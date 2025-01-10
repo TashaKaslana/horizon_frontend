@@ -5,11 +5,11 @@ import NavigationContainer from "@/app/(landing_page)/(landing_header)/Navigatio
 
 const LandingHeader = () => {
     return (
-        <div className={'flex justify-between'}>
+        <header className={'flex justify-between relative'}>
             <LogoContainer/>
             <NavigationContainer/>
             <AuthenticatedSection/>
-        </div>
+        </header>
     )
 }
 

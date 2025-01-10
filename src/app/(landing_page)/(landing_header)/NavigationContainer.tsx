@@ -9,11 +9,11 @@ import Link from "next/link";
 
 const NavigationContainer = () => {
     return (
-        <div>
+        <div className={'absolute left-1/2 transform -translate-x-1/2'}>
             <NavigationMenu>
                 <NavigationMenuList>
                     <NavigationMenuItem>
-                        <NavigationMenuTrigger>
+                        <NavigationMenuTrigger className={'font-semibold text-lg'}>
                             Getting started
                         </NavigationMenuTrigger>
                         <NavigationMenuContent className={'min-w-64'}>
