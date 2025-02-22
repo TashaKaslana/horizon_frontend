@@ -15,14 +15,14 @@ const LandingHeader = () => {
 
 const LogoContainer = () => {
     return (
-        <h1>Horizon</h1>
+        <h1 className={""}>Horizon</h1>
     )
 }
 
 const AuthenticatedSection = () => {
     return (
         <div className={'flex gap-4'}>
-            <Button>
+            <Button className={"w-64"}>
                 <Link href={"/login"}>
                     Login
                 </Link>
