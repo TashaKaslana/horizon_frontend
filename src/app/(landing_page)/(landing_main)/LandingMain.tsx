@@ -14,7 +14,7 @@ const LandingMain = () => {
 
 const LandingMainTitle = () => {
     return (
-        <h1 className={'font-extrabold text-6xl bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent'}>Welcome to Horizon</h1>
+        <h1 className={'font-extrabold text-6xl bg-linear-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent'}>Welcome to Horizon</h1>
     )
 }
 
