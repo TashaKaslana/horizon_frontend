@@ -2,18 +2,26 @@
 
 import VideoContainer from "@/app/home/foryou/(video-section)/VideoContainer";
 import CommentContainer from "@/app/home/foryou/(comment-section)/CommentContainer";
-import { useState } from "react";
+import {useState} from "react";
 
 const ForyouContainer = () => {
     const [isCommentOpened, setIsCommentOpened] = useState(false);
 
     return (
-        <div className={`flex size-full gap-12 justify-center items-center transition-all duration-300 ease-in-out ${isCommentOpened ? '' : 'justify-center'}`}>
-            <div className={`transition-transform duration-500 ease-in-out ${isCommentOpened ? 'transform-none' : ''}`}>
+        <div className="flex size-full gap-5 justify-center items-center transition-all duration-300 ease-in-out">
+            <div
+                className={`flex justify-center transition-all duration-500 ease-in-out ${
+                    isCommentOpened ? "w-[60%]" : "w-full"
+                }`}
+            >
                 <VideoContainer setIsCommentOpened={setIsCommentOpened} />
             </div>
-            <div className={`transition-all duration-1000 ease-in-out ${isCommentOpened ? 'opacity-100' : 'opacity-0 '}`}>
-                <CommentContainer isCommentOpened={isCommentOpened}/>
+            <div
+                className={`transition-all duration-700 ease-in-out overflow-hidden ${
+                    isCommentOpened ? "w-[40%] opacity-100" : "w-0 opacity-0"
+                }`}
+            >
+                <CommentContainer isCommentOpened={isCommentOpened} />
             </div>
         </div>
     )

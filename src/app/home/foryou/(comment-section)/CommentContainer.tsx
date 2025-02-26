@@ -4,11 +4,7 @@ import {Separator} from "@/components/ui/separator";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {CommentSection} from "@/app/home/foryou/(comment-section)/CommentSection";
 
-interface CommentContainerProps {
-    isCommentOpened?: boolean
-}
-
-const CommentContainer = ({isCommentOpened}: CommentContainerProps) => {
+const CommentContainer = () => {
     const items = [
         {
             id: 1,
@@ -59,7 +55,7 @@ const CommentContainer = ({isCommentOpened}: CommentContainerProps) => {
 
     return (
         <article
-            className={'border rounded-xl transition-all duration-500 p-3 space-y-2' + (isCommentOpened ? ' w-[28rem] h-[36rem]' : ' scale-0')}>
+            className={'border rounded-xl transition-all duration-500 p-3 space-y-2 w-[28rem] h-[36rem]'}>
             <CommentHeader/>
             <Separator/>
             <ScrollArea className={'h-[calc(100%-28px)] p-2 w-[calc(100%+8px)]'}>
