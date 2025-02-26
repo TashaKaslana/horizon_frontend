@@ -16,7 +16,7 @@ interface CommentSectionProps {
 export const CommentSection = ({commentId, user, content, createdAt}: CommentSectionProps) => {
     return (
         <section className={'border border-gray-300 duration-300 p-1 rounded-xl ' +
-            'w-[calc(100%-8px)] hover:bg-gray-200'} key={commentId}>
+            'w-[calc(100%-8px)] hover:bg-gray-200 bg-gray-100'} key={commentId}>
             <header className={'flex gap-2 h-10 cursor-pointer justify-between'}>
                 <div className={'flex gap-2'}>
                     <Avatar className={'size-10'}>
@@ -29,7 +29,7 @@ export const CommentSection = ({commentId, user, content, createdAt}: CommentSec
                     </div>
                 </div>
 
-                <span className={'flex text-gray-600'}>
+                <span className={'flex text-gray-600 gap-1'}>
                      <Clock/> <span>{createdAt}</span>
                 </span>
             </header>

@@ -8,7 +8,7 @@ const ForyouContainer = () => {
     const [isCommentOpened, setIsCommentOpened] = useState(false);
 
     return (
-        <div className="flex size-full gap-5 justify-center items-center transition-all duration-300 ease-in-out">
+        <div className="flex size-full gap-8 justify-center items-center transition-all duration-300 ease-in-out">
             <div
                 className={`flex justify-center transition-all duration-500 ease-in-out ${
                     isCommentOpened ? "w-[60%]" : "w-full"

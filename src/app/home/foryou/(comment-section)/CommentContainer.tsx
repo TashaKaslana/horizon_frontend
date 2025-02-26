@@ -55,9 +55,11 @@ const CommentContainer = () => {
 
     return (
         <article
-            className={'border rounded-xl transition-all duration-500 p-3 space-y-2 w-[28rem] h-[36rem]'}>
+            className={'border rounded-xl transition-all duration-500 p-3 space-y-2 w-[28rem] h-[36rem] bg-gray-50'}>
             <CommentHeader/>
+
             <Separator/>
+
             <ScrollArea className={'h-[calc(100%-28px)] p-2 w-[calc(100%+8px)]'}>
                 <div className={'space-y-2'}>
                     {items.map(((item, index) => (
@@ -80,7 +82,7 @@ const CommentHeader = () => {
     const [commentCount, ] = useState(0)
 
     return (
-        <header className={'flex justify-between'}>
+        <header className={'flex justify-between bg-gray-100 rounded px-1'}>
             <h1 className={'font-bold'}>
                 Comments <span className={'font-light text-zinc-800'}> - {commentCount}</span>
             </h1>

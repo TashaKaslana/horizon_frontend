@@ -8,7 +8,7 @@ interface VideoContainerProps {
 
 const VideoContainer = ({setIsCommentOpened}: VideoContainerProps) => {
     return (
-        <div className={'flex gap-4 items-center'}>
+        <div className={'flex gap-4 items-center relative'}>
             <VideoSection/>
             <ActionButtonGroup setIsCommentOpened={setIsCommentOpened}/>
         </div>
