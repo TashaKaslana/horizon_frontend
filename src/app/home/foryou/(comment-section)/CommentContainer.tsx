@@ -56,7 +56,7 @@ const CommentContainer = () => {
     return (
         <article
             className={'border rounded-xl transition-all duration-500 p-3 space-y-2 w-[28rem] h-[36rem] bg-gray-50'}>
-            <CommentHeader/>
+            <CommentHeader amount={items.length}/>
 
             <Separator/>
 
@@ -78,8 +78,12 @@ const CommentContainer = () => {
     )
 }
 
-const CommentHeader = () => {
-    const [commentCount, ] = useState(0)
+interface CommentHeaderProps {
+    amount?: number
+}
+
+const CommentHeader = ({amount}: CommentHeaderProps) => {
+    const [commentCount,] = useState(amount ?? 0)
 
     return (
         <header className={'flex justify-between bg-gray-100 rounded px-1'}>
