@@ -1,5 +1,5 @@
 import {SidebarHeader} from "@/components/ui/sidebar";
-import Logo from "../../../../public/images/share/Logo";
+import Logo from "../../../../../public/images/share/Logo";
 
 export const HomeSidebarHeader = () => {
     return (

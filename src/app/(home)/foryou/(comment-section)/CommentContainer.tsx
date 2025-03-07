@@ -2,7 +2,7 @@ import {useState} from "react";
 import {AlignLeft} from "lucide-react";
 import {Separator} from "@/components/ui/separator";
 import {ScrollArea} from "@/components/ui/scroll-area";
-import {CommentSection} from "@/app/home/foryou/(comment-section)/CommentSection";
+import {CommentSection} from "@/app/(home)/foryou/(comment-section)/CommentSection";
 
 const CommentContainer = () => {
     const items = [
