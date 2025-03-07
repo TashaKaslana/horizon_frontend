@@ -22,8 +22,8 @@ export const navigationData = [
 ]
 
 export const navigationUserData = [
-    {title: 'History', icon: <HistoryIcon/>, href: '/'},
-    {title: 'Profile', icon: <SquareUserRound/>, href: '/'},
-    {title: 'Settings', icon: <Settings/>, href: '/'},
-    {title: 'Logout', icon: <DoorOpen/>, href: '/'},
+    {title: 'History', icon: <HistoryIcon/>, href: '/history'},
+    {title: 'Profile', icon: <SquareUserRound/>, href: '/profile'},
+    {title: 'Settings', icon: <Settings/>, href: '/settings'},
+    {title: 'Logout', icon: <DoorOpen/>, href: '/logout'},
 ]
