@@ -1,4 +1,4 @@
-import HomeSidebar from "@/app/(home)/_components/sidebar/HomeSidebar";
+import HomeSidebar from "@/app/(home)/components/sidebar/HomeSidebar";
 import {ReactNode} from "react";
 import {SidebarProvider, SidebarTrigger} from "@/components/ui/sidebar";
 

@@ -1,6 +1,6 @@
 import {SidebarContent, SidebarMenu, SidebarMenuItem, SidebarSeparator} from "@/components/ui/sidebar";
 import Link from "next/link";
-import {SearchBar} from "@/app/(home)/_components/searchbar/SearchBar";
+import {SearchBar} from "@/app/(home)/components/searchbar/SearchBar";
 import {navigationData} from "@/app/(home)/constraints/navigation_data";
 
 export const HomeSidebarContent = () => {

@@ -1,7 +1,7 @@
 'use client'
 
-import VideoContainer from "@/app/(home)/foryou/(video-section)/VideoContainer";
-import CommentContainer from "@/app/(home)/foryou/(comment-section)/CommentContainer";
+import VideoContainer from "@/app/(home)/foryou/video-section/VideoContainer";
+import CommentContainer from "@/app/(home)/foryou/comment-section/CommentContainer";
 import {useState} from "react";
 
 const ForyouContainer = () => {
