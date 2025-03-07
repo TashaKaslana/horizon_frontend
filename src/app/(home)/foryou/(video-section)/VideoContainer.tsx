@@ -1,4 +1,4 @@
-import ActionButtonGroup from "@/app/home/foryou/(video-section)/ActionButtonGroup";
+import ActionButtonGroup from "@/app/(home)/foryou/(video-section)/ActionButtonGroup";
 import React from "react";
 
 

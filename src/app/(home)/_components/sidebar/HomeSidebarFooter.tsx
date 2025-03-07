@@ -1,17 +1,10 @@
-import {DoorOpen, HistoryIcon, Settings, SquareUserRound} from "lucide-react";
 import {SidebarFooter} from "@/components/ui/sidebar";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {Separator} from "@/components/ui/separator";
 import Link from "next/link";
+import {navigationUserData} from "@/app/(home)/constraints/navigation_data";
 
 export const HomeSidebarFooter = () => {
-    const items = [
-        {title: 'History', icon: <HistoryIcon/>, href: '/'},
-        {title: 'Profile', icon: <SquareUserRound/>, href: '/'},
-        {title: 'Settings', icon: <Settings/>, href: '/'},
-        {title: 'Logout', icon: <DoorOpen/>, href: '/'},
-    ]
-
     return (
         <SidebarFooter>
             <Popover>
@@ -28,7 +21,7 @@ export const HomeSidebarFooter = () => {
                     <Separator/>
 
                     <div className={'flex flex-col place-content-start'}>
-                        {items.map((item, index) =>
+                        {navigationUserData.map((item, index) =>
                             <Link key={index}
                                   href={item.href}
                                   className={'group box-border flex p-1 gap-2 justify-start border border-transparent ' +
