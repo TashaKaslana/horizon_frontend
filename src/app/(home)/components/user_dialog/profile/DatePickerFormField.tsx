@@ -12,30 +12,31 @@ import formProfileSchema from "@/app/(home)/constraints/formProfileSchema";
 type FormSchemaType = z.infer<typeof formProfileSchema>
 
 interface DatePickerFormFieldProps {
-    form: UseFormReturn<FormSchemaType>
-    name: keyof FormSchemaType
-    label: string
+    form: UseFormReturn<FormSchemaType>,
+    name: keyof FormSchemaType,
+    label: string,
+    disabled?: boolean
 }
 
 
-export const DatePickerFormField = ({form, name, label}: DatePickerFormFieldProps) => {
+export const DatePickerFormField = ({form, name, label, disabled}: DatePickerFormFieldProps) => {
     return (
         <FormField
             control={form.control}
             name={name}
-            render={({ field }) => (
+            render={({field}) => (
                 <FormItem className="flex flex-col h-full">
                     <FormLabel>{label}</FormLabel>
 
                     <Popover>
-                        <PopoverTrigger asChild>
+                        <PopoverTrigger asChild disabled={disabled}>
                             <FormControl>
                                 <Button
                                     variant="outline"
                                     className={cn("w-full pl-3 text-left font-normal", !field.value && "text-muted-foreground")}
                                 >
                                     {field.value ? format(field.value as Date, "PPP") : <span>Pick a date</span>}
-                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                    <CalendarIcon className="ml-auto h-4 w-4 opacity-50"/>
                                 </Button>
                             </FormControl>
                         </PopoverTrigger>
@@ -49,7 +50,7 @@ export const DatePickerFormField = ({form, name, label}: DatePickerFormFieldProp
                             />
                         </PopoverContent>
                     </Popover>
-                    <FormMessage />
+                    <FormMessage/>
                 </FormItem>
             )}
         />

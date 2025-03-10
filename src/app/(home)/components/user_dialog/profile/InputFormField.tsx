@@ -7,25 +7,31 @@ import formProfileSchema from "@/app/(home)/constraints/formProfileSchema";
 type FormSchemaType = z.infer<typeof formProfileSchema>
 
 interface InputFormFieldProps {
-    form: UseFormReturn<FormSchemaType>
-    name: keyof FormSchemaType
-    label: string
-    placeholder: string
-    type?: string
+    form: UseFormReturn<FormSchemaType>,
+    name: keyof FormSchemaType,
+    label: string,
+    placeholder: string,
+    type?: string,
+    disabled?: boolean
 }
 
-export const InputFormField = ({form, name, label, placeholder, type}: InputFormFieldProps) => {
+export const InputFormField = ({form, name, label, placeholder, type, disabled}: InputFormFieldProps) => {
     return (
         <FormField
             control={form.control}
             name={name}
-            render={({ field }) => (
+            render={({field}) => (
                 <FormItem>
                     <FormLabel>{label}</FormLabel>
                     <FormControl>
-                        <Input placeholder={placeholder} type={type ?? "text"} {...field} value={field.value as string} />
+                        <Input placeholder={placeholder}
+                               type={type ?? "text"}
+                               {...field}
+                               value={field.value as string}
+                                disabled={disabled}
+                        />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage/>
                 </FormItem>
             )}
         />

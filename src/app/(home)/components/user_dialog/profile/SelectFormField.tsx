@@ -7,14 +7,15 @@ import formProfileSchema from "@/app/(home)/constraints/formProfileSchema";
 type FormSchemaType = z.infer<typeof formProfileSchema>
 
 interface SelectFormFieldProps {
-    form: UseFormReturn<FormSchemaType>
-    name: keyof FormSchemaType
-    label: string
-    placeholder: string
-    options: { value: string; label: string }[]
+    form: UseFormReturn<FormSchemaType>,
+    name: keyof FormSchemaType,
+    label: string,
+    placeholder: string,
+    options: { value: string; label: string }[],
+    disabled?: boolean
 }
 
-export const SelectFormField = ({form, name, label, placeholder, options}: SelectFormFieldProps) => {
+export const SelectFormField = ({form, name, label, placeholder, options, disabled}: SelectFormFieldProps) => {
     return (
         <FormField
             control={form.control}
@@ -22,7 +23,7 @@ export const SelectFormField = ({form, name, label, placeholder, options}: Selec
             render={({field}) => (
                 <FormItem>
                     <FormLabel>{label}</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value as string}>
+                    <Select onValueChange={field.onChange} defaultValue={field.value as string} disabled={disabled}>
                         <FormControl>
                             <SelectTrigger>
                                 <SelectValue placeholder={placeholder}/>

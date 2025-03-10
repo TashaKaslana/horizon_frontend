@@ -19,6 +19,11 @@ import {useState} from "react";
 export const ProfileDialog = () => {
     const item = {icon: <SquareUserRound/>, title: 'Profile'};
     const [open, setOpen] = useState(false);
+    const [isEditing, setIsEditing] = useState(false);
+
+    const handleEditToggle = () => {
+        setIsEditing(prevState => !prevState);
+    }
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -36,9 +41,9 @@ export const ProfileDialog = () => {
                             className={'h-16 w-full rounded-xl bg-gradient-to-r from-indigo-400 via-red-300 to-cyan-400'}/>
                         <div className={'flex justify-between items-center w-full hover:bg-gray-300 rounded-lg'}>
                             <UserInformation className={''}/>
-                            <Button className={'mr-1 bg-sky-500 hover:bg-sky-400 w-24'}>Edit</Button>
+                            <Button className={'mr-1 bg-sky-500 hover:bg-sky-400 w-24'} onClick={handleEditToggle}>Edit</Button>
                         </div>
-                        <ProfileInformationForm/>
+                        <ProfileInformationForm isEditing={isEditing}/>
                     </section>
                 </ScrollArea>
             </DialogContent>
