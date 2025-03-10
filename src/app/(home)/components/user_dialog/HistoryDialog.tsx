@@ -1,0 +1,7 @@
+export const HistoryDialog = () => {
+  return (
+      <>
+
+      </>
+  )
+}

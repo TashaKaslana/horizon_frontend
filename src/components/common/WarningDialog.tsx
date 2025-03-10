@@ -23,12 +23,12 @@ export const WarningDialog = ({trigger, title, description, onContinueAction, on
     const [open, setOpen] = React.useState(false);
 
     const handleCancel = () => {
-        onContinueAction()
+        onCancelAction();
         setOpen(false);
     }
 
     const handleContinue = () => {
-        onCancelAction();
+        onContinueAction()
         setOpen(false);
     }
 
