@@ -1,7 +1,7 @@
 import {JSX} from "react";
 
 interface UserDialogTriggerProps {
-    item?: { icon: JSX.Element; title: string }
+    item: { icon: JSX.Element; title: string }
 }
 
 export const UserDialogTrigger = ({item}: UserDialogTriggerProps) => {
