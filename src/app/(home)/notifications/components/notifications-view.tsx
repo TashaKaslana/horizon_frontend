@@ -1,6 +1,6 @@
 "use client"
 
-import React, {useEffect, useState} from "react"
+import React from "react"
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
 import NotificationCard from "./notification-card"
 import NotificationHeader from "@/app/(home)/notifications/components/notification-header"
