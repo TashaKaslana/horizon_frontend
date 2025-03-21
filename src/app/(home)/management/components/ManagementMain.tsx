@@ -9,7 +9,7 @@ export const ManagementMain = () => {
     const {posts} = usePostManagementStore()
 
     return (
-        <main className={'grid grid-cols-2 gap-5'}>
+        <main className={'grid grid-cols-2 gap-5 place-items-center'}>
             {posts.map((post) => (
                 <PostCard post={post} key={post.id}/>
             ))}
