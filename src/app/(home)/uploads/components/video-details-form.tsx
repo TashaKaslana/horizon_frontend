@@ -16,6 +16,8 @@ interface VideoDetailsFormProps {
 }
 
 export function VideoDetailsForm({form}: VideoDetailsFormProps) {
+    const categories = ["entertainment", "music", "education", "gaming", "tech"]
+
     return (
         <div className="space-y-6">
             <FormField
@@ -98,11 +100,13 @@ export function VideoDetailsForm({form}: VideoDetailsFormProps) {
                                         <SelectValue placeholder="Select category"/>
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="entertainment">Entertainment</SelectItem>
-                                        <SelectItem value="music">Music</SelectItem>
-                                        <SelectItem value="education">Education</SelectItem>
-                                        <SelectItem value="gaming">Gaming</SelectItem>
-                                        <SelectItem value="tech">Technology</SelectItem>
+                                        {categories.map((category) => (
+                                            <SelectItem key={category}
+                                                        value={category}
+                                            >
+                                                {category.at(0)?.toUpperCase() + category.substring(1)}
+                                            </SelectItem>
+                                        ))}
                                     </SelectContent>
                                 </Select>
                             </FormControl>
