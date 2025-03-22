@@ -17,6 +17,7 @@ import NotificationSetting from "@/app/(home)/components/user_dialog/settings/No
 import AppPreferencesSetting from "@/app/(home)/components/user_dialog/settings/AppPreferencesSetting";
 import {UserInformation} from "@/components/common/UserInformation";
 import {setting_data} from "@/app/(home)/constraints/setting_data";
+import VideoSetting from "@/app/(home)/components/user_dialog/settings/VideoSetting";
 
 export const SettingsContainer = () => {
     const [sidebarOpenIndex, setSidebarOpenIndex] = useState(0);
@@ -85,6 +86,8 @@ const DisplaySettingSection = (index: number) => {
         case 2:
             return <NotificationSetting/>
         case 3:
+            return <VideoSetting/>
+        case 4:
             return <AppPreferencesSetting/>
     }
 }
