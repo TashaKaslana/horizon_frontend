@@ -1,4 +1,4 @@
-import {AppleIcon, Bell, Lock, User} from "lucide-react";
+import {AppleIcon, Bell, Lock, User, Video} from "lucide-react";
 
 export const setting_data = [
     {
@@ -12,6 +12,10 @@ export const setting_data = [
     {
         label: 'Notifications',
         icon: <Bell/>
+    },
+    {
+        label: 'Video Settings',
+        icon: <Video/>
     },
     {
         label: 'App Preferences',
