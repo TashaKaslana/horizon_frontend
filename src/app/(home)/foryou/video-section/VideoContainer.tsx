@@ -1,5 +1,6 @@
 import ActionButtonGroup from "@/app/(home)/foryou/video-section/ActionButtonGroup";
 import React from "react";
+import {useConfigStore} from "@/store/useConfigStore";
 
 
 interface VideoContainerProps {
@@ -16,14 +17,20 @@ const VideoContainer = ({setIsCommentOpened}: VideoContainerProps) => {
 }
 
 const VideoSection = () => {
+    const {videoSettings} = useConfigStore()
+
+    const getValueByKey = (key: string) => {
+        return videoSettings.find((v) => v.key === key)?.value ?? true
+    }
+
     return (
         <div className={'h-[22rem] rounded-xl transition aspect-video'}>
             <video
-                autoPlay
-                loop
+                autoPlay={getValueByKey('auto_play')}
+                loop={getValueByKey('loop_video')}
+                controls={getValueByKey('control_video')}
                 className={'object-cover w-full h-full rounded-xl'}
                 src={'https://www.w3schools.com/tags/mov_bbb.mp4'}
-                controls
             />
         </div>
     )

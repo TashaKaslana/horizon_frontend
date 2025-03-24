@@ -1,5 +1,6 @@
 import {Button} from "@/components/ui/button";
 import Image from "next/image";
+import Link from "next/link";
 
 const LandingMain = () => {
     return (
@@ -29,7 +30,9 @@ const LandingMainButton = () => {
     return (
         <div className={'flex justify-center'}>
             <Button className={'w-40'}>
-                Login
+                <Link href={'/foryou'}>
+                    Enter
+                </Link>
             </Button>
         </div>
     )
