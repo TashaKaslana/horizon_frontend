@@ -1,0 +1,1 @@
+export const triggerTabs = ['All', 'Gaming', 'Music', 'Sports', 'Techs', 'Foods', 'Books', 'Travels']

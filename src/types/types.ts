@@ -9,3 +9,19 @@ export type ConfigOption<T = ValueConfigType> = {
 };
 
 type ValueConfigType = boolean | string
+
+export interface Post {
+    id: string;
+    title: string;
+    description: string;
+    src: string;
+    avatar: string;
+    author: string;
+    username: string;
+    category: string;
+    tags: string[];
+    view: number;
+    timestamp: string;
+    likes: number;
+    comments: number;
+}
