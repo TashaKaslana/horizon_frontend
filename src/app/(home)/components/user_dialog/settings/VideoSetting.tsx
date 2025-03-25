@@ -1,6 +1,7 @@
 import {Label} from "@/components/ui/label";
 import {Switch} from "@/components/ui/switch";
-import {ConfigOption, useConfigStore} from "@/store/useConfigStore";
+import {useConfigStore} from "@/store/useConfigStore";
+import { ConfigOption } from "@/types/types";
 
 const VideoSetting = () => {
     const {videoSettings, changeVideoSettingByKey} = useConfigStore()
@@ -25,7 +26,7 @@ const VideoSetting = () => {
                                     <p className={"text-sm font-light text-gray-400"}>{config.description}</p>
                                 </div>
                             </Label>
-                            <Switch id={config.key} checked={config.value}
+                            <Switch id={config.key} checked={config.value as boolean}
                                     onCheckedChange={
                                         (value) => handleCheckedChange({key: config.key, value})
                                     }/>

@@ -11,13 +11,8 @@ import {
 import {useState} from "react";
 import {cn} from "@/lib/utils";
 import {Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbSeparator} from "@/components/ui/breadcrumb";
-import AccountSetting from "@/app/(home)/components/user_dialog/settings/AccountSetting";
-import PrivacySecuritySetting from "@/app/(home)/components/user_dialog/settings/PrivacySecuritySetting";
-import NotificationSetting from "@/app/(home)/components/user_dialog/settings/NotificationSetting";
-import AppPreferencesSetting from "@/app/(home)/components/user_dialog/settings/AppPreferencesSetting";
 import {UserInformation} from "@/components/common/UserInformation";
 import {setting_data} from "@/app/(home)/constraints/setting_data";
-import VideoSetting from "@/app/(home)/components/user_dialog/settings/VideoSetting";
 
 export const SettingsContainer = () => {
     const [sidebarOpenIndex, setSidebarOpenIndex] = useState(0);
@@ -70,26 +65,11 @@ export const SettingsContainer = () => {
                     </Breadcrumb>
                 </header>
                 <main>
-                    {DisplaySettingSection(sidebarOpenIndex)}
+                    {setting_data[sidebarOpenIndex].ui}
                 </main>
             </section>
         </SidebarProvider>
     )
-}
-
-const DisplaySettingSection = (index: number) => {
-    switch (index) {
-        case 0:
-            return <AccountSetting/>
-        case 1:
-            return <PrivacySecuritySetting/>
-        case 2:
-            return <NotificationSetting/>
-        case 3:
-            return <VideoSetting/>
-        case 4:
-            return <AppPreferencesSetting/>
-    }
 }
 
 export default SettingsContainer;
