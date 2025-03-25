@@ -1,4 +1,4 @@
-import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
+import {Tabs, TabsContent} from "@/components/ui/tabs";
 import {DiscoverHeader} from "@/app/(home)/discover/components/DiscoverHeader";
 import {DiscoverTabContent} from "@/app/(home)/discover/components/DiscoverTabContent";
 
@@ -7,23 +7,16 @@ const DiscoverContainer = () => {
     const triggers = ['All', 'Gaming', 'Music', 'Sports', 'Techs', 'Foods', 'Books', 'Travels']
 
     return (
-        <>
-            <DiscoverHeader/>
-            <Tabs defaultValue={triggers[0]} className={'w-full px-5 mt-2'}>
-                <TabsList className={'w-full'}>
-                    {triggers.map((trigger, index) =>
-                        <TabsTrigger value={trigger} key={index}>
-                            {trigger}
-                        </TabsTrigger>
-                    )}
-                </TabsList>
+        <article className={'h-full p-6 space-y-3 relative'}>
+            <Tabs defaultValue={triggers[0]} className={'w-full h-full'}>
+                <DiscoverHeader triggers={triggers}/>
                 {triggers.map((trigger, index) =>
-                    <TabsContent value={trigger} key={index}>
+                    <TabsContent value={trigger} key={index} className={'max-h-96'}>
                         <DiscoverTabContent/>
                     </TabsContent>
                 )}
             </Tabs>
-        </>
+        </article>
     )
 }
 
