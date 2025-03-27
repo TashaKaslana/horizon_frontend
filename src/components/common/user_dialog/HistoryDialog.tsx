@@ -6,10 +6,10 @@ import {
     DialogTitle,
     DialogTrigger
 } from "@/components/ui/dialog";
-import {UserDialogTrigger} from "@/app/(home)/components/user_dialog/UserDialogTrigger";
+import {UserDialogTrigger} from "@/components/common/user_dialog/UserDialogTrigger";
 import {Clock} from "lucide-react";
 import {DataTable} from "@/components/ui/data-table";
-import {History, historyColumns} from "@/app/(home)/components/user_dialog/history/columns";
+import {History, historyColumns} from "@/components/common/user_dialog/history/columns";
 
 const histories: History[] = [
     { id: '1', type: 'watch', references: 'video_123', createdAt: '2024-03-10T10:00:00Z' },

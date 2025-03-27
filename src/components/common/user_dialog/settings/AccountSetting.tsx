@@ -3,7 +3,7 @@ import {ScrollArea} from "@/components/ui/scroll-area";
 import {z} from "zod";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {AccountField} from "@/app/(home)/components/user_dialog/settings/AccountField";
+import {AccountField} from "@/components/common/user_dialog/settings/AccountField";
 import {Button} from "@/components/ui/button";
 import {toast} from "sonner";
 

@@ -6,9 +6,9 @@ import formProfileSchema from "@/app/(home)/constraints/formProfileSchema"
 import {zodResolver} from "@hookform/resolvers/zod"
 import {Form} from "@/components/ui/form"
 import {Button} from "@/components/ui/button"
-import {DatePickerFormField} from "@/app/(home)/components/user_dialog/profile/DatePickerFormField";
-import {SelectFormField} from "@/app/(home)/components/user_dialog/profile/SelectFormField";
-import {InputFormField} from "@/app/(home)/components/user_dialog/profile/InputFormField";
+import {DatePickerFormField} from "@/components/common/user_dialog/profile/DatePickerFormField";
+import {SelectFormField} from "@/components/common/user_dialog/profile/SelectFormField";
+import {InputFormField} from "@/components/common/user_dialog/profile/InputFormField";
 
 type FormSchemaType = z.infer<typeof formProfileSchema>
 

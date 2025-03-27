@@ -2,6 +2,7 @@ import React from "react";
 import {Button} from "@/components/ui/button";
 import Link from "next/link";
 import NavigationContainer from "@/app/components/landing_page/landing_header/NavigationContainer";
+import LoginButton from "@/app/components/LoginButton";
 
 const LandingHeader = () => {
     return (
@@ -21,18 +22,7 @@ const LogoContainer = () => {
 
 const AuthenticatedSection = () => {
     return (
-        <div className={'flex gap-4'}>
-            <Button>
-                <Link href={"/login"}>
-                    Login
-                </Link>
-            </Button>
-            <Button>
-                <Link href={"/register"}>
-                    Register
-                </Link>
-            </Button>
-        </div>
+        <LoginButton/>
     )
 }
 export default LandingHeader

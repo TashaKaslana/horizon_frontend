@@ -5,9 +5,9 @@ import {
     DialogTitle,
     DialogTrigger
 } from "@/components/ui/dialog";
-import {UserDialogTrigger} from "@/app/(home)/components/user_dialog/UserDialogTrigger";
+import {UserDialogTrigger} from "@/components/common/user_dialog/UserDialogTrigger";
 import {Settings} from "lucide-react";
-import SettingsContainer from "@/app/(home)/components/user_dialog/settings/SettingsContainer";
+import SettingsContainer from "@/components/common/user_dialog/settings/SettingsContainer";
 
 export const SettingDialog = () => {
     const trigger = {

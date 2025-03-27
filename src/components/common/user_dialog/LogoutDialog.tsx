@@ -2,7 +2,7 @@
 
 import {DoorOpen} from "lucide-react";
 import {toast} from "sonner";
-import {UserDialogTrigger} from "@/app/(home)/components/user_dialog/UserDialogTrigger";
+import {UserDialogTrigger} from "@/components/common/user_dialog/UserDialogTrigger";
 import {
     AlertDialog, AlertDialogAction, AlertDialogCancel,
     AlertDialogContent, AlertDialogDescription, AlertDialogFooter,
@@ -10,11 +10,21 @@ import {
     AlertDialogTitle,
     AlertDialogTrigger
 } from "@/components/ui/alert-dialog";
+import { useRouter } from "next/navigation";
 
 export const LogoutDialog = () => {
     const item = {
         icon: <DoorOpen/>,
         title: 'Logout',
+    }
+    const router = useRouter();
+
+    const onCancel = () => {
+        toast.info('Logout canceled', {duration: 2000});
+    }
+
+    const onContinue = () => {
+        router.push("/auth/logout");
     }
 
     return (
@@ -45,13 +55,7 @@ export const LogoutDialog = () => {
     )
 }
 
-const onCancel = () => {
-    toast.info('Logout canceled', {duration: 2000});
-}
 
-const onContinue = () => {
-    toast.success('Logged out successfully', {duration: 2000});
-}
 
 
 

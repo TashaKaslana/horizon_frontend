@@ -1,25 +1,23 @@
+'use client'
+
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
+import { useUser } from "@auth0/nextjs-auth0";
 
 export const UserInformation = ({className}: { className?: string }) => {
-    const information = {
-        id: 1,
-        avatar: 'https://github.com/shadcn.png',
-        userDisplay: 'User Display',
-        username: 'UserName'
-    }
+    const {user} = useUser()
 
     return (
         <article
             className={'flex gap-2 items-center hover:bg-gray-300 p-1 rounded cursor-pointer select-none transition duration-300 ' + className}>
             <Avatar>
-                <AvatarImage src={information.avatar}/>
+                <AvatarImage src={user?.picture}/>
                 <AvatarFallback>
-                    {information.userDisplay.at(0)?.toUpperCase()}
+                    {user?.name?.at(0)?.toUpperCase()}
                 </AvatarFallback>
             </Avatar>
-            <main>
-                <h1 className={'font-bold text-md'}>{information.userDisplay}</h1>
-                <p className={'font-extralight text-xs italic text-zinc-600'}>@{information.username}</p>
+            <main className={'text-start'}>
+                <h1 className={'font-bold text-md'}>{user?.name}</h1>
+                <p className={'font-extralight text-xs italic text-zinc-600'}>@{user?.nickname}</p>
             </main>
         </article>
     )
