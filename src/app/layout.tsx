@@ -5,6 +5,10 @@ import {Toaster} from "@/components/ui/sonner";
 import React from "react";
 import {ThemeProvider} from "@/components/theme-provider";
 import {Auth0Provider} from "@auth0/nextjs-auth0";
+import {QueryClient} from "@tanstack/query-core";
+import {QueryClientProvider} from "@tanstack/react-query";
+
+const queryClient = new QueryClient()
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -28,21 +32,23 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" suppressHydrationWarning>
-            <body
-                className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-            >
-                <Auth0Provider>
-                    <ThemeProvider
-                        attribute="class"
-                        defaultTheme="system"
-                        enableSystem
-                        disableTransitionOnChange
-                    >
-                        {children}
-                        <Toaster richColors/>
-                    </ThemeProvider>
-                </Auth0Provider>
-            </body>
+        <body
+            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+        <Auth0Provider>
+            <QueryClientProvider client={queryClient}>
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="system"
+                    enableSystem
+                    disableTransitionOnChange
+                >
+                    {children}
+                    <Toaster richColors/>
+                </ThemeProvider>
+            </QueryClientProvider>
+        </Auth0Provider>
+        </body>
         </html>
     );
 }
