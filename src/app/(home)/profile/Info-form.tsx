@@ -62,7 +62,7 @@ const formSchema = z.object({
 });
 
 export default function InfoForm() {
-    const [countryName, setCountryName] = useState<string>('')
+    const [, setCountryName] = useState<string>('')
     const [stateName, setStateName] = useState<string>('')
 
     const form = useForm<z.infer<typeof formSchema>>({

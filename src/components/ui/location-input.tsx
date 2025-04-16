@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, {useEffect, useRef, useState} from 'react'
 import { Check, ChevronsUpDown } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { ScrollArea, ScrollBar } from '@/components/ui/scroll-area'
@@ -16,9 +16,6 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { cn } from '@/lib/utils'
-
-import countries from '@/data/countries.json'
-import states from '@/data/states.json'
 
 interface Timezone {
   zoneName: string
@@ -72,6 +69,13 @@ interface LocationSelectorProps {
   onStateChange?: (state: StateProps | null) => void
 }
 
+const getCountries = async () => {
+  return await import('@/data/countries.json')
+}
+const getStates = async () => {
+    return await import('@/data/states.json')
+}
+
 const LocationSelector = ({
   disabled,
   onCountryChange,
@@ -85,11 +89,24 @@ const LocationSelector = ({
   const [openStateDropdown, setOpenStateDropdown] = useState(false)
 
   // Cast imported JSON data to their respective types
-  const countriesData = countries as CountryProps[]
-  const statesData = states as StateProps[]
+  const countriesData = useRef<CountryProps[]>([])
+  const statesData = useRef<StateProps[]>([])
+  
+  useEffect(() => {
+    getCountries().then((data) => {
+      countriesData.current = (data.default as CountryProps[]).map((country) => ({
+        ...country,
+        subregion_id: country.subregion_id || "",
+      }));
+    });
+    getStates().then((data) => {
+      statesData.current = data.default as StateProps[];
+    });
+  }, []);
+
 
   // Filter states for selected country
-  const availableStates = statesData.filter(
+  const availableStates = statesData.current?.filter(
     (state) => state.country_id === selectedCountry?.id,
   )
 
@@ -135,7 +152,7 @@ const LocationSelector = ({
               <CommandEmpty>No country found.</CommandEmpty>
               <CommandGroup>
                 <ScrollArea className="h-[300px]">
-                  {countriesData.map((country) => (
+                  {countriesData.current.map((country) => (
                     <CommandItem
                       key={country.id}
                       value={country.name}
