@@ -1,0 +1,23 @@
+export interface User {
+    id: string;
+    firstName: string;
+    lastName: string;
+    username: string;
+    email: string;
+    gender: 'MALE' | 'FEMALE' | 'OTHER';
+    phoneNumber: string;
+    dateOfBirth: Date;
+    profileImage: string;
+    coverImage: string;
+    bio: string;
+    country: string;
+    city: string;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export type UserSummary = Pick<User, 'id' | 'firstName' | 'lastName' | 'username' | 'profileImage' | 'coverImage' | 'createdAt'>;
+
+export type UserProfileInformationUpdate = Partial<Omit<User, 'id' | 'username' | 'email' | 'coverImage' | 'profileImage'>>
+
+export type UserProfileIdentification = Partial<Pick<User, 'email' | 'username'> & { password: string }>

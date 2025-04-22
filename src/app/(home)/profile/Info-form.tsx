@@ -51,34 +51,48 @@ import LocationSelector from "@/components/ui/location-input"
 import {
     PhoneInput
 } from "@/components/ui/phone-input";
+import {updateProfileRequest} from "@/app/(home)/profile/libs/services/updateProfile";
+import {getAccessToken} from "@auth0/nextjs-auth0";
 
 const formSchema = z.object({
-    firstname: z.string().min(3, {message : 'First name is least at 3 characters'}).max(30),
-    lastname: z.string().min(3).max(30),
-    date_birth: z.coerce.date(),
-    gender: z.string(),
+    firstName: z.string().min(3, {message : 'First name is least at 3 characters'}).max(30),
+    lastName: z.string().min(3).max(30),
+    dateOfBirth: z.coerce.date().refine((value) => value < new Date(), {
+        message: 'Date of birth must be in the past',
+    }),
+    gender: z.enum(['MALE', 'FEMALE', 'OTHER']),
     location: z.tuple([z.string(), z.string().optional()]),
-    phone: z.string()
+    phoneNumber: z.string()
 });
+
 
 export default function InfoForm() {
     const [, setCountryName] = useState<string>('')
     const [stateName, setStateName] = useState<string>('')
+    // const {user} = useUser()
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            firstname: '',
-            lastname: '',
-            date_birth: new Date(),
+            firstName: '',
+            lastName: '',
+            dateOfBirth: new Date(),
             gender: undefined,
             location: ['', ''],
-            phone: ''
+            phoneNumber: ''
         },
     })
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
+     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
+            const token = await getAccessToken()
+
+            const { location, ...restOfValues } = values;
+            await updateProfileRequest(token, {
+                ...restOfValues,
+                country: location[0],
+                city: location[1],
+            })
             console.log(values);
             toast(
                 <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
@@ -101,7 +115,7 @@ export default function InfoForm() {
 
                         <FormField
                             control={form.control}
-                            name="firstname"
+                            name="firstName"
                             render={({field}) => (
                                 <FormItem>
                                     <FormLabel>First Name</FormLabel>
@@ -124,7 +138,7 @@ export default function InfoForm() {
 
                         <FormField
                             control={form.control}
-                            name="lastname"
+                            name="lastName"
                             render={({field}) => (
                                 <FormItem>
                                     <FormLabel>Last Name</FormLabel>
@@ -150,7 +164,7 @@ export default function InfoForm() {
 
                         <FormField
                             control={form.control}
-                            name="date_birth"
+                            name="dateOfBirth"
                             render={({field}) => (
                                 <FormItem className="flex flex-col">
                                     <FormLabel>Date of birth</FormLabel>
@@ -202,9 +216,9 @@ export default function InfoForm() {
                                             className="flex flex-col space-y-1 "
                                         >
                                             {[
-                                                ["Male", "male"],
-                                                ["Female", "female"],
-                                                ["Other", "other"]
+                                                ["Male", "MALE"],
+                                                ["Female", "FEMALE"],
+                                                ["Other", "OTHER"]
                                             ].map((option, index) => (
                                                 <FormItem className="flex items-center space-x-3 space-y-0" key={index}>
                                                     <FormControl>
@@ -254,7 +268,7 @@ export default function InfoForm() {
 
                 <FormField
                     control={form.control}
-                    name="phone"
+                    name="phoneNumber"
                     render={({field}) => (
                         <FormItem className="flex flex-col items-start">
                             <FormLabel>Phone number</FormLabel>
