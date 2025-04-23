@@ -2,6 +2,7 @@ import axios, {AxiosProgressEvent} from "axios";
 import {getAccessToken} from "@auth0/nextjs-auth0";
 import {apiRequest} from "@/lib/apiRequest";
 import {PostUpload} from "@/app/(home)/uploads/types/postUpload";
+import {CreateAsset} from "@/types/Asset";
 
 type UploadSignature = {
     signature: string;
@@ -9,17 +10,6 @@ type UploadSignature = {
     api_key: string;
     folder: string;
 };
-
-type AssetStore = {
-    publicId: string;
-    resourceType: string;
-    format: string;
-    secureUrl: string;
-    bytes: number;
-    width: number;
-    height: number;
-    originalFilename: string;
-}
 
 const uploadVideo = async ({
                                postData,
@@ -54,7 +44,7 @@ const uploadVideo = async ({
         throw new Error("Failed to upload video");
     }
 
-    const asset: AssetStore = {
+    const asset: CreateAsset = {
         publicId: response.data.public_id,
         resourceType: response.data.resource_type,
         format: response.data.format,
@@ -88,7 +78,7 @@ const getSignature = async (): Promise<UploadSignature> => {
 };
 
 
-const createPost = async (postData: PostUpload, videoAsset: AssetStore) => {
+const createPost = async (postData: PostUpload, videoAsset: CreateAsset) => {
     const accessToken = await getAccessToken();
 
     return apiRequest({

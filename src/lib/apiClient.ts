@@ -9,16 +9,20 @@ const apiClient = axios.create({
 
 apiClient.interceptors.response.use(
     (response) => {
+        if (response.status === 204) {
+            return response;
+        }
+
         const res = response.data;
 
-        if (!res.success) {
+        if (!res?.success && ![200, 201].includes(response.status)) {
             return Promise.reject({
-                message: res.message,
-                error: res.error,
-                status: res.error?.status,
-                path: res.error?.path,
-                fieldErrors: res.error?.fieldErrors,
-                globalErrors: res.error?.globalErrors,
+                message: res?.message ?? 'Unexpected error',
+                error: res?.error,
+                status: res?.error?.status,
+                path: res?.error?.path,
+                fieldErrors: res?.error?.fieldErrors,
+                globalErrors: res?.error?.globalErrors,
             });
         }
 

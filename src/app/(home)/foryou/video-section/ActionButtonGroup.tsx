@@ -1,30 +1,48 @@
 import {Button} from "@/components/ui/button";
 import {BookMarked, Heart, MessageSquareMore, MoreVertical} from "lucide-react";
-import React from "react";
+import React, {useEffect} from "react";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
-import {toast} from "sonner";
+import {Statistic} from "@/types/Feed";
+import {UUID} from "node:crypto";
+import {BookmarkAction, checkLikeStatus, LikeAction, RemoveLikeAction} from "@/app/(home)/foryou/actions/actions";
 
 interface ActionButtonGroupProps {
     setIsCommentOpened?: React.Dispatch<React.SetStateAction<boolean>>
+    postId: UUID
+    statistic?: Statistic
 }
 
-const ActionButtonGroup = ({setIsCommentOpened}: ActionButtonGroupProps) => {
-    const {likeAmount, commentAmount} = {
-        likeAmount: 140,
-        commentAmount: 99
-    };
+const ActionButtonGroup = ({setIsCommentOpened, postId, statistic}: ActionButtonGroupProps) => {
+    const [isLiked, setIsLiked] = React.useState(false);
+
+    useEffect(() => {
+        if (postId) {
+            checkLikeStatus(postId)
+                .then(res => setIsLiked(res));
+        }
+    }, [postId]);
+
+    const toggleLike = () => {
+        if (isLiked) {
+            RemoveLikeAction(postId).then().catch((e) => console.error(e));
+        } else {
+            LikeAction(postId).then().catch((e) => console.error(e))
+        }
+
+        setIsLiked(!isLiked);
+    }
 
     const items = [
         {
             icon: <Heart/>,
             label: 'Like',
-            amount: likeAmount,
-            action: LikeAction
+            amount: statistic?.totalLikes ?? 0,
+            action: toggleLike
         },
         {
             icon: <MessageSquareMore/>,
             label: 'Comment',
-            amount: commentAmount,
+            amount: statistic?.totalComments ?? 0,
             action: () => CommentAction(setIsCommentOpened)
         },
         {
@@ -48,9 +66,8 @@ const ActionButtonGroup = ({setIsCommentOpened}: ActionButtonGroupProps) => {
                                 <Button className={'size-12 rounded-full'} onClick={item?.action}>
                                     {item.icon}
                                 </Button>
-                                {
-                                    item.amount && <p className={'absolute left-1/2 transform -translate-x-1/2 bottom-[-24px] text-center'}>{item.amount}</p>
-                                }
+
+                                <p className={'absolute left-1/2 transform -translate-x-1/2 bottom-[-24px] text-center'}>{item.amount}</p>
                             </span>
                         </TooltipTrigger>
                         <TooltipContent>
@@ -67,17 +84,6 @@ const CommentAction = (setIsCommentOpened: React.Dispatch<React.SetStateAction<b
     if (setIsCommentOpened) {
         setIsCommentOpened(prevState => !prevState);
     }
-}
-
-const LikeAction = () => {
-
-}
-
-const BookmarkAction = () => {
-    toast.success('Bookmark added to your book mark!', {
-        description: 'You have successfully bookmarked this post.',
-        duration: 3000,
-    });
 }
 
 export default ActionButtonGroup
