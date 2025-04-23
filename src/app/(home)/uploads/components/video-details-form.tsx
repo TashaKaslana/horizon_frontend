@@ -62,19 +62,19 @@ export function VideoDetailsForm({form}: VideoDetailsFormProps) {
                                         <SelectValue placeholder="Select visibility"/>
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="private">
+                                        <SelectItem value="PRIVATE">
                                             <div className="flex items-center gap-2">
                                                 <div className="h-2 w-2 rounded-full bg-red-500"></div>
                                                 Private
                                             </div>
                                         </SelectItem>
-                                        <SelectItem value="unlisted">
+                                        <SelectItem value="FRIEND">
                                             <div className="flex items-center gap-2">
                                                 <div className="h-2 w-2 rounded-full bg-yellow-500"></div>
                                                 Unlisted
                                             </div>
                                         </SelectItem>
-                                        <SelectItem value="public">
+                                        <SelectItem value="PUBLIC">
                                             <div className="flex items-center gap-2">
                                                 <div className="h-2 w-2 rounded-full bg-green-500"></div>
                                                 Public
