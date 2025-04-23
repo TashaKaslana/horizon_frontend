@@ -23,10 +23,10 @@ type AssetStore = {
 
 const uploadVideo = async ({
                                postData,
-                               onProgress
+                               setUploadProgress
                            }: {
     postData: PostUpload;
-    onProgress?: (progressEvent: AxiosProgressEvent) => void;
+    setUploadProgress: (progress: number) => void;
 }) => {
     const formData = new FormData();
     const signatureRes = await getSignature();
@@ -37,11 +37,16 @@ const uploadVideo = async ({
     formData.append("signature", signatureRes.signature);
     formData.append("folder", signatureRes.folder);
 
+    const cloudinaryProgress = (progressEvent : AxiosProgressEvent) => {
+        const percentCompleted = Math.round((progressEvent.loaded * 80) / (progressEvent.total ?? 100));
+        setUploadProgress(percentCompleted);
+    };
+
     const response = await axios.post(
         `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/video/upload`,
         formData,
         {
-            onUploadProgress: onProgress,
+            onUploadProgress: cloudinaryProgress,
         }
     );
 
@@ -60,6 +65,7 @@ const uploadVideo = async ({
         originalFilename: response.data.original_filename,
     };
 
+    setUploadProgress(90)
     await createPost(postData, asset);
 
     return response.data;

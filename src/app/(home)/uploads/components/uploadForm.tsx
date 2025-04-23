@@ -12,9 +12,9 @@ import { Button } from "@/components/ui/button";
 import { VideoPreview } from "@/app/(home)/uploads/components/video-preview";
 import { VideoDetailsForm } from "@/app/(home)/uploads/components/video-details-form";
 import { UploadProgress } from "@/app/(home)/uploads/components/upload-progress";
-import {AxiosProgressEvent} from "axios";
 import {toast} from "sonner";
 import {PostUpload} from "@/app/(home)/uploads/types/postUpload";
+import {cn} from "@/lib/utils";
 
 export const UploadForm = ({
                                file,
@@ -58,10 +58,7 @@ export const UploadForm = ({
         mutationFn: (postData: PostUpload) =>
             uploadVideo({
                 postData,
-                onProgress: (e: AxiosProgressEvent) => {
-                    const percent = Math.round((e.loaded * 100) / (e.total ?? 1));
-                    setUploadProgress(percent);
-                },
+                setUploadProgress
             }),
         onSuccess: (data) => {
             console.log("Upload successful", data);
@@ -110,7 +107,9 @@ export const UploadForm = ({
                     <Button
                         type="button"
                         onClick={resetUpload}
-                        className="border bg-background text-muted-foreground hover:bg-accent h-10 px-6"
+                        className={cn("border bg-background text-muted-foreground hover:bg-accent h-10 px-6",
+                                uploadComplete && "text-black dark:text-white"
+                            )}
                     >
                         {uploadComplete ? "Go Back" : "Cancel"}
                     </Button>
