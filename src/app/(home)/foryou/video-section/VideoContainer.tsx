@@ -1,43 +1,30 @@
 import ActionButtonGroup from "@/app/(home)/foryou/video-section/ActionButtonGroup";
-import React, {Suspense, useEffect} from "react";
+import React, {Suspense} from "react";
 import {useConfigStore} from "@/store/useConfigStore";
 import {Feed} from "@/types/Feed";
-import {useQuery} from "@tanstack/react-query";
-import {getPosts} from "@/app/(home)/foryou/actions/actions";
-
 
 interface VideoContainerProps {
-    setIsCommentOpened?: React.Dispatch<React.SetStateAction<boolean>>
+    setIsCommentOpened?: React.Dispatch<React.SetStateAction<boolean>>,
+    feed: Feed
 }
 
 
-const VideoContainer = ({setIsCommentOpened}: VideoContainerProps) => {
-    const [feeds, setFeeds] = React.useState<Feed[]>({} as Feed[]);
-    
-    const { data: res } = useQuery({
-        queryKey: ['posts'],
-        queryFn: () => getPosts(),
-    })
-    
-    useEffect(() => {
-        setFeeds(res?.data ?? {} as Feed[]);
-    }, [res?.data]);
-
+const VideoContainer = ({setIsCommentOpened, feed}: VideoContainerProps) => {
     return (
         <div className={'flex gap-4 items-center relative'}>
             <Suspense fallback={<div>Loading...</div>}>
-                <VideoSection videoUrl={feeds[0]?.post.videoPlaybackUrl}
-                              thumbnailUrl={feeds[0]?.post.videoThumbnailUrl}/>
+                <VideoSection videoUrl={feed.post.videoPlaybackUrl}
+                              thumbnailUrl={feed.post.videoThumbnailUrl}/>
                 <ActionButtonGroup setIsCommentOpened={setIsCommentOpened}
-                                   postId={feeds[0]?.post.id}
-                                   statistic={feeds[0]?.statistic}/>
+                                   postId={feed.post.id}
+                                   statistic={feed.statistic}/>
             </Suspense>
         </div>
     )
 }
 
 
-const VideoSection = ({videoUrl, thumbnailUrl} : {videoUrl: string | null, thumbnailUrl: string|null}) => {
+const VideoSection = ({videoUrl, thumbnailUrl}: { videoUrl: string | null, thumbnailUrl: string | null }) => {
     const {videoSettings} = useConfigStore()
 
     const getValueByKey = (key: string) => {

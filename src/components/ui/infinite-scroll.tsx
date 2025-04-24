@@ -18,6 +18,7 @@ export default function InfiniteScroll({
                                            threshold = 1,
                                            root = null,
                                            rootMargin = '0px',
+                                           // eslint-disable-next-line @typescript-eslint/no-unused-vars
                                            reverse,
                                            children,
                                        }: InfiniteScrollProps) {
@@ -59,18 +60,21 @@ export default function InfiniteScroll({
 
     return (
         <>
-            {flattenChildren.map((child, index) => {
+            {flattenChildren.map((child) => {
                 if (!React.isValidElement(child)) {
+                    // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                     process.env.NODE_ENV === 'development' &&
                     console.warn('You should use a valid element with InfiniteScroll');
                     return child;
                 }
 
-                const isObserveTarget = reverse ? index === 0 : index === flattenChildren.length - 1;
-                const ref = isObserveTarget ? observerRef : null;
-                // @ts-ignore ignore ref type
-                return React.cloneElement(child, { ref });
+                return child;
             })}
+            {/* Sentinel div for observing */}
+            <div
+                ref={observerRef}
+                className={'h-[1px] opacity-0'}
+            />
         </>
     );
 }

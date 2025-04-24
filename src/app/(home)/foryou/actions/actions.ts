@@ -61,20 +61,20 @@ export const checkLikeStatus = async (postId: UUID) => {
     return res.data;
 }
 
-export const getPosts = async () => {
-    const token = await getAccessToken()
+export const getPosts = async ({ page = 0, size = 10 }) => {
+    const token = await getAccessToken();
 
     return await apiRequest<Feed[]>({
         url: '/feeds',
         method: 'GET',
-        // params: {
-        //     page: 1,
-        //     size: 10,
-        //     sortBy: 'createdAt',
-        //     sortOrder: 'desc'
-        // },
+        params: {
+            page,
+            size,
+            sortBy: 'createdAt',
+            sortOrder: 'desc',
+        },
         headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
-}
+            Authorization: `Bearer ${token}`,
+        },
+    });
+};
