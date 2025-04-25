@@ -2,6 +2,7 @@
 
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import { useUser } from "@auth0/nextjs-auth0";
+import {UserSummary} from "@/types/user";
 
 export const UserInformation = ({className}: { className?: string }) => {
     const {user} = useUser()
@@ -21,4 +22,20 @@ export const UserInformation = ({className}: { className?: string }) => {
             </main>
         </article>
     )
+}
+
+export const UserOverview = ({user, className} : {user: UserSummary, className?: string}) => {
+    return <article
+        className={'flex gap-2 items-center hover:bg-gray-300 p-1 rounded cursor-pointer select-none transition duration-300 ' + className}>
+        <Avatar>
+            <AvatarImage src={user.profileImage}/>
+            <AvatarFallback>
+                {user.lastName.at(0)?.toUpperCase()}
+            </AvatarFallback>
+        </Avatar>
+        <main className={'text-start'}>
+            <h1 className={'font-bold text-md'}>{user?.lastName}</h1>
+            <p className={'font-extralight text-xs italic text-zinc-600'}>@{user?.username}</p>
+        </main>
+    </article>
 }

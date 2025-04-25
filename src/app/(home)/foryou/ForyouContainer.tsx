@@ -1,6 +1,6 @@
 'use client';
 
-import React, {Suspense, useMemo, useState, useRef} from "react";
+import React, {Suspense, useMemo, useState, useRef, useEffect} from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getPosts } from "@/app/(home)/foryou/actions/actions";
@@ -11,6 +11,8 @@ import CommentContainer from "@/app/(home)/foryou/comment-section/CommentContain
 import { cn } from "@/lib/utils";
 import { PaginationInfo } from "@/types/api";
 import {Loader2} from "lucide-react";
+import { useIsVisible } from "@/hooks/use-is-visible";
+import {useConfigStore} from "@/store/useConfigStore";
 
 const ForyouContainer = () => {
     const {
@@ -31,15 +33,6 @@ const ForyouContainer = () => {
     });
 
     const scrollContainerRef = useRef<HTMLDivElement>(null);
-    // const [isReady, setIsReady] = useState(false);
-    //
-    // useEffect(() => {
-    //     // Wait until scrollContainerRef is assigned
-    //     if (scrollContainerRef.current) {
-    //         setIsReady(true);
-    //     }
-    // }, [scrollContainerRef]);
-
 
     const feeds = useMemo(() => {
         return data?.pages.flatMap((page) => page.data) ?? [];
@@ -70,6 +63,31 @@ const ForyouContainer = () => {
 
 const PostDisplay = ({ feed }: { feed: Feed }) => {
     const [isCommentOpened, setIsCommentOpened] = useState(false);
+    const videoRef = useRef<HTMLVideoElement>(null);
+    const { ref: containerRef, isVisible } = useIsVisible<HTMLDivElement>();
+    const {videoSettings} = useConfigStore()
+
+    useEffect(() => {
+        const video = videoRef.current
+        if (!video) return
+
+        if (isVisible) {
+            const enableAutoPlay = videoSettings.find(v => v.key === 'auto_play')?.value
+
+            if (video.paused && enableAutoPlay) {
+                video.muted = true;
+                video.play().catch((err) => {
+                    console.warn('Play error:', err.message);
+                });
+            }
+            video.muted = false;
+        } else {
+            if (!video.paused) {
+                video.pause();
+                video.muted = true;
+            }
+        }
+    }, [isVisible, videoSettings]);
 
     return (
         <div className="snap-start relative h-screen w-full flex items-center justify-center">
@@ -78,8 +96,9 @@ const PostDisplay = ({ feed }: { feed: Feed }) => {
                     !isCommentOpened && "absolute inset-0",
                     "w-full h-full flex items-center justify-center gap-20"
                 )}
+                ref={containerRef}
             >
-                <VideoContainer setIsCommentOpened={setIsCommentOpened} feed={feed} />
+                <VideoContainer setIsCommentOpened={setIsCommentOpened} feed={feed} ref={videoRef}/>
                 <div
                     className={cn(
                         "transition-all duration-700 ease-in-out overflow-hidden",

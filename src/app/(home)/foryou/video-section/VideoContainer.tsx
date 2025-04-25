@@ -1,20 +1,26 @@
 import ActionButtonGroup from "@/app/(home)/foryou/video-section/ActionButtonGroup";
-import React, {Suspense} from "react";
+import React, {Ref, Suspense} from "react";
 import {useConfigStore} from "@/store/useConfigStore";
 import {Feed} from "@/types/Feed";
+import {Card, CardContent, CardFooter} from "@/components/ui/card";
+import {Post} from "@/types/Post";
+import {Badge} from "@/components/ui/badge";
+import {formatDateTS} from "@/lib/utils";
+import {UserOverview} from "@/components/common/UserInformation";
+import {Clock} from "lucide-react";
 
 interface VideoContainerProps {
     setIsCommentOpened?: React.Dispatch<React.SetStateAction<boolean>>,
-    feed: Feed
+    feed: Feed,
+    ref?: Ref<HTMLVideoElement>,
 }
 
 
-const VideoContainer = ({setIsCommentOpened, feed}: VideoContainerProps) => {
+const VideoContainer = ({setIsCommentOpened, feed, ref}: VideoContainerProps) => {
     return (
         <div className={'flex gap-4 items-center relative'}>
             <Suspense fallback={<div>Loading...</div>}>
-                <VideoSection videoUrl={feed.post.videoPlaybackUrl}
-                              thumbnailUrl={feed.post.videoThumbnailUrl}/>
+                <VideoSection post={feed.post} ref={ref}/>
                 <ActionButtonGroup setIsCommentOpened={setIsCommentOpened}
                                    postId={feed.post.id}
                                    statistic={feed.statistic}/>
@@ -24,7 +30,7 @@ const VideoContainer = ({setIsCommentOpened, feed}: VideoContainerProps) => {
 }
 
 
-const VideoSection = ({videoUrl, thumbnailUrl}: { videoUrl: string | null, thumbnailUrl: string | null }) => {
+const VideoSection = ({post, ref}: { post: Post, ref?: Ref<HTMLVideoElement>}) => {
     const {videoSettings} = useConfigStore()
 
     const getValueByKey = (key: string) => {
@@ -37,16 +43,36 @@ const VideoSection = ({videoUrl, thumbnailUrl}: { videoUrl: string | null, thumb
     };
 
     return (
-        <div className={'h-[22rem] rounded-xl transition aspect-video'}>
-            <video
-                autoPlay={getValueByKey('auto_play') === true}
-                loop={getValueByKey('loop_video') === true}
-                controls={getValueByKey('control_video') === true}
-                className={'object-cover w-full h-full rounded-xl'}
-                src={videoUrl ?? 'https://www.w3schools.com/tags/mov_bbb.mp4'}
-                poster={thumbnailUrl ?? undefined}
-            />
-        </div>
+        <Card className={'pt-0 pb-2 gap-2'}>
+            <CardContent className={'h-[22rem] rounded-xl transition aspect-video p-0'}>
+                <video
+                    ref={ref}
+                    loop={getValueByKey('loop_video') === true}
+                    controls={getValueByKey('control_video') === true}
+                    playsInline
+                    muted
+                    className={'object-cover w-full h-full rounded-xl'}
+                    src={post.videoPlaybackUrl ?? 'https://www.w3schools.com/tags/mov_bbb.mp4'}
+                    poster={post.videoThumbnailUrl ?? undefined}
+                />
+            </CardContent>
+            <CardFooter className={'h-max-56 flex-col items-start px-4'}>
+                <div className={'w-full flex justify-between items-start'}>
+                    <div>
+                        <h4 className={'text-xl bold'}>{post.caption}</h4>
+                        <p className={'text-xs text-zinc-700 dark:text-zinc-300'}>{post.description}</p>
+                    </div>
+                    <UserOverview user={post.user}/>
+                </div>
+                <div>
+                    <Badge><Clock/> {formatDateTS(post.createdAt)}</Badge>
+                    {post.tags?.map(tag => (
+                        <Badge key={tag}>tag</Badge>
+                    ))}
+                </div>
+            </CardFooter>
+        </Card>
+
     )
 }
 
