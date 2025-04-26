@@ -105,7 +105,7 @@ const PostDisplay = ({ feed }: { feed: Feed }) => {
                         isCommentOpened ? "w-[40%] opacity-100" : "w-0 opacity-0"
                     )}
                 >
-                    <CommentContainer />
+                    <CommentContainer postId={feed.post.id} isCommentOpened={isCommentOpened} />
                 </div>
             </div>
         </div>

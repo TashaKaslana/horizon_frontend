@@ -1,80 +1,90 @@
-import {useState} from "react";
-import {AlignLeft} from "lucide-react";
+import React, {useEffect, useMemo, useRef} from "react";
+import {AlignLeft, MessageSquareMore} from "lucide-react";
 import {Separator} from "@/components/ui/separator";
-import {ScrollArea} from "@/components/ui/scroll-area";
 import {CommentSection} from "@/app/(home)/foryou/comment-section/CommentSection";
+import {useInfiniteQuery} from "@tanstack/react-query";
+import {getCommentsByPostId} from "@/app/(home)/foryou/actions/actions";
+import {PaginationInfo} from "@/types/api";
+import {UUID} from "node:crypto";
+import InfiniteScroll from "@/components/ui/infinite-scroll";
+import {CommentInput} from "@/app/(home)/foryou/comment-section/CommentInput";
+import {Spinner} from "@/components/ui/spinner";
 
-const CommentContainer = () => {
-    const items = [
-        {
-            id: 1,
-            user: {
-                id: 1,
-                username: '@UserDisplay',
-                displayName: 'UserDisplay',
-                avatar: 'https://github.com/shadcn.png',
-            },
-            content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel felis vel dui faucibus tempor. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum at velit vitae ex fermentum faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.',
-            createdAt: '2022-01-01',
+interface CommentProps {
+    postId: UUID,
+    isCommentOpened?: boolean
+}
+
+const CommentContainer = ({postId, isCommentOpened}: CommentProps) => {
+    const scrollRef = useRef<HTMLDivElement>(null);
+
+    const {data, isFetchingNextPage, fetchNextPage, hasNextPage} = useInfiniteQuery({
+        queryKey: ['foryou-comments', postId],
+        queryFn: async ({pageParam = 0}) => {
+            return await getCommentsByPostId(postId, {page: pageParam, size: 10})
         },
-        {
-            id: 1,
-            user: {
-                id: 1,
-                username: '@UserDisplay',
-                displayName: 'UserDisplay',
-                avatar: 'https://github.com/shadcn.png',
-            },
-            content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel felis vel dui faucibus tempor. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum at velit vitae ex fermentum faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.',
-            createdAt: '2022-01-01',
+        getNextPageParam: lastPage => {
+            const pagination: PaginationInfo | undefined = lastPage.metadata?.pagination;
+
+            return pagination?.hasNext ? pagination.currentPage + 1 : undefined;
         },
-        {
-            id: 1,
-            user: {
-                id: 1,
-                username: '@UserDisplay',
-                displayName: 'UserDisplay',
-                avatar: 'https://github.com/shadcn.png',
-            },
-            content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel felis vel dui faucibus tempor. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum at velit vitae ex fermentum faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.',
-            createdAt: '2022-01-01',
-        },
-        {
-            id: 1,
-            user: {
-                id: 1,
-                username: 'UserDisplay',
-                displayName: 'UserDisplay',
-                avatar: 'https://github.com/shadcn.png',
-            },
-            content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed vel felis vel dui faucibus tempor. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum at velit vitae ex fermentum faucibus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.',
-            createdAt: '2022-01-01',
+        initialPageParam: 0
+    })
+
+    const comments = useMemo(() => {
+        return data?.pages.flatMap((page) => page.data) ?? [];
+    }, [data]);
+
+    //prevent scroll event of parent when open comment container
+    //bugs
+    const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
+        if (!isCommentOpened) return;
+
+        const el = scrollRef.current;
+        if (!el) return;
+
+        const isAtTop = el.scrollTop === 0;
+        const isAtBottom = el.scrollHeight - el.scrollTop === el.clientHeight;
+
+        if ((!isAtTop && e.deltaY < 0) || (!isAtBottom && e.deltaY > 0)) {
+            e.stopPropagation();
         }
-    ]
-
+    };
 
     return (
-        <article
-            className={'border rounded-xl transition-all duration-500 p-3 space-y-2 w-[28rem] h-[36rem] bg-gray-50'}>
-            <CommentHeader amount={items.length}/>
+        <>
+            <article
+                className={'border rounded-xl transition-all duration-500 py-3 pl-3 gap-2 w-[28rem] h-[38rem] bg-gray-50 flex flex-col'}>
+                <CommentHeader amount={comments.length}/>
 
-            <Separator/>
-
-            <ScrollArea className={'h-[calc(100%-28px)] p-2 w-[calc(100%+8px)]'}>
-                <div className={'space-y-2'}>
-                    {items.map(((item, index) => (
-                            <CommentSection
-                                key={index}
-                                commentId={item.id}
-                                user={item.user}
-                                content={item.content}
-                                createdAt={item.createdAt}
-                            />
-                        ))
-                    )}
+                <Separator/>
+                <div
+                    ref={scrollRef}
+                    onWheel={handleWheel}
+                    className={'flex-1 min-h-0 overflow-y-auto space-y-2'}>
+                    {(comments.length == 0) ? (
+                            <div className={'flex justify-center items-center h-full'}>
+                                <div className={'flex flex-col items-center gap-2'}>
+                                    <MessageSquareMore className={'size-1/3'}/>
+                                    <p>Become first person comment in this post</p>
+                                </div>
+                            </div>
+                        ) :
+                        <InfiniteScroll isLoading={isFetchingNextPage} hasMore={hasNextPage} next={fetchNextPage}>
+                            {comments.map(((comment, index) => (
+                                    <CommentSection
+                                        key={index}
+                                        comment={comment}
+                                    />
+                                ))
+                            )}
+                            <Spinner show={isFetchingNextPage}/>
+                        </InfiniteScroll>
+                    }
                 </div>
-            </ScrollArea>
-        </article>
+                <CommentInput postId={postId}/>
+            </article>
+        </>
     )
 }
 
@@ -83,12 +93,10 @@ interface CommentHeaderProps {
 }
 
 const CommentHeader = ({amount}: CommentHeaderProps) => {
-    const [commentCount,] = useState(amount ?? 0)
-
     return (
-        <header className={'flex justify-between bg-gray-100 rounded px-1'}>
+        <header className={'flex justify-between bg-gray-100 rounded px-1 mr-3'}>
             <h1 className={'font-bold'}>
-                Comments <span className={'font-light text-zinc-800'}> - {commentCount}</span>
+                Comments <span className={'font-light text-zinc-800'}> - {amount}</span>
             </h1>
             <AlignLeft/>
         </header>
