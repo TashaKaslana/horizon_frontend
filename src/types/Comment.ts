@@ -8,6 +8,7 @@ export interface CommentResponse {
     parentCommentId?: UUID | null
     user: UserSummary
     isAuthorDeleted?: boolean
+    isPinned: boolean
     createdAt: Date
     updatedAt: Date
 }
@@ -17,3 +18,5 @@ export type CommentCreated = Pick<CommentResponse, 'id'>
 
 export type UpdateComment = Partial<Pick<CommentResponse, 'id' | 'content'>>
 export type CommentUpdated = Pick<CommentResponse, 'id'>
+
+export type CommentWithInteraction = CommentResponse & { isLiked: boolean}

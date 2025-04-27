@@ -3,7 +3,6 @@ import {getAccessToken} from "@auth0/nextjs-auth0";
 import {apiRequest} from "@/lib/apiRequest";
 import {toast} from "sonner";
 import {Feed} from "@/types/Feed";
-import {CommentCreated, CommentResponse, CommentUpdated, CreateComment, UpdateComment} from "@/types/Comment";
 
 export const LikeAction = async (postId: UUID) => {
     try {
@@ -80,47 +79,3 @@ export const getPosts = async ({ page = 0, size = 10 }) => {
     });
 };
 
-export const getCommentsByPostId = async (postId: UUID, {page = 1, size = 10}) => {
-    const token = await getAccessToken()
-
-    return await apiRequest<CommentResponse>({
-        url: `/comments/posts/${postId}`,
-        method: "GET",
-        params: {
-            page,
-            size,
-            sortBy: 'createdAt',
-            sortOrder: 'desc',
-        },
-        headers: {
-            Authorization: `Bearer ${token}`,
-        }
-    })
-}
-
-
-export const createComment = async (comment: CreateComment) => {
-    const token = await getAccessToken()
-
-    return await apiRequest<CommentCreated>({
-        url: '/comments',
-        method: 'POST',
-        data: comment,
-        headers: {
-            Authorization: `Bearer ${token}`,
-        }
-    })
-}
-
-export const updateComment = async (updateComment: UpdateComment) => {
-    const token = await getAccessToken()
-
-    return await apiRequest<CommentUpdated>({
-        url: `/comments/${updateComment.id}`,
-        method: 'PUT',
-        data: updateComment,
-        headers: {
-            Authorization: `Bearer ${token}`,
-        }
-    })
-}

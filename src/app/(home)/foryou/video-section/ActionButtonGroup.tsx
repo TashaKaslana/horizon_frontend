@@ -4,7 +4,7 @@ import React, {useEffect} from "react";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
 import {Statistic} from "@/types/Feed";
 import {UUID} from "node:crypto";
-import {BookmarkAction, checkLikeStatus, LikeAction, RemoveLikeAction} from "@/app/(home)/foryou/actions/actions";
+import {BookmarkAction, checkLikeStatus, LikeAction, RemoveLikeAction} from "@/app/(home)/foryou/api/postApi";
 
 interface ActionButtonGroupProps {
     setIsCommentOpened?: React.Dispatch<React.SetStateAction<boolean>>

@@ -1,6 +1,6 @@
 import ForyouContainer from "./ForyouContainer";
 import {dehydrate, HydrationBoundary, QueryClient} from "@tanstack/react-query";
-import {getPosts} from "@/app/(home)/foryou/actions/actions";
+import {getPosts} from "@/app/(home)/foryou/api/postApi";
 import {RestApiResponse} from "@/types/api";
 import {Feed} from "@/types/Feed";
 

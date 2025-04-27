@@ -1,22 +1,25 @@
-import React, {useEffect, useMemo, useRef} from "react";
+import React, {useEffect, useRef} from "react";
 import {AlignLeft, MessageSquareMore} from "lucide-react";
 import {Separator} from "@/components/ui/separator";
 import {CommentSection} from "@/app/(home)/foryou/comment-section/CommentSection";
 import {useInfiniteQuery} from "@tanstack/react-query";
-import {getCommentsByPostId} from "@/app/(home)/foryou/actions/actions";
+import {getCommentsByPostId} from "@/app/(home)/foryou/api/commentApi";
 import {PaginationInfo} from "@/types/api";
 import {UUID} from "node:crypto";
 import InfiniteScroll from "@/components/ui/infinite-scroll";
 import {CommentInput} from "@/app/(home)/foryou/comment-section/CommentInput";
 import {Spinner} from "@/components/ui/spinner";
+import {useCommentStore} from "@/app/(home)/foryou/store/useCommentStore";
 
 interface CommentProps {
     postId: UUID,
-    isCommentOpened?: boolean
+    isCommentOpened?: boolean,
+    isVisible: boolean
 }
 
-const CommentContainer = ({postId, isCommentOpened}: CommentProps) => {
+const CommentContainer = ({postId, isCommentOpened, isVisible}: CommentProps) => {
     const scrollRef = useRef<HTMLDivElement>(null);
+    const {comments, setComments} = useCommentStore();
 
     const {data, isFetchingNextPage, fetchNextPage, hasNextPage} = useInfiniteQuery({
         queryKey: ['foryou-comments', postId],
@@ -31,9 +34,12 @@ const CommentContainer = ({postId, isCommentOpened}: CommentProps) => {
         initialPageParam: 0
     })
 
-    const comments = useMemo(() => {
-        return data?.pages.flatMap((page) => page.data) ?? [];
-    }, [data]);
+    useEffect(() => {
+        if (data) {
+            const allComments = data.pages.flatMap(page => page.data);
+            setComments(allComments);
+        }
+    }, [data, setComments]);
 
     //prevent scroll event of parent when open comment container
     //bugs
@@ -78,11 +84,11 @@ const CommentContainer = ({postId, isCommentOpened}: CommentProps) => {
                                     />
                                 ))
                             )}
-                            <Spinner show={isFetchingNextPage}/>
+                            <Spinner show={isFetchingNextPage} className={'text-green-500'}/>
                         </InfiniteScroll>
                     }
                 </div>
-                <CommentInput postId={postId}/>
+                <CommentInput postId={postId} isVisible={isVisible}/>
             </article>
         </>
     )

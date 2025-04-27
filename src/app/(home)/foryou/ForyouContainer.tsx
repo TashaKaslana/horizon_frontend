@@ -3,7 +3,7 @@
 import React, {Suspense, useMemo, useState, useRef, useEffect} from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { getPosts } from "@/app/(home)/foryou/actions/actions";
+import { getPosts } from "@/app/(home)/foryou/api/postApi";
 import { Feed } from "@/types/Feed";
 import InfiniteScroll from "@/components/ui/infinite-scroll";
 import VideoContainer from "@/app/(home)/foryou/video-section/VideoContainer";
@@ -15,6 +15,8 @@ import { useIsVisible } from "@/hooks/use-is-visible";
 import {useConfigStore} from "@/store/useConfigStore";
 
 const ForyouContainer = () => {
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+
     const {
         data,
         isFetchingNextPage,
@@ -31,8 +33,6 @@ const ForyouContainer = () => {
         },
         initialPageParam: 0,
     });
-
-    const scrollContainerRef = useRef<HTMLDivElement>(null);
 
     const feeds = useMemo(() => {
         return data?.pages.flatMap((page) => page.data) ?? [];
@@ -105,7 +105,7 @@ const PostDisplay = ({ feed }: { feed: Feed }) => {
                         isCommentOpened ? "w-[40%] opacity-100" : "w-0 opacity-0"
                     )}
                 >
-                    <CommentContainer postId={feed.post.id} isCommentOpened={isCommentOpened} />
+                    <CommentContainer postId={feed.post.id} isCommentOpened={isCommentOpened} isVisible={isVisible}/>
                 </div>
             </div>
         </div>
