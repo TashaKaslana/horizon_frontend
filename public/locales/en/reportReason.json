@@ -1,0 +1,21 @@
+{
+  "comment": {
+    "violent": "Violent or Threatening",
+    "hate_speech": "Hate Speech or Symbols",
+    "harassment": "Harassment or Bullying",
+    "abusive_language": "Abusive Language",
+    "misinformation": "Misinformation",
+    "spam": "Spam or Advertising",
+    "personal_attacks": "Personal Attacks"
+  },
+  "post": {
+    "sexual_content": "Sexual Content or Nudity",
+    "graphic_content": "Violent or Graphic Content",
+    "hate_speech": "Hate Speech or Symbols",
+    "harassment": "Harassment or Bullying",
+    "false_information": "False Information",
+    "spam_or_misleading": "Spam or Misleading",
+    "copyright": "Copyright Infringement"
+  }
+}
+

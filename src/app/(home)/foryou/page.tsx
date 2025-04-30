@@ -1,6 +1,6 @@
 import ForyouContainer from "./ForyouContainer";
 import {dehydrate, HydrationBoundary, QueryClient} from "@tanstack/react-query";
-import {getPosts} from "@/app/(home)/foryou/api/postApi";
+import {getFeeds} from "@/app/(home)/foryou/api/postApi";
 import {RestApiResponse} from "@/types/api";
 import {Feed} from "@/types/Feed";
 
@@ -9,7 +9,7 @@ const Page = async () => {
 
     await queryClient.prefetchInfiniteQuery({
         queryKey: ['foryou-posts'],
-        queryFn: ({ pageParam = 0 }) => getPosts({ page: pageParam, size: 2 }),
+        queryFn: ({ pageParam = 0 }) => getFeeds({ page: pageParam, size: 2 }),
         getNextPageParam: (lastPage: Omit<RestApiResponse<Feed[]>, 'error' | 'success'>) => {
             const pagination = lastPage.metadata?.pagination;
             return pagination?.hasNext ? pagination.currentPage + 1 : undefined;

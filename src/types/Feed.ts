@@ -8,4 +8,7 @@ export type Feed = {
 export type Statistic = {
     totalLikes: number,
     totalComments: number,
+    totalBookmarks: number,
+    isLiked: boolean,
+    isBookmarked: boolean,
 }

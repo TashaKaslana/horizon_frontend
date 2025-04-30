@@ -1,42 +1,26 @@
 'use client';
 
-import React, {Suspense, useMemo, useState, useRef, useEffect} from "react";
+import React, {Suspense, useState, useRef, useEffect} from "react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { getPosts } from "@/app/(home)/foryou/api/postApi";
 import { Feed } from "@/types/Feed";
 import InfiniteScroll from "@/components/ui/infinite-scroll";
 import VideoContainer from "@/app/(home)/foryou/video-section/VideoContainer";
 import CommentContainer from "@/app/(home)/foryou/comment-section/CommentContainer";
 import { cn } from "@/lib/utils";
-import { PaginationInfo } from "@/types/api";
 import {Loader2} from "lucide-react";
 import { useIsVisible } from "@/hooks/use-is-visible";
 import {useConfigStore} from "@/store/useConfigStore";
+import {useFeedActions} from "@/app/(home)/foryou/hooks/useFeedAction";
 
 const ForyouContainer = () => {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
 
     const {
-        data,
+        feeds,
         isFetchingNextPage,
         fetchNextPage,
         hasNextPage,
-    } = useInfiniteQuery({
-        queryKey: ['foryou-posts'],
-        queryFn: async ({ pageParam = 0 }) => {
-            return await getPosts({ page: pageParam, size: 2 });
-        },
-        getNextPageParam: (lastPage) => {
-            const pagination: PaginationInfo | undefined = lastPage.metadata?.pagination;
-            return pagination?.hasNext ? pagination.currentPage + 1 : undefined;
-        },
-        initialPageParam: 0,
-    });
-
-    const feeds = useMemo(() => {
-        return data?.pages.flatMap((page) => page.data) ?? [];
-    }, [data]);
+    } = useFeedActions()
 
     return (
         <Suspense fallback={<Skeleton />}>

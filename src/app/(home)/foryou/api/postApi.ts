@@ -18,8 +18,7 @@ export const LikeAction = async (postId: UUID) => {
                 interactionType: 'LIKE'
             }
         })
-    }
-    catch (error) {
+    } catch (error) {
         console.error(error)
         toast.error('Error liking the post', {
             description: 'Please try again later.',
@@ -40,7 +39,17 @@ export const RemoveLikeAction = async (postId: UUID) => {
     })
 }
 
-export const BookmarkAction = () => {
+export const BookmarkAction = async (postId: UUID) => {
+    const token = await getAccessToken()
+
+    await apiRequest({
+        url: `/posts/${postId}/bookmarks`,
+        method: 'POST',
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+
     toast.success('Bookmark added to your book mark!', {
         description: 'You have successfully bookmarked this post.',
         duration: 3000,
@@ -61,7 +70,7 @@ export const checkLikeStatus = async (postId: UUID) => {
     return res.data;
 }
 
-export const getPosts = async ({ page = 0, size = 10 }) => {
+export const getFeeds = async ({page = 0, size = 10}) => {
     const token = await getAccessToken();
 
     return await apiRequest<Feed[]>({
@@ -79,3 +88,41 @@ export const getPosts = async ({ page = 0, size = 10 }) => {
     });
 };
 
+export const bookmarkPost = async (postId: UUID) => {
+    const token = await getAccessToken()
+
+    return await apiRequest({
+        url: `/posts/${postId}/bookmarks`,
+        method: 'POST',
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
+
+export const removeBookmarkPost = async (postId: UUID) => {
+    const token = await getAccessToken()
+
+    return await apiRequest({
+        url: `/posts/${postId}/bookmarks`,
+        method: 'DELETE',
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
+
+export const reportPost = async (postId: UUID, reason: string) => {
+    const token = await getAccessToken()
+
+    return await apiRequest({
+        url: `/posts/${postId}/reports`,
+        method: 'POST',
+        data: {
+            reason,
+        },
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}

@@ -15,12 +15,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {useCommentAction} from "@/app/(home)/foryou/hooks/useCommentAction";
 
-import reports from '@/../public/locales/en/report.json'
+import reports from '@/../public/locales/en/reportReason.json'
 
 export const CommentActionBar = ({comment}: {
     comment: CommentResponse,
 }) => {
-    const reportReasons = reports['commentReport']
+    const reportReasons = Object.values(reports.comment)
 
     const {
         handleLike,
