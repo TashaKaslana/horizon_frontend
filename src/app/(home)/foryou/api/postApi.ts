@@ -116,7 +116,7 @@ export const reportPost = async (postId: UUID, reason: string) => {
     const token = await getAccessToken()
 
     return await apiRequest({
-        url: `/posts/${postId}/reports`,
+        url: `/posts/${postId}/report`,
         method: 'POST',
         data: {
             reason,

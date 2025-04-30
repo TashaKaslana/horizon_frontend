@@ -2,7 +2,7 @@ import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { useTheme } from "next-themes";
-import { useConfigStore } from "@/store/useConfigStore";
+import { useConfigStore } from "@/stores/useConfigStore";
 
 type PreferenceKey = "dark_mode" | "region" | "language";
 

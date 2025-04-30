@@ -89,7 +89,7 @@ const createPost = async (postData: PostUpload, videoAsset: CreateAsset) => {
             description: postData.description,
             visibility: postData.visibility,
             duration: postData.duration,
-            category: postData.category,
+            categoryName: postData.category,
             allowComments: postData.allowComments,
             ageRestricted: postData.ageRestricted,
             videoAsset: videoAsset,

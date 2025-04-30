@@ -1,6 +1,6 @@
 import ActionButtonGroup from "@/app/(home)/foryou/video-section/ActionButtonGroup";
 import React, {Ref, Suspense} from "react";
-import {useConfigStore} from "@/store/useConfigStore";
+import {useConfigStore} from "@/stores/useConfigStore";
 import {Feed} from "@/types/Feed";
 import {Card, CardContent, CardFooter} from "@/components/ui/card";
 import {Post} from "@/types/Post";

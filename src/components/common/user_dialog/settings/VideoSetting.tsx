@@ -1,6 +1,6 @@
 import {Label} from "@/components/ui/label";
 import {Switch} from "@/components/ui/switch";
-import {useConfigStore} from "@/store/useConfigStore";
+import {useConfigStore} from "@/stores/useConfigStore";
 import { ConfigOption } from "@/types/types";
 
 const VideoSetting = () => {

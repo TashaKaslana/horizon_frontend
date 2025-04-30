@@ -9,7 +9,7 @@ import CommentContainer from "@/app/(home)/foryou/comment-section/CommentContain
 import { cn } from "@/lib/utils";
 import {Loader2} from "lucide-react";
 import { useIsVisible } from "@/hooks/use-is-visible";
-import {useConfigStore} from "@/store/useConfigStore";
+import {useConfigStore} from "@/stores/useConfigStore";
 import {useFeedActions} from "@/app/(home)/foryou/hooks/useFeedAction";
 
 const ForyouContainer = () => {
