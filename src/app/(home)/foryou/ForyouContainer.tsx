@@ -65,13 +65,21 @@ const PostDisplay = ({ feed }: { feed: Feed }) => {
                 });
             }
             video.muted = false;
+
+            const basePath = "/foryou"
+            const newUrl = `${basePath}/${feed.post.id}`
+            const currentUrl = window.location.pathname
+
+            if (currentUrl !== newUrl) {
+                window.history.replaceState(null, "", newUrl)
+            }
         } else {
             if (!video.paused) {
                 video.pause();
                 video.muted = true;
             }
         }
-    }, [isVisible, videoSettings]);
+    }, [feed.post.id, isVisible, videoSettings]);
 
     return (
         <div className="snap-start relative h-screen w-full flex items-center justify-center">
