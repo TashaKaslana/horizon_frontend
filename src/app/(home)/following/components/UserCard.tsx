@@ -5,10 +5,10 @@ import {Button} from "@/components/ui/button";
 import {useState} from "react";
 import {cn} from "@/lib/utils";
 import {AchievementIcon} from "../../../../../public/images/share/AchievementIcon";
-import {RankType, UserCardProps} from "@/app/(home)/following/types/type";
+import {RankType, FollowCardProps} from "@/app/(home)/following/types/type";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
 
-const UserCard = ({user, initialFollowing = true} : {user: UserCardProps, initialFollowing?: boolean}) => {
+const UserCard = ({follow, initialFollowing = true} : {follow: FollowCardProps, initialFollowing?: boolean}) => {
     const [isFollowing, setIsFollowing] = useState(initialFollowing)
 
     const handleToggleFollowing = () => {
@@ -20,12 +20,12 @@ const UserCard = ({user, initialFollowing = true} : {user: UserCardProps, initia
             <header className={'h-12 relative'}>
                 <div className={'bg-sky-500 size-full rounded relative'}>
                     <main className={'absolute bottom-2 right-2'}>
-                        <AchievementStatus variant={user.rank}/>
+                        <AchievementStatus variant={"beginner"}/>
                     </main>
                 </div>
                 <Avatar className={'size-16 absolute bottom-0 translate-y-1/2 left-4'}>
-                    <AvatarImage src={user.avatarUrl}/>
-                    <AvatarFallback>{user.displayName.at(0)?.toUpperCase()}</AvatarFallback>
+                    <AvatarImage src={follow.user.profileImage}/>
+                    <AvatarFallback>{follow.user.lastName?.at(0)?.toUpperCase()}</AvatarFallback>
                 </Avatar>
             </header>
 
@@ -34,9 +34,9 @@ const UserCard = ({user, initialFollowing = true} : {user: UserCardProps, initia
 
                 </section>
                 <section className={'flex-1'}>
-                    <h2 className={'text-zinc-800 font-semibold'}>{user.displayName}</h2>
-                    <p className={'text-sm text-gray-700 italic'}>@{user.username}</p>
-                    <p className={'text-sm pl-1 text-gray-800'}>{user.bio}</p>
+                    <h2 className={'text-zinc-800 font-semibold'}>{follow.user.lastName}</h2>
+                    <p className={'text-sm text-gray-700 italic'}>@{follow.user.username}</p>
+                    <p className={'text-sm pl-1 text-gray-800'}>Bio ####</p>
                 </section>
                 <section className={'p-1'}>
                     <Button className={cn('w-32', !isFollowing && 'bg-zinc-800 hover:bg-zinc-700')}

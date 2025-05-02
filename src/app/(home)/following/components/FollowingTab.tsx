@@ -8,7 +8,7 @@ export const FollowingTab = () => {
     return <ScrollArea className={'overflow-y-auto h-full'}>
         <section className={'grid grid-cols-2 gap-5 px-3'}>
             {following.map((item, index) => (
-                <UserCard user={item} key={index}/>
+                <UserCard follow={item} key={index}/>
             ))}
         </section>
     </ScrollArea>;

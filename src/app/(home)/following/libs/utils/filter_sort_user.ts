@@ -1,6 +1,6 @@
-import {UserCardProps} from "@/app/(home)/following/types/type";
+import {FollowCardProps} from "@/app/(home)/following/types/type";
 
-export const filterUsers = (users: UserCardProps[],
+export const filterUsers = (users: FollowCardProps[],
                             filterString: string) => {
     const trimmedFilter = filterString.trim();
     if (!trimmedFilter) return users;

@@ -1,16 +1,16 @@
 import {create} from "zustand";
-import {UserCardProps} from "@/app/(home)/following/types/type";
+import {FollowCardProps} from "@/app/(home)/following/types/type";
 
 interface UserFollowingState {
-    initialFollowing: UserCardProps[]
-    initialFollowers: UserCardProps[]
-    following: UserCardProps[];
-    followers: UserCardProps[];
+    initialFollowing: FollowCardProps[]
+    initialFollowers: FollowCardProps[]
+    following: FollowCardProps[];
+    followers: FollowCardProps[];
 
-    setInitialFollowing: (initialFollowing: UserCardProps[]) => void;
-    setInitialFollowers: (initialFollowers: UserCardProps[]) => void;
-    setFollowing: (following: UserCardProps[]) => void;
-    setFollowers: (followers: UserCardProps[]) => void;
+    setInitialFollowing: (initialFollowing: FollowCardProps[]) => void;
+    setInitialFollowers: (initialFollowers: FollowCardProps[]) => void;
+    setFollowing: (following: FollowCardProps[]) => void;
+    setFollowers: (followers: FollowCardProps[]) => void;
 }
 
 const useFollowingStore = create<UserFollowingState>()((set) => ({
