@@ -3,7 +3,7 @@ import { Feed } from '@/types/Feed';
 
 interface FeedStore {
     feeds: Feed[];
-    setFeeds: (feeds: Feed[]) => void;
+    setFeeds: (feeds: Feed[] | ((prev: Feed[]) => Feed[])) => void;
     addFeed: (feed: Feed) => void;
     updateFeed: (id: string, updater: (prev: Feed) => Feed) => void;
     removeFeed: (id: string) => void;
@@ -12,14 +12,19 @@ interface FeedStore {
 
 export const useFeedStore = create<FeedStore>((set) => ({
     feeds: [],
-    setFeeds: (newFeeds) => {
+    setFeeds: (feedsOrUpdater) => {
         set((state) => {
+            const nextFeeds =
+                typeof feedsOrUpdater === 'function'
+                    ? feedsOrUpdater(state.feeds)
+                    : feedsOrUpdater;
+
             const isSame =
-                Array.isArray(newFeeds) &&
+                Array.isArray(nextFeeds) &&
                 Array.isArray(state.feeds) &&
-                state.feeds.length === newFeeds.length &&
+                state.feeds.length === nextFeeds.length &&
                 state.feeds.every((feed, index) => {
-                    const newFeed = newFeeds[index];
+                    const newFeed = nextFeeds[index];
                     return feed?.post?.id && newFeed?.post?.id && feed.post.id === newFeed.post.id;
                 });
 
@@ -27,8 +32,8 @@ export const useFeedStore = create<FeedStore>((set) => ({
                 return {};
             }
 
-            console.log("Updating feeds to: ", newFeeds);
-            return { feeds: newFeeds };
+            console.log("Updating feeds to: ", nextFeeds);
+            return { feeds: nextFeeds };
         });
     },
     addFeed: (feed) => set((state) => ({ feeds: [feed, ...state.feeds] })),
