@@ -29,7 +29,6 @@ export const UserProvider = ({children}: { children: React.ReactNode }) => {
     useEffect(() => {
         if (!data) return
         setUser(data.data)
-        console.log(data)
     }, [data, setUser]);
 
     return <>{children}</>

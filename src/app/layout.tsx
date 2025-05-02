@@ -30,25 +30,25 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en" suppressHydrationWarning>
-            <body
-                className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-            >
-            <Auth0Provider>
-                <QueryProvider>
-                    <UserProvider>
-                        <ThemeProvider
-                            attribute="class"
-                            defaultTheme="system"
-                            enableSystem
-                            disableTransitionOnChange
-                        >
-                            {children}
-                            <Toaster richColors/>
-                        </ThemeProvider>
-                    </UserProvider>
-                </QueryProvider>
-            </Auth0Provider>
-            </body>
+        <body
+            className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        >
+        <Auth0Provider>
+            <QueryProvider>
+                <UserProvider>
+                    <ThemeProvider
+                        attribute="class"
+                        defaultTheme="system"
+                        enableSystem
+                        disableTransitionOnChange
+                    >
+                        {children}
+                        <Toaster richColors/>
+                    </ThemeProvider>
+                </UserProvider>
+            </QueryProvider>
+        </Auth0Provider>
+        </body>
         </html>
     );
 }

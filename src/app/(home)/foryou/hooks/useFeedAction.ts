@@ -1,18 +1,19 @@
-import {useInfiniteQuery, useMutation} from '@tanstack/react-query';
+import {useInfiniteQuery, useMutation, useQuery} from '@tanstack/react-query';
 import {
     LikeAction,
     RemoveLikeAction,
     bookmarkPost,
     getFeeds,
-    removeBookmarkPost, reportPost
+    removeBookmarkPost, reportPost, getFeedById
 } from '@/app/(home)/foryou/api/postApi';
 import {useFeedStore} from '@/app/(home)/foryou/store/useFeedStore';
 import {UUID} from 'node:crypto';
 import {PaginationInfo} from "@/types/api";
 import {useEffect} from "react";
 import {toast} from "sonner";
+import {Feed} from "@/types/Feed";
 
-export const useFeedActions = () => {
+export const useFeedActions = (excludePostId?: UUID) => {
     const {
         feeds,
         setFeeds,
@@ -22,15 +23,21 @@ export const useFeedActions = () => {
         clearFeeds,
     } = useFeedStore();
 
+    const {data: singleData} = useQuery({
+        queryKey: ['foryou-post', excludePostId],
+        queryFn: () => excludePostId ? getFeedById(excludePostId) : undefined,
+        enabled: !!excludePostId,
+    });
+
     const {
         data,
         isFetchingNextPage,
         fetchNextPage,
         hasNextPage,
     } = useInfiniteQuery({
-        queryKey: ['foryou-posts'],
+        queryKey: ['foryou-posts', {exclude: excludePostId}],
         queryFn: async ({pageParam = 0}) => {
-            return await getFeeds({page: pageParam, size: 2});
+            return await getFeeds({page: pageParam, size: 2, excludePostId: excludePostId});
         },
         getNextPageParam: (lastPage) => {
             const pagination: PaginationInfo | undefined = lastPage.metadata?.pagination;
@@ -40,8 +47,21 @@ export const useFeedActions = () => {
     });
 
     useEffect(() => {
-        setFeeds(data?.pages.flatMap((page) => page.data) ?? []);
-    }, [data, setFeeds]);
+        if (!data) return;
+        const finalData = data?.pages.flatMap((page) => page.data) ?? [];
+
+        if (excludePostId) {
+            if (!singleData?.data) return;
+
+            const singlePost = singleData.data;
+            const finalFeeds = finalData.filter((f): f is Feed => !!f.post && f.post.id !== excludePostId);
+
+            const newData: Feed[] = [singlePost, ...finalFeeds];
+            setFeeds(newData);
+        } else {
+            setFeeds(finalData);
+        }
+    }, [data, excludePostId, setFeeds, singleData?.data]);
 
     const likeMutation = useMutation({
         mutationFn: ({postId, isLiked}: { postId: UUID; isLiked: boolean }) =>

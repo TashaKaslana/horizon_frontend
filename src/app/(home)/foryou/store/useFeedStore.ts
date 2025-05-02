@@ -12,7 +12,25 @@ interface FeedStore {
 
 export const useFeedStore = create<FeedStore>((set) => ({
     feeds: [],
-    setFeeds: (feeds) => set({ feeds }),
+    setFeeds: (newFeeds) => {
+        set((state) => {
+            const isSame =
+                Array.isArray(newFeeds) &&
+                Array.isArray(state.feeds) &&
+                state.feeds.length === newFeeds.length &&
+                state.feeds.every((feed, index) => {
+                    const newFeed = newFeeds[index];
+                    return feed?.post?.id && newFeed?.post?.id && feed.post.id === newFeed.post.id;
+                });
+
+            if (isSame) {
+                return {};
+            }
+
+            console.log("Updating feeds to: ", newFeeds);
+            return { feeds: newFeeds };
+        });
+    },
     addFeed: (feed) => set((state) => ({ feeds: [feed, ...state.feeds] })),
     updateFeed: (id, updater) =>
         set((state) => ({

@@ -70,7 +70,11 @@ export const checkLikeStatus = async (postId: UUID) => {
     return res.data;
 }
 
-export const getFeeds = async ({page = 0, size = 10}) => {
+export const getFeeds = async ({page = 0, size = 10, excludePostId}: {
+    page?: number,
+    size?: number,
+    excludePostId?: UUID
+}) => {
     const token = await getAccessToken();
 
     return await apiRequest<Feed[]>({
@@ -81,12 +85,25 @@ export const getFeeds = async ({page = 0, size = 10}) => {
             size,
             sortBy: 'createdAt',
             sortOrder: 'desc',
+            excludePostId: excludePostId ? excludePostId : undefined
         },
         headers: {
             Authorization: `Bearer ${token}`,
         },
     });
 };
+
+export const getFeedById = async (postId: UUID) => {
+    const token = await getAccessToken()
+
+    return await apiRequest<Feed>({
+        url: `feeds/posts/${postId}`,
+        method: 'GET',
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
 
 export const bookmarkPost = async (postId: UUID) => {
     const token = await getAccessToken()

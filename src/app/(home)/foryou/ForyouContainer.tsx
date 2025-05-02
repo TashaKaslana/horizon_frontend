@@ -11,8 +11,9 @@ import {Loader2} from "lucide-react";
 import { useIsVisible } from "@/hooks/use-is-visible";
 import {useConfigStore} from "@/stores/useConfigStore";
 import {useFeedActions} from "@/app/(home)/foryou/hooks/useFeedAction";
+import {UUID} from "node:crypto";
 
-const ForyouContainer = () => {
+const ForyouContainer = ({postId} : {postId?: UUID}) => {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
 
     const {
@@ -20,8 +21,12 @@ const ForyouContainer = () => {
         isFetchingNextPage,
         fetchNextPage,
         hasNextPage,
-    } = useFeedActions()
+    } = useFeedActions(postId)
 
+    useEffect(() => {
+        console.log("feeds", feeds)
+    }, [feeds]);
+    
     return (
         <Suspense fallback={<Skeleton />}>
             <div ref={scrollContainerRef}
@@ -33,7 +38,7 @@ const ForyouContainer = () => {
                     threshold={0.5}
                     root={scrollContainerRef.current}
                 >
-                    {feeds.map((feed, index) => (
+                    {feeds.filter(feed => feed?.post?.id).map((feed, index) => (
                         <PostDisplay key={index} feed={feed} />
                     ))}
                     <Loader2
@@ -79,7 +84,7 @@ const PostDisplay = ({ feed }: { feed: Feed }) => {
                 video.muted = true;
             }
         }
-    }, [feed.post.id, isVisible, videoSettings]);
+    }, [feed?.post?.id, isVisible, videoSettings]);
 
     return (
         <div className="snap-start relative h-screen w-full flex items-center justify-center">
