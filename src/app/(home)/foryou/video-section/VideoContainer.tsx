@@ -7,7 +7,7 @@ import {Post} from "@/types/Post";
 import {Badge} from "@/components/ui/badge";
 import {formatDateTS} from "@/lib/utils";
 import {UserOverview} from "@/components/common/UserInformation";
-import {Clock} from "lucide-react";
+import {Clock, Grid} from "lucide-react";
 
 interface VideoContainerProps {
     setIsCommentOpened?: React.Dispatch<React.SetStateAction<boolean>>,
@@ -64,11 +64,21 @@ const VideoSection = ({post, ref}: { post: Post, ref?: Ref<HTMLVideoElement>}) =
                     </div>
                     <UserOverview user={post.user}/>
                 </div>
-                <div>
-                    <Badge><Clock/> {formatDateTS(post.createdAt)}</Badge>
-                    {post.tags?.map(tag => (
-                        <Badge key={tag}>tag</Badge>
-                    ))}
+                <div className={'w-full'}>
+                    <div className={'flex justify-between items-center'}>
+                        <div>
+                            <Badge><Clock/> {formatDateTS(post.createdAt)}</Badge>
+                        </div>
+                        <div className={'flex items-center'}>
+                            <Badge><Grid/> {post.categoryName}</Badge>
+                        </div>
+                    </div>
+
+                    <div className={'space-x-2'}>
+                        {post.tags?.map(tag => (
+                            <Badge key={tag} variant={'outline'}># {tag}</Badge>
+                        ))}
+                    </div>
                 </div>
             </CardFooter>
         </Card>

@@ -13,7 +13,7 @@ export interface Post {
     description: string,
     visibility: "PUBLIC" | "PRIVATE" | "UNLISTED",
     duration: number,
-    category: string,
+    categoryName: string,
     tags: string[],
     videoPlaybackUrl: string,
     videoThumbnailUrl: string,
