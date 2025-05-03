@@ -1,10 +1,10 @@
 import {UserSummary} from "@/types/user";
 
 
-// beginner < 3-month
-// moderator 3 months - 1-year
-// expert > 1 year
-export type RankType = "beginner" | "moderator" | "expert";
+// beginner < a month
+// moderator < 6-month
+// expert > 6-month
+export type RankType = "beginner" | "intermediate" | "expert";
 
 export type FollowCardProps = {
     user: UserSummary

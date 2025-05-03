@@ -8,7 +8,7 @@ import {AchievementIcon} from "../../../../../public/images/share/AchievementIco
 import {RankType, FollowCardProps} from "@/app/(home)/following/types/type";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
 
-const UserCard = ({follow, initialFollowing = true} : {follow: FollowCardProps, initialFollowing?: boolean}) => {
+const UserCard = ({follow, initialFollowing = true}: { follow: FollowCardProps, initialFollowing?: boolean }) => {
     const [isFollowing, setIsFollowing] = useState(initialFollowing)
 
     const handleToggleFollowing = () => {
@@ -20,7 +20,7 @@ const UserCard = ({follow, initialFollowing = true} : {follow: FollowCardProps, 
             <header className={'h-12 relative'}>
                 <div className={'bg-sky-500 size-full rounded relative'}>
                     <main className={'absolute bottom-2 right-2'}>
-                        <AchievementStatus variant={"beginner"}/>
+                        <AchievementStatus variant={calcRank(follow.user.createdAt)}/>
                     </main>
                 </div>
                 <Avatar className={'size-16 absolute bottom-0 translate-y-1/2 left-4'}>
@@ -60,5 +60,19 @@ const AchievementStatus = (props: { variant: RankType }) => <TooltipProvider>
         </TooltipContent>
     </Tooltip>
 </TooltipProvider>;
+
+const calcRank = (date: string) => {
+    const date1 = new Date(date)
+    const date2 = new Date()
+    const diffTime = Math.abs(date2.getTime() - date1.getTime())
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+    if (diffDays < 30) {
+        return 'beginner'
+    } else if (diffDays < 30 * 6) {
+        return 'intermediate'
+    } else {
+        return 'expert'
+    }
+}
 
 export default UserCard

@@ -1,12 +1,12 @@
 import { JSX, SVGProps } from "react";
 
 interface AchievementIconProps extends JSX.IntrinsicAttributes, SVGProps<SVGSVGElement> {
-    variant?: "beginner" | "moderator" | "expert";
+    variant?: "beginner" | "intermediate" | "expert";
 }
 
 const gradientColors: Record<NonNullable<AchievementIconProps["variant"]>, [string, string, string]> = {
     beginner: ["#57CC99", "#38A3A5", "#22577A"],
-    moderator : ["#FF6B6B", "#FFA07A", "#FFD166"],
+    intermediate : ["#FF6B6B", "#FFA07A", "#FFD166"],
     expert: ["#4C1D95", "#6D28D9", "#9333EA"],
 };
 
