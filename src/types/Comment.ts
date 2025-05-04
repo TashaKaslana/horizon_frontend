@@ -1,16 +1,15 @@
 import {UserSummary} from "@/types/user";
-import {UUID} from "node:crypto";
 
 export interface CommentResponse {
-    id: UUID
-    postId: UUID,
+    id: string
+    postId: string,
     content: string
-    parentCommentId?: UUID | null
+    parentCommentId?: string | null
     user: UserSummary
     isAuthorDeleted?: boolean
     isPinned: boolean
-    createdAt: Date
-    updatedAt: Date
+    createdAt: string
+    updatedAt: string
 }
 
 export type CreateComment = Partial<Pick<CommentResponse, 'postId' | 'content' | 'parentCommentId'>>

@@ -3,9 +3,8 @@
 import {ManagementHeader} from "@/app/(home)/management/components/ManagementHeader";
 import {ManagementMain} from "@/app/(home)/management/components/ManagementMain";
 import {usePostManagementStore} from "@/app/(home)/management/store/usePostManagementStore";
+import { Post } from "@/types/Post";
 import {useEffect} from "react";
-import {Post} from "@/app/(home)/management/types/types";
-
 interface ManagementContainerProps {
     posts: Post[]
 }

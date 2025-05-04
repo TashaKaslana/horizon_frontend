@@ -5,14 +5,13 @@ import {CommentSection} from "@/app/(home)/foryou/comment-section/CommentSection
 import {useInfiniteQuery} from "@tanstack/react-query";
 import {getCommentsByPostId} from "@/app/(home)/foryou/api/commentApi";
 import {PaginationInfo} from "@/types/api";
-import {UUID} from "node:crypto";
 import InfiniteScroll from "@/components/ui/infinite-scroll";
 import {CommentInput} from "@/app/(home)/foryou/comment-section/CommentInput";
 import {Spinner} from "@/components/ui/spinner";
 import {useCommentStore} from "@/app/(home)/foryou/store/useCommentStore";
 
 interface CommentProps {
-    postId: UUID,
+    postId: string,
     isCommentOpened?: boolean,
     isVisible: boolean
 }

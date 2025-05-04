@@ -1,9 +1,8 @@
 import { apiRequest } from "@/lib/apiRequest"
 import { getAccessToken } from "@auth0/nextjs-auth0"
-import {UUID} from "node:crypto";
 import {CommentCreated, CommentResponse, CommentUpdated, CreateComment, UpdateComment} from "@/types/Comment";
 
-export const getCommentsByPostId = async (postId: UUID, {page = 1, size = 10}) => {
+export const getCommentsByPostId = async (postId: string, {page = 1, size = 10}) => {
     const token = await getAccessToken()
 
     return await apiRequest<CommentResponse>({
@@ -48,7 +47,7 @@ export const updateComment = async (updateComment: UpdateComment) => {
     })
 }
 
-export const likeComment = async (commentId: UUID) => {
+export const likeComment = async (commentId: string) => {
     const token = await getAccessToken()
 
     return await apiRequest<void>({
@@ -63,7 +62,7 @@ export const likeComment = async (commentId: UUID) => {
     })
 }
 
-export const deleteComment = async (commentId: UUID) => {
+export const deleteComment = async (commentId: string) => {
     const token = await getAccessToken()
 
     return await apiRequest<void>({
@@ -75,7 +74,7 @@ export const deleteComment = async (commentId: UUID) => {
     })
 }
 
-export const pinComment = async (commentId: UUID) => {
+export const pinComment = async (commentId: string) => {
     const token = await getAccessToken()
 
     return await apiRequest<void>({
@@ -90,7 +89,7 @@ export const pinComment = async (commentId: UUID) => {
     })
 }
 
-export const unpinComment = async (commentId: UUID) => {
+export const unpinComment = async (commentId: string) => {
     const token = await getAccessToken()
 
     return await apiRequest<void>({
@@ -102,7 +101,7 @@ export const unpinComment = async (commentId: UUID) => {
     })
 }
 
-export const reportComment = async (commentId: UUID, reason: string) => {
+export const reportComment = async (commentId: string, reason: string) => {
     const token = await getAccessToken()
 
     return await apiRequest<void>({

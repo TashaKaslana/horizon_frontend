@@ -1,5 +1,7 @@
 import {create} from "zustand";
-import {Post, PostCategory, SortType} from "../types/types";
+import {PostCategory, SortType} from "../types/types";
+import { Post } from "@/types/Post";
+import { toast } from "sonner";
 
 type PostManagementStore = {
     initialPosts: Post[]
@@ -24,17 +26,23 @@ export const usePostManagementStore = create<PostManagementStore>()((set) => ({
             posts: [...state.posts].sort((a, b) => {
                     switch (option.toLowerCase()) {
                         case 'newest':
-                            return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+                            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
                         case 'oldest':
-                            return new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+                            return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
                         case 'popular':
-                            return b.view - a.view
+                            toast.error('This feature is not available yet')
+                            // return b.view - a.view
+                            return 0
                         case 'top_rated':
-                            return b.likes - a.likes
+                            toast.error('This feature is not available yet')
+                            // return b.likes - a.likes
+                            return 0
                         case 'top_commented':
-                            return b.comments - a.comments
+                            toast.error('This feature is not available yet')
+                            // return b.comments - a.comments
+                            return 0
                         default:
-                            return new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()
+                            return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
                     }
                 }
             )
@@ -46,15 +54,15 @@ export const usePostManagementStore = create<PostManagementStore>()((set) => ({
             posts: state.initialPosts.filter((post) => {
                 switch (option) {
                     case 'tech':
-                        return post.category === 'tech'
+                        return post.categoryName.toLowerCase() === 'tech'
                     case 'gaming':
-                        return post.category === 'gaming'
+                        return post.categoryName.toLowerCase() === 'gaming'
                     case 'music':
-                        return post.category === 'music'
+                        return post.categoryName.toLowerCase() === 'music'
                     case 'education':
-                        return post.category === 'education'
+                        return post.categoryName.toLowerCase() === 'education'
                     case 'entertainment':
-                        return post.category === 'entertainment'
+                        return post.categoryName.toLowerCase() === 'entertainment'
                     default:
                         return true
                 }
@@ -65,7 +73,7 @@ export const usePostManagementStore = create<PostManagementStore>()((set) => ({
     searchPosts: (filterString: string) => {
         set((state) => ({
             posts: state.initialPosts.filter((post) =>
-                post.title.toLowerCase().includes(filterString.toLowerCase())
+                post.caption.toLowerCase().includes(filterString.toLowerCase())
             )
         }));
     }

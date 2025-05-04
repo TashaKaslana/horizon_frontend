@@ -5,7 +5,7 @@ import {useCommentInput} from "../hooks/useCommentInput"; // adjust path if need
 import {UUID} from "node:crypto";
 
 type CommentInputProps = {
-    postId: UUID,
+    postId: string,
     parentCommentId?: UUID | null,
     updateCommentId?: UUID,
     updatedContent?: string,

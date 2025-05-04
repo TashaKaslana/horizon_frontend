@@ -2,11 +2,10 @@ import {useCallback, useEffect, useRef, useState} from "react";
 import {toast} from "sonner";
 import {useMutation} from "@tanstack/react-query";
 import {createComment, updateComment} from "@/app/(home)/foryou/api/commentApi";
-import {UUID} from "node:crypto";
 import {useCommentRefStore} from "@/app/(home)/foryou/store/useCommentRefStore";
 
 type UseCommentInputProps = {
-    postId: UUID;
+    postId: string;
 };
 
 export function useCommentInput({

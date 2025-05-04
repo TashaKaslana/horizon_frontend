@@ -7,13 +7,12 @@ import {
     removeBookmarkPost, reportPost, getFeedById
 } from '@/app/(home)/foryou/api/postApi';
 import {useFeedStore} from '@/app/(home)/foryou/store/useFeedStore';
-import {UUID} from 'node:crypto';
 import {PaginationInfo} from "@/types/api";
 import {useEffect} from "react";
 import {toast} from "sonner";
 import {Feed} from "@/types/Feed";
 
-export const useFeedActions = (excludePostId?: UUID) => {
+export const useFeedActions = (excludePostId?: string) => {
     const {
         feeds,
         setFeeds,
@@ -74,7 +73,7 @@ export const useFeedActions = (excludePostId?: UUID) => {
     }, [data, excludePostId, setFeeds, singleData?.data]);
 
     const likeMutation = useMutation({
-        mutationFn: ({postId, isLiked}: { postId: UUID; isLiked: boolean }) =>
+        mutationFn: ({postId, isLiked}: { postId: string; isLiked: boolean }) =>
             isLiked ? RemoveLikeAction(postId) : LikeAction(postId),
         onSuccess: (_, {postId, isLiked}) => {
             updateFeed(postId, (prev) => ({
@@ -91,7 +90,7 @@ export const useFeedActions = (excludePostId?: UUID) => {
     });
 
     const bookmarkMutation = useMutation({
-        mutationFn: ({postId, isBookmarked}: { postId: UUID, isBookmarked: boolean }) =>
+        mutationFn: ({postId, isBookmarked}: { postId: string, isBookmarked: boolean }) =>
             isBookmarked ? removeBookmarkPost(postId) : bookmarkPost(postId),
         onSuccess: (_, {postId, isBookmarked}) => {
             updateFeed(postId, (prev) => ({
@@ -108,7 +107,7 @@ export const useFeedActions = (excludePostId?: UUID) => {
     });
 
     const reportMutation = useMutation({
-        mutationFn: ({postId, reason}: { postId: UUID, reason: string }) => reportPost(postId, reason),
+        mutationFn: ({postId, reason}: { postId: string, reason: string }) => reportPost(postId, reason),
         onSuccess: () => {
             toast.success("Reported post");
         },
@@ -117,19 +116,19 @@ export const useFeedActions = (excludePostId?: UUID) => {
         }
     })
 
-    const handleLike = (postId: UUID) => {
+    const handleLike = (postId: string) => {
         const feed = feeds.find(f => f.post.id === postId);
         if (!feed) return;
         likeMutation.mutate({postId, isLiked: feed.statistic.isLiked});
     }
 
-    const handleBookmark = (postId: UUID) => {
+    const handleBookmark = (postId: string) => {
         const feed = feeds.find(f => f.post.id === postId);
         if (!feed) return;
         bookmarkMutation.mutate({postId, isBookmarked: feed.statistic.isBookmarked});
     }
 
-    const handleShareLink = (postId: UUID) => {
+    const handleShareLink = (postId: string) => {
         const shareUrl = `${window.location.origin}${window.location.pathname}/${postId}`;
 
         navigator.clipboard.writeText(shareUrl)
@@ -137,7 +136,7 @@ export const useFeedActions = (excludePostId?: UUID) => {
             .catch((err) => console.error("Error copying link: ", err));
     };
 
-    const handleReport = (postId: UUID, reason: string) => {
+    const handleReport = (postId: string, reason: string) => {
         const feed = feeds.find(f => f.post.id === postId);
         if (!feed) return;
 

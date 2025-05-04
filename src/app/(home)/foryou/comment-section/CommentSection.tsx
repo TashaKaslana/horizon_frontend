@@ -11,7 +11,7 @@ interface CommentSectionProps {
 }
 
 export const CommentSection = ({comment}: CommentSectionProps) => {
-    const date = useMemo(() => formatDateDifference(comment.createdAt), [comment.createdAt]);
+    const date = useMemo(() => formatDateDifference(new Date(comment.createdAt)), [comment.createdAt]);
 
     return (
         <section

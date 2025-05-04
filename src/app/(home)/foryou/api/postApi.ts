@@ -1,10 +1,9 @@
-import {UUID} from "node:crypto";
 import {getAccessToken} from "@auth0/nextjs-auth0";
 import {apiRequest} from "@/lib/apiRequest";
 import {toast} from "sonner";
 import {Feed} from "@/types/Feed";
 
-export const LikeAction = async (postId: UUID) => {
+export const LikeAction = async (postId: string) => {
     try {
         const token = await getAccessToken()
 
@@ -27,7 +26,7 @@ export const LikeAction = async (postId: UUID) => {
     }
 }
 
-export const RemoveLikeAction = async (postId: UUID) => {
+export const RemoveLikeAction = async (postId: string) => {
     const token = await getAccessToken()
 
     await apiRequest({
@@ -39,7 +38,7 @@ export const RemoveLikeAction = async (postId: UUID) => {
     })
 }
 
-export const BookmarkAction = async (postId: UUID) => {
+export const BookmarkAction = async (postId: string) => {
     const token = await getAccessToken()
 
     await apiRequest({
@@ -56,7 +55,7 @@ export const BookmarkAction = async (postId: UUID) => {
     });
 }
 
-export const checkLikeStatus = async (postId: UUID) => {
+export const checkLikeStatus = async (postId: string) => {
     const token = await getAccessToken()
 
     const res = await apiRequest<boolean>({
@@ -73,7 +72,7 @@ export const checkLikeStatus = async (postId: UUID) => {
 export const getFeeds = async ({page = 0, size = 10, excludePostId}: {
     page?: number,
     size?: number,
-    excludePostId?: UUID
+    excludePostId?: string
 }) => {
     const token = await getAccessToken();
 
@@ -93,7 +92,7 @@ export const getFeeds = async ({page = 0, size = 10, excludePostId}: {
     });
 };
 
-export const getFeedById = async (postId: UUID) => {
+export const getFeedById = async (postId: string) => {
     const token = await getAccessToken()
 
     return await apiRequest<Feed>({
@@ -105,7 +104,7 @@ export const getFeedById = async (postId: UUID) => {
     })
 }
 
-export const bookmarkPost = async (postId: UUID) => {
+export const bookmarkPost = async (postId: string) => {
     const token = await getAccessToken()
 
     return await apiRequest({
@@ -117,7 +116,7 @@ export const bookmarkPost = async (postId: UUID) => {
     })
 }
 
-export const removeBookmarkPost = async (postId: UUID) => {
+export const removeBookmarkPost = async (postId: string) => {
     const token = await getAccessToken()
 
     return await apiRequest({
@@ -129,7 +128,7 @@ export const removeBookmarkPost = async (postId: UUID) => {
     })
 }
 
-export const reportPost = async (postId: UUID, reason: string) => {
+export const reportPost = async (postId: string, reason: string) => {
     const token = await getAccessToken()
 
     return await apiRequest({

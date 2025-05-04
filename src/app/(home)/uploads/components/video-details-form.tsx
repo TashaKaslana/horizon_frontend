@@ -27,7 +27,7 @@ export function VideoDetailsForm({form}: VideoDetailsFormProps) {
                     <FormItem>
                         <FormLabel>Title</FormLabel>
                         <FormControl>
-                            <Input placeholder="Add a title that describes your video" className="h-12" {...field} />
+                            <Input placeholder="Add a caption that describes your video" className="h-12" {...field} />
                         </FormControl>
                         <FormMessage/>
                     </FormItem>

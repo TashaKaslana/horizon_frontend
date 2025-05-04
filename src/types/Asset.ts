@@ -1,7 +1,5 @@
-import {UUID} from "node:crypto";
-
 export interface AssetSummary {
-    id: UUID
+    id: string
     publicId: string;
     resourceType: string;
     format: string;
@@ -10,8 +8,8 @@ export interface AssetSummary {
     width: number;
     height: number;
     originalFilename: string;
-    createdAt: Date;
-    createdBy: UUID;
+    createdAt: string;
+    createdBy: string;
 }
 
 export type CreateAsset = Omit<AssetSummary, 'id' | 'createdBy' | 'createdAt'>;

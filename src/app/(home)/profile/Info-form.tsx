@@ -92,6 +92,7 @@ export default function InfoForm() {
                 ...restOfValues,
                 country: location[0],
                 city: location[1],
+                dateOfBirth: values.dateOfBirth.toISOString()
             })
             console.log(values);
             toast(

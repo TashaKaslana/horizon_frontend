@@ -68,7 +68,7 @@ const VideoSection = ({post, ref}: { post: Post, ref?: Ref<HTMLVideoElement>}) =
                 <div className={'w-full'}>
                     <div className={'flex justify-between items-center'}>
                         <div>
-                            <Badge><Clock/> {formatDateTS(post.createdAt)}</Badge>
+                            <Badge><Clock/> {formatDateTS(new Date(post.createdAt))}</Badge>
                         </div>
                         <div className={'flex items-center'}>
                             <Badge><Grid/> {post.categoryName}</Badge>

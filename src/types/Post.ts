@@ -1,13 +1,12 @@
-import {UUID} from "node:crypto";
 import {UserSummary} from "@/types/user";
 import {AssetSummary} from "@/types/Asset";
 
 export interface Post {
-    id: UUID,
-    createdAt: Date,
-    updatedAt: Date,
-    createdBy: UUID,
-    updatedBy: UUID,
+    id: string,
+    createdAt: string,
+    updatedAt: string,
+    createdBy: string,
+    updatedBy: string,
     user: UserSummary
     caption: string,
     description: string,

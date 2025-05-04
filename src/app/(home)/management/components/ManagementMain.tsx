@@ -18,34 +18,34 @@ export const ManagementMain = () => {
 };
 
 type PostCard = {
-    title: string,
+    caption: string,
     description: string,
-    src: string,
-    view: number,
-    timestamp: string,
-    likes: number,
-    comments: number,
+    videoPlaybackUrl: string,
+    view?: number,
+    createdAt: string,
+    likes?: number,
+    comments?: number,
 }
 
 const PostCard = ({post}: { post: PostCard }) => {
-    const date = formatDateTS(new Date(post.timestamp))
-    const formatViews = getFixedNumberFormat(post.view)
-    const formatLikes = getFixedNumberFormat(post.likes)
-    const formatComments = getFixedNumberFormat(post.comments)
+    const date = formatDateTS(new Date(post.createdAt))
+    const formatViews = getFixedNumberFormat(post.view ?? 0)
+    const formatLikes = getFixedNumberFormat(post.likes ?? 0)
+    const formatComments = getFixedNumberFormat(post.comments ?? 0)
 
     return (
         <Card className={'w-[36rem] pt-0 hover:bg-gray-100 transition'}>
             <CardContent className={'px-0 rounded-t-xl'}>
                 <AspectRatio ratio={16 / 9}>
                     <video controls className={'size-full object-cover rounded-t-xl'}>
-                        <source src={post.src} type="video/mp4"/>
+                        <source src={post.videoPlaybackUrl} type="video/mp4"/>
                     </video>
                 </AspectRatio>
             </CardContent>
 
             <CardFooter className={'w-full'}>
                 <div className={'w-full'}>
-                    <h1 className={'text-xl font-bold'}>{post.title}</h1>
+                    <h1 className={'text-xl font-bold'}>{post.caption}</h1>
                     <div className={'flex justify-between text-sm text-gray-500'}>
                         <span>{date}</span>
                         <span>{formatViews} Views</span>

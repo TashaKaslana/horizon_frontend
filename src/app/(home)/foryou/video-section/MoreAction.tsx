@@ -1,4 +1,3 @@
-import {UUID} from "node:crypto";
 import {useFeedActions} from "@/app/(home)/foryou/hooks/useFeedAction";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
 import {
@@ -17,7 +16,7 @@ import {MoreVertical} from "lucide-react";
 import React from "react";
 import reportReason from '@/../public/locales/en/reportReason.json';
 
-export const MoreAction = ({postId}: { postId: UUID }) => {
+export const MoreAction = ({postId}: { postId: string }) => {
     const {handleShareLink, handleReportPost} = useFeedActions();
     const reason = Object.values(reportReason.post)
 
