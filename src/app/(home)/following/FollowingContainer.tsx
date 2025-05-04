@@ -52,10 +52,10 @@ const FollowingContainer = () => {
             <Tabs defaultValue={'following'}>
                 <FollowingHeader/>
                 <main className={'border rounded py-1'}>
-                    <TabsContent value={'following'} className={'h-[82vh]'}>
+                    <TabsContent value={'following'} className={'h-[calc(100vh-7rem)]'}>
                         <FollowingTab/>
                     </TabsContent>
-                    <TabsContent value={'followers'}>
+                    <TabsContent value={'followers'} className={'h-[calc(100vh-7rem)]'}>
                         <FollowerTab/>
                     </TabsContent>
                 </main>
