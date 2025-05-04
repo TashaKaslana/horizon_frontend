@@ -6,7 +6,7 @@ import {Card, CardContent, CardFooter} from "@/components/ui/card";
 import {Post} from "@/types/Post";
 import {Badge} from "@/components/ui/badge";
 import {formatDateTS} from "@/lib/utils";
-import {UserOverview} from "@/components/common/UserInformation";
+import {UserSummaryCard} from "@/components/common/UserInformation";
 import {Clock, Grid} from "lucide-react";
 
 interface VideoContainerProps {
@@ -32,6 +32,7 @@ const VideoContainer = ({setIsCommentOpened, feed, ref}: VideoContainerProps) =>
 
 const VideoSection = ({post, ref}: { post: Post, ref?: Ref<HTMLVideoElement>}) => {
     const {videoSettings} = useConfigStore()
+    console.log(post)
 
     const getValueByKey = (key: string) => {
         const value = videoSettings.find((v) => v.key === key)?.value;
@@ -62,7 +63,7 @@ const VideoSection = ({post, ref}: { post: Post, ref?: Ref<HTMLVideoElement>}) =
                         <h4 className={'text-xl bold'}>{post.caption}</h4>
                         <p className={'text-xs text-zinc-700 dark:text-zinc-300'}>{post.description}</p>
                     </div>
-                    <UserOverview user={post.user}/>
+                    <UserSummaryCard user={post.user}/>
                 </div>
                 <div className={'w-full'}>
                     <div className={'flex justify-between items-center'}>

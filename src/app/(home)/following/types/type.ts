@@ -1,4 +1,4 @@
-import {UserSummary} from "@/types/user";
+import {UserIntroduction} from "@/types/user";
 
 
 // beginner < a month
@@ -7,6 +7,6 @@ import {UserSummary} from "@/types/user";
 export type RankType = "beginner" | "intermediate" | "expert";
 
 export type FollowCardProps = {
-    user: UserSummary
+    user: UserIntroduction
     createdAt: string
 }

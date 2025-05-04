@@ -11,12 +11,12 @@ export const filterUsers = (users: FollowCardProps[],
         // remove @ from filter
         const newFilterString = trimmedFilter.substring(1)
 
-        return users.filter(user => user.username.toLowerCase().includes(newFilterString.toLowerCase()))
+        return users.filter(card => card.user.username.toLowerCase().includes(newFilterString.toLowerCase()))
     }
 
-    return users.filter(user =>
-        user.displayName.toLowerCase().includes(trimmedFilter.toLowerCase()) ||
-        user.username.toLowerCase().includes(trimmedFilter.toLowerCase())
+    return users.filter(card =>
+        card.user.displayName.toLowerCase().includes(trimmedFilter.toLowerCase()) ||
+        card.user.username.toLowerCase().includes(trimmedFilter.toLowerCase())
     )
 }
 

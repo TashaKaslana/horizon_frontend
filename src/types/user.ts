@@ -2,6 +2,7 @@ import {UUID} from "node:crypto";
 
 export interface User {
     id: UUID;
+    displayName: string;
     firstName: string;
     lastName: string;
     username: string;
@@ -18,7 +19,9 @@ export interface User {
     updatedAt: string;
 }
 
-export type UserSummary = Pick<User, 'id' | 'firstName' | 'lastName' | 'username' | 'profileImage' | 'coverImage' | 'createdAt'>;
+export type UserSummary = Pick<User, 'id' | 'displayName' | 'username' | 'profileImage' | 'coverImage' | 'createdAt'>;
+
+export type UserIntroduction = Pick<User, 'displayName' | 'firstName' | 'lastName' | 'username' | 'profileImage' | 'coverImage' | 'bio' | 'email' | 'createdAt'>;
 
 export type UserProfileInformationUpdate = Partial<Omit<User, 'id' | 'username' | 'email' | 'coverImage' | 'profileImage'>>
 

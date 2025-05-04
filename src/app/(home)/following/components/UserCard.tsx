@@ -25,7 +25,7 @@ const UserCard = ({follow, initialFollowing = true}: { follow: FollowCardProps, 
                 </div>
                 <Avatar className={'size-16 absolute bottom-0 translate-y-1/2 left-4'}>
                     <AvatarImage src={follow.user.profileImage}/>
-                    <AvatarFallback>{follow.user.lastName?.at(0)?.toUpperCase()}</AvatarFallback>
+                    <AvatarFallback>{follow.user?.displayName?.at(0)?.toUpperCase()}</AvatarFallback>
                 </Avatar>
             </header>
 
@@ -34,7 +34,7 @@ const UserCard = ({follow, initialFollowing = true}: { follow: FollowCardProps, 
 
                 </section>
                 <section className={'flex-1'}>
-                    <h2 className={'text-zinc-800 font-semibold'}>{follow.user.lastName}</h2>
+                    <h2 className={'text-zinc-800 font-semibold'}>{follow.user?.displayName ? follow.user?.displayName  : null}</h2>
                     <p className={'text-sm text-gray-700 italic'}>@{follow.user.username}</p>
                     <p className={'text-sm pl-1 text-gray-800'}>Bio ####</p>
                 </section>
