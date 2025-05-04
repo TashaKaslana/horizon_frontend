@@ -3,49 +3,49 @@ import {AspectRatio} from "@/components/ui/aspect-ratio";
 import {Badge} from "@/components/ui/badge";
 import {formatDateTS, getFixedNumberFormat} from "@/lib/utils";
 import {Heart, MessageSquare} from "lucide-react";
-import {usePostManagementStore} from "@/app/(home)/management/store/usePostManagementStore";
+import {Feed} from "@/types/Feed";
+import {usePostManagement} from "@/app/(home)/management/hooks/usePostManagement";
+import InfiniteScroll from "@/components/ui/infinite-scroll";
+import {Spinner} from "@/components/ui/spinner";
+import React from "react";
 
 export const ManagementMain = () => {
-    const {posts} = usePostManagementStore()
+    const {feeds, isFetchingNextPage, fetchNextPage, hasNextPage} = usePostManagement()
 
     return (
-        <main className={'grid grid-cols-2 gap-5 place-items-center'}>
-            {posts.map((post) => (
-                <PostCard post={post} key={post.id}/>
-            ))}
-        </main>
+        <div className={'space-y-5'}>
+            <main className={'grid grid-cols-2 gap-5 place-items-center'}>
+                <InfiniteScroll isLoading={isFetchingNextPage} hasMore={hasNextPage} next={fetchNextPage}>
+                    {feeds?.map((feed) => (
+                        <PostCard feed={feed} key={feed.post.id}/>
+                    ))}
+                </InfiniteScroll>
+            </main>
+            <Spinner show={isFetchingNextPage} className={'text-sky-500'}/>
+        </div>
     );
 };
 
-type PostCard = {
-    caption: string,
-    description: string,
-    videoPlaybackUrl: string,
-    view?: number,
-    createdAt: string,
-    likes?: number,
-    comments?: number,
-}
-
-const PostCard = ({post}: { post: PostCard }) => {
-    const date = formatDateTS(new Date(post.createdAt))
-    const formatViews = getFixedNumberFormat(post.view ?? 0)
-    const formatLikes = getFixedNumberFormat(post.likes ?? 0)
-    const formatComments = getFixedNumberFormat(post.comments ?? 0)
+const PostCard = ({feed}: { feed: Feed }) => {
+    const date = formatDateTS(new Date(feed.post.createdAt))
+    //TODO: add views
+    const formatViews = /*getFixedNumberFormat(feed.view ?? 0)*/ 0
+    const formatLikes = getFixedNumberFormat(feed.statistic.totalLikes ?? 0)
+    const formatComments = getFixedNumberFormat(feed.statistic.totalComments ?? 0)
 
     return (
         <Card className={'w-[36rem] pt-0 hover:bg-gray-100 transition'}>
             <CardContent className={'px-0 rounded-t-xl'}>
                 <AspectRatio ratio={16 / 9}>
                     <video controls className={'size-full object-cover rounded-t-xl'}>
-                        <source src={post.videoPlaybackUrl} type="video/mp4"/>
+                        <source src={feed.post.videoPlaybackUrl} type="video/mp4"/>
                     </video>
                 </AspectRatio>
             </CardContent>
 
             <CardFooter className={'w-full'}>
                 <div className={'w-full'}>
-                    <h1 className={'text-xl font-bold'}>{post.caption}</h1>
+                    <h1 className={'text-xl font-bold'}>{feed.post.caption}</h1>
                     <div className={'flex justify-between text-sm text-gray-500'}>
                         <span>{date}</span>
                         <span>{formatViews} Views</span>

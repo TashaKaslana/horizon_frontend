@@ -1,13 +1,13 @@
 import {create} from "zustand";
 import {PostCategory, SortType} from "../types/types";
-import { Post } from "@/types/Post";
 import { toast } from "sonner";
+import {Feed} from "@/types/Feed";
 
 type PostManagementStore = {
-    initialPosts: Post[]
-    posts: Post[],
-    setPosts: (posts: Post[]) => void
-    setInitialPosts: (posts: Post[]) => void
+    initialPosts: Feed[]
+    feeds: Feed[],
+    setPosts: (posts: Feed[]) => void
+    setInitialPosts: (posts: Feed[]) => void
     sortPosts: (option: SortType) => void
     filterPosts: (option: PostCategory) => void
     searchPosts: (filterString: string) => void
@@ -15,20 +15,20 @@ type PostManagementStore = {
 
 export const usePostManagementStore = create<PostManagementStore>()((set) => ({
     initialPosts: [],
-    posts: [],
+    feeds: [],
 
     setInitialPosts: (posts) => set({initialPosts: posts}),
 
-    setPosts: (posts) => set({posts}),
+    setPosts: (posts) => set({feeds: posts}),
 
     sortPosts: (option: SortType) => {
         set((state) => ({
-            posts: [...state.posts].sort((a, b) => {
+            feeds: [...state.feeds].sort((a, b) => {
                     switch (option.toLowerCase()) {
                         case 'newest':
-                            return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+                            return new Date(b.post.createdAt).getTime() - new Date(a.post.createdAt).getTime()
                         case 'oldest':
-                            return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+                            return new Date(a.post.createdAt).getTime() - new Date(b.post.createdAt).getTime()
                         case 'popular':
                             toast.error('This feature is not available yet')
                             // return b.view - a.view
@@ -42,7 +42,7 @@ export const usePostManagementStore = create<PostManagementStore>()((set) => ({
                             // return b.comments - a.comments
                             return 0
                         default:
-                            return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+                            return new Date(a.post.createdAt).getTime() - new Date(b.post.createdAt).getTime()
                     }
                 }
             )
@@ -51,18 +51,18 @@ export const usePostManagementStore = create<PostManagementStore>()((set) => ({
 
     filterPosts: (option: PostCategory) => {
         set((state) => ({
-            posts: state.initialPosts.filter((post) => {
+            feeds: state.initialPosts.filter((feed) => {
                 switch (option) {
                     case 'tech':
-                        return post.categoryName.toLowerCase() === 'tech'
+                        return feed.post?.categoryName.toLowerCase() === 'tech'
                     case 'gaming':
-                        return post.categoryName.toLowerCase() === 'gaming'
+                        return feed.post?.categoryName.toLowerCase() === 'gaming'
                     case 'music':
-                        return post.categoryName.toLowerCase() === 'music'
+                        return feed.post?.categoryName.toLowerCase() === 'music'
                     case 'education':
-                        return post.categoryName.toLowerCase() === 'education'
+                        return feed.post?.categoryName.toLowerCase() === 'education'
                     case 'entertainment':
-                        return post.categoryName.toLowerCase() === 'entertainment'
+                        return feed.post?.categoryName.toLowerCase() === 'entertainment'
                     default:
                         return true
                 }
@@ -72,8 +72,8 @@ export const usePostManagementStore = create<PostManagementStore>()((set) => ({
 
     searchPosts: (filterString: string) => {
         set((state) => ({
-            posts: state.initialPosts.filter((post) =>
-                post.caption.toLowerCase().includes(filterString.toLowerCase())
+            feeds: state.initialPosts.filter((feed) =>
+                feed.post.caption.toLowerCase().includes(filterString.toLowerCase())
             )
         }));
     }
