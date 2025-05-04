@@ -1,11 +1,11 @@
 import {useInfiniteQuery, useMutation, useQuery} from '@tanstack/react-query';
 import {
-    LikeAction,
-    RemoveLikeAction,
+    likePost,
+    removeLikePost,
     bookmarkPost,
     getFeeds,
     removeBookmarkPost, reportPost, getFeedById
-} from '@/app/(home)/foryou/api/postApi';
+} from '@/api/postApi';
 import {useFeedStore} from '@/app/(home)/foryou/store/useFeedStore';
 import {PaginationInfo} from "@/types/api";
 import {useEffect} from "react";
@@ -74,7 +74,7 @@ export const useFeedActions = (excludePostId?: string) => {
 
     const likeMutation = useMutation({
         mutationFn: ({postId, isLiked}: { postId: string; isLiked: boolean }) =>
-            isLiked ? RemoveLikeAction(postId) : LikeAction(postId),
+            isLiked ? removeLikePost(postId) : likePost(postId),
         onSuccess: (_, {postId, isLiked}) => {
             updateFeed(postId, (prev) => ({
                 ...prev,

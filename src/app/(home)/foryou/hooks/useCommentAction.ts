@@ -2,7 +2,7 @@ import {useMutation} from "@tanstack/react-query";
 import {CommentResponse} from "@/types/Comment";
 import {useCommentRefStore} from "@/app/(home)/foryou/store/useCommentRefStore";
 import {toast} from "sonner";
-import {deleteComment, likeComment, pinComment, reportComment, unpinComment} from "@/app/(home)/foryou/api/commentApi";
+import {deleteComment, likeComment, pinComment, reportComment, unpinComment} from "@/api/commentApi";
 import {useCommentStore} from "@/app/(home)/foryou/store/useCommentStore";
 
 type CommentAction = {

@@ -2,8 +2,9 @@ import {getAccessToken} from "@auth0/nextjs-auth0";
 import {apiRequest} from "@/lib/apiRequest";
 import {toast} from "sonner";
 import {Feed} from "@/types/Feed";
+import {UpdatePost} from "@/types/Post";
 
-export const LikeAction = async (postId: string) => {
+export const likePost = async (postId: string) => {
     try {
         const token = await getAccessToken()
 
@@ -26,7 +27,7 @@ export const LikeAction = async (postId: string) => {
     }
 }
 
-export const RemoveLikeAction = async (postId: string) => {
+export const removeLikePost = async (postId: string) => {
     const token = await getAccessToken()
 
     await apiRequest({
@@ -36,37 +37,6 @@ export const RemoveLikeAction = async (postId: string) => {
             Authorization: `Bearer ${token}`
         },
     })
-}
-
-export const BookmarkAction = async (postId: string) => {
-    const token = await getAccessToken()
-
-    await apiRequest({
-        url: `/posts/${postId}/bookmarks`,
-        method: 'POST',
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
-
-    toast.success('Bookmark added to your book mark!', {
-        description: 'You have successfully bookmarked this post.',
-        duration: 3000,
-    });
-}
-
-export const checkLikeStatus = async (postId: string) => {
-    const token = await getAccessToken()
-
-    const res = await apiRequest<boolean>({
-        url: `/posts/${postId}/interactions/LIKE/me-is-interacted`,
-        method: 'GET',
-        headers: {
-            Authorization: `Bearer ${token}`
-        }
-    });
-
-    return res.data;
 }
 
 export const getFeeds = async ({page = 0, size = 10, excludePostId}: {
@@ -137,6 +107,19 @@ export const reportPost = async (postId: string, reason: string) => {
         data: {
             reason,
         },
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
+
+export const postUpdate = async (postId: string, data: UpdatePost) => {
+    const token = await getAccessToken()
+
+    return await apiRequest({
+        url: `/posts/${postId}`,
+        method: 'PUT',
+        data,
         headers: {
             Authorization: `Bearer ${token}`
         }

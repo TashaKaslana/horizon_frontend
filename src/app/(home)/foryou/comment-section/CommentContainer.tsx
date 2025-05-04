@@ -3,7 +3,7 @@ import {AlignLeft, MessageSquareMore} from "lucide-react";
 import {Separator} from "@/components/ui/separator";
 import {CommentSection} from "@/app/(home)/foryou/comment-section/CommentSection";
 import {useInfiniteQuery} from "@tanstack/react-query";
-import {getCommentsByPostId} from "@/app/(home)/foryou/api/commentApi";
+import {getCommentsByPostId} from "@/api/commentApi";
 import {PaginationInfo} from "@/types/api";
 import InfiniteScroll from "@/components/ui/infinite-scroll";
 import {CommentInput} from "@/app/(home)/foryou/comment-section/CommentInput";

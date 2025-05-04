@@ -1,7 +1,7 @@
 import {dehydrate, HydrationBoundary, QueryClient} from "@tanstack/react-query";
 import ForyouContainer from "../ForyouContainer"
 import {UUID} from "node:crypto";
-import {getFeeds, getFeedById} from "@/app/(home)/foryou/api/postApi";
+import {getFeeds, getFeedById} from "@/api/postApi";
 import {Feed} from "@/types/Feed";
 import {RestApiResponse} from "@/types/api";
 

@@ -19,3 +19,7 @@ export interface Post {
     videoAsset: AssetSummary,
     isAuthorDeleted: boolean,
 }
+
+export type PostSummary = Omit<Post, 'videoAsset' | 'createdBy' | 'updatedBy' | 'isAuthorDeleted'>
+
+export type UpdatePost = Pick<PostSummary, 'caption' | 'description' | 'visibility' | 'categoryName' | 'tags'>

@@ -3,7 +3,7 @@ import React, {Ref, Suspense} from "react";
 import {useConfigStore} from "@/stores/useConfigStore";
 import {Feed} from "@/types/Feed";
 import {Card, CardContent, CardFooter} from "@/components/ui/card";
-import {Post} from "@/types/Post";
+import {PostSummary} from "@/types/Post";
 import {Badge} from "@/components/ui/badge";
 import {formatDateTS} from "@/lib/utils";
 import {UserSummaryCard} from "@/components/common/UserInformation";
@@ -30,7 +30,7 @@ const VideoContainer = ({setIsCommentOpened, feed, ref}: VideoContainerProps) =>
 }
 
 
-const VideoSection = ({post, ref}: { post: Post, ref?: Ref<HTMLVideoElement>}) => {
+const VideoSection = ({post, ref}: { post: PostSummary, ref?: Ref<HTMLVideoElement>}) => {
     const {videoSettings} = useConfigStore()
     console.log(post)
 
