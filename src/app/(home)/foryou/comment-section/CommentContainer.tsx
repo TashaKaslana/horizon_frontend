@@ -19,7 +19,13 @@ interface CommentProps {
 
 const CommentContainer = ({postId, isCommentOpened, isVisible}: CommentProps) => {
     const scrollRef = useRef<HTMLDivElement>(null);
-    const {comments, setComments} = useCommentStore();
+    const {
+        getComments,
+        setComments
+    } = useCommentStore();
+
+    const comments = getComments(postId);
+
 
     const {data, isFetchingNextPage, fetchNextPage, hasNextPage} = useInfiniteQuery({
         queryKey: ['foryou-comments', postId],
@@ -37,9 +43,9 @@ const CommentContainer = ({postId, isCommentOpened, isVisible}: CommentProps) =>
     useEffect(() => {
         if (data) {
             const allComments = data.pages.flatMap(page => page.data);
-            setComments(allComments);
+            setComments(postId, allComments);
         }
-    }, [data, setComments]);
+    }, [data, postId, setComments]);
 
     //prevent scroll event of parent when open comment container
     //bugs

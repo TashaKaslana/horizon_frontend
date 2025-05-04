@@ -17,7 +17,7 @@ export function useCommentAction({comment}: CommentAction) {
     const likeMutation = useMutation({
         mutationFn: () => likeComment(comment.id),
         onSuccess: () => {
-            updateComment(comment.id, {
+            updateComment(comment.postId, comment.id, {
                 // isLiked: true
             });
         },
@@ -29,7 +29,7 @@ export function useCommentAction({comment}: CommentAction) {
     const deleteMutation = useMutation({
         mutationFn: () => deleteComment(comment.id),
         onSuccess: () => {
-            removeComment(comment.id);
+            removeComment(comment.postId, comment.id);
             toast.success("Comment deleted");
         },
         onError: () => {
@@ -40,7 +40,7 @@ export function useCommentAction({comment}: CommentAction) {
     const pinMutation = useMutation({
         mutationFn: () => pinComment(comment.id),
         onSuccess: () => {
-            updateComment(comment.id, { isPinned: true });
+            updateComment(comment.postId, comment.id, { isPinned: true });
             toast.success("Pinned comment");
         },
         onError: () => {
@@ -51,7 +51,7 @@ export function useCommentAction({comment}: CommentAction) {
     const unpinMutation = useMutation({
         mutationFn: () => unpinComment(comment.id),
         onSuccess: () => {
-            updateComment(comment.id, { isPinned: false });
+            updateComment(comment.postId, comment.id, { isPinned: false });
             toast.success("Unpinned comment");
         },
         onError: () => {
