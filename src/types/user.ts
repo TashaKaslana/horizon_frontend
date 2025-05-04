@@ -21,7 +21,7 @@ export interface User {
 
 export type UserSummary = Pick<User, 'id' | 'displayName' | 'username' | 'profileImage' | 'coverImage' | 'createdAt'>;
 
-export type UserIntroduction = Pick<User, 'displayName' | 'firstName' | 'lastName' | 'username' | 'profileImage' | 'coverImage' | 'bio' | 'email' | 'createdAt'>;
+export type UserIntroduction = Pick<User, 'id' | 'displayName' | 'firstName' | 'lastName' | 'username' | 'profileImage' | 'coverImage' | 'bio' | 'email' | 'createdAt'>;
 
 export type UserProfileInformationUpdate = Partial<Omit<User, 'id' | 'username' | 'email' | 'coverImage' | 'profileImage'>>
 

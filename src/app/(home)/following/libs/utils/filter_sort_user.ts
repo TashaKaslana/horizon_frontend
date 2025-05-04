@@ -21,6 +21,13 @@ export const filterUsers = (users: FollowCardProps[],
 }
 
 
-// export const sortUsers = (users: UserCardProps[], sortOption: "newest" | "oldest") => {
-//     return users.sort((a, b) => a.)
-// }
+export const sortUsers = (users: FollowCardProps[], sortOption: "newest" | "oldest") => {
+    return users.sort((a, b) => {
+        const aDate = new Date(a.createdAt).getTime();
+        const bDate = new Date(b.createdAt).getTime();
+
+        return sortOption === 'newest'
+            ? bDate - aDate
+            : aDate - bDate
+    });
+}

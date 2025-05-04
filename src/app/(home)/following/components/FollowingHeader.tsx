@@ -4,7 +4,7 @@ import {Input} from "@/components/ui/input";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {useDebouncedCallback} from "use-debounce";
-import {filterUsers} from "@/app/(home)/following/libs/utils/filter_sort_user";
+import {filterUsers, sortUsers} from "@/app/(home)/following/libs/utils/filter_sort_user";
 import useFollowingStore from "@/app/(home)/following/store/useFollowingStore";
 import React, {useRef} from "react";
 
@@ -34,6 +34,14 @@ export const FollowingHeader = () => {
 
         if (inputRef.current) {
             inputRef.current.value = '';
+        }
+    }
+
+    const handleSort = (sortOption: "newest" | "oldest") => {
+        if (tab === "following") {
+            setFollowing(sortUsers(following, sortOption));
+        } else {
+            setFollowers(sortUsers(followers, sortOption));
         }
     }
 
@@ -70,8 +78,8 @@ export const FollowingHeader = () => {
                         <SelectValue placeholder="Newest"/>
                     </SelectTrigger>
                     <SelectContent>
-                        <SelectItem value="newest">Newest</SelectItem>
-                        <SelectItem value="oldest">Oldest</SelectItem>
+                        <SelectItem value="newest" onClick={() => handleSort('newest')}>Newest</SelectItem>
+                        <SelectItem value="oldest" onClick={() => handleSort('oldest')}>Oldest</SelectItem>
                     </SelectContent>
                 </Select>
             </section>
