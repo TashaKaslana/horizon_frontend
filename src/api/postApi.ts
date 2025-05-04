@@ -2,7 +2,7 @@ import {getAccessToken} from "@auth0/nextjs-auth0";
 import {apiRequest} from "@/lib/apiRequest";
 import {toast} from "sonner";
 import {Feed} from "@/types/Feed";
-import {UpdatePost} from "@/types/Post";
+import {Post, UpdatePost} from "@/types/Post";
 
 export const likePost = async (postId: string) => {
     try {
@@ -113,7 +113,20 @@ export const reportPost = async (postId: string, reason: string) => {
     })
 }
 
-export const postUpdate = async (postId: string, data: UpdatePost) => {
+
+export const getPostById = async (postId: string) => {
+    const token = await getAccessToken()
+
+    return await apiRequest<Post>({
+        url: `/posts/${postId}`,
+        method: 'GET',
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
+
+export const updatePost = async (postId: string, data: UpdatePost) => {
     const token = await getAccessToken()
 
     return await apiRequest({

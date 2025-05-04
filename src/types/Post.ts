@@ -10,7 +10,7 @@ export interface Post {
     user: UserSummary
     caption: string,
     description: string,
-    visibility: "PUBLIC" | "PRIVATE" | "UNLISTED",
+    visibility: PostVisibility,
     duration: number,
     categoryName: string,
     tags: string[],
@@ -19,6 +19,8 @@ export interface Post {
     videoAsset: AssetSummary,
     isAuthorDeleted: boolean,
 }
+
+export type PostVisibility = "PUBLIC" | "PRIVATE" | "FRIEND"
 
 export type PostSummary = Omit<Post, 'videoAsset' | 'createdBy' | 'updatedBy' | 'isAuthorDeleted'>
 

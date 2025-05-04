@@ -18,7 +18,7 @@ export function formatDateDifference(dateInput: Date) {
   const now = new Date();
   const inputDate = new Date(dateInput);
 
-  const diffInMilliseconds = inputDate.getMilliseconds() - now.getMilliseconds();
+  const diffInMilliseconds = inputDate.getTime() - now.getTime();
   const diffInSeconds = Math.floor(diffInMilliseconds / 1000);
   const diffInMinutes = Math.floor(diffInSeconds / 60);
   const diffInHours = Math.floor(diffInMinutes / 60);

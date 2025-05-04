@@ -3,13 +3,16 @@
 import {Button} from "@/components/ui/button"
 import {Badge} from "@/components/ui/badge"
 import {FileVideo, X} from "lucide-react"
-import {PostSummary} from "@/types/Post"
+import {Post} from "@/types/Post"
+import {formatDateDifference, formatDateTS} from "@/lib/utils";
+import {Suspense} from "react";
+import {Spinner} from "@/components/ui/spinner";
 
 interface VideoPreviewProps {
     file?: File
-    previewUrl: string | null
+    previewUrl?: string | null
     onResetAction: () => void
-    existingData?: PostSummary
+    existingData?: Post
     mode: "edit" | "create"
 }
 
@@ -23,7 +26,7 @@ export function VideoPreview({file, previewUrl, onResetAction, mode, existingDat
 
 const fileVersion = ({file, previewUrl, onResetAction}: {
     file: File
-    previewUrl: string | null
+    previewUrl?: string | null
     onResetAction: () => void
 }) => {
     return (
@@ -62,14 +65,16 @@ const fileVersion = ({file, previewUrl, onResetAction}: {
 }
 
 const existingDataVersion = ({existingData, onResetAction}: {
-    existingData: PostSummary
+    existingData: Post
     onResetAction: () => void
 }) => {
     return (
         <>
             <div
                 className="aspect-video bg-black rounded-xl overflow-hidden relative shadow-lg border border-black/10">
-                {existingData.videoPlaybackUrl && <video src={existingData.videoPlaybackUrl} className="w-full h-full object-contain" controls/>}
+                <Suspense fallback={<Spinner/>}>
+                    <video src={existingData.videoPlaybackUrl} className="w-full h-full object-contain" controls/>
+                </Suspense>
                 <Button
                     type="button"
                     size="icon"
@@ -86,10 +91,19 @@ const existingDataVersion = ({existingData, onResetAction}: {
                     <FileVideo className="h-5 w-5 text-primary"/>
                 </div>
                 <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium truncate">{existingData.videoAsset.originalFilename}</p>
                     <p className="text-xs text-muted-foreground">
-                        {new Date(existingData.updatedAt).toLocaleDateString()}
+                        {(existingData.videoAsset.bytes / (1024 * 1024)).toFixed(2)} MB
                     </p>
                 </div>
+                <Badge variant="outline" className="ml-auto">
+                    {existingData.videoAsset.format}
+                </Badge>
+            </div>
+
+            <div className="bg-muted/50 rounded-lg p-4 flex flex-col items-center gap-3">
+                <p>Post created: {formatDateTS(new Date(existingData.createdAt))}</p>
+                <p>Last post updated: {formatDateDifference(new Date(existingData.updatedAt))}</p>
             </div>
         </>
     )

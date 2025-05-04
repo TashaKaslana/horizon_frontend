@@ -7,5 +7,5 @@ export const uploadSchema = z.object({
     category: z.string().min(1, "Category is required"),
     allowComments: z.boolean().default(true),
     ageRestricted: z.boolean().default(false),
-    file: z.instanceof(File, { message: "File is required" }),
+    file: z.instanceof(File, { message: "File is required" }).optional(),
 })
