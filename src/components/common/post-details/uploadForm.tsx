@@ -1,17 +1,17 @@
-import React, { SetStateAction, useState } from "react";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import React, {SetStateAction, useState} from "react";
+import {useForm} from "react-hook-form";
+import {z} from "zod";
+import {zodResolver} from "@hookform/resolvers/zod";
+import {useMutation} from "@tanstack/react-query";
 
-import { uploadSchema } from "@/app/(home)/uploads/schemas/schema";
+import {uploadSchema} from "@/app/(home)/uploads/schemas/schema";
 import uploadVideo from "@/app/(home)/uploads/libs/uploadVideo";
 
-import { Form } from "@/components/ui/form";
-import { Button } from "@/components/ui/button";
-import { VideoPreview } from "@/app/(home)/uploads/components/video-preview";
-import { VideoDetailsForm } from "@/app/(home)/uploads/components/video-details-form";
-import { UploadProgress } from "@/app/(home)/uploads/components/upload-progress";
+import {Form} from "@/components/ui/form";
+import {Button} from "@/components/ui/button";
+import {VideoPreview} from "@/components/common/post-details/video-preview";
+import {VideoDetailsForm} from "@/components/common/post-details/video-details-form";
+import {UploadProgress} from "@/components/common/post-details/upload-progress";
 import {toast} from "sonner";
 import {PostUpload} from "@/app/(home)/uploads/types/postUpload";
 import {cn} from "@/lib/utils";
@@ -22,12 +22,14 @@ export const UploadForm = ({
                                setFile,
                                setPreview,
                                setError,
+                               mode
                            }: {
     file: File;
     previewUrl: string | null;
     setFile: React.Dispatch<SetStateAction<File | null>>;
     setPreview: React.Dispatch<SetStateAction<string | null>>;
     setError: React.Dispatch<SetStateAction<string | null>>;
+    mode: "create" | "edit",
 }) => {
     const [uploadProgress, setUploadProgress] = useState(0);
     const [uploadComplete, setUploadComplete] = useState(false);
@@ -89,11 +91,15 @@ export const UploadForm = ({
             <form onSubmit={form.handleSubmit(handleUpload)} className="p-6 space-y-8">
                 <div className="flex flex-col lg:flex-row gap-8">
                     <div className="w-full lg:w-2/5 space-y-4">
-                        <VideoPreview file={file} previewUrl={previewUrl} onResetAction={resetUpload} />
+                        <VideoPreview
+                            file={file}
+                            previewUrl={previewUrl}
+                            onResetAction={resetUpload}
+                            mode={mode}/>
                     </div>
 
                     <div className="w-full lg:w-3/5">
-                        <VideoDetailsForm form={form} />
+                        <VideoDetailsForm form={form}/>
                     </div>
                 </div>
 
@@ -108,8 +114,8 @@ export const UploadForm = ({
                         type="button"
                         onClick={resetUpload}
                         className={cn("border bg-background text-muted-foreground hover:bg-accent h-10 px-6",
-                                uploadComplete && "text-black dark:text-white"
-                            )}
+                            uploadComplete && "text-black dark:text-white"
+                        )}
                     >
                         {uploadComplete ? "Go Back" : "Cancel"}
                     </Button>

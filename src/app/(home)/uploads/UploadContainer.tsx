@@ -5,7 +5,7 @@ import { useState, useEffect } from "react"
 import { Video } from "lucide-react"
 import { Card, CardContent } from "@/components/ui/card"
 import { FileUploadArea } from "@/app/(home)/uploads/components/file-upload-area"
-import { UploadForm } from "@/app/(home)/uploads/components/uploadForm"
+import { UploadForm } from "@/components/common/post-details/uploadForm"
 import { FileUploader, FileInput } from "@/components/ui/file-upload"
 import { DropzoneOptions } from "react-dropzone"
 import { cn } from "@/lib/utils"
@@ -104,6 +104,7 @@ export default function UploadContainer() {
                                     }}
                                     setPreview={setPreview}
                                     setError={setError}
+                                    mode={"create"}
                                 />
                             )}
                         </div>
