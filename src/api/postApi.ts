@@ -113,7 +113,6 @@ export const reportPost = async (postId: string, reason: string) => {
     })
 }
 
-
 export const getPostById = async (postId: string) => {
     const token = await getAccessToken()
 
@@ -133,6 +132,18 @@ export const updatePost = async (postId: string, data: UpdatePost) => {
         url: `/posts/${postId}`,
         method: 'PUT',
         data,
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
+
+export const deletePost = async (postId: string) => {
+    const token = await getAccessToken()
+
+    return await apiRequest({
+        url: `/posts/${postId}`,
+        method: 'DELETE',
         headers: {
             Authorization: `Bearer ${token}`
         }

@@ -1,10 +1,12 @@
 import {usePostManagementStore} from "@/app/(home)/management/store/usePostManagementStore";
-import {useInfiniteQuery} from "@tanstack/react-query";
-import {getFeeds} from "@/api/postApi";
-import {useEffect} from "react";
+import {useInfiniteQuery, useMutation} from "@tanstack/react-query";
+import {deletePost, getFeeds} from "@/api/postApi";
+import {useEffect, useRef} from "react";
+import { toast } from "sonner";
 
 export const usePostManagement = () => {
-    const {feeds, setInitialPosts, setPosts} = usePostManagementStore()
+    const {feeds, setInitialPosts, setPosts, deletePostById} = usePostManagementStore()
+    const deletedPostIdsRef = useRef<Set<string>>(new Set());
 
     const {data, isFetchingNextPage, fetchNextPage, hasNextPage} = useInfiniteQuery({
         queryKey: ['my-posts'],
@@ -18,18 +20,42 @@ export const usePostManagement = () => {
         initialPageParam: 0
     })
 
+    const postDeleteMutation = useMutation({
+        mutationFn: async (postId: string) => {
+            return await deletePost(postId)
+        },
+        onSuccess: (_data, postId ) => {
+            deletedPostIdsRef.current.add(postId)
+            deletePostById(postId)
+            toast.success("Post deleted successfully.")
+        },
+        onError: () => {
+            toast.error('Failed to delete post')
+        }
+    })
+
     useEffect(() => {
         const feedsData = data?.pages.flatMap((page) => page.data) ?? [];
         if (feedsData.length === 0) return;
 
-        setPosts(feedsData);
-        setInitialPosts(feedsData);
+        const filteredFeeds = feedsData.filter((feed) => {
+            return !deletedPostIdsRef.current.has(feed.post.id);
+        })
+        if (filteredFeeds.length === 0) return;
+
+        setPosts(filteredFeeds);
+        setInitialPosts(filteredFeeds);
     }, [data?.pages, setInitialPosts, setPosts]);
-    
+
+    const deletePostAction = (postId: string) => {
+        postDeleteMutation.mutate(postId)
+    }
+
     return {
         feeds,
         isFetchingNextPage,
         fetchNextPage,
         hasNextPage,
+        deletePostAction,
     }
 }

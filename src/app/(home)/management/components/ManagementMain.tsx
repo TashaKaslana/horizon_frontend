@@ -8,6 +8,7 @@ import {usePostManagement} from "@/app/(home)/management/hooks/usePostManagement
 import InfiniteScroll from "@/components/ui/infinite-scroll";
 import {Spinner} from "@/components/ui/spinner";
 import React from "react";
+import {MoreActionDropdown} from "@/app/(home)/management/components/MoreActionDropdown";
 
 export const ManagementMain = () => {
     const {feeds, isFetchingNextPage, fetchNextPage, hasNextPage} = usePostManagement()
@@ -50,18 +51,23 @@ const PostCard = ({feed}: { feed: Feed }) => {
                         <span>{date}</span>
                         <span>{formatViews} Views</span>
                     </div>
-                    <div className={'flex gap-2 mt-2'}>
-                        <Badge>
-                            <Heart/>
-                            <span>{formatLikes}</span>
-                        </Badge>
-                        <Badge>
-                            <MessageSquare/>
-                            <span>{formatComments}</span>
-                        </Badge>
+                    <div className={'flex justify-between items-center'}>
+                        <div className={'flex gap-2 mt-2'}>
+                            <Badge>
+                                <Heart/>
+                                <span>{formatLikes}</span>
+                            </Badge>
+                            <Badge>
+                                <MessageSquare/>
+                                <span>{formatComments}</span>
+                            </Badge>
+                        </div>
+
+                        <MoreActionDropdown postId={feed.post.id}/>
                     </div>
                 </div>
             </CardFooter>
         </Card>
     )
 }
+

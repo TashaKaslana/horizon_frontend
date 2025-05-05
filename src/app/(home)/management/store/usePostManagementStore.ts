@@ -1,6 +1,6 @@
 import {create} from "zustand";
 import {PostCategory, SortType} from "../types/types";
-import { toast } from "sonner";
+import {toast} from "sonner";
 import {Feed} from "@/types/Feed";
 
 type PostManagementStore = {
@@ -11,6 +11,8 @@ type PostManagementStore = {
     sortPosts: (option: SortType) => void
     filterPosts: (option: PostCategory) => void
     searchPosts: (filterString: string) => void
+    deletePostById: (postId: string) => void
+    addPost: (post: Feed) => void
 }
 
 export const usePostManagementStore = create<PostManagementStore>()((set) => ({
@@ -76,5 +78,17 @@ export const usePostManagementStore = create<PostManagementStore>()((set) => ({
                 feed.post.caption.toLowerCase().includes(filterString.toLowerCase())
             )
         }));
-    }
+    },
+
+    deletePostById: (postId: string) => {
+        set((state) => ({
+            feeds: state.feeds.filter((feed) => feed.post.id !== postId),
+            initialPosts: state.initialPosts.filter((feed) => feed.post.id !== postId)
+        }))
+    },
+
+    addPost: (post: Feed) => set((state) => ({
+        feeds: {...state.feeds, post},
+        initialPosts: {...state.initialPosts, post}
+    }))
 }))
