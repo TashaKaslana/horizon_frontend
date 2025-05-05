@@ -200,7 +200,7 @@ const resolveData = ({existingData, file}: { existingData?: Post, file?: File })
             title: existingData.caption,
             description: existingData.description,
             visibility: existingData.visibility,
-            category: existingData.categoryName,
+            category: existingData.categoryName.toLowerCase(),
             allowComments: /*existingData.allowComments*/ true,
             ageRestricted: /*existingData.ageRestricted*/ false,
             file: undefined,
