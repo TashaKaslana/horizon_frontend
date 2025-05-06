@@ -1,44 +1,42 @@
 import DiscoverContainer from "@/app/(home)/discover/DiscoverContainer";
+import {dehydrate, HydrationBoundary, QueryClient} from "@tanstack/react-query";
+import {getFeeds, getPostCategories} from "@/api/postApi";
+import {RestApiResponse} from "@/types/api";
+import {PostCategory} from "@/types/Category";
+import {Feed} from "@/types/Feed";
 
-const Page = () => {
-  const items = [
-      {
-          id: "0",
-          title: "Discovering the Sea",
-          description: "A journey through the vast oceans of the world.",
-          src: "https://www.w3schools.com/tags/mov_bbb.mp4",
-          avatar: "https://github.com/shadcn.png/",
-          author: "JaneDoe",
-          username: "janedoe",
-          category: "travel",
-          tags: ["adventure", "water", "scuba diving"],
-          view: 1234,
-          timestamp: "2025-02-28T12:00:00Z",
-          likes: 750,
-          comments: 15,
-      },
-      {
-          id: "1",
-          title: "Exploring the Mountains",
-          description: "A journey through the majestic landscapes of the Alps.",
-          src: "https://www.w3schools.com/tags/mov_bbb.mp4",
-          avatar: "https://github.com/shadcn.png/",
-          author: "JohnDoe",
-          username: "john123",
-          category: "education",
-          tags: ["adventure", "nature", "hiking"],
-          view: 1523,
-          timestamp: "2025-03-18T14:30:00Z",
-          likes: 875,
-          comments: 12,
-      },
-  ]
+const Page = async () => {
+    const queryClient = new QueryClient()
 
-  return (
-      <>
-        <DiscoverContainer posts={items}/>
-      </>
-  )
+    await queryClient.prefetchInfiniteQuery({
+        queryKey: ['post-category'],
+        queryFn: async ({pageParam = 0}) => {
+            return await getPostCategories({page: pageParam, size: 10})
+        },
+        getNextPageParam: (lastPage: Omit<RestApiResponse<PostCategory[]>, 'error' | 'success'>) => {
+            const pagination = lastPage.metadata?.pagination;
+            return pagination?.hasNext ? pagination.currentPage + 1 : undefined;
+        },
+        initialPageParam: 0
+    })
+
+    await queryClient.prefetchInfiniteQuery({
+        queryKey: ['posts-discover', {category: 'all'}],
+        queryFn: async ({pageParam = 0}) => {
+            return await getFeeds({page: pageParam, size: 10})
+        },
+        getNextPageParam: (lastPage: Omit<RestApiResponse<Feed[]>, 'error' | 'success'>) => {
+            const pagination = lastPage.metadata?.pagination;
+            return pagination?.hasNext ? pagination.currentPage + 1 : undefined;
+        },
+        initialPageParam: 0
+    })
+
+    return (
+        <HydrationBoundary state={dehydrate(queryClient)}>
+            <DiscoverContainer/>
+        </HydrationBoundary>
+    )
 }
 
 export default Page

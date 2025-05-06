@@ -57,16 +57,13 @@ export const useFeedActions = (excludePostId?: string) => {
 
             const newData: Feed[] = [singlePost, ...finalFeeds];
             setFeeds(newData);
-            console.log("Exclude trigger")
         } else {
             setFeeds((prev) => {
                 // Check if the first post in the previous feeds is the same as the first post in the new data
                 if (prev.length > 0 && prev[0].post.id !== finalData[0]?.post?.id) {
-                    console.log("Skipping Not Exclude trigger to preserve order");
                     return prev;
                 }
 
-                console.log("Not Exclude trigger");
                 return finalData;
             });
         }
@@ -103,6 +100,7 @@ export const useFeedActions = (excludePostId?: string) => {
                         : prev.statistic.totalBookmarks + 1,
                 },
             }));
+            toast.success(isBookmarked ? "Removed bookmark" : "Added bookmark");
         },
     });
 

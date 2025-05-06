@@ -9,6 +9,7 @@ interface InfiniteScrollProps {
     rootMargin?: string;
     reverse?: boolean;
     children?: React.ReactNode;
+    direction?: 'vertical' | 'horizontal';
 }
 
 export default function InfiniteScroll({
@@ -21,6 +22,7 @@ export default function InfiniteScroll({
                                            // eslint-disable-next-line @typescript-eslint/no-unused-vars
                                            reverse,
                                            children,
+                                           direction = 'vertical',
                                        }: InfiniteScrollProps) {
     const observer = React.useRef<IntersectionObserver>(null);
     // This callback ref will be called when it is dispatched to an element or detached from an element,
@@ -73,7 +75,11 @@ export default function InfiniteScroll({
             {/* Sentinel div for observing */}
             <div
                 ref={observerRef}
-                className={'h-[1px] opacity-0'}
+                className={
+                    direction === 'vertical'
+                        ? 'h-[1px] opacity-0'
+                        : 'w-[1px] h-full opacity-0 inline-block'
+                }
             />
         </>
     );

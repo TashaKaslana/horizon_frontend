@@ -3,6 +3,7 @@ import {apiRequest} from "@/lib/apiRequest";
 import {toast} from "sonner";
 import {Feed} from "@/types/Feed";
 import {Post, UpdatePost} from "@/types/Post";
+import {PostCategory} from "@/types/Category";
 
 export const likePost = async (postId: string) => {
     try {
@@ -39,10 +40,11 @@ export const removeLikePost = async (postId: string) => {
     })
 }
 
-export const getFeeds = async ({page = 0, size = 10, excludePostId}: {
+export const getFeeds = async ({page = 0, size = 10, excludePostId, categoryName}: {
     page?: number,
     size?: number,
     excludePostId?: string
+    categoryName?: string
 }) => {
     const token = await getAccessToken();
 
@@ -54,7 +56,8 @@ export const getFeeds = async ({page = 0, size = 10, excludePostId}: {
             size,
             sortBy: 'createdAt',
             sortOrder: 'desc',
-            excludePostId: excludePostId ? excludePostId : undefined
+            excludePostId: excludePostId ? excludePostId : undefined,
+            categoryName: categoryName ? categoryName : undefined
         },
         headers: {
             Authorization: `Bearer ${token}`,
@@ -144,6 +147,22 @@ export const deletePost = async (postId: string) => {
     return await apiRequest({
         url: `/posts/${postId}`,
         method: 'DELETE',
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
+
+export const getPostCategories = async (p0: { page: number; size: number; }) => {
+    const token = await getAccessToken()
+
+    return await apiRequest<PostCategory[]>({
+        url: '/post-categories',
+        method: 'GET',
+        params: {
+            page: p0.page,
+            size: p0.size
+        },
         headers: {
             Authorization: `Bearer ${token}`
         }

@@ -1,38 +1,41 @@
-import {Post} from "@/types/types";
+import {Feed} from "@/types/Feed";
 import {create} from 'zustand'
+import {toast} from "sonner";
 
 interface DiscoverState {
-    posts: Post[];
-    setPosts: (posts: Post[]) => void;
-    addPost: (post: Post) => void;
-    removePost: (id: string) => void;
-    sortPosts: (option: 'popular' | 'rating' | 'recent') => void
+    feeds: Feed[];
+    setFeeds: (feed: Feed[]) => void;
+    addFeed: (feeds: Feed) => void;
+    removeFeed: (id: string) => void;
+    sortFeeds: (option: 'popular' | 'rating' | 'recent') => void
 }
 
 export const useDiscoverStore = create<DiscoverState>()((set) => ({
-        posts: [],
-        setPosts: (posts) => set({posts: posts}),
+        feeds: [],
+        setFeeds: (feed) => set({feeds: feed}),
 
-        addPost: (post) =>
+        addFeed: (post) =>
             set((state) => ({
-                posts: [...state.posts, post],
+                feeds: [...state.feeds, post],
             })),
-        removePost: (id) =>
+        removeFeed: (id) =>
             set((state) => ({
-                posts: state.posts.filter((post) => post.id !== id),
+                feeds: state.feeds.filter(feed => feed.post.id !== id),
             })),
-        sortPosts: (option) => {
+        sortFeeds: (option) => {
             set((state) => ({
-                posts: [...state.posts].sort((a, b) => {
+                feeds: [...state.feeds].sort((a, b) => {
                         switch (option.toLowerCase()) {
                             case 'popular':
-                                return b.view - a.view
+                                toast.error("This feature is not available yet")
+                                // return b.view - a.view
+                                return 0
                             case 'rating':
-                                return b.likes - a.likes
+                                return b.statistic.totalLikes - a.statistic.totalLikes
                             case 'recent':
-                                return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+                                return new Date(b.post.createdAt).getTime() - new Date(a.post.createdAt).getTime()
                             default:
-                                return new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime()
+                                return new Date(b.post.createdAt).getTime() - new Date(a.post.createdAt).getTime()
                         }
                     }
                 )

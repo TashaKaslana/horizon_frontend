@@ -1,13 +1,18 @@
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {useDiscoverStore} from "@/app/(home)/discover/store/useDiscoverPostStore";
+import {usePostCategoryStore} from "@/app/(home)/discover/store/usePostCategoryStore";
+import InfiniteScroll from "@/components/ui/infinite-scroll";
+import {useDiscovery} from "@/app/(home)/discover/hooks/useDiscovery";
 
 export const DiscoverHeader = ({triggers} : {triggers: string[]}) => {
     const viewOptions = ['Popular', 'Recent', 'Rating']
-    const {sortPosts} = useDiscoverStore()
+    const {sortFeeds} = useDiscoverStore()
+    const {setSelectedCategory} = usePostCategoryStore()
+    const {categoryHasNextPage, categoryFetchNext, categoryIsFetching} = useDiscovery()
 
     const handleValueChange = (value: 'popular' | 'rating' | 'recent') => {
-        sortPosts(value)
+        sortFeeds(value)
     }
 
     return <header className={'space-y-3 border p-1 rounded sticky'}>
@@ -22,17 +27,25 @@ export const DiscoverHeader = ({triggers} : {triggers: string[]}) => {
                     <SelectValue placeholder={viewOptions[0]}/>
                 </SelectTrigger>
                 <SelectContent>
-                    {viewOptions.map((viewOption, index) =>
-                        <SelectItem value={viewOption.toLowerCase()} key={index}>
-                            {viewOption}
-                        </SelectItem>
-                    )}
+                    <InfiniteScroll
+                        isLoading={categoryIsFetching}
+                        hasMore={categoryHasNextPage}
+                        next={categoryFetchNext}
+                        direction={'horizontal'}
+                        rootMargin={'0px 100px 0px 0px'}
+                    >
+                        {viewOptions.map((viewOption, index) =>
+                            <SelectItem value={viewOption.toLowerCase()} key={index}>
+                                {viewOption}
+                            </SelectItem>
+                        )}
+                    </InfiniteScroll>
                 </SelectContent>
             </Select>
         </div>
         <TabsList className={'w-full'}>
             {triggers.map((trigger, index) =>
-                <TabsTrigger value={trigger} key={index}>
+                <TabsTrigger value={trigger} key={index} onClick={() => setSelectedCategory(trigger)}>
                     {trigger}
                 </TabsTrigger>
             )}
