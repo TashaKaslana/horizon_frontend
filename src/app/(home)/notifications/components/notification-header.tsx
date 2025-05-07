@@ -48,6 +48,7 @@ export default function NotificationHeader() {
         handleDismissAllNotifications
     } = useNotification()
 
+    //TODO: Fix count issue
     const unreadCount = notifications.filter((n) => !n.isRead).length
     const hasUnread = unreadCount > 0
     const hasUnreadInTab = notifications.some((n) => n.type === activeTab && !n.isRead)

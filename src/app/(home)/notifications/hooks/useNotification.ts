@@ -23,11 +23,11 @@ export const useNotification = () => {
     } = useNotificationStore()
 
     const {data, isFetchingNextPage, fetchNextPage, hasNextPage} = useInfiniteQuery({
-        queryKey: ['my-notifications'],
-        queryFn: async () => {
+        queryKey: ['my-notifications', activeTab],
+        queryFn: async ({pageParam = 0}) => {
             return await getMyAllNotifications({
-                page: 0,
-                size: 10,
+                page: pageParam,
+                size: 2,
                 type: activeTab !== 'all' ? activeTab : undefined
             })
         },
@@ -99,10 +99,15 @@ export const useNotification = () => {
 
     useEffect(() => {
         const notifications = data?.pages.flatMap((page) => page.data)
+
         if (notifications) {
-            setNotifications(notifications)
+            const uniqueNotifications = Array.from(
+                new Map(notifications.map(n => [n.id, n])).values()
+            )
+            setNotifications(uniqueNotifications)
         }
     }, [data?.pages, setNotifications])
+
 
     const handleToggleReadStatus = (notificationId: string, currentReadStatus: boolean) => {
         if (currentReadStatus) {

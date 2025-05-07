@@ -5,10 +5,11 @@ import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
 import NotificationCard from "./notification-card"
 import NotificationHeader from "@/app/(home)/notifications/components/notification-header"
 import {useNotificationStore} from "../store/useNotificationStore"
-import { notificationTabs } from "../constraints/notification-tab"
+import {notificationTabs} from "../constraints/notification-tab"
 import {useNotification} from "@/app/(home)/notifications/hooks/useNotification";
 import InfiniteScroll from "@/components/ui/infinite-scroll";
 import {getGroupType} from "@/app/(home)/notifications/libs/notification-data";
+import {Spinner} from "@/components/ui/spinner";
 
 export default function NotificationsView() {
     const {
@@ -56,9 +57,10 @@ export default function NotificationsView() {
 
                 <p className="text-sm text-muted-foreground mb-6">{getCurrentTab().description}</p>
 
-                <InfiniteScroll isLoading={isFetchingNextPage} hasMore={hasNextPage} next={fetchNextPage}>
-                    {notificationTabs.map((tab) => (
-                        <TabsContent key={tab.id} value={tab.id} className="space-y-4">
+
+                {notificationTabs.map((tab) => (
+                    <TabsContent key={tab.id} value={tab.id} className="space-y-4">
+                        <InfiniteScroll isLoading={isFetchingNextPage} hasMore={hasNextPage} next={fetchNextPage}>
                             {filteredNotifications.length > 0 ? (
                                 filteredNotifications.map((notification) => (
                                     <NotificationCard key={notification.id}
@@ -75,9 +77,10 @@ export default function NotificationsView() {
                                         any {tab.label.toLowerCase()} notifications at the moment.</p>
                                 </div>
                             )}
-                        </TabsContent>
-                    ))}
-                </InfiniteScroll>
+                            <Spinner show={isFetchingNextPage}/>
+                        </InfiniteScroll>
+                    </TabsContent>
+                ))}
             </Tabs>
         </div>
     )

@@ -14,9 +14,9 @@ const Page = async () => {
     const queryClient = new QueryClient()
 
     await queryClient.prefetchInfiniteQuery({
-        queryKey: ['my-notifications'],
-        queryFn: async () => {
-            return await getMyAllNotifications({page: 0, size: 10})
+        queryKey: ['my-notifications', 'all'],
+        queryFn: async ({pageParam = 0}) => {
+            return await getMyAllNotifications({page: pageParam, size: 2})
         },
         getNextPageParam: (lastPage: Omit<RestApiResponse<Notification[]>, 'error' | 'success'>) => {
             const pagination = lastPage.metadata?.pagination;

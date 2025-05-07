@@ -11,7 +11,7 @@ export const getMyAllNotifications = async (p0: { page: number; size: number; ty
         params: {
             page: p0.page,
             size: p0.size,
-            type: (p0.type && p0.type !== 'all')? p0.type : undefined
+            groupType: (p0.type && p0.type !== 'all')? p0.type : undefined
         },
         headers: {
             Authorization: `Bearer ${token}`
