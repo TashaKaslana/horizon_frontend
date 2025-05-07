@@ -23,9 +23,9 @@ export default function NotificationHeader() {
         clearAllNotifications,
     } = useNotificationStore()
 
-    const unreadCount = notifications.filter((n) => !n.read).length
+    const unreadCount = notifications.filter((n) => !n.isRead).length
     const hasUnread = unreadCount > 0
-    const hasUnreadInTab = notifications.some((n) => n.type === activeTab && !n.read)
+    const hasUnreadInTab = notifications.some((n) => n.type === activeTab && !n.isRead)
 
     return (
         <div className="flex flex-col gap-4 mb-6">

@@ -6,6 +6,8 @@ import NotificationCard from "./notification-card"
 import NotificationHeader from "@/app/(home)/notifications/components/notification-header"
 import {useNotificationStore} from "../store/useNotificationStore"
 import { notificationTabs } from "../constraints/notification-tab"
+import {useNotification} from "@/app/(home)/notifications/hooks/useNotification";
+import InfiniteScroll from "@/components/ui/infinite-scroll";
 
 export default function NotificationsView() {
     const {
@@ -16,14 +18,13 @@ export default function NotificationsView() {
         setActiveTab,
     } = useNotificationStore()
 
-
-
+    const {hasNextPage, fetchNextPage, isFetchingNextPage} = useNotification()
 
     const filteredNotifications = notifications.filter((notification) => {
         if (activeTab !== "all" && notification.type !== activeTab) return false
-        if (readFilter === "read" && !notification.read) return false
-        if (readFilter === "unread" && notification.read) return false
-        return !(searchQuery && !notification.title.toLowerCase().includes(searchQuery.toLowerCase()));
+        if (readFilter === "read" && !notification.isRead) return false
+        if (readFilter === "unread" && notification.isRead) return false
+        return !(searchQuery && !notification.content.toLowerCase().includes(searchQuery.toLowerCase()));
     })
 
     const getTypeCount = (type: string) => {
@@ -54,26 +55,28 @@ export default function NotificationsView() {
 
                 <p className="text-sm text-muted-foreground mb-6">{getCurrentTab().description}</p>
 
-                {notificationTabs.map((tab) => (
-                    <TabsContent key={tab.id} value={tab.id} className="space-y-4">
-                        {filteredNotifications.length > 0 ? (
-                            filteredNotifications.map((notification) => (
-                                <NotificationCard key={notification.id}
-                                                  notification={notification}
-                                />
-                            ))
-                        ) : (
-                            <div className="text-center py-12">
-                                {React.cloneElement(tab.icon as React.ReactElement<React.SVGProps<SVGSVGElement>>, {
-                                    className: "mx-auto h-12 w-12 text-muted-foreground",
-                                })}
-                                <h3 className="mt-4 text-lg font-medium">No {tab.label.toLowerCase()} notifications</h3>
-                                <p className="text-muted-foreground mt-2">You don&#39;t have
-                                    any {tab.label.toLowerCase()} notifications at the moment.</p>
-                            </div>
-                        )}
-                    </TabsContent>
-                ))}
+                <InfiniteScroll isLoading={isFetchingNextPage} hasMore={hasNextPage} next={fetchNextPage}>
+                    {notificationTabs.map((tab) => (
+                        <TabsContent key={tab.id} value={tab.id} className="space-y-4">
+                            {filteredNotifications.length > 0 ? (
+                                filteredNotifications.map((notification) => (
+                                    <NotificationCard key={notification.id}
+                                                      notification={notification}
+                                    />
+                                ))
+                            ) : (
+                                <div className="text-center py-12">
+                                    {React.cloneElement(tab.icon as React.ReactElement<React.SVGProps<SVGSVGElement>>, {
+                                        className: "mx-auto h-12 w-12 text-muted-foreground",
+                                    })}
+                                    <h3 className="mt-4 text-lg font-medium">No {tab.label.toLowerCase()} notifications</h3>
+                                    <p className="text-muted-foreground mt-2">You don&#39;t have
+                                        any {tab.label.toLowerCase()} notifications at the moment.</p>
+                                </div>
+                            )}
+                        </TabsContent>
+                    ))}
+                </InfiniteScroll>
             </Tabs>
         </div>
     )

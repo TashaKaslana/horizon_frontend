@@ -1,8 +1,10 @@
 import { create } from "zustand"
-import { type Notification } from "@/app/(home)/notifications/libs/notification-data"
+import { Notification } from "@/types/Notification"
 
 type NotificationStore = {
     notifications: Notification[]
+    selectedNotificationType: string
+    setSelectedNotificationType: (type : string) => void
     searchQuery: string
     activeTab: string
     readFilter: string
@@ -20,6 +22,8 @@ type NotificationStore = {
 
 export const useNotificationStore = create<NotificationStore>()((set) => ({
     notifications: [],
+    selectedNotificationType: 'all',
+    setSelectedNotificationType: (type) => set({ selectedNotificationType: type}),
     searchQuery: "",
     activeTab: "all",
     readFilter: "all",
@@ -31,26 +35,26 @@ export const useNotificationStore = create<NotificationStore>()((set) => ({
     setReadFilter: (filter) => set({ readFilter: filter }),
     toggleSearch: () => set((state) => ({ showSearch: !state.showSearch })),
 
-    markAllAsRead: () => {
+    markAllAsRead: () =>
         set((state) => ({
-            notifications: state.notifications.map((n) => ({ ...n, read: true })),
-        }))
-    },
+            notifications: state.notifications.map((n) => ({ ...n, isRead: true })),
+        })),
 
-    markTabAsRead: () => {
+    markTabAsRead: () =>
         set((state) => ({
             notifications: state.notifications.map((n) =>
-                state.activeTab === "all" || n.type === state.activeTab ? { ...n, read: true } : n
+                state.activeTab === "all" || n.type === state.activeTab
+                    ? { ...n, isRead: true }
+                    : n
             ),
-        }))
-    },
+        })),
 
     clearAllNotifications: () => set({ notifications: [] }),
 
     updateNotificationReadStatus: (id, isRead) =>
         set((state) => ({
             notifications: state.notifications.map((n) =>
-                n.id === id ? { ...n, read: isRead } : n
+                n.id === id ? { ...n, isRead } : n
             ),
         })),
 }))
