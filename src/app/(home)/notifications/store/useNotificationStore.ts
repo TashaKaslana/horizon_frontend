@@ -14,16 +14,18 @@ type NotificationStore = {
     setActiveTab: (tab: string) => void
     setReadFilter: (filter: string) => void
     toggleSearch: () => void
-    markAllAsRead: () => void
-    markTabAsRead: () => void
+    markAllAsRead: (isRead: boolean) => void
+    markTabAsRead: (isRead: boolean) => void
     clearAllNotifications: () => void
     updateNotificationReadStatus: (id: string, isRead: boolean) => void
+    deleteNotification: (id: string) => void
+    updateNotification: (id: string, updates: Partial<Notification>) => void
 }
 
 export const useNotificationStore = create<NotificationStore>()((set) => ({
     notifications: [],
     selectedNotificationType: 'all',
-    setSelectedNotificationType: (type) => set({ selectedNotificationType: type}),
+    setSelectedNotificationType: (type) => set({ selectedNotificationType: type }),
     searchQuery: "",
     activeTab: "all",
     readFilter: "all",
@@ -35,16 +37,16 @@ export const useNotificationStore = create<NotificationStore>()((set) => ({
     setReadFilter: (filter) => set({ readFilter: filter }),
     toggleSearch: () => set((state) => ({ showSearch: !state.showSearch })),
 
-    markAllAsRead: () =>
+    markAllAsRead: (isRead: boolean) =>
         set((state) => ({
-            notifications: state.notifications.map((n) => ({ ...n, isRead: true })),
+            notifications: state.notifications.map((n) => ({ ...n, isRead: isRead })),
         })),
 
-    markTabAsRead: () =>
+    markTabAsRead: (isRead: boolean) =>
         set((state) => ({
             notifications: state.notifications.map((n) =>
                 state.activeTab === "all" || n.type === state.activeTab
-                    ? { ...n, isRead: true }
+                    ? { ...n, isRead: isRead }
                     : n
             ),
         })),
@@ -55,6 +57,18 @@ export const useNotificationStore = create<NotificationStore>()((set) => ({
         set((state) => ({
             notifications: state.notifications.map((n) =>
                 n.id === id ? { ...n, isRead } : n
+            ),
+        })),
+
+    deleteNotification: (id) =>
+        set((state) => ({
+            notifications: state.notifications.filter((n) => n.id !== id),
+        })),
+
+    updateNotification: (id, updates) =>
+        set((state) => ({
+            notifications: state.notifications.map((n) =>
+                n.id === id ? { ...n, ...updates } : n
             ),
         })),
 }))

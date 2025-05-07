@@ -36,7 +36,64 @@ export const markNotificationAsRead = async (id: string) => {
 
     return await apiRequest({
         url: `/notifications/${id}/mark-as-read`,
-        method: 'POST',
+        method: 'patch',
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+}
+
+export const markAllNotificationsAsRead = async (props: {type?: string}) => {
+    const token = await getAccessToken();
+
+    return await apiRequest({
+        url: `/notifications/mark-all-as-read`,
+        method: 'patch',
+        params: {
+            type: (props.type && props.type !== 'all')? props.type : undefined
+        },
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+}
+
+export const unreadAllNotifications = async (props: {type?: string}) => {
+    const token = await getAccessToken();
+
+    return await apiRequest({
+        url: `/notifications/unmark-all-as-read`,
+        method: 'patch',
+        params: {
+            type: (props.type && props.type !== 'all')? props.type : undefined
+        },
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+}
+
+export const unreadNotification = async (id: string) => {
+    const token = await getAccessToken();
+
+    return await apiRequest({
+        url: `/notifications/${id}/unmark-as-read`,
+        method: 'patch',
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+}
+
+export const dismissAllNotifications = async (props: {type?: string}) => {
+    const token = await getAccessToken();
+
+    return await apiRequest({
+        url: `/notifications/dismiss-all`,
+        method: 'DELETE',
+        params: {
+            type: (props.type && props.type !== 'all')? props.type : undefined
+        },
         headers: {
             Authorization: `Bearer ${token}`
         }

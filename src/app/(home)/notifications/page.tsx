@@ -14,7 +14,7 @@ const Page = async () => {
     const queryClient = new QueryClient()
 
     await queryClient.prefetchInfiniteQuery({
-        queryKey: ['my-notifications', {type: 'all'}],
+        queryKey: ['my-notifications'],
         queryFn: async () => {
             return await getMyAllNotifications({page: 0, size: 10})
         },

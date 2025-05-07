@@ -8,6 +8,7 @@ import {useNotificationStore} from "../store/useNotificationStore"
 import { notificationTabs } from "../constraints/notification-tab"
 import {useNotification} from "@/app/(home)/notifications/hooks/useNotification";
 import InfiniteScroll from "@/components/ui/infinite-scroll";
+import {getGroupType} from "@/app/(home)/notifications/libs/notification-data";
 
 export default function NotificationsView() {
     const {
@@ -21,7 +22,7 @@ export default function NotificationsView() {
     const {hasNextPage, fetchNextPage, isFetchingNextPage} = useNotification()
 
     const filteredNotifications = notifications.filter((notification) => {
-        if (activeTab !== "all" && notification.type !== activeTab) return false
+        if (activeTab !== "all" && getGroupType(notification.type) !== activeTab) return false
         if (readFilter === "read" && !notification.isRead) return false
         if (readFilter === "unread" && notification.isRead) return false
         return !(searchQuery && !notification.content.toLowerCase().includes(searchQuery.toLowerCase()));
@@ -29,7 +30,7 @@ export default function NotificationsView() {
 
     const getTypeCount = (type: string) => {
         if (type === "all") return notifications.length
-        return notifications.filter((n) => n.type === type).length
+        return notifications.filter((n) => getGroupType(n.type) === type).length
     }
 
     const getCurrentTab = () => notificationTabs.find((t) => t.id === activeTab) || notificationTabs[0]

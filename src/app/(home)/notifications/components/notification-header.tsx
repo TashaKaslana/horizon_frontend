@@ -1,12 +1,35 @@
 "use client"
 
 import { Button } from "@/components/ui/button"
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger
+} from "@/components/ui/tooltip"
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue
+} from "@/components/ui/select"
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
-import { Search, Filter, MoreHorizontal, CheckCircle2, Trash2 } from "lucide-react"
+import {
+    Search,
+    Filter,
+    MoreHorizontal,
+    CheckCircle2,
+    Trash2
+} from "lucide-react"
 import { useNotificationStore } from "../store/useNotificationStore"
+import { useNotification } from "../hooks/useNotification"
 
 export default function NotificationHeader() {
     const {
@@ -17,11 +40,13 @@ export default function NotificationHeader() {
         showSearch,
         setSearchQuery,
         setReadFilter,
-        toggleSearch,
-        markAllAsRead,
-        markTabAsRead,
-        clearAllNotifications,
+        toggleSearch
     } = useNotificationStore()
+
+    const {
+        handleToggleAllReadStatus,
+        handleDismissAllNotifications
+    } = useNotification()
 
     const unreadCount = notifications.filter((n) => !n.isRead).length
     const hasUnread = unreadCount > 0
@@ -83,18 +108,18 @@ export default function NotificationHeader() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             {hasUnread && (
-                                <DropdownMenuItem onClick={markAllAsRead}>
+                                <DropdownMenuItem onClick={() => handleToggleAllReadStatus(true)}>
                                     <CheckCircle2 className="h-4 w-4 mr-2" />
                                     Mark all as read
                                 </DropdownMenuItem>
                             )}
                             {hasUnreadInTab && (
-                                <DropdownMenuItem onClick={markTabAsRead}>
+                                <DropdownMenuItem onClick={() => handleToggleAllReadStatus(true)}>
                                     <CheckCircle2 className="h-4 w-4 mr-2" />
                                     Mark {activeTab} as read
                                 </DropdownMenuItem>
                             )}
-                            <DropdownMenuItem onClick={clearAllNotifications}>
+                            <DropdownMenuItem onClick={handleDismissAllNotifications}>
                                 <Trash2 className="h-4 w-4 mr-2" />
                                 Clear all
                             </DropdownMenuItem>
