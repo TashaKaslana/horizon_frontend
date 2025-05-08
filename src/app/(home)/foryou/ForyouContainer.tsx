@@ -11,9 +11,8 @@ import {Loader2} from "lucide-react";
 import { useIsVisible } from "@/hooks/use-is-visible";
 import {useConfigStore} from "@/stores/useConfigStore";
 import {useFeedActions} from "@/app/(home)/foryou/hooks/useFeedAction";
-import {UUID} from "node:crypto";
 
-const ForyouContainer = ({postId} : {postId?: UUID}) => {
+const ForyouContainer = ({postId} : {postId?: string}) => {
     const scrollContainerRef = useRef<HTMLDivElement>(null);
 
     const {
