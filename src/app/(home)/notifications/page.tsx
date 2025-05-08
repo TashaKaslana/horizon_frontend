@@ -1,7 +1,7 @@
 import NotificationContainer from "./NotificationContainer"
 import type {Metadata} from "next";
 import {dehydrate, HydrationBoundary, QueryClient} from "@tanstack/react-query";
-import {getMyAllNotifications} from "@/api/notificationApi";
+import {getMyAllNotifications, getNotificationStatistic} from "@/api/notificationApi";
 import {RestApiResponse} from "@/types/api";
 import {Notification} from "@/types/Notification";
 
@@ -23,6 +23,13 @@ const Page = async () => {
             return pagination?.hasNext ? pagination.currentPage + 1 : undefined;
         },
         initialPageParam: 0
+    })
+
+    await queryClient.prefetchQuery({
+        queryKey: ['my-notifications-statistic'],
+        queryFn: async () => {
+            return await getNotificationStatistic()
+        }
     })
 
     return (

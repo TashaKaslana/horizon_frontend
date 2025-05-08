@@ -30,28 +30,33 @@ import {
 } from "lucide-react"
 import { useNotificationStore } from "../store/useNotificationStore"
 import { useNotification } from "../hooks/useNotification"
+import {GroupType} from "@/types/Notification";
 
 export default function NotificationHeader() {
     const {
-        notifications,
         searchQuery,
         activeTab,
         readFilter,
         showSearch,
         setSearchQuery,
         setReadFilter,
-        toggleSearch
+        toggleSearch,
+        groupedStats
     } = useNotificationStore()
 
     const {
         handleToggleAllReadStatus,
-        handleDismissAllNotifications
+        handleDismissAllNotifications,
+        statistics,
     } = useNotification()
 
-    //TODO: Fix count issue
-    const unreadCount = notifications.filter((n) => !n.isRead).length
+    const unreadCount = statistics?.allUnreadCount ?? 0
     const hasUnread = unreadCount > 0
-    const hasUnreadInTab = notifications.some((n) => n.type === activeTab && !n.isRead)
+    const groupType = activeTab as GroupType;
+
+    const hasUnreadInTab =
+        groupedStats[groupType]?.unreadCount > 0;
+
 
     return (
         <div className="flex flex-col gap-4 mb-6">
@@ -60,7 +65,7 @@ export default function NotificationHeader() {
                     <div className="flex items-center">
                         <span className="text-lg font-medium">Notifications</span>
                         <div className="ml-2 bg-primary/10 text-primary rounded-full px-2 py-0.5 text-xs font-medium">
-                            {notifications.length}
+                            {statistics?.allCount ?? 0}
                         </div>
                     </div>
                     <div className="flex items-center">

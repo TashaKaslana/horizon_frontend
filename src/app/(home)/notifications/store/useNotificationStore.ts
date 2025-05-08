@@ -1,10 +1,18 @@
-import { create } from "zustand"
-import { Notification } from "@/types/Notification"
+import {create} from "zustand"
+import {GroupType, Notification, NotificationCount} from "@/types/Notification"
 
 type NotificationStore = {
     notifications: Notification[]
     selectedNotificationType: string
-    setSelectedNotificationType: (type : string) => void
+    setSelectedNotificationType: (type: string) => void
+    allCount: number
+    allUnreadCount: number
+    groupedStats: Record<GroupType, NotificationCount>
+    setNotificationStatistics: (payload: {
+        allCount: number
+        allUnreadCount: number
+        stats: Record<GroupType, NotificationCount>
+    }) => void
     searchQuery: string
     activeTab: string
     readFilter: string
@@ -25,38 +33,49 @@ type NotificationStore = {
 export const useNotificationStore = create<NotificationStore>()((set) => ({
     notifications: [],
     selectedNotificationType: 'all',
-    setSelectedNotificationType: (type) => set({ selectedNotificationType: type }),
+    setSelectedNotificationType: (type) => set({selectedNotificationType: type}),
     searchQuery: "",
     activeTab: "all",
     readFilter: "all",
     showSearch: false,
 
-    setNotifications: (notifications) => set({ notifications }),
-    setSearchQuery: (query) => set({ searchQuery: query }),
-    setActiveTab: (tab) => set({ activeTab: tab }),
-    setReadFilter: (filter) => set({ readFilter: filter }),
-    toggleSearch: () => set((state) => ({ showSearch: !state.showSearch })),
+    allCount: 0,
+    allUnreadCount: 0,
+    groupedStats: {
+        like: {count: 0, unreadCount: 0},
+        follow: {count: 0, unreadCount: 0},
+        comment: {count: 0, unreadCount: 0},
+        mention: {count: 0, unreadCount: 0},
+        post: {count: 0, unreadCount: 0},
+        system: {count: 0, unreadCount: 0},
+    },
+
+    setNotifications: (notifications) => set({notifications}),
+    setSearchQuery: (query) => set({searchQuery: query}),
+    setActiveTab: (tab) => set({activeTab: tab}),
+    setReadFilter: (filter) => set({readFilter: filter}),
+    toggleSearch: () => set((state) => ({showSearch: !state.showSearch})),
 
     markAllAsRead: (isRead: boolean) =>
         set((state) => ({
-            notifications: state.notifications.map((n) => ({ ...n, isRead: isRead })),
+            notifications: state.notifications.map((n) => ({...n, isRead: isRead})),
         })),
 
     markTabAsRead: (isRead: boolean) =>
         set((state) => ({
             notifications: state.notifications.map((n) =>
                 state.activeTab === "all" || n.type === state.activeTab
-                    ? { ...n, isRead: isRead }
+                    ? {...n, isRead: isRead}
                     : n
             ),
         })),
 
-    clearAllNotifications: () => set({ notifications: [] }),
+    clearAllNotifications: () => set({notifications: []}),
 
     updateNotificationReadStatus: (id, isRead) =>
         set((state) => ({
             notifications: state.notifications.map((n) =>
-                n.id === id ? { ...n, isRead } : n
+                n.id === id ? {...n, isRead} : n
             ),
         })),
 
@@ -68,7 +87,14 @@ export const useNotificationStore = create<NotificationStore>()((set) => ({
     updateNotification: (id, updates) =>
         set((state) => ({
             notifications: state.notifications.map((n) =>
-                n.id === id ? { ...n, ...updates } : n
+                n.id === id ? {...n, ...updates} : n
             ),
+        })),
+
+    setNotificationStatistics: ({allCount, allUnreadCount, stats}) =>
+        set(() => ({
+            allCount,
+            allUnreadCount,
+            groupedStats: stats,
         })),
 }))

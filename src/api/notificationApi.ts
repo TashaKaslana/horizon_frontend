@@ -1,6 +1,6 @@
 import { apiRequest } from "@/lib/apiRequest";
 import {getAccessToken} from "@auth0/nextjs-auth0";
-import {Notification} from "@/types/Notification";
+import {Notification, NotificationStatistics} from "@/types/Notification";
 
 export const getMyAllNotifications = async (p0: { page: number; size: number; type?: string }) => {
     const token = await getAccessToken();
@@ -94,6 +94,18 @@ export const dismissAllNotifications = async (props: {type?: string}) => {
         params: {
             type: (props.type && props.type !== 'all')? props.type : undefined
         },
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    });
+}
+
+export const getNotificationStatistic = async () => {
+    const token = await getAccessToken();
+
+    return await apiRequest<NotificationStatistics>({
+        url: '/notifications/statistics',
+        method: 'GET',
         headers: {
             Authorization: `Bearer ${token}`
         }

@@ -10,6 +10,7 @@ import {useNotification} from "@/app/(home)/notifications/hooks/useNotification"
 import InfiniteScroll from "@/components/ui/infinite-scroll";
 import {getGroupType} from "@/app/(home)/notifications/libs/notification-data";
 import {Spinner} from "@/components/ui/spinner";
+import {GroupType} from "@/types/Notification";
 
 export default function NotificationsView() {
     const {
@@ -18,9 +19,10 @@ export default function NotificationsView() {
         activeTab,
         readFilter,
         setActiveTab,
+        groupedStats
     } = useNotificationStore()
 
-    const {hasNextPage, fetchNextPage, isFetchingNextPage} = useNotification()
+    const {hasNextPage, fetchNextPage, isFetchingNextPage, statistics} = useNotification()
 
     const filteredNotifications = notifications.filter((notification) => {
         if (activeTab !== "all" && getGroupType(notification.type) !== activeTab) return false
@@ -29,10 +31,11 @@ export default function NotificationsView() {
         return !(searchQuery && !notification.content.toLowerCase().includes(searchQuery.toLowerCase()));
     })
 
-    const getTypeCount = (type: string) => {
-        if (type === "all") return notifications.length
-        return notifications.filter((n) => getGroupType(n.type) === type).length
-    }
+    const getTypeCount = (type: 'all' | GroupType) => {
+        return type === 'all'
+            ? statistics?.allCount ?? 0
+            : groupedStats[type]?.count ?? 0;
+    };
 
     const getCurrentTab = () => notificationTabs.find((t) => t.id === activeTab) || notificationTabs[0]
 
@@ -48,7 +51,7 @@ export default function NotificationsView() {
                                 {tab.icon}
                                 <span className="hidden sm:inline">{tab.label}</span>
                                 <div className="bg-primary/10 text-primary rounded-full px-1.5 py-0.5 text-xs">
-                                    {getTypeCount(tab.id)}
+                                    {getTypeCount(tab.id as 'all' | GroupType)}
                                 </div>
                             </TabsTrigger>
                         ))}

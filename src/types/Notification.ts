@@ -31,3 +31,22 @@ export type NotificationType =
     | 'SYSTEM_MESSAGE';
 
 export type NotificationStatus = 'success' | 'error' | 'warning' | 'info';
+
+export type NotificationCount = {
+    count: number
+    unreadCount: number
+}
+
+export type NotificationStatistics = {
+    allCount: number
+    allUnreadCount: number
+    stats: Record<GroupType, NotificationCount>
+}
+
+export type GroupType =
+    | 'like'
+    | 'follow'
+    | 'comment'
+    | 'mention'
+    | 'post'
+    | 'system';

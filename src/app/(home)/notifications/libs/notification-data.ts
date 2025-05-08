@@ -1,4 +1,4 @@
-import {NotificationType} from "@/types/Notification";
+import {GroupType, NotificationType} from "@/types/Notification";
 
 export function getNotificationTypeInfo(type: NotificationType) {
     const groupType = getGroupType(type);
@@ -71,7 +71,7 @@ export function getNotificationTypeInfo(type: NotificationType) {
     }
 }
 
-export const getGroupType = (type: NotificationType) => {
+export const getGroupType = (type: NotificationType) : GroupType => {
     switch (type) {
         case 'LIKE_POST':
         case 'LIKE_COMMENT':
@@ -92,6 +92,25 @@ export const getGroupType = (type: NotificationType) => {
             return 'system';
         default:
             return type;
+    }
+};
+
+export const getNotificationTypesByGroup = (group: GroupType): NotificationType[] => {
+    switch (group) {
+        case 'like':
+            return ['LIKE_POST', 'LIKE_COMMENT'];
+        case 'follow':
+            return ['NEW_FOLLOWER', 'UN_FOLLOWER'];
+        case 'comment':
+            return ['REPLY_COMMENT', 'COMMENT_PINNED', 'REPORT_COMMENT'];
+        case 'mention':
+            return ['MENTION_COMMENT'];
+        case 'post':
+            return ['COMMENT_POST', 'REPORT_POST'];
+        case 'system':
+            return ['SYSTEM_MESSAGE'];
+        default:
+            return [];
     }
 };
 

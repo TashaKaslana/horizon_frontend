@@ -4,10 +4,10 @@ import {
     markNotificationAsRead,
     markAllNotificationsAsRead,
     unreadAllNotifications,
-    unreadNotification, dismissAllNotifications
+    unreadNotification, dismissAllNotifications, getNotificationStatistic
 } from "@/api/notificationApi"
 import {RestApiResponse} from "@/types/api"
-import {useInfiniteQuery, useMutation} from "@tanstack/react-query"
+import {useInfiniteQuery, useMutation, useQuery} from "@tanstack/react-query"
 import {useNotificationStore} from "@/app/(home)/notifications/store/useNotificationStore"
 import {useEffect} from "react"
 import {Notification} from "@/types/Notification"
@@ -19,7 +19,8 @@ export const useNotification = () => {
         markTabAsRead,
         deleteNotification: deleteNotificationStore,
         updateNotification,
-        markAllAsRead
+        markAllAsRead,
+        setNotificationStatistics,
     } = useNotificationStore()
 
     const {data, isFetchingNextPage, fetchNextPage, hasNextPage} = useInfiniteQuery({
@@ -38,6 +39,26 @@ export const useNotification = () => {
         initialPageParam: 0
     })
 
+    //TODO: add update statistics
+    const {data: statisticsData} = useQuery({
+        queryKey: ['my-notifications-statistic'],
+        queryFn: async () => {
+            return await getNotificationStatistic()
+        }
+    })
+
+    const statistics = statisticsData?.data
+
+    useEffect(() => {
+        if (statistics) {
+            setNotificationStatistics({
+                allCount: statistics.allCount,
+                allUnreadCount: statistics.allUnreadCount,
+                stats: statistics.stats,
+            });
+        }
+    }, [setNotificationStatistics, statistics]);
+    
     const deleteMutation = useMutation({
         mutationFn: async (notificationId: string) => {
             await deleteNotification(notificationId)
@@ -137,6 +158,7 @@ export const useNotification = () => {
         isFetchingNextPage,
         fetchNextPage,
         hasNextPage,
+        statistics,
         handleDeleteNotification,
         handleToggleReadStatus,
         handleToggleAllReadStatus,
