@@ -13,6 +13,12 @@ type NotificationStore = {
         allUnreadCount: number
         stats: Record<GroupType, NotificationCount>
     }) => void
+    setAllCount: (count: number | ((prev: number) => number)) => void
+    setAllUnreadCount: (count: number | ((prev: number) => number)) => void,
+    setGroupedStats: (
+        stats: Record<GroupType, NotificationCount>
+            | ((prev: Record<GroupType, NotificationCount>) => Record<GroupType, NotificationCount>
+            )) => void,
     searchQuery: string
     activeTab: string
     readFilter: string
@@ -96,5 +102,23 @@ export const useNotificationStore = create<NotificationStore>()((set) => ({
             allCount,
             allUnreadCount,
             groupedStats: stats,
+        })),
+
+    setAllCount: (count: number | ((prev: number) => number)) =>
+        set(state => ({
+            allCount: typeof count === 'function' ? (count as (prev: number) => number)(state.allCount) : count,
+        })),
+
+    setAllUnreadCount: (count: number | ((prev: number) => number)) =>
+        set(state => ({
+            allUnreadCount: typeof count === 'function' ? (count as (prev: number) => number)(state.allUnreadCount) : count,
+        })),
+
+    setGroupedStats: (
+        stats: Record<GroupType, NotificationCount>
+            | ((prev: Record<GroupType, NotificationCount>) => Record<GroupType, NotificationCount>
+            )) =>
+        set(state => ({
+            groupedStats: typeof stats === 'function' ? (stats as (prev: typeof state.groupedStats) => typeof state.groupedStats)(state.groupedStats) : stats,
         })),
 }))

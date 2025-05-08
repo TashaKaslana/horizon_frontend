@@ -41,16 +41,17 @@ export default function NotificationHeader() {
         setSearchQuery,
         setReadFilter,
         toggleSearch,
-        groupedStats
+        groupedStats,
+        allCount,
+        allUnreadCount
     } = useNotificationStore()
 
     const {
         handleToggleAllReadStatus,
         handleDismissAllNotifications,
-        statistics,
     } = useNotification()
 
-    const unreadCount = statistics?.allUnreadCount ?? 0
+    const unreadCount = allCount ?? 0
     const hasUnread = unreadCount > 0
     const groupType = activeTab as GroupType;
 
@@ -65,13 +66,13 @@ export default function NotificationHeader() {
                     <div className="flex items-center">
                         <span className="text-lg font-medium">Notifications</span>
                         <div className="ml-2 bg-primary/10 text-primary rounded-full px-2 py-0.5 text-xs font-medium">
-                            {statistics?.allCount ?? 0}
+                            {allCount}
                         </div>
                     </div>
                     <div className="flex items-center">
                         <span className="text-sm text-muted-foreground">Unread</span>
                         <div className="ml-2 bg-primary text-primary-foreground rounded-full px-2 py-0.5 text-xs font-medium">
-                            {unreadCount}
+                            {allUnreadCount}
                         </div>
                     </div>
                 </div>

@@ -10,7 +10,7 @@ import {RestApiResponse} from "@/types/api"
 import {useInfiniteQuery, useMutation, useQuery} from "@tanstack/react-query"
 import {useNotificationStore} from "@/app/(home)/notifications/store/useNotificationStore"
 import {useEffect} from "react"
-import {Notification} from "@/types/Notification"
+import {GroupType, Notification} from "@/types/Notification"
 
 export const useNotification = () => {
     const {
@@ -20,7 +20,10 @@ export const useNotification = () => {
         deleteNotification: deleteNotificationStore,
         updateNotification,
         markAllAsRead,
-        setNotificationStatistics,
+        setAllCount,
+        setAllUnreadCount,
+        setGroupedStats,
+        groupedStats
     } = useNotificationStore()
 
     const {data, isFetchingNextPage, fetchNextPage, hasNextPage} = useInfiniteQuery({
@@ -39,7 +42,6 @@ export const useNotification = () => {
         initialPageParam: 0
     })
 
-    //TODO: add update statistics
     const {data: statisticsData} = useQuery({
         queryKey: ['my-notifications-statistic'],
         queryFn: async () => {
@@ -51,13 +53,18 @@ export const useNotification = () => {
 
     useEffect(() => {
         if (statistics) {
-            setNotificationStatistics({
-                allCount: statistics.allCount,
-                allUnreadCount: statistics.allUnreadCount,
-                stats: statistics.stats,
-            });
+            setAllCount(statistics?.allCount ?? 0)
+            setAllUnreadCount(statistics?.allUnreadCount ?? 0)
+            setGroupedStats(statistics?.stats ?? {
+                like: {count: 0, unreadCount: 0},
+                follow: {count: 0, unreadCount: 0},
+                comment: {count: 0, unreadCount: 0},
+                mention: {count: 0, unreadCount: 0},
+                post: {count: 0, unreadCount: 0},
+                system: {count: 0, unreadCount: 0},
+            })
         }
-    }, [setNotificationStatistics, statistics]);
+    }, [setAllCount, setAllUnreadCount, setGroupedStats, statistics]);
     
     const deleteMutation = useMutation({
         mutationFn: async (notificationId: string) => {
@@ -65,6 +72,15 @@ export const useNotification = () => {
         },
         onSuccess: (_data, notificationId) => {
             deleteNotificationStore(notificationId)
+            setAllCount(prev => prev - 1)
+            //TODO:need way to check if is read
+            setGroupedStats(prev => ({
+                ...prev,
+                [activeTab as GroupType]: {
+                    ...prev[activeTab as GroupType],
+                    count: prev[activeTab as GroupType].count - 1
+                }
+            }))
         }
     })
 
@@ -74,6 +90,14 @@ export const useNotification = () => {
         },
         onSuccess: (_data, notificationId) => {
             updateNotification(notificationId, {isRead: true})
+            setAllUnreadCount(prev => prev - 1)
+            setGroupedStats(prev => ({
+                ...prev,
+                [activeTab as GroupType]: {
+                    ...prev[activeTab as GroupType],
+                    unreadCount: prev[activeTab as GroupType].unreadCount - 1
+                }
+            }))
         }
     })
 
@@ -83,6 +107,14 @@ export const useNotification = () => {
         },
         onSuccess: (_data, notificationId) => {
             updateNotification(notificationId, {isRead: false})
+            setAllUnreadCount(prev => prev + 1)
+            setGroupedStats(prev => ({
+                ...prev,
+                [activeTab as GroupType]: {
+                    ...prev[activeTab as GroupType],
+                    unreadCount: prev[activeTab as GroupType].unreadCount + 1
+                }
+            }))
         }
     })
 
@@ -94,6 +126,16 @@ export const useNotification = () => {
         },
         onSuccess: () => {
             markTabAsRead(true)
+            markAllAsRead(true)
+            setAllUnreadCount(prev => prev - (groupedStats[activeTab as GroupType]?.unreadCount ?? 0))
+            setAllCount(prev => prev - (groupedStats[activeTab as GroupType]?.unreadCount ?? 0))
+            setGroupedStats(prev => ({
+                ...prev,
+                [activeTab as GroupType]: {
+                    ...prev[activeTab as GroupType],
+                    unreadCount: 0
+                }
+            }))
         }
     })
 
@@ -105,6 +147,15 @@ export const useNotification = () => {
         },
         onSuccess: () => {
             markAllAsRead(false)
+            setAllUnreadCount(prev => prev + (groupedStats[activeTab as GroupType]?.unreadCount ?? 0))
+            setAllCount(prev => prev - (groupedStats[activeTab as GroupType]?.unreadCount ?? 0))
+            setGroupedStats(prev => ({
+                ...prev,
+                [activeTab as GroupType]: {
+                    ...prev[activeTab as GroupType],
+                    unreadCount: 0
+                }
+            }))
         }
     })
 
@@ -115,6 +166,12 @@ export const useNotification = () => {
         onSuccess: () => {
             markTabAsRead(false)
             markAllAsRead(false)
+            setAllCount(prev => prev - (groupedStats[activeTab as GroupType]?.count ?? 0))
+            setAllUnreadCount(prev => prev - (groupedStats[activeTab as GroupType]?.unreadCount ?? 0))
+            setGroupedStats(prev => ({
+                ...prev,
+                [activeTab as GroupType]: {count: 0, unreadCount: 0},
+            }))
         }
     })
 
