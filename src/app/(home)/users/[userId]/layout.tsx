@@ -18,7 +18,7 @@ const Layout = async ({
 
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
-            <div className={'size-full'}>
+            <div className={'h-screen'}>
                 {children}
             </div>
         </HydrationBoundary>

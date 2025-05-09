@@ -4,9 +4,9 @@ const Page = ({params} : {params: { userId: string }}) => {
     const userId = params.userId
 
     return (
-        <div>
+        <>
             <PostListContainer userId={userId}/>
-        </div>
+        </>
     )
 }
 

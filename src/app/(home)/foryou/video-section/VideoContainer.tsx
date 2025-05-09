@@ -8,6 +8,7 @@ import {Badge} from "@/components/ui/badge";
 import {formatDateTS} from "@/lib/utils";
 import {UserSummaryCard} from "@/components/common/UserInformation";
 import {Clock, Grid} from "lucide-react";
+import Link from "next/link";
 
 interface VideoContainerProps {
     setIsCommentOpened?: React.Dispatch<React.SetStateAction<boolean>>,
@@ -63,7 +64,9 @@ const VideoSection = ({post, ref}: { post: PostSummary, ref?: Ref<HTMLVideoEleme
                         <h4 className={'text-xl bold'}>{post.caption}</h4>
                         <p className={'text-xs text-zinc-700 dark:text-zinc-300'}>{post.description}</p>
                     </div>
-                    <UserSummaryCard user={post.user}/>
+                    <Link href={`/users/${post.user.id}/overview`}>
+                        <UserSummaryCard user={post.user}/>                    
+                    </Link>
                 </div>
                 <div className={'w-full'}>
                     <div className={'flex justify-between items-center'}>
