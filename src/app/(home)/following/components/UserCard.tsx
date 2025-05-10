@@ -5,10 +5,10 @@ import {Button} from "@/components/ui/button";
 import {useState} from "react";
 import {cn} from "@/lib/utils";
 import {AchievementIcon} from "../../../../../public/images/share/AchievementIcon";
-import {RankType, FollowCardProps} from "@/app/(home)/following/types/type";
+import {RankType, FollowCardProps} from "@/types/follow";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
 import {useMutation} from "@tanstack/react-query";
-import {followUser, unfollowUser} from "@/app/(home)/following/libs/api/followApi";
+import {followUser, unfollowUser} from "@/api/followApi";
 import {toast} from "sonner";
 
 const UserCard = ({follow, initialFollowing = true}: { follow: FollowCardProps, initialFollowing?: boolean }) => {
@@ -56,7 +56,9 @@ const UserCard = ({follow, initialFollowing = true}: { follow: FollowCardProps, 
                 </section>
                 <section className={'p-1'}>
                     <Button className={cn('w-32', !isFollowing && 'bg-zinc-800 hover:bg-zinc-700')}
-                            onClick={() => mutation.mutate()}
+                            onClick={() => {
+                                mutation.mutate()
+                            }}
                     >
                         {isFollowing ? 'Following' : 'Follow'}
                     </Button>

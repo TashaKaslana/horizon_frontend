@@ -1,20 +1,28 @@
-import {dehydrate, HydrationBoundary, QueryClient} from "@tanstack/react-query";
+import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query";
 import React from "react";
-import {getUserOverviewById} from "@/api/userApi";
+import { getUserIntroduction } from "@/api/userApi";
+import { getFollowOverview } from "@/api/followApi";
 
 const Layout = async ({
-                    children,
-                    params,
-                }: {
-    children: React.ReactNode
-    params: { userId: string }
+                          children,
+                          params,
+                      }: {
+    children: React.ReactNode;
+    params: Promise<{ userId: string }>;
 }) => {
+    const {userId} = await params
     const queryClient = new QueryClient();
 
-    await queryClient.prefetchQuery({
-        queryKey: ['user-overview', params.userId],
-        queryFn: () => getUserOverviewById(params.userId),
-    })
+    await Promise.all([
+        queryClient.prefetchQuery({
+            queryKey: ['user-intro', userId],
+            queryFn: () => getUserIntroduction(userId),
+        }),
+        queryClient.prefetchQuery({
+            queryKey: ['user-follow-overview', userId],
+            queryFn: () => getFollowOverview(userId),
+        }),
+    ]);
 
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
@@ -22,7 +30,7 @@ const Layout = async ({
                 {children}
             </div>
         </HydrationBoundary>
-    )
-}
+    );
+};
 
-export default Layout
+export default Layout;

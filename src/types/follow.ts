@@ -10,3 +10,9 @@ export type FollowCardProps = {
     user: UserIntroduction
     createdAt: string
 }
+
+export type FollowOverview = {
+    isMeFollowing: boolean,
+    totalFollowers: number,
+    totalFollowing: number,
+}

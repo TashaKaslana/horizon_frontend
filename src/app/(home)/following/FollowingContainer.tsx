@@ -4,11 +4,11 @@ import {FollowingHeader} from "@/app/(home)/following/components/FollowingHeader
 import {Tabs, TabsContent} from "@/components/ui/tabs";
 import {FollowerTab} from "@/app/(home)/following/components/FollowerTab";
 import {FollowingTab} from "@/app/(home)/following/components/FollowingTab";
-import {FollowCardProps} from "@/app/(home)/following/types/type";
+import {FollowCardProps} from "@/types/follow";
 import useFollowingStore from "@/app/(home)/following/store/useFollowingStore";
 import {useEffect} from "react";
 import {useInfiniteQuery} from "@tanstack/react-query";
-import {getMeFollowers, getMeFollowing} from "@/app/(home)/following/libs/api/followApi";
+import {getMeFollowers, getMeFollowing} from "@/api/followApi";
 import {RestApiResponse} from "@/types/api";
 
 const FollowingContainer = () => {

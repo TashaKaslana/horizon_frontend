@@ -8,10 +8,12 @@ import {useState} from "react";
 
 export const PostCard = ({
                              post,
-                             isEnableCategory
+                             isEnableCategory,
+                             direction = "vertical"
                          }: {
     post: Post,
     isEnableCategory?: boolean
+    direction?: "vertical" | "horizon"
 }) => {
     const [isHover, setIsHover] = useState(false)
 

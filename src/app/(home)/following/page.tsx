@@ -1,7 +1,7 @@
 import FollowingContainer from "@/app/(home)/following/FollowingContainer";
-import {FollowCardProps} from "@/app/(home)/following/types/type";
+import {FollowCardProps} from "@/types/follow";
 import {dehydrate, HydrationBoundary, QueryClient} from "@tanstack/react-query";
-import {getMeFollowers, getMeFollowing} from "@/app/(home)/following/libs/api/followApi";
+import {getMeFollowers, getMeFollowing} from "@/api/followApi";
 import {RestApiResponse} from "@/types/api";
 
 const Page = async () => {

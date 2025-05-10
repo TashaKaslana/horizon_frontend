@@ -1,4 +1,4 @@
-import {FollowCardProps} from "@/app/(home)/following/types/type";
+import {FollowCardProps} from "@/types/follow";
 
 export const filterUsers = (users: FollowCardProps[],
                             filterString: string) => {

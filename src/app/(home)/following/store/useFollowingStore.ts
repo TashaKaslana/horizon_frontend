@@ -1,5 +1,5 @@
 import {create} from "zustand";
-import {FollowCardProps} from "@/app/(home)/following/types/type";
+import {FollowCardProps} from "@/types/follow";
 
 interface UserFollowingState {
     initialFollowing: FollowCardProps[]
