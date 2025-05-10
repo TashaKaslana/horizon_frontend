@@ -1,3 +1,5 @@
+'use client'
+
 import {useQuery} from "@tanstack/react-query";
 import {getUserIntroduction} from "@/api/userApi";
 import {getFollowOverview} from "@/api/followApi";

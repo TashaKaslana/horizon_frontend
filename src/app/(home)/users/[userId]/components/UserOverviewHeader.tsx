@@ -8,7 +8,6 @@ interface UserOverviewContainerProps {
 }
 
 const UserOverviewHeader = ({userId}: UserOverviewContainerProps) => {
-    //TODO: refactor this
     return (
         <div className={'px-10 py-3'}>
             <UserOverviewAppearance userId={userId}/>

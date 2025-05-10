@@ -6,7 +6,6 @@ import {useQuery} from "@tanstack/react-query";
 import {cn} from "@/lib/utils";
 
 const UserOverviewMain = () => {
-
     const {data} = useQuery({
         queryKey: ['posts'],
         queryFn: async () => {
@@ -20,7 +19,7 @@ const UserOverviewMain = () => {
     //TODO: DEMO
     return (
         <div>
-            <div className={'px-10 py-3'}>
+            <div className={'px-10 pb-3'}>
                 <div className={'flex flex-col gap-5'}>
                     <div>
                         <h2 className={'text-2xl font-bold'}>The most popular post</h2>

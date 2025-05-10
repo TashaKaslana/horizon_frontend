@@ -1,5 +1,5 @@
 import {useQuery} from "@tanstack/react-query";
-import {PostCard} from "../components/PostCard"
+import {PostCard} from "@/app/(home)/users/[userId]/components/PostCard"
 import {getFeeds} from "@/api/postApi";
 import {Box} from "lucide-react";
 

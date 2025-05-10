@@ -2,6 +2,7 @@ import { dehydrate, HydrationBoundary, QueryClient } from "@tanstack/react-query
 import React from "react";
 import { getUserIntroduction } from "@/api/userApi";
 import { getFollowOverview } from "@/api/followApi";
+import UserOverviewHeader from "@/app/(home)/users/[userId]/components/UserOverviewHeader";
 
 const Layout = async ({
                           children,
@@ -27,6 +28,7 @@ const Layout = async ({
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
             <div className={'h-screen'}>
+                <UserOverviewHeader userId={userId}/>
                 {children}
             </div>
         </HydrationBoundary>

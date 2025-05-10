@@ -1,14 +1,14 @@
-
-import { usePathname } from 'next/navigation';
+import {usePathname} from 'next/navigation';
 import clsx from 'clsx';
 import Link from "next/link";
 
-export function UserOverviewNav({ userId }: { userId: string }) {
+export function UserOverviewNav({userId}: { userId: string }) {
     const pathname = usePathname();
 
     const links = [
-        { label: 'Overview', href: `/users/${userId}/overview` },
-        { label: 'Posts', href: `/users/${userId}/posts` },
+        {label: 'Overview', href: `/users/${userId}/overview`},
+        {label: 'Posts', href: `/users/${userId}/posts`},
+        {label: 'Info', href: `/users/${userId}/info`},
     ];
 
     return (
