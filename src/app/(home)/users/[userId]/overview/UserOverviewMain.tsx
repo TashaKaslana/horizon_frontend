@@ -15,6 +15,7 @@ const UserOverviewMain = () => {
     })
 
     const posts = data?.data ?? [];
+    const popularPost = posts.at(0)?.post
 
     //TODO: DEMO
     return (
@@ -23,16 +24,18 @@ const UserOverviewMain = () => {
                 <div className={'flex flex-col gap-5'}>
                     <div>
                         <h2 className={'text-2xl font-bold'}>The most popular post</h2>
-                        <div className={cn('flex gap-2 ', posts.length < 3 && 'justify-around')}>
-                            {posts.slice(0,3).map(feed => (
-                                <div key={feed.post.id} className={'w-1/3'}>
-                                    <PostCard post={feed.post} isEnableCategory/>
+                        <div className={cn('flex justify-center flex-1 px-12')}>
+                            {popularPost && (
+                                <div key={popularPost.id} className={'w-full'}>
+                                    <PostCard post={popularPost}
+                                              isEnableCategory
+                                              direction={'horizon'}/>
                                 </div>
-                            ))}
+                            )}
                         </div>
                     </div>
                     <div>
-                        <h3 className={'text-xl font-semibold'}>Posts</h3>
+                        <h3 className={'text-xl font-semibold'}>Recent Posts</h3>
                         <div className={cn('grid grid-cols-5 gap-2 w-full')}>
                             {posts.map(feed => (
                                 <div key={feed.post.id} className={'w-full'}>

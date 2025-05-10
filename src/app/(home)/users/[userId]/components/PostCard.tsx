@@ -3,7 +3,7 @@ import {Card, CardContent, CardFooter} from "@/components/ui/card";
 import {AspectRatio} from "@/components/ui/aspect-ratio";
 import {Badge} from "@/components/ui/badge";
 import {cn, formatDateDifference} from "@/lib/utils";
-import {Clock, Eye, Grid} from "lucide-react";
+import {Clock, Dot, Eye, Grid} from "lucide-react";
 import {useState} from "react";
 
 export const PostCard = ({
@@ -11,58 +11,73 @@ export const PostCard = ({
                              isEnableCategory,
                              direction = "vertical"
                          }: {
-    post: Post,
-    isEnableCategory?: boolean
-    direction?: "vertical" | "horizon"
+    post: Post;
+    isEnableCategory?: boolean;
+    direction?: "vertical" | "horizon";
 }) => {
-    const [isHover, setIsHover] = useState(false)
+    const [isHover, setIsHover] = useState(false);
+    const isHorizontal = direction === "horizon";
 
     return (
-        <Card className={cn('p-0 gap-1 hover:bg-gray-300/30',
-            !isHover && 'border-transparent shadow-none')
-        }
-              onMouseEnter={() => setIsHover(true)}
-              onMouseLeave={() => setIsHover(false)}
+        <Card
+            className={cn(
+                "p-0 hover:bg-gray-300/30 gap-1",
+                isHorizontal ? "flex flex-row gap-4 w-full" : "flex flex-col",
+                !isHover && "border-transparent shadow-none"
+            )}
+            onMouseEnter={() => setIsHover(true)}
+            onMouseLeave={() => setIsHover(false)}
         >
-            <CardContent className={'p-0'}>
-                <div className={cn(
-                    "w-full h-full flex items-center justify-center"
-                )}>
-                    <AspectRatio ratio={16 / 9}>
-                        <video
-                            ref={(ref) => {
-                                if (ref && isHover) {
-                                    ref.play().catch(() => {
-                                    });
-                                } else if (ref && !isHover) {
-                                    ref.pause();
-                                    ref.currentTime = 0; // rewind time burh
-                                }
-                            }}
-                            muted={isHover}
-                            controls={isHover}
-                            loop={isHover}
-                            autoPlay={isHover}
-                            playsInline
-                            className={'object-cover w-full h-full rounded-xl'}>
-                            <source src={post.videoPlaybackUrl} type="video/mp4"/>
-                            Your browser does not support the video tag.
-                        </video>
-                    </AspectRatio>
-                </div>
+            <CardContent className={cn("p-0", isHorizontal ? "w-1/3 h-full" : "w-full")}>
+                <AspectRatio ratio={16 / 9}>
+                    <video
+                        ref={(ref) => {
+                            if (ref && isHover) {
+                                ref.play().catch(() => {
+                                });
+                            } else if (ref) {
+                                ref.pause();
+                                ref.currentTime = 0;
+                            }
+                        }}
+                        muted={isHover}
+                        controls={isHover}
+                        loop={isHover}
+                        autoPlay={isHover}
+                        playsInline
+                        className="object-cover w-full h-full rounded-xl"
+                    >
+                        <source src={post.videoPlaybackUrl} type="video/mp4"/>
+                        Your browser does not support the video tag.
+                    </video>
+                </AspectRatio>
             </CardContent>
-            <CardFooter className={'flex-col items-start px-2 pb-1'}>
-                <div>
-                    <h2 className={'text-md font-bold'}>{post.caption}</h2>
-                </div>
-                <div className={'flex justify-between w-full items-center'}>
-                    <div className={'flex items-center gap-2'}>
-                        <Badge><Eye/> views</Badge>
-                        <Badge><Clock/> {formatDateDifference(new Date(post.createdAt))}</Badge>
+
+            <div className={cn(isHorizontal ? "w-1/2 p-2 flex flex-col justify-between w-full" : "")}>
+                <CardFooter
+                    className={cn("gap-1", isHorizontal ? "p-0 flex-col items-start w-full" : "flex-col items-start px-2 pb-1")}>
+                    <h2 className="text-md font-bold">{post.caption}</h2>
+
+                    <div className="flex justify-between w-full items-center flex-wrap gap-2 text-zinc-600 text-xs">
+                        <div className="flex items-center">
+                            <span className={'flex gap-1 items-center'}><Eye className="w-4 h-4"/>1.24m views</span>
+                            <Dot/>
+                            <span className={'flex gap-1 items-center'}><Clock
+                                className="w-4 h-4"/> {formatDateDifference(new Date(post.createdAt))}</span>
+                        </div>
+                        {isEnableCategory && (
+                            <Badge>
+                                <Grid className="w-4 h-4"/> {post.categoryName}
+                            </Badge>
+                        )}
                     </div>
-                    {isEnableCategory && <Badge><Grid/>{post.categoryName}</Badge>}
-                </div>
-            </CardFooter>
+                    {isHorizontal && post.description && (
+                        <div className="pt-2 text-sm text-muted-foreground line-clamp-3 h-full">
+                            {post.description}
+                        </div>
+                    )}
+                </CardFooter>
+            </div>
         </Card>
-    )
-}
+    );
+};
