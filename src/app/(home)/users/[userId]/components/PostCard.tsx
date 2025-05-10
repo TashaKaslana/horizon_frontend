@@ -18,6 +18,8 @@ export const PostCard = ({
     const [isHover, setIsHover] = useState(false);
     const isHorizontal = direction === "horizon";
 
+
+    //TODO: consider add image as poster for smooth
     return (
         <Card
             className={cn(
@@ -38,6 +40,7 @@ export const PostCard = ({
                             } else if (ref) {
                                 ref.pause();
                                 ref.currentTime = 0;
+                                ref.load()
                             }
                         }}
                         muted={isHover}
@@ -45,6 +48,7 @@ export const PostCard = ({
                         loop={isHover}
                         autoPlay={isHover}
                         playsInline
+                        poster={post.videoThumbnailUrl}
                         className="object-cover w-full h-full rounded-xl"
                     >
                         <source src={post.videoPlaybackUrl} type="video/mp4"/>
@@ -53,7 +57,7 @@ export const PostCard = ({
                 </AspectRatio>
             </CardContent>
 
-            <div className={cn(isHorizontal ? "w-1/2 p-2 flex flex-col justify-between w-full" : "")}>
+            <div className={cn(isHorizontal ? "p-2 flex flex-col justify-between w-full" : "")}>
                 <CardFooter
                     className={cn("gap-1", isHorizontal ? "p-0 flex-col items-start w-full" : "flex-col items-start px-2 pb-1")}>
                     <h2 className="text-md font-bold">{post.caption}</h2>
