@@ -4,7 +4,7 @@ import React from "react";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
 import {Statistic} from "@/types/Feed";
 import {useFeedActions} from "@/app/(home)/foryou/hooks/useFeedAction";
-import {MoreAction} from "@/app/(home)/foryou/video-section/MoreAction";
+import {MoreAction} from "@/app/components/post-presentation/video-section/MoreAction";
 
 interface ActionButtonGroupProps {
     setIsCommentOpened?: React.Dispatch<React.SetStateAction<boolean>>;

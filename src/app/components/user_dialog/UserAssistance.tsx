@@ -1,10 +1,10 @@
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover";
 import {UserInformation} from "@/components/common/UserInformation";
 import {Separator} from "@/components/ui/separator";
-import {HistoryDialog} from "@/components/common/user_dialog/HistoryDialog";
-import {ProfileDialog} from "@/components/common/user_dialog/ProfileDialog";
-import {SettingDialog} from "@/components/common/user_dialog/SettingDialog";
-import {LogoutDialog} from "@/components/common/user_dialog/LogoutDialog";
+import {HistoryDialog} from "@/app/components/user_dialog/HistoryDialog";
+import {ProfileDialog} from "@/app/components/user_dialog/ProfileDialog";
+import {SettingDialog} from "@/app/components/user_dialog/SettingDialog";
+import {LogoutDialog} from "@/app/components/user_dialog/LogoutDialog";
 
 export const UserAssistance = () => {
     return (

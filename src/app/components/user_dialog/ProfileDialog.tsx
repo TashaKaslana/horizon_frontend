@@ -8,12 +8,12 @@ import {
     DialogTitle,
     DialogTrigger
 } from "@/components/ui/dialog";
-import {UserDialogTrigger} from "@/components/common/user_dialog/UserDialogTrigger";
+import {UserDialogTrigger} from "@/app/components/user_dialog/UserDialogTrigger";
 import {SquareUserRound} from "lucide-react";
 import {ScrollArea} from "@/components/ui/scroll-area";
 import {Button} from "@/components/ui/button";
 import {UserInformation} from "@/components/common/UserInformation";
-import {ProfileInformationForm} from "@/components/common/user_dialog/profile/ProfileInformationForm";
+import {ProfileInformationForm} from "@/app/components/user_dialog/profile/ProfileInformationForm";
 import {useState} from "react";
 
 export const ProfileDialog = () => {

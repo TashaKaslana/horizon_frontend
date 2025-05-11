@@ -1,4 +1,4 @@
-import ActionButtonGroup from "@/app/(home)/foryou/video-section/ActionButtonGroup";
+import ActionButtonGroup from "@/app/components/post-presentation/video-section/ActionButtonGroup";
 import React, {Ref, Suspense} from "react";
 import {useConfigStore} from "@/stores/useConfigStore";
 import {Feed} from "@/types/Feed";
@@ -33,7 +33,6 @@ const VideoContainer = ({setIsCommentOpened, feed, ref}: VideoContainerProps) =>
 
 const VideoSection = ({post, ref}: { post: PostSummary, ref?: Ref<HTMLVideoElement>}) => {
     const {videoSettings} = useConfigStore()
-    console.log(post)
 
     const getValueByKey = (key: string) => {
         const value = videoSettings.find((v) => v.key === key)?.value;

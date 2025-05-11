@@ -1,9 +1,9 @@
 import {AppleIcon, Bell, Lock, User, Video} from "lucide-react";
-import AccountSetting from "@/components/common/user_dialog/settings/AccountSetting";
-import PrivacySecuritySetting from "@/components/common/user_dialog/settings/PrivacySecuritySetting";
-import NotificationSetting from "@/components/common/user_dialog/settings/NotificationSetting";
-import VideoSetting from "@/components/common/user_dialog/settings/VideoSetting";
-import AppPreferencesSetting from "@/components/common/user_dialog/settings/AppPreferencesSetting";
+import AccountSetting from "@/app/components/user_dialog/settings/AccountSetting";
+import PrivacySecuritySetting from "@/app/components/user_dialog/settings/PrivacySecuritySetting";
+import NotificationSetting from "@/app/components/user_dialog/settings/NotificationSetting";
+import VideoSetting from "@/app/components/user_dialog/settings/VideoSetting";
+import AppPreferencesSetting from "@/app/components/user_dialog/settings/AppPreferencesSetting";
 
 export const setting_data = [
     {

@@ -1,7 +1,7 @@
 import {Textarea} from "@/components/ui/textarea";
 import {Button} from "@/components/ui/button";
 import {Spinner} from "@/components/ui/spinner";
-import {useCommentInput} from "../hooks/useCommentInput"; // adjust path if needed
+import {useCommentInput} from "../../../../hooks/useCommentInput"; // adjust path if needed
 import {UUID} from "node:crypto";
 
 type CommentInputProps = {

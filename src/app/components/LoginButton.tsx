@@ -3,7 +3,7 @@
 import {Button} from "@/components/ui/button";
 import Link from "next/link";
 import {useUser} from "@auth0/nextjs-auth0";
-import {UserAssistance} from "@/components/common/user_dialog/UserAssistance";
+import {UserAssistance} from "@/app/components/user_dialog/UserAssistance";
 
 export default function LoginButton() {
     const {user} = useUser()

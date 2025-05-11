@@ -2,7 +2,7 @@
 
 import {DoorOpen} from "lucide-react";
 import {toast} from "sonner";
-import {UserDialogTrigger} from "@/components/common/user_dialog/UserDialogTrigger";
+import {UserDialogTrigger} from "@/app/components/user_dialog/UserDialogTrigger";
 import {
     AlertDialog, AlertDialogAction, AlertDialogCancel,
     AlertDialogContent, AlertDialogDescription, AlertDialogFooter,

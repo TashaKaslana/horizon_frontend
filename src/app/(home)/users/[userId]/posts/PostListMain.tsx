@@ -2,8 +2,13 @@ import {useQuery} from "@tanstack/react-query";
 import {PostCard} from "@/app/(home)/users/[userId]/components/PostCard"
 import {getFeeds} from "@/api/postApi";
 import {Box} from "lucide-react";
+import Link from "next/link";
 
-export const PostListMain = () => {
+interface PostListMainProps {
+    userId: string
+}
+
+export const PostListMain = ({userId}: PostListMainProps) => {
     const {data} = useQuery({
         queryKey: ['posts'],
         queryFn: async () => {
@@ -26,7 +31,9 @@ export const PostListMain = () => {
         <div className="grid grid-cols-5 w-full gap-2 px-2">
             {posts.map(feed => (
                 <div key={feed.post.id} className={'w-full'}>
-                    <PostCard post={feed.post}/>
+                    <Link href={`/users/${userId}/posts/${feed.post.id}`}>
+                        <PostCard post={feed.post}/>
+                    </Link>
                 </div>
             ))}
         </div>

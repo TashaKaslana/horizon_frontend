@@ -77,6 +77,25 @@ export const getFeedById = async (postId: string) => {
     })
 }
 
+export const getFeedByUserId = async (userId: string, 
+                                      excludePostId?: string,
+                                      size = 5, page = 0) => {
+    const token = await getAccessToken()
+
+    return await apiRequest<Feed[]>({
+        url: `feeds/users/${userId}`,
+        params: {
+            excludePostId: excludePostId ? excludePostId : undefined,
+            size,
+            page
+        },
+        method: 'GET',
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
+
 export const bookmarkPost = async (postId: string) => {
     const token = await getAccessToken()
 

@@ -4,7 +4,7 @@ import {CommentResponse} from "@/types/Comment";
 import {formatDateDifference} from "@/lib/utils";
 import {useMemo} from "react";
 import MentionedText from "@/components/common/mention-text";
-import {CommentActionBar} from "@/app/(home)/foryou/comment-section/CommentActionBar";
+import {CommentActionBar} from "@/app/components/post-presentation/comment-section/CommentActionBar";
 
 interface CommentSectionProps {
     comment: CommentResponse,

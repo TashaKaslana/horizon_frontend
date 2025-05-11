@@ -13,9 +13,9 @@ import {
     DropdownMenuSubTrigger,
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import {useCommentAction} from "@/app/(home)/foryou/hooks/useCommentAction";
+import {useCommentAction} from "@/hooks/useCommentAction";
 
-import reports from '@/../public/locales/en/reportReason.json'
+import reports from '../../../../../public/locales/en/reportReason.json'
 
 export const CommentActionBar = ({comment}: {
     comment: CommentResponse,

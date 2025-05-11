@@ -14,7 +14,7 @@ import {
 import {Button} from "@/components/ui/button";
 import {MoreVertical} from "lucide-react";
 import React from "react";
-import reportReason from '@/../public/locales/en/reportReason.json';
+import reportReason from '../../../../../public/locales/en/reportReason.json';
 
 export const MoreAction = ({postId}: { postId: string }) => {
     const {handleShareLink, handleReportPost} = useFeedActions();
