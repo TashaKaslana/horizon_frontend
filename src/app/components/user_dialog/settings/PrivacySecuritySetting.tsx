@@ -5,7 +5,7 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/c
 
 const PrivacySecuritySetting = () => {
     return (
-        <section className={'px-1 space-y-5'}>
+        <section className={'px-1 space-y-10'}>
             <ProfileSection/>
             <CommentSection/>
         </section>
@@ -14,9 +14,9 @@ const PrivacySecuritySetting = () => {
 
 function ProfileSection() {
     return (
-        <article className={'px-1'}>
+        <article className={'px-1 space-y-2'}>
             <header className={"font-bold text-2xl"}>Profile Privacy</header>
-            <main className={"flex justify-between hover:bg-gray-100 items-center rounded"}>
+            <main className={"flex justify-between hover:bg-gray-100 items-center rounded px-1 font-md"}>
                 <Label htmlFor={"public"} className={"w-full"}>
                     <div>
                         <p className={"text-xl text-gray-700"}>Public</p>
@@ -32,8 +32,8 @@ function ProfileSection() {
 const CommentSection = () => {
     return (
         <article className={'px-1'}>
-            <header className={"font-bold text-xl"}>Comments Privacy</header>
-            <main className={"flex justify-between items-center hover:bg-gray-100 rounded"}>
+            <header className={"font-bold text-2xl"}>Comments Privacy</header>
+            <main className={"flex justify-between items-center hover:bg-gray-100 rounded px-1 font-md"}>
                 <header className={'w-full'}>
                     <p className={"text-xl text-gray-700"}>Comments On</p>
                     <p className={"text-sm font-light text-gray-400"}>Allow users to comment on your posts</p>

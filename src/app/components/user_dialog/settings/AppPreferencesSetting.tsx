@@ -24,7 +24,7 @@ const AppPreferencesSetting = () => {
     };
 
     return (
-        <article className="mt-6">
+        <article>
             <header className="font-bold text-2xl">App Preferences</header>
             <section className="space-y-4 mt-4 *:px-1">
                 <div className="flex justify-between items-center hover:bg-gray-300 dark:hover:bg-gray-700 rounded py-1">
@@ -61,7 +61,7 @@ const AppPreferencesSetting = () => {
                     </Select>
                 </div>
 
-                <div className="flex justify-between items-center hover:bg-gray-300 dark:hover:bg-gray-700 rounded py-2">
+                <div className="flex justify-between items-center hover:bg-gray-300 dark:hover:bg-gray-700 rounded py-1">
                     <Label htmlFor="darkMode" className="text-lg w-full">
                         <div>
                             <h1>Dark Mode</h1>

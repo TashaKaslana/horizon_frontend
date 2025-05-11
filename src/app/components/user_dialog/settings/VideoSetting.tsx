@@ -15,14 +15,14 @@ const VideoSetting = () => {
             <article className={'space-y-2'}>
                 <header>
                     <h1 className={'font-bold text-2xl'}>Video Settings</h1>
-                    <p>Customize video quality and settings</p>
+                    <p className={"text-md font-md text-zinc-500"}>Customize video quality and settings</p>
                 </header>
-                <main className={'space-y-2'}>
+                <main className={'space-y-2 px-1'}>
                     {videoSettings.map((config) => (
-                        <div key={config.key} className={'flex justify-between hover:bg-gray-100 items-center rounded'}>
+                        <div key={config.key} className={'flex justify-between hover:bg-gray-100 items-center rounded px-1 cursor-pointer'}>
                             <Label htmlFor={config.key} className={"w-full"}>
                                 <div>
-                                    <p className={"text-xl text-gray-700"}>{config.title}</p>
+                                    <p className={"text-xl font-lg text-gray-800"}>{config.title}</p>
                                     <p className={"text-sm font-light text-gray-400"}>{config.description}</p>
                                 </div>
                             </Label>

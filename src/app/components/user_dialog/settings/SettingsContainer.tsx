@@ -23,7 +23,7 @@ export const SettingsContainer = () => {
 
     return (
         <SidebarProvider>
-            <Sidebar className={'h-[500px]'}>
+            <Sidebar className={'h-full'}>
                 <SidebarContent>
                     <SidebarGroup>
                         <SidebarGroupContent>
@@ -64,7 +64,7 @@ export const SettingsContainer = () => {
                         </BreadcrumbList>
                     </Breadcrumb>
                 </header>
-                <main>
+                <main className="py-1">
                     {setting_data[sidebarOpenIndex].ui}
                 </main>
             </section>
