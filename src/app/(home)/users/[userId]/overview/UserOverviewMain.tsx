@@ -4,6 +4,7 @@ import {PostCard} from "@/app/(home)/users/[userId]/components/PostCard";
 import {getFeeds} from "@/api/postApi";
 import {useQuery} from "@tanstack/react-query";
 import {cn} from "@/lib/utils";
+import Link from "next/link";
 
 const UserOverviewMain = () => {
     const {data} = useQuery({
@@ -38,7 +39,9 @@ const UserOverviewMain = () => {
                         <div className={cn('grid grid-cols-5 gap-2 w-full')}>
                             {posts.map(feed => (
                                 <div key={feed.post.id} className={'w-full'}>
-                                    <PostCard post={feed.post}/>
+                                    <Link href={`/users/${feed.post.user.id}/posts/${feed.post.id}`}>
+                                        <PostCard post={feed.post}/>
+                                    </Link>
                                 </div>
                             ))}
                         </div>

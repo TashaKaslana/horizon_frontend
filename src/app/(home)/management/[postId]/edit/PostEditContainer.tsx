@@ -1,6 +1,6 @@
 'use client'
 
-import {UploadForm} from "@/components/common/post-details/uploadForm";
+import {UploadForm} from "@/app/components/post-details/uploadForm";
 import {useQuery} from "@tanstack/react-query";
 import {getPostById} from "@/api/postApi";
 import {Video} from "lucide-react";

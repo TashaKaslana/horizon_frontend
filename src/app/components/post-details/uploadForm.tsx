@@ -9,14 +9,14 @@ import uploadVideo from "@/app/(home)/uploads/libs/uploadVideo";
 
 import {Form} from "@/components/ui/form";
 import {Button} from "@/components/ui/button";
-import {VideoPreview} from "@/components/common/post-details/video-preview";
-import {VideoDetailsForm} from "@/components/common/post-details/video-details-form";
-import {UploadProgress} from "@/components/common/post-details/upload-progress";
 import {toast} from "sonner";
 import {PostUpload} from "@/app/(home)/uploads/types/postUpload";
 import {cn} from "@/lib/utils";
 import {Post, PostVisibility} from "@/types/Post";
 import {updatePost} from "@/api/postApi";
+import {VideoDetailsForm} from "./video-details-form";
+import {VideoPreview} from "./video-preview";
+import {UploadProgress} from "./upload-progress";
 
 export const UploadForm = ({
                                file,
@@ -109,7 +109,7 @@ export const UploadForm = ({
 
                 mutation.mutate({...data, duration, file: data.file!});
             } else {
-                mutation.mutate({...data, duration: existingData?.duration ?? 0, file:data.file!});
+                mutation.mutate({...data, duration: existingData?.duration ?? 0, file: data.file!});
             }
         };
 
