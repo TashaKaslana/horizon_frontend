@@ -29,7 +29,7 @@ const UserPostContainer = ({userId, postId}: UserPostContainerProps) => {
     } = useInfiniteQuery({
         queryKey: ['user-posts', {userId: userId}],
         queryFn: async ({pageParam = 0}) => {
-            return await getFeedByUserId(userId, postId, 5, pageParam)
+            return await getFeedByUserId({userId, excludePostId: postId, size: 5, page: pageParam})
         },
         getNextPageParam: (lastPage: Omit<RestApiResponse<Feed[]>, 'error' | 'success'>) => {
             const pagination: PaginationInfo | undefined = lastPage.metadata?.pagination;

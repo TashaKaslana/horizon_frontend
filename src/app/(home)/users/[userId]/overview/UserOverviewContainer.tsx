@@ -3,7 +3,7 @@ import UserOverviewMain from "@/app/(home)/users/[userId]/overview/UserOverviewM
 const UserOverviewContainer = ({userId}: {userId: string}) => {
     return (
         <div>
-            <UserOverviewMain/>
+            <UserOverviewMain userId={userId}/>
         </div>
     )
 }

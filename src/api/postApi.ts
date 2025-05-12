@@ -77,9 +77,12 @@ export const getFeedById = async (postId: string) => {
     })
 }
 
-export const getFeedByUserId = async (userId: string, 
-                                      excludePostId?: string,
-                                      size = 5, page = 0) => {
+export const getFeedByUserId = async ({userId, excludePostId, size = 5, page = 0}: {
+    userId: string;
+    excludePostId?: string;
+    size?: number;
+    page?: number;
+}) => {
     const token = await getAccessToken()
 
     return await apiRequest<Feed[]>({

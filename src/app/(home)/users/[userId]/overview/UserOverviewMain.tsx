@@ -1,16 +1,16 @@
 'use client'
 
 import {PostCard} from "@/app/(home)/users/[userId]/components/PostCard";
-import {getFeeds} from "@/api/postApi";
+import {getFeedByUserId} from "@/api/postApi";
 import {useQuery} from "@tanstack/react-query";
 import {cn} from "@/lib/utils";
 import Link from "next/link";
 
-const UserOverviewMain = () => {
+const UserOverviewMain = ({userId} : {userId: string}) => {
     const {data} = useQuery({
         queryKey: ['posts'],
         queryFn: async () => {
-            return await getFeeds({page: 0, size: 10});
+            return await getFeedByUserId({userId});
         },
     })
 
@@ -39,7 +39,7 @@ const UserOverviewMain = () => {
                         <div className={cn('grid grid-cols-5 gap-2 w-full')}>
                             {posts.map(feed => (
                                 <div key={feed.post.id} className={'w-full'}>
-                                    <Link href={`/users/${feed.post.user.id}/posts/${feed.post.id}`}>
+                                    <Link href={`/users/${userId}/posts/${feed.post.id}`}>
                                         <PostCard post={feed.post}/>
                                     </Link>
                                 </div>
