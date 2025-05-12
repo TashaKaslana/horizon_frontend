@@ -25,7 +25,7 @@ interface UserInfoContainerProps {
 }
 
 const UserInfoContainer = ({userId}: UserInfoContainerProps) => {
-    const {user} = useUserHook(userId);
+    const {user, totalAllPostCount, totalAllPostViewCount} = useUserHook(userId);
 
     const handleCopyProfileLink = useCallback(() => {
         const link = `${window.location.origin}/users/${userId}/overview`;
@@ -64,10 +64,10 @@ const UserInfoContainer = ({userId}: UserInfoContainerProps) => {
             <section className="space-y-2">
                 <h2 className="text-lg font-semibold">Statistics</h2>
                 <p className="flex items-center gap-2">
-                    <FileText className="w-4 h-4"/> Total posts:
+                    <FileText className="w-4 h-4"/> Total posts: {totalAllPostCount?.totalPosts ?? 0}
                 </p>
                 <p className="flex items-center gap-2">
-                    <Eye className="w-4 h-4"/> Total views:
+                    <Eye className="w-4 h-4"/> Total views: {totalAllPostViewCount?.totalView ?? 0}
                 </p>
             </section>
 

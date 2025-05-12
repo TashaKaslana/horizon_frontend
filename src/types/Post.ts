@@ -25,3 +25,8 @@ export type PostVisibility = "PUBLIC" | "PRIVATE" | "FRIEND"
 export type PostSummary = Omit<Post, 'videoAsset' | 'createdBy' | 'updatedBy' | 'isAuthorDeleted'>
 
 export type UpdatePost = Pick<PostSummary, 'caption' | 'description' | 'visibility' | 'categoryName' | 'tags'>
+
+export type TotalPostResponse = {totalPosts: number}
+
+//or total view of a post or is total all posts
+export type TotalViewResponse = {totalView: number}

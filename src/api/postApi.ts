@@ -2,7 +2,7 @@ import {getAccessToken} from "@auth0/nextjs-auth0";
 import {apiRequest} from "@/lib/apiRequest";
 import {toast} from "sonner";
 import {Feed} from "@/types/Feed";
-import {Post, UpdatePost} from "@/types/Post";
+import {Post, TotalPostResponse, TotalViewResponse, UpdatePost} from "@/types/Post";
 import {PostCategory} from "@/types/Category";
 
 export const likePost = async (postId: string) => {
@@ -210,6 +210,30 @@ export const recordPostView = async (postId: string) => {
         url: `/posts/${postId}/view`,
         method: 'POST',
         data: {},
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
+
+export const getCountAllPosts = async (userId: string) => {
+    const token = await getAccessToken()
+
+    return await apiRequest<TotalPostResponse>({
+        url: `/posts/users/${userId}/total-posts`,
+        method: 'GET',
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
+
+export const getCountViewAllPosts = async (userId: string) => {
+    const token = await getAccessToken()
+
+    return await apiRequest<TotalViewResponse>({
+        url: `/posts/users/${userId}/total-views`,
+        method: 'GET',
         headers: {
             Authorization: `Bearer ${token}`
         }
