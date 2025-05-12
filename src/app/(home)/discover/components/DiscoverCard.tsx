@@ -9,13 +9,13 @@ import {DiscoverMoreAction} from "@/app/(home)/discover/components/DiscorverMore
 
 export const DiscoverCard = (feed : Feed) => {
     const date = formatDateTS(new Date(feed.post.createdAt))
-    const formatViews = /*getFixedNumberFormat(feed.statistic.view ?? 0)*/ 0
+    const formatViews = feed.statistic.totalViews
     const formatLikes = getFixedNumberFormat(feed.statistic.totalLikes)
     const formatComments = getFixedNumberFormat(feed.statistic.totalComments)
 
     return (
-        <Card className={'py-0 h-[190px] hover:bg-gray-100 transition-colors flex flex-row box-border'}>
-            <CardHeader className={'p-0 w-[21rem]'}>
+        <Card className={'py-0 hover:bg-gray-100 transition-colors flex flex-row box-border'}>
+            <CardHeader className={'p-0 w-96'}>
                 <AspectRatio ratio={16 / 9}>
                     <video controls className={'size-full object-cover rounded-xl'}>
                         <source src={feed.post.videoPlaybackUrl} type="video/mp4"/>
@@ -23,17 +23,17 @@ export const DiscoverCard = (feed : Feed) => {
                 </AspectRatio>
             </CardHeader>
 
-            <div className={'flex flex-col justify-between py-1 w-full'}>
+            <div className={'flex flex-col gap-2 w-full'}>
                 <CardContent className={'pl-0 pr-4 w-full flex justify-between'}>
                     <div>
                         <h1 className={'text-xl font-bold'}>{feed.post.caption}</h1>
-                        <p>{feed.post.description}</p>
+                        <p className={''}>{feed.post.description}</p>
                     </div>
                     <DiscoverMoreAction postId={feed.post.id}/>
                 </CardContent>
                 <CardFooter className={'px-0'}>
                     <div className={'w-full'}>
-                        <main className={'space-y-1'}>
+                        <main className={'space-y-1 pl-1'}>
                             <header className={'flex items-center gap-2'}>
                                 <Avatar className={'size-10'}>
                                     <AvatarImage src={feed.post.user.profileImage}/>
@@ -45,10 +45,10 @@ export const DiscoverCard = (feed : Feed) => {
                                 </div>
                             </header>
                             <div>
-                                <div className={'flex gap-1 text-sm text-gray-500 items-center'}>
+                                <div className={'flex text-sm text-gray-500 items-center'}>
                                     <span>{date} </span>
                                     <Dot/>
-                                    <span>{formatViews} Views</span>
+                                    <span>{formatViews} views</span>
                                 </div>
                                 <div className={'flex gap-2'}>
                                     <Badge>

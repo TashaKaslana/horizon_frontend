@@ -7,7 +7,7 @@ import {PostSummary} from "@/types/Post";
 import {Badge} from "@/components/ui/badge";
 import {formatDateTS} from "@/lib/utils";
 import {UserSummaryCard} from "@/components/common/UserInformation";
-import {Clock, Grid} from "lucide-react";
+import {Clock, Eye, Grid} from "lucide-react";
 import Link from "next/link";
 
 interface VideoContainerProps {
@@ -16,12 +16,11 @@ interface VideoContainerProps {
     ref?: Ref<HTMLVideoElement>,
 }
 
-
 const VideoContainer = ({setIsCommentOpened, feed, ref}: VideoContainerProps) => {
     return (
         <div className={'flex gap-4 items-center relative'}>
             <Suspense fallback={<div>Loading...</div>}>
-                <VideoSection post={feed.post} ref={ref}/>
+                <VideoSection post={feed.post} ref={ref} views={feed.statistic.totalViews}/>
                 <ActionButtonGroup setIsCommentOpened={setIsCommentOpened}
                                    postId={feed.post.id}
                                    statistic={feed.statistic}/>
@@ -31,7 +30,7 @@ const VideoContainer = ({setIsCommentOpened, feed, ref}: VideoContainerProps) =>
 }
 
 
-const VideoSection = ({post, ref}: { post: PostSummary, ref?: Ref<HTMLVideoElement>}) => {
+const VideoSection = ({post, ref, views = 0}: { post: PostSummary, ref?: Ref<HTMLVideoElement>, views: number }) => {
     const {videoSettings} = useConfigStore()
 
     const getValueByKey = (key: string) => {
@@ -69,7 +68,8 @@ const VideoSection = ({post, ref}: { post: PostSummary, ref?: Ref<HTMLVideoEleme
                 </div>
                 <div className={'w-full'}>
                     <div className={'flex justify-between items-center'}>
-                        <div>
+                        <div className={'flex gap-2'}>
+                            <Badge><Eye/> {views}</Badge>
                             <Badge><Clock/> {formatDateTS(new Date(post.createdAt))}</Badge>
                         </div>
                         <div className={'flex items-center'}>

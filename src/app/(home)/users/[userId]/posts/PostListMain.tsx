@@ -32,7 +32,7 @@ export const PostListMain = ({userId}: PostListMainProps) => {
             {posts.map(feed => (
                 <div key={feed.post.id} className={'w-full'}>
                     <Link href={`/users/${userId}/posts/${feed.post.id}`}>
-                        <PostCard post={feed.post}/>
+                        <PostCard post={feed.post} views={feed.statistic.totalViews}/>
                     </Link>
                 </div>
             ))}

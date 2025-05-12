@@ -9,9 +9,11 @@ import {useState} from "react";
 export const PostCard = ({
                              post,
                              isEnableCategory,
-                             direction = "vertical"
+                             direction = "vertical",
+                             views = 0
                          }: {
     post: Post;
+    views: number;
     isEnableCategory?: boolean;
     direction?: "vertical" | "horizon";
 }) => {
@@ -64,10 +66,15 @@ export const PostCard = ({
 
                     <div className="flex justify-between w-full items-center flex-wrap gap-2 text-zinc-600 text-xs">
                         <div className="flex items-center">
-                            <span className={'flex gap-1 items-center'}><Eye className="w-4 h-4"/>1.24m views</span>
+                            <span className={'flex items-center gap-x-1'}>
+                                <Eye className="w-4 h-4"/>
+                                {views} views
+                            </span>
                             <Dot/>
-                            <span className={'flex gap-1 items-center'}><Clock
-                                className="w-4 h-4"/> {formatDateDifference(new Date(post.createdAt))}</span>
+                            <span className={'flex items-center gap-x-1'}>
+                                <Clock className="w-4 h-4"/>
+                                {formatDateDifference(new Date(post.createdAt))}
+                            </span>
                         </div>
                         {isEnableCategory && (
                             <Badge>

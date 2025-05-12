@@ -4,8 +4,9 @@ import {useDiscoverStore} from "@/app/(home)/discover/store/useDiscoverPostStore
 import {usePostCategoryStore} from "@/app/(home)/discover/store/usePostCategoryStore";
 import InfiniteScroll from "@/components/ui/infinite-scroll";
 import {useDiscovery} from "@/app/(home)/discover/hooks/useDiscovery";
+import {ScrollArea, ScrollBar} from "@/components/ui/scroll-area";
 
-export const DiscoverHeader = ({triggers} : {triggers: string[]}) => {
+export const DiscoverHeader = ({triggers}: { triggers: string[] }) => {
     const viewOptions = ['Popular', 'Recent', 'Rating']
     const {sortFeeds} = useDiscoverStore()
     const {setSelectedCategory} = usePostCategoryStore()
@@ -27,28 +28,36 @@ export const DiscoverHeader = ({triggers} : {triggers: string[]}) => {
                     <SelectValue placeholder={viewOptions[0]}/>
                 </SelectTrigger>
                 <SelectContent>
-                    <InfiniteScroll
-                        isLoading={categoryIsFetching}
-                        hasMore={categoryHasNextPage}
-                        next={categoryFetchNext}
-                        direction={'horizontal'}
-                        rootMargin={'0px 100px 0px 0px'}
-                    >
-                        {viewOptions.map((viewOption, index) =>
-                            <SelectItem value={viewOption.toLowerCase()} key={index}>
-                                {viewOption}
-                            </SelectItem>
-                        )}
-                    </InfiniteScroll>
+                    {viewOptions.map((viewOption, index) =>
+                        <SelectItem value={viewOption.toLowerCase()} key={index}>
+                            {viewOption}
+                        </SelectItem>
+                    )}
                 </SelectContent>
             </Select>
         </div>
         <TabsList className={'w-full'}>
-            {triggers.map((trigger, index) =>
-                <TabsTrigger value={trigger} key={index} onClick={() => setSelectedCategory(trigger)}>
-                    {trigger}
-                </TabsTrigger>
-            )}
+            <ScrollArea className={'justify-between'}>
+                <InfiniteScroll
+                    isLoading={categoryIsFetching}
+                    hasMore={categoryHasNextPage}
+                    next={categoryFetchNext}
+                    direction={'horizontal'}
+                    rootMargin={'0px 100px 0px 0px'}
+                >
+                    {triggers.map((trigger, index) =>
+                        <TabsTrigger
+                            value={trigger}
+                            key={index}
+                            onClick={() => setSelectedCategory(trigger)}
+                            className={'w-24'}
+                        >
+                            {trigger}
+                        </TabsTrigger>
+                    )}
+                </InfiniteScroll>
+                <ScrollBar orientation="horizontal"/>
+            </ScrollArea>
         </TabsList>
     </header>;
 }

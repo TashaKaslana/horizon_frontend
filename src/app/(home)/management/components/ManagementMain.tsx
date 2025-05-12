@@ -30,7 +30,7 @@ export const ManagementMain = () => {
 const PostCard = ({feed}: { feed: Feed }) => {
     const date = formatDateTS(new Date(feed.post.createdAt))
     //TODO: add views
-    const formatViews = /*getFixedNumberFormat(feed.view ?? 0)*/ 0
+    const formatViews = feed.statistic.totalViews
     const formatLikes = getFixedNumberFormat(feed.statistic.totalLikes ?? 0)
     const formatComments = getFixedNumberFormat(feed.statistic.totalComments ?? 0)
 

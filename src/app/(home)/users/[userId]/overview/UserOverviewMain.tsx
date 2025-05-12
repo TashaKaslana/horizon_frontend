@@ -6,7 +6,7 @@ import {useQuery} from "@tanstack/react-query";
 import {cn} from "@/lib/utils";
 import Link from "next/link";
 
-const UserOverviewMain = ({userId} : {userId: string}) => {
+const UserOverviewMain = ({userId}: { userId: string }) => {
     const {data} = useQuery({
         queryKey: ['posts'],
         queryFn: async () => {
@@ -14,10 +14,10 @@ const UserOverviewMain = ({userId} : {userId: string}) => {
         },
     })
 
-    const posts = data?.data ?? [];
-    const popularPost = posts.at(0)?.post
+    const feeds = data?.data ?? [];
+    //TODO: add actual popular
+    const feed = feeds.at(0)
 
-    //TODO: DEMO
     return (
         <div>
             <div className={'px-10 pb-3'}>
@@ -25,11 +25,13 @@ const UserOverviewMain = ({userId} : {userId: string}) => {
                     <div>
                         <h2 className={'text-2xl font-bold'}>The most popular post</h2>
                         <div className={cn('flex justify-center flex-1 px-12')}>
-                            {popularPost && (
-                                <div key={popularPost.id} className={'w-full'}>
-                                    <PostCard post={popularPost}
+                            {feed !== undefined && (
+                                <div key={feed.post.id} className={'w-full'}>
+                                    <PostCard post={feed.post}
                                               isEnableCategory
-                                              direction={'horizon'}/>
+                                              direction={'horizon'}
+                                              views={feed.statistic.totalViews}
+                                    />
                                 </div>
                             )}
                         </div>
@@ -37,10 +39,10 @@ const UserOverviewMain = ({userId} : {userId: string}) => {
                     <div>
                         <h3 className={'text-xl font-semibold'}>Recent Posts</h3>
                         <div className={cn('grid grid-cols-5 gap-2 w-full')}>
-                            {posts.map(feed => (
+                            {feeds.map(feed => (
                                 <div key={feed.post.id} className={'w-full'}>
                                     <Link href={`/users/${userId}/posts/${feed.post.id}`}>
-                                        <PostCard post={feed.post}/>
+                                        <PostCard post={feed.post} views={feed.statistic.totalViews}/>
                                     </Link>
                                 </div>
                             ))}

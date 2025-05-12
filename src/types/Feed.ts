@@ -9,6 +9,7 @@ export type Statistic = {
     totalLikes: number,
     totalComments: number,
     totalBookmarks: number,
+    totalViews: number,
     isLiked: boolean,
     isBookmarked: boolean,
 }
