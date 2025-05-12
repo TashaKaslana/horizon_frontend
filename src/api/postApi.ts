@@ -190,3 +190,28 @@ export const getPostCategories = async (p0: { page: number; size: number; }) => 
         }
     })
 }
+
+export const getViewCountByPostId = async (postId: string) => {
+    const token = await getAccessToken()
+
+    return await apiRequest<PostCategory[]>({
+        url: `/posts/${postId}/views`,
+        method: 'GET',
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}
+
+export const recordPostView = async (postId: string) => {
+    const token = await getAccessToken()
+
+    return await apiRequest<PostCategory[]>({
+        url: `/posts/${postId}/view`,
+        method: 'POST',
+        data: {},
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
+}

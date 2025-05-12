@@ -5,6 +5,8 @@ import {useConfigStore} from "@/stores/useConfigStore";
 import {cn} from "@/lib/utils";
 import VideoContainer from "@/app/components/post-presentation/video-section/VideoContainer";
 import CommentContainer from "@/app/components/post-presentation/comment-section/CommentContainer";
+import {useMutation} from "@tanstack/react-query";
+import {recordPostView} from "@/api/postApi";
 
 export const PostDisplay = ({feed}: { feed: Feed }) => {
     const [isCommentOpened, setIsCommentOpened] = useState(false);
@@ -12,12 +14,21 @@ export const PostDisplay = ({feed}: { feed: Feed }) => {
     const {ref: containerRef, isVisible} = useIsVisible<HTMLDivElement>();
     const {videoSettings} = useConfigStore()
 
+    const viewMutation = useMutation({
+        mutationFn: () => recordPostView(feed.post.id),
+        onSuccess: () => {
+
+        }
+    })
+
+    const hasViewed = useRef(false);
+
     useEffect(() => {
-        const video = videoRef.current
-        if (!video) return
+        const video = videoRef.current;
+        if (!video) return;
 
         if (isVisible) {
-            const enableAutoPlay = videoSettings.find(v => v.key === 'auto_play')?.value
+            const enableAutoPlay = videoSettings.find(v => v.key === 'auto_play')?.value;
 
             if (video.paused && enableAutoPlay) {
                 video.muted = true;
@@ -27,18 +38,18 @@ export const PostDisplay = ({feed}: { feed: Feed }) => {
             }
             video.muted = false;
 
-            const pathname = window.location.pathname
-            const isInForyou = pathname.startsWith('/foryou')
+            const pathname = window.location.pathname;
+            const isInForyou = pathname.startsWith('/foryou');
 
-            const userId = feed.post.user.id
-            const postId = feed.post.id
-            
-            const basePath = isInForyou ? "/foryou" : `/users/${userId}/posts`
-            const newUrl = `${basePath}/${postId}`
-            const currentUrl = window.location.pathname
+            const userId = feed.post.user.id;
+            const postId = feed.post.id;
+
+            const basePath = isInForyou ? "/foryou" : `/users/${userId}/posts`;
+            const newUrl = `${basePath}/${postId}`;
+            const currentUrl = window.location.pathname;
 
             if (currentUrl !== newUrl) {
-                window.history.replaceState(null, "", newUrl)
+                window.history.replaceState(null, "", newUrl);
             }
         } else {
             if (!video.paused) {
@@ -46,7 +57,24 @@ export const PostDisplay = ({feed}: { feed: Feed }) => {
                 video.muted = true;
             }
         }
-    }, [feed.post.id, feed.post.user.id, isVisible, videoSettings]);
+    }, [isVisible, videoSettings, feed.post.id, feed.post.user.id]);
+
+
+    useEffect(() => {
+        if (!isVisible || hasViewed.current) return;
+
+        const timeoutId = setTimeout(() => {
+            viewMutation.mutate();
+            hasViewed.current = true;
+        }, 3000);
+
+        return () => clearTimeout(timeoutId);
+    }, [isVisible, viewMutation]);
+
+
+    useEffect(() => {
+        hasViewed.current = false;
+    }, [feed.post.id]);
 
     return (
         <div className="snap-start relative h-screen w-full flex items-center justify-center">
