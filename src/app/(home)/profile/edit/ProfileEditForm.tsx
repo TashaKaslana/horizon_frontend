@@ -1,8 +1,8 @@
-import InfoForm from "@/app/(home)/profile/Info-form";
+import InfoForm from "@/app/(home)/profile/edit/Info-form";
 import {Separator} from "@/components/ui/separator";
 
 const ProfileEditForm = () => {
-    return <div className={'size-full bg-linear-to-t from-sky-400 to-indigo-400 flex justify-center'}>
+    return <div className={'size-full flex justify-center'}>
         <div className={'my-5 bg-muted/80 w-3/4 rounded-lg'}>
             <header className={'space-y-2 p-1 rounded bg-transparent/70'}>
                 <h2 className={'text-2xl font-bold text-center'}>Edit Profile</h2>

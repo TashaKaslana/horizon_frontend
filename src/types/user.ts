@@ -21,6 +21,6 @@ export type UserSummary = Pick<User, 'id' | 'displayName' | 'username' | 'profil
 
 export type UserIntroduction = Pick<User, 'id' | 'displayName' | 'firstName' | 'lastName' | 'username' | 'profileImage' | 'coverImage' | 'bio' | 'email' | 'createdAt'>;
 
-export type UserProfileInformationUpdate = Partial<Omit<User, 'id' | 'username' | 'email' | 'coverImage' | 'profileImage'>>
+export type UserProfileInformationUpdate = Partial<Omit<User, 'id' | 'displayName' | 'username' | 'email' | 'coverImage' | 'profileImage'>>
 
 export type UserProfileIdentification = Partial<Pick<User, 'email' | 'username'> & { password: string }>

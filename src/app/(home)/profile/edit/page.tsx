@@ -1,7 +1,7 @@
-import ProfileEditForm from "@/app/(home)/profile/ProfileEditForm";
+import ProfileEditForm from "@/app/(home)/profile/edit/ProfileEditForm";
 
 const Page = () => {
-  return (
+    return (
       <>
           <ProfileEditForm/>
       </>
