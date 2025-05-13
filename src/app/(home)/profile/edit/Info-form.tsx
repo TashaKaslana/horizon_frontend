@@ -56,6 +56,7 @@ import {updateProfileRequest} from "@/app/(home)/profile/edit/libs/services/upda
 import {getAccessToken} from "@auth0/nextjs-auth0";
 import {useCurrentUser} from "@/stores/useCurrentUser";
 import {Spinner} from "@/components/ui/spinner";
+import {Textarea} from "@/components/ui/textarea";
 
 const formSchema = z.object({
     displayName: z.string(),
@@ -66,7 +67,8 @@ const formSchema = z.object({
     }),
     gender: z.enum(['MALE', 'FEMALE', 'OTHER']),
     location: z.tuple([z.string(), z.string().optional()]),
-    phoneNumber: z.string()
+    phoneNumber: z.string(),
+    bio: z.string().max(500, {message: "Can't go over 500 characters"})
 });
 
 
@@ -84,7 +86,8 @@ export default function InfoForm() {
             dateOfBirth: user?.dateOfBirth ? new Date(user?.dateOfBirth) : new Date(),
             gender: user?.gender ?? undefined,
             location: [user?.country ?? '', user?.city ?? ''],
-            phoneNumber: user?.phoneNumber ?? ''
+            phoneNumber: user?.phoneNumber ?? '',
+            bio: user?.bio ?? ''
         },
     })
 
@@ -119,6 +122,8 @@ export default function InfoForm() {
                 city: location[1],
                 dateOfBirth: values.dateOfBirth.toISOString()
             })
+
+            toast.success("Update successfully");
         } catch (error) {
             console.error("Form submission error", error);
             toast.error("Failed to submit the form. Please try again.");
@@ -255,6 +260,7 @@ export default function InfoForm() {
                                         <RadioGroup
                                             onValueChange={field.onChange}
                                             className="flex flex-col space-y-1 "
+                                            defaultValue={user?.gender}
                                         >
                                             {[
                                                 ["Male", "MALE"],
@@ -325,6 +331,24 @@ export default function InfoForm() {
                                 />
                             </FormControl>
                             <FormDescription>Enter your phone number.</FormDescription>
+                            <FormMessage/>
+                        </FormItem>
+                    )}
+                />
+
+                <FormField
+                    control={form.control}
+                    name="bio"
+                    render={({field}) => (
+                        <FormItem className="flex flex-col items-start">
+                            <FormLabel>Bio</FormLabel>
+                            <FormControl className="w-full max-h-64">
+                                <Textarea {...field}
+                                          placeholder={'Enter your bio'}
+                                          defaultValue={user?.bio ?? null}
+                                />
+                            </FormControl>
+                            <FormDescription>Enter your bio.</FormDescription>
                             <FormMessage/>
                         </FormItem>
                     )}
