@@ -13,12 +13,14 @@ import {
     RefreshCw,
     Share,
     User,
-    Flag
+    Flag, Pencil
 } from "lucide-react";
 import {formatDateTS} from "@/lib/utils";
 import {Button} from "@/components/ui/button";
 import {toast} from "sonner";
 import {useCallback} from "react";
+import {useCurrentUser} from "@/stores/useCurrentUser";
+import Link from "next/link";
 
 interface UserInfoContainerProps {
     userId: string;
@@ -26,6 +28,7 @@ interface UserInfoContainerProps {
 
 const UserInfoContainer = ({userId}: UserInfoContainerProps) => {
     const {user, totalAllPostCount, totalAllPostViewCount} = useUserHook(userId);
+    const {user: currentUser} = useCurrentUser();
 
     const handleCopyProfileLink = useCallback(() => {
         const link = `${window.location.origin}/users/${userId}/overview`;
@@ -85,10 +88,16 @@ const UserInfoContainer = ({userId}: UserInfoContainerProps) => {
             <section className="space-y-2">
                 <h2 className="text-lg font-semibold">Actions</h2>
                 <div className={'flex gap-4'}>
+                    {currentUser?.id === userId && <Link href={'/profile/edit'}>
+                        <Button variant='outline' className="flex items-center gap-2">
+                            <Pencil className="w-4 h-4"/> Edit Profile
+                        </Button>
+                    </Link>}
                     <Button variant="outline" className=" flex items-center gap-2" onClick={handleCopyProfileLink}>
                         <Share className="w-4 h-4"/> Share Profile
                     </Button>
-                    <Button variant="destructive" className="flex items-center gap-2" onClick={() => toast("Report sent (placeholder)")}>
+                    <Button variant="destructive" className="flex items-center gap-2"
+                            onClick={() => toast("Report sent (placeholder)")}>
                         <Flag className="w-4 h-4"/> Report User
                     </Button>
                 </div>
