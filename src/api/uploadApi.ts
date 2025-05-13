@@ -46,14 +46,25 @@ export const uploadToCloudinary = async ({
         setProgress(percentCompleted);
     };
 
+    const mime = file.type;
+    let resourceType: "image" | "video" | "raw" | "auto";
+
+    if (mime.startsWith("image/")) {
+        resourceType = "image";
+    } else if (mime.startsWith("video/")) {
+        resourceType = "video";
+    } else {
+        resourceType = "raw";
+    }
+
     const response = await axios.post(
-        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/video/upload`,
+        `https://api.cloudinary.com/v1_1/${process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME}/${resourceType}/upload`,
         formData,
         { onUploadProgress: cloudinaryProgress }
     );
 
     if (response.status !== 200) {
-        throw new Error("Failed to upload video");
+        throw new Error("Failed to upload file");
     }
 
     return {

@@ -2,6 +2,7 @@ import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTr
 import { Dispatch, ReactNode, SetStateAction } from "react";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import Image from "next/image"
 
 interface ImagePreviewDialogProps {
     variant: 'avatar' | 'cover';
@@ -39,7 +40,21 @@ export const ImagePreviewDialog = ({
                             </Avatar>
                         ) : (
                             <div className="w-full h-40 rounded-md overflow-hidden border shadow">
-                                <img src={imageUrl} alt="Cover Preview" className="w-full h-full object-cover" />
+                                {imageUrl ? (
+                                    <div className="relative w-full h-64 rounded-lg overflow-hidden">
+                                        <Image
+                                            src={imageUrl}
+                                            alt="Cover Preview"
+                                            className="object-cover"
+                                            fill
+                                            unoptimized
+                                        />
+                                    </div>
+                                ) : (
+                                    <div className="w-full h-64 flex items-center justify-center border rounded-lg text-gray-500">
+                                        No image selected
+                                    </div>
+                                )}
                             </div>
                         )
                     ) : (

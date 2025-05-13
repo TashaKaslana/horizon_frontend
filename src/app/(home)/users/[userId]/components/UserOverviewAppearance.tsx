@@ -7,7 +7,7 @@ import {followUser, unfollowUser} from "@/api/followApi";
 import {toast} from "sonner";
 import {useCurrentUser} from "@/stores/useCurrentUser";
 import TruncatedText from "@/components/common/truncated-text";
-import {ImageUpload} from "@/components/common/avatar_upload/avatar-upload";
+import {ImageUpload} from "@/app/components/avatar_upload/avatar-upload";
 
 export function UserOverviewAppearance({userId}: { userId: string }) {
     const {user, followOverview} = useUserHook(userId)
@@ -33,7 +33,13 @@ export function UserOverviewAppearance({userId}: { userId: string }) {
     }
 
     return <header className={"space-y-2"}>
-        {user?.profileImage && (
+        {user?.profileImage ? (
+            <ImageUpload
+                imageUrl={user?.coverImage}
+                placeholder={''}
+                variant={"cover"}
+            />
+        ) : (
             <div className={"h-24 w-full bg-sky-400 rounded-lg"}/>
         )}
         <div className={"flex"}>

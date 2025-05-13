@@ -44,17 +44,16 @@ export const getUserIntroduction = async (userId: string) => {
     })
 }
 
-export const updateUserImage = async ({profileImage, coverPhoto} :{profileImage: string, coverPhoto: string}) => {
-    const token = await getAccessToken()
-
+export const updateUserImage = async (
+    data: Partial<{ profileImage: string; coverImage: string }>
+) => {
+    const token = await getAccessToken();
     return await apiRequest({
         url: `/users/me/update-image`,
-        method: "PUT",
-        data: {
-          profileImage, coverPhoto
-        },
+        method: 'PUT',
+        data,
         headers: {
-            Authorization: `Bearer ${token}`
-        }
-    })
-}
+            Authorization: `Bearer ${token}`,
+        },
+    });
+};
