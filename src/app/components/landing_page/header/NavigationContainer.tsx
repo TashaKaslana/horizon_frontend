@@ -48,7 +48,7 @@ const NavigationContainer = () => {
 const ItemComposition = ({title, children, src}: { title: string, children: ReactNode, src: string }) => {
     return (
         <NavigationMenuLink asChild>
-            <Link href={src} className={'max-w-max hover:*:bg-gray-300'}>
+            <Link href={src} className={'max-w-max hover:bg-gray-300 space-y-0'}>
                 <h1 className={'font-bold text-xl'}>{title}</h1>
                 <p className={'text-sm font-light'}>{children}</p>
             </Link>

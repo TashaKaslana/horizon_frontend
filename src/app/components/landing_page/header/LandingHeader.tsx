@@ -2,7 +2,6 @@ import React from "react";
 import NavigationContainer from "@/app/components/landing_page/header/NavigationContainer";
 import LoginButton from "@/app/components/LoginButton";
 import Logo from "../../../../../public/images/share/Logo";
-import {Separator} from "@/components/ui/separator";
 
 const LandingHeader = () => {
     return (
@@ -10,7 +9,6 @@ const LandingHeader = () => {
             <LogoContainer/>
             <NavigationContainer/>
             <AuthenticatedSection/>
-            <Separator/>
         </header>
     )
 }
