@@ -18,18 +18,27 @@ import {
 import {DataTablePagination, DataTableViewOptions} from "@/components/common/data-table-components";
 import React from "react";
 import {Input} from "@/components/ui/input";
+import {Spinner} from "@/components/ui/spinner";
 
 interface DataTableProps<TData, TValue> {
-    columns: ColumnDef<TData, TValue>[]
-    data: TData[]
+    columns: ColumnDef<TData, TValue>[],
+    data: TData[],
+    fetchNextPage?: () => void,
+    hasNextPage?: boolean
+    isLoading?: boolean
+    totalPageCount?: number
 }
 
 export function DataTable<TData, TValue>({
                                              columns,
                                              data,
+                                             fetchNextPage,
+                                             hasNextPage,
+                                             isLoading,
+                                             totalPageCount
                                          }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([])
-    const [columnFilters,   setColumnFilters] = React.useState<ColumnFiltersState>([]);
+    const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [globalFilter, setGlobalFilter] = React.useState("");
 
     const table = useReactTable({
@@ -60,7 +69,7 @@ export function DataTable<TData, TValue>({
                     onChange={(event) => setGlobalFilter(event.target.value)}
                     className="max-w-sm"
                 />
-                <DataTableViewOptions table={table} />
+                <DataTableViewOptions table={table}/>
             </div>
             <div className={'flex-1'}>
                 <Table>
@@ -83,7 +92,13 @@ export function DataTable<TData, TValue>({
                         ))}
                     </TableHeader>
                     <TableBody>
-                        {table.getRowModel().rows?.length ? (
+                        {isLoading ? (
+                            <TableRow>
+                                <TableCell colSpan={columns.length} className="h-24 text-center">
+                                    <Spinner/>
+                                </TableCell>
+                            </TableRow>
+                        ) : table.getRowModel().rows?.length ? (
                             table.getRowModel().rows.map((row) => (
                                 <TableRow
                                     key={row.id}
@@ -107,7 +122,9 @@ export function DataTable<TData, TValue>({
                 </Table>
             </div>
             <div>
-                <DataTablePagination table={table}/>
+                <DataTablePagination table={table}
+                                     fetchNextPage={fetchNextPage}
+                                     hasNextPage={hasNextPage}/>
             </div>
         </div>
     )

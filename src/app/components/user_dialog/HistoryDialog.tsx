@@ -1,3 +1,4 @@
+'use client'
 import {
     Dialog,
     DialogContent,
@@ -9,28 +10,39 @@ import {
 import {UserDialogTrigger} from "@/app/components/user_dialog/UserDialogTrigger";
 import {Clock} from "lucide-react";
 import {DataTable} from "@/components/ui/data-table";
-import {History, historyColumns} from "@/app/components/user_dialog/history/columns";
-
-const histories: History[] = [
-    { id: '1', type: 'watch', references: 'video_123', createdAt: '2024-03-10T10:00:00Z' },
-    { id: '2', type: 'comment', references: 'comment_456', createdAt: '2024-03-10T11:15:00Z' },
-    { id: '3', type: 'like', references: 'post_789', createdAt: '2024-03-10T12:30:00Z' },
-    { id: '4', type: 'watch', references: 'video_987', createdAt: '2024-03-10T14:45:00Z' },
-    { id: '5', type: 'comment', references: 'comment_654', createdAt: '2024-03-10T16:00:00Z' },
-    { id: '6', type: 'like', references: 'post_321', createdAt: '2024-03-10T17:20:00Z' },
-    { id: '1', type: 'watch', references: 'video_123', createdAt: '2024-03-10T10:00:00Z' },
-    { id: '2', type: 'comment', references: 'comment_456', createdAt: '2024-03-10T11:15:00Z' },
-    { id: '3', type: 'like', references: 'post_789', createdAt: '2024-03-10T12:30:00Z' },
-    { id: '4', type: 'watch', references: 'video_987', createdAt: '2024-03-10T14:45:00Z' },
-    { id: '5', type: 'comment', references: 'comment_654', createdAt: '2024-03-10T16:00:00Z' },
-    { id: '6', type: 'like', references: 'post_321', createdAt: '2024-03-10T17:20:00Z' },
-];
+import {historyColumns} from "@/app/components/user_dialog/history/columns";
+import {History} from "@/types/History";
+import {useInfiniteQuery} from "@tanstack/react-query";
+import {getHistoryForMe} from "@/api/historyApi";
+import {useCurrentUser} from "@/stores/useCurrentUser";
+import {RestApiResponse} from "@/types/api";
+import {useState} from "react";
 
 export const HistoryDialog = () => {
-  const trigger = {
-      icon: <Clock/>,
-      title: "History",
-  }
+    const [totalPage, setTotalPage] = useState(0)
+
+    const trigger = {
+        icon: <Clock/>,
+        title: "History",
+    }
+
+    const {user} = useCurrentUser();
+
+    const {data, fetchNextPage, hasNextPage} = useInfiniteQuery({
+        queryKey: ['histories', user?.id],
+        queryFn: async ({pageParam = 0}) => {
+            const result = await getHistoryForMe({page: pageParam, size: 10})
+            setTotalPage(result.metadata?.pagination?.totalPages ?? 0)
+            return result
+        },
+        getNextPageParam: (lastPage: Omit<RestApiResponse<History[]>, 'error' | 'success'>) => {
+            const pagination = lastPage.metadata?.pagination;
+            return pagination?.hasNext ? pagination.currentPage + 1 : undefined;
+        },
+        initialPageParam: 0,
+    })
+
+    const histories = data?.pages.flatMap(item => item.data)
 
     return (
         <Dialog>
@@ -43,7 +55,12 @@ export const HistoryDialog = () => {
                     <DialogDescription>Display your history activity</DialogDescription>
                 </DialogHeader>
 
-                <DataTable columns={historyColumns} data={histories}/>
+                <DataTable columns={historyColumns}
+                           data={histories ?? []}
+                           fetchNextPage={fetchNextPage}
+                           hasNextPage={hasNextPage}
+                           totalPageCount={totalPage}
+                />
             </DialogContent>
         </Dialog>
     )

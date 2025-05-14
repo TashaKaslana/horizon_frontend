@@ -11,13 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { MoreHorizontal } from "lucide-react";
-
-export type History = {
-    id: string;
-    type: 'watch' | 'comment' | 'like',
-    references: string;
-    createdAt: string;
-}
+import {ActivityPart, History} from "@/types/History";
 
 export const historyColumns: ColumnDef<History>[] = [
     {
@@ -27,16 +21,13 @@ export const historyColumns: ColumnDef<History>[] = [
         accessorKey: 'id'
     },
     {
+        id: "activity",
         header: ({column}) => (
-            <DataTableColumnHeader column={column} title={'Type'}/>
+            <DataTableColumnHeader column={column} title={'Activity'} />
         ),
-        accessorKey: 'type'
-    },
-    {
-        header: ({column}) => (
-            <DataTableColumnHeader column={column} title={'References'}/>
-        ),
-        accessorKey: 'references',
+        cell: ({row}) => {
+            return <div className="flex flex-wrap gap-1 items-center">{renderParts(row.original.parts)}</div>;
+        }
     },
     {
         id: "createdAt",
@@ -48,11 +39,11 @@ export const historyColumns: ColumnDef<History>[] = [
     {
         id: "actions",
         cell: ({ row }) => {
-            const history = row.original
-            return <Action history={history}/>
+            const history = row.original;
+            return <Action history={history}/>;
         },
     },
-]
+];
 
 const Action = ({history} : {history: History}) => {
     return (
@@ -77,3 +68,21 @@ const Action = ({history} : {history: History}) => {
         </DropdownMenu>
     )
 }
+
+const renderParts = (parts: ActivityPart[]) => {
+    return parts.map((part, idx) => {
+        if (part.type === 'text') {
+            return <span key={idx}>{part.value}</span>;
+        }
+
+        if (part.type === 'object') {
+            return (
+                <span key={idx} className="font-medium text-blue-600">
+          {part.label}
+        </span>
+            );
+        }
+
+        return null;
+    });
+};

@@ -1,4 +1,4 @@
-import {Column} from "@tanstack/react-table"
+import {Column, Table} from "@tanstack/react-table"
 import {ArrowDown, ArrowUp, ChevronsUpDown, EyeOff} from "lucide-react"
 
 import {cn} from "@/lib/utils"
@@ -12,7 +12,6 @@ import {
 } from "@/components/ui/dropdown-menu"
 import React from "react";
 
-import {Table} from "@tanstack/react-table"
 import {
     ChevronLeft,
     ChevronRight,
@@ -28,7 +27,7 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 
-import { Settings2 } from "lucide-react"
+import {Settings2} from "lucide-react"
 
 interface DataTableColumnHeaderProps<TData, TValue>
     extends React.HTMLAttributes<HTMLDivElement> {
@@ -85,12 +84,25 @@ export function DataTableColumnHeader<TData, TValue>({
 }
 
 interface DataTablePaginationProps<TData> {
-    table: Table<TData>
+    table: Table<TData>,
+    fetchNextPage?: (() => void) | undefined,
+    hasNextPage?: boolean | undefined
 }
 
 export function DataTablePagination<TData>({
                                                table,
+                                               fetchNextPage,
+                                               hasNextPage
                                            }: DataTablePaginationProps<TData>) {
+    const handleNextPage = () => {
+        table.nextPage();
+
+        if (!table.getCanNextPage() && fetchNextPage && hasNextPage) {
+            fetchNextPage();
+        }
+    };
+
+
     return (
         <div className="flex items-center justify-between px-2">
             <div className="flex-1 text-sm text-muted-foreground">
@@ -144,8 +156,8 @@ export function DataTablePagination<TData>({
                     <Button
                         variant="outline"
                         className="h-8 w-8 p-0"
-                        onClick={() => table.nextPage()}
-                        disabled={!table.getCanNextPage()}
+                        onClick={handleNextPage}
+                        disabled={!table.getCanNextPage() && !hasNextPage}
                     >
                         <span className="sr-only">Go to next page</span>
                         <ChevronRight/>
@@ -180,13 +192,13 @@ export function DataTableViewOptions<TData>({
                     size="sm"
                     className="ml-auto hidden h-8 lg:flex"
                 >
-                    <Settings2 />
+                    <Settings2/>
                     View
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[150px]">
                 <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
-                <DropdownMenuSeparator />
+                <DropdownMenuSeparator/>
                 {table
                     .getAllColumns()
                     .filter(
