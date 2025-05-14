@@ -34,8 +34,7 @@ export function DataTable<TData, TValue>({
                                              data,
                                              fetchNextPage,
                                              hasNextPage,
-                                             isLoading,
-                                             totalPageCount
+                                             isLoading
                                          }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>([])
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
