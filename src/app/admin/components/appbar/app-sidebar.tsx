@@ -3,11 +3,8 @@
 import * as React from "react"
 import {
     ArrowUpCircleIcon,
-    BarChartIcon,
-    CameraIcon,
     ClipboardListIcon,
     DatabaseIcon,
-    FileCodeIcon,
     FileIcon,
     FileTextIcon,
     FolderIcon,
@@ -15,8 +12,10 @@ import {
     LayoutDashboardIcon,
     ListIcon,
     SearchIcon,
+    MessageSquareIcon,
     SettingsIcon,
     UsersIcon,
+    BellIcon,
 } from "lucide-react"
 
 import {
@@ -36,81 +35,66 @@ import {useEffect} from "react";
 
 const data = {
     user: {
-        name: "shadcn",
-        email: "m@example.com",
-        avatar: "/avatars/shadcn.jpg",
+        name: "Admin",
+        email: "admin@example.com",
+        avatar: "/avatars/admin.jpg",
     },
     navMain: [
         {
             title: "Dashboard",
-            url: "#",
+            url: "/admin/dashboard",
             icon: LayoutDashboardIcon,
         },
         {
-            title: "Lifecycle",
-            url: "#",
-            icon: ListIcon,
-        },
-        {
-            title: "Analytics",
-            url: "#",
-            icon: BarChartIcon,
-        },
-        {
-            title: "Projects",
-            url: "#",
-            icon: FolderIcon,
-        },
-        {
-            title: "Team",
-            url: "#",
+            title: "Users",
+            url: "/admin/users",
             icon: UsersIcon,
+        },
+        {
+            title: "Posts",
+            url: "/admin/posts",
+            icon: FileTextIcon,
+        },
+        {
+            title: "Comments",
+            url: "/admin/comments",
+            icon: MessageSquareIcon,
+        },
+        {
+            title: "Categories",
+            url: "/admin/categories",
+            icon: FolderIcon,
         },
     ],
     navClouds: [
         {
-            title: "Capture",
-            icon: CameraIcon,
+            title: "Notifications",
+            icon: BellIcon,
+            url: "#",
             isActive: true,
-            url: "#",
             items: [
                 {
-                    title: "Active Proposals",
-                    url: "#",
+                    title: "All Notifications",
+                    url: "/admin/notifications",
                 },
                 {
-                    title: "Archived",
-                    url: "#",
+                    title: "Unread",
+                    url: "/admin/notifications/unread",
                 },
             ],
         },
         {
-            title: "Proposal",
-            icon: FileTextIcon,
+            title: "Logs",
+            icon: ListIcon,
             url: "#",
             items: [
                 {
-                    title: "Active Proposals",
-                    url: "#",
+                    title: "System Logs",
+                    url: "/admin/logs/system",
                 },
                 {
-                    title: "Archived",
-                    url: "#",
-                },
-            ],
-        },
-        {
-            title: "Prompts",
-            icon: FileCodeIcon,
-            url: "#",
-            items: [
-                {
-                    title: "Active Proposals",
-                    url: "#",
-                },
-                {
-                    title: "Archived",
-                    url: "#",
+                    title: "User Activity",
+                    url: "/admin/logs/activity",
                 },
             ],
         },
@@ -118,12 +102,12 @@ const data = {
     navSecondary: [
         {
             title: "Settings",
-            url: "#",
+            url: "/admin/settings",
             icon: SettingsIcon,
         },
         {
             title: "Get Help",
-            url: "#",
+            url: "/support",
             icon: HelpCircleIcon,
         },
         {
@@ -134,19 +118,19 @@ const data = {
     ],
     documents: [
         {
-            name: "Data Library",
-            url: "#",
-            icon: DatabaseIcon,
+            name: "User Guide",
+            url: "/docs/user-guide",
+            icon: FileIcon,
         },
         {
-            name: "Reports",
-            url: "#",
+            name: "API Reference",
+            url: "/docs/api",
             icon: ClipboardListIcon,
         },
         {
-            name: "Word Assistant",
-            url: "#",
-            icon: FileIcon,
+            name: "Database Schema",
+            url: "/docs/database",
+            icon: DatabaseIcon,
         },
     ],
 }
