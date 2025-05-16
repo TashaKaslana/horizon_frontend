@@ -22,13 +22,20 @@ export const CommentSection = ({comment}: CommentSectionProps) => {
                 <div className={'flex gap-2 flex-1'}>
                     <Avatar className={'size-10 border'}>
                         <AvatarImage src={comment.user?.profileImage}/>
-                        <AvatarFallback>{comment?.user.displayName.at(0)?.toUpperCase()}</AvatarFallback>
+                        <AvatarFallback>{comment.user.displayName ?
+                            comment?.user.displayName.at(0)?.toUpperCase() :
+                            comment?.user.username[0]
+                        }</AvatarFallback>
                     </Avatar>
                     <div className={'flex justify-between h-full w-full'}>
                         <div className={'w-full flex-1'}>
                             <div className={'flex w-full items-center h-5 gap-1 justify-between'}>
                                 <div className={'flex items-center h-5 gap-1'}>
-                                    <h1 className={'font-bold'}>{comment.user?.displayName}</h1>
+                                    <h1 className={'font-bold'}>{
+                                        comment.user?.displayName
+                                            ? comment.user.displayName :
+                                            comment.user.username
+                                    }</h1>
                                     <div className={'rounded-full bg-gray-500 size-1'}/>
                                     <span className={'flex h-full items-center text-gray-600 gap-x-1 text-sm'}>
                                         <Clock className={'size-4'}/> <span>{date}</span>

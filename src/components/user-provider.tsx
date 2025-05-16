@@ -5,11 +5,14 @@ import { useCurrentUser } from "@/stores/useCurrentUser"
 import React, { useEffect, useState } from "react"
 import { useUser } from "@auth0/nextjs-auth0";
 import { createUser, getMe } from "@/api/userApi";
+import {useRouter} from "next/navigation";
+import { toast } from "sonner";
 
 export const UserProvider = ({ children }: { children: React.ReactNode }) => {
   const { setUser } = useCurrentUser()
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const { user } = useUser()
+  const router = useRouter()
 
   useEffect(() => {
     setIsAuthenticated(!!user)
@@ -49,8 +52,14 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
         email: user.email,
         username: user.nickname || user.name || user.sub,
       });
+
+      toast.success("User created successfully. Redirecting to profile edit page after 3 seconds...")
+      
+      setTimeout(() => {
+        router.push('/profile/edit')
+      }, 3000)
     }
-  }, [user, isAuthenticated, data, isLoading, isError, createUserOnBackend])
+  }, [user, isAuthenticated, data, isLoading, isError, createUserOnBackend, router])
 
   return <>{children}</>
 }

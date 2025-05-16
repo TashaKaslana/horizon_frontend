@@ -1,5 +1,4 @@
 'use client'
-import { useUser } from "@auth0/nextjs-auth0";
 import LandingFooter from "./components/landing_page/footer/landing-footer";
 import LandingHeader from "./components/landing_page/header/LandingHeader";
 import LandingMain from "./components/landing_page/main/LandingMain";
