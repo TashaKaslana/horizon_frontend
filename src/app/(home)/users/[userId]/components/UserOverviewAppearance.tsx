@@ -8,6 +8,7 @@ import {toast} from "sonner";
 import {useCurrentUser} from "@/stores/useCurrentUser";
 import TruncatedText from "@/components/common/truncated-text";
 import {ImageUpload} from "@/app/components/avatar_upload/avatar-upload";
+import {UnVerifiedBadge} from "@/components/common/verified-badge";
 
 export function UserOverviewAppearance({userId}: { userId: string }) {
     const {user, followOverview} = useUserHook(userId)
@@ -50,7 +51,10 @@ export function UserOverviewAppearance({userId}: { userId: string }) {
             />
             <div>
                 <div className={"flex flex-col ml-5 gap-1"}>
-                    <h1 className={"text-3xl font-semibold"}>{user?.displayName}</h1>
+                    <h3 className={"text-3xl font-semibold flex gap-2 items-center"}>
+                        <span>{user?.displayName ?? user?.username}</span>
+                        <span>{!user?.displayName && <UnVerifiedBadge/>}</span>
+                    </h3>
                     <div className={'flex gap-1 text-sm text-muted-foreground items-center'}>
                         <p className={"italic text-sm text-muted-foreground"}>@{user?.username}</p>
                         <Dot/>

@@ -3,6 +3,7 @@
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {UserIntroduction, UserSummary} from "@/types/user";
 import {useCurrentUser} from "@/stores/useCurrentUser";
+import {UnVerifiedBadge} from "@/components/common/verified-badge";
 
 export const UserInformation = ({className}: { className?: string }) => {
     const {user} = useCurrentUser();
@@ -21,7 +22,11 @@ export const UserInformation = ({className}: { className?: string }) => {
                 </AvatarFallback>
             </Avatar>
             <main className={'text-start'}>
-                <h1 className={'font-bold text-md'}>{user?.displayName ?? user?.username}</h1>
+                <h3 className={'font-bold text-md flex gap-2'}>{user?.displayName ?? user?.username}
+                    {!user?.displayName &&
+                        <UnVerifiedBadge/>
+                    }
+                </h3>
                 <p className={'font-extralight text-xs italic text-zinc-600'}>@{user?.username}</p>
             </main>
         </article>

@@ -100,7 +100,8 @@ export default function InfoForm() {
                 dateOfBirth: user.dateOfBirth ? new Date(user.dateOfBirth) : new Date(),
                 gender: user.gender ?? undefined,
                 location: [user.country ?? '', user.city ?? ''],
-                phoneNumber: user.phoneNumber ?? ''
+                phoneNumber: user.phoneNumber ?? '',
+                bio: user.bio ?? ''
             });
         }
     }, [form, user]);
@@ -345,7 +346,6 @@ export default function InfoForm() {
                             <FormControl className="w-full max-h-64">
                                 <Textarea {...field}
                                           placeholder={'Enter your bio'}
-                                          defaultValue={user?.bio ?? null}
                                 />
                             </FormControl>
                             <FormDescription>Enter your bio.</FormDescription>

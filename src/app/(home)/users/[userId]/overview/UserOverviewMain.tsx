@@ -21,7 +21,7 @@ const UserOverviewMain = ({userId}: { userId: string }) => {
     return (
         <div>
             <div className={'px-10 pb-3'}>
-                <div className={'flex flex-col gap-5'}>
+                {feeds.length > 0 ? (<div className={'flex flex-col gap-5'}>
                     <div>
                         <h2 className={'text-2xl font-bold'}>The most popular post</h2>
                         <div className={cn('flex justify-center flex-1 px-12')}>
@@ -48,7 +48,14 @@ const UserOverviewMain = ({userId}: { userId: string }) => {
                             ))}
                         </div>
                     </div>
-                </div>
+                </div>) : (
+                    <div className={'flex flex-col justify-center items-center size-full'}>
+                        <h2 className={'text-2xl font-bold'}>No posts yet</h2>
+                        <p className={'text-muted-foreground'}>
+                            This user has not posted anything yet. Check back later!
+                        </p>
+                    </div>
+                )}
             </div>
         </div>
     )
