@@ -38,7 +38,7 @@ export const UserAssistance = ({isCollapsible}: { isCollapsible?: boolean }) => 
                 {isCollapsible ? (
                     <Avatar className={'w-full'}>
                         <AvatarImage src={user?.profileImage}/>
-                        <AvatarFallback>{user?.displayName[0]}</AvatarFallback>
+                        <AvatarFallback>{user?.displayName?.[0] ?? user?.username[0]}</AvatarFallback>
                     </Avatar>
                 ) : (
                     <div className={'w-full'}>
