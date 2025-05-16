@@ -5,6 +5,7 @@ import {Box} from "lucide-react";
 import Link from "next/link";
 import {useUserPost} from "@/app/(home)/users/[userId]/posts/hooks/useUserPost";
 import {Button} from "@/components/ui/button";
+import {useEffect} from "react";
 
 interface PostListMainProps {
     userId: string
@@ -20,9 +21,9 @@ export const PostListMain = ({userId}: PostListMainProps) => {
         },
     })
 
-    const posts = data?.data ?? [];
-
-    setFeeds(posts)
+    useEffect(() => {
+        setFeeds(data?.data ?? [])
+    }, [data?.data, setFeeds]);
 
     if (feeds.length < 1) {
         return <div className="flex size-full justify-center items-center">
@@ -34,8 +35,8 @@ export const PostListMain = ({userId}: PostListMainProps) => {
     }
 
     return (
-        <section>
-            <header className="flex ">
+        <section className={'space-y-2'}>
+            <header className="flex gap-2 px-4">
                 <Button variant={'outline'} onClick={() => handleSort('newest')}>Newest</Button>
                 <Button variant={'outline'} onClick={() => handleSort('oldest')}>Oldest</Button>
                 <Button variant={'outline'} onClick={() => handleSort('popular')}>Popular</Button>

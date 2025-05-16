@@ -29,7 +29,7 @@ export const MoreAction = ({postId}: { postId: string }) => {
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
-                    <DropdownMenuItem onClick={() => handleShareLink(postId)}>
+                    <DropdownMenuItem onClick={() => handleShareLink()}>
                         Share Link
                     </DropdownMenuItem>
                     <DropdownMenuGroup>
