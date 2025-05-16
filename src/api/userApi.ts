@@ -57,3 +57,24 @@ export const updateUserImage = async (
         },
     });
 };
+
+export const createUser = async (user: {
+    auth0Id: string;
+    email: string;
+    username: string
+}) => {
+    const token = await getAccessToken();
+
+    return await apiRequest({
+        url: `/users`,
+        method: "POST",
+        data: user,
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    }).catch((error) => {
+        console.error("Error creating user:", error);
+        toast.error("Error creating user");
+        throw error;
+    });
+};

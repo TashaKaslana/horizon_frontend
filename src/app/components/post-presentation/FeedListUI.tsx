@@ -1,10 +1,9 @@
-import { Loader2 } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { Suspense, RefObject } from "react";
 import { PostDisplay } from "@/app/components/post-presentation/PostDisplay";
 import {Feed} from "@/types/Feed";
 import {Skeleton} from "@/components/ui/skeleton";
 import InfiniteScroll from "@/components/ui/infinite-scroll";
+import {Spinner} from "@/components/ui/spinner";
 
 interface FeedListUIProps {
     feeds: Feed[];
@@ -40,7 +39,9 @@ export const FeedListUI = ({
                             <PostDisplay key={index} feed={feed} />
                         ))}
                     {isLoading && (
-                        <Loader2 className={cn("my-24 h-16 w-16 text-primary/60 animate-spin absolute right-1/2")} />
+                        <div className="flex justify-center items-center">
+                            <Spinner />
+                        </div>
                     )}
                 </InfiniteScroll>
             </div>

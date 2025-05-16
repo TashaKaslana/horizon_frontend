@@ -88,7 +88,7 @@ export const usePostManagementStore = create<PostManagementStore>()((set) => ({
     },
 
     addPost: (post: Feed) => set((state) => ({
-        feeds: {...state.feeds, post},
-        initialPosts: {...state.initialPosts, post}
+        feeds: [...state.feeds, post],
+        initialPosts: [...state.initialPosts, post]
     }))
 }))

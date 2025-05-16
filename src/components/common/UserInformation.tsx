@@ -14,18 +14,21 @@ export const UserInformation = ({className}: { className?: string }) => {
             <Avatar>
                 <AvatarImage src={user?.profileImage}/>
                 <AvatarFallback>
-                    {user?.displayName?.at(0)?.toUpperCase()}
+                    {user?.displayName ?
+                        user?.displayName?.at(0)?.toUpperCase() :
+                        user?.username.at(0)?.toUpperCase()
+                    }
                 </AvatarFallback>
             </Avatar>
             <main className={'text-start'}>
-                <h1 className={'font-bold text-md'}>{user?.displayName}</h1>
+                <h1 className={'font-bold text-md'}>{user?.displayName ?? user?.username}</h1>
                 <p className={'font-extralight text-xs italic text-zinc-600'}>@{user?.username}</p>
             </main>
         </article>
     )
 }
 
-export const UserIntroductionCard = ({user, className} : {user: UserIntroduction, className?: string}) => {
+export const UserIntroductionCard = ({user, className}: { user: UserIntroduction, className?: string }) => {
     return <article
         className={'flex gap-2 items-center hover:bg-gray-300 p-1 rounded cursor-pointer select-none transition duration-300 ' + className}>
         <Avatar>
@@ -41,7 +44,7 @@ export const UserIntroductionCard = ({user, className} : {user: UserIntroduction
     </article>
 }
 
-export const UserSummaryCard = ({user, className} : {user: UserSummary, className?: string}) => {
+export const UserSummaryCard = ({user, className}: { user: UserSummary, className?: string }) => {
     return <article
         className={'flex gap-2 items-center hover:bg-gray-300 p-1 rounded cursor-pointer select-none transition duration-300 ' + className}>
         <Avatar>

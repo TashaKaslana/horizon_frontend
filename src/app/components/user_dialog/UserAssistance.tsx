@@ -17,14 +17,14 @@ export const UserAssistance = ({isCollapsible}: { isCollapsible?: boolean }) => 
 
     return (
         <Popover>
-            <PopoverTrigger>
+            <PopoverTrigger className={'w-full'}>
                 {isCollapsible ?(
-                    <Avatar>
+                    <Avatar className={'w-full'}>
                         <AvatarImage src={user?.profileImage}/>
                         <AvatarFallback>{user?.displayName[0]}</AvatarFallback>
                     </Avatar>
                 ) : (
-                    <div className={'size-full'}>
+                    <div className={'w-full'}>
                         <UserInformation/>
                     </div>
                 )}

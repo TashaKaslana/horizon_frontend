@@ -1,35 +1,56 @@
 "use client"
 
-import {useQuery} from "@tanstack/react-query"
-import {useCurrentUser} from "@/stores/useCurrentUser"
-import React, {useEffect, useState} from "react"
-import {useUser} from "@auth0/nextjs-auth0";
-import {getMe} from "@/api/userApi";
+import { useMutation, useQuery } from "@tanstack/react-query"
+import { useCurrentUser } from "@/stores/useCurrentUser"
+import React, { useEffect, useState } from "react"
+import { useUser } from "@auth0/nextjs-auth0";
+import { createUser, getMe } from "@/api/userApi";
 
-export const UserProvider = ({children}: { children: React.ReactNode }) => {
-    const {setUser} = useCurrentUser()
-    const [isAuthenticated, setIsAuthenticated] = useState(false)
-    const {user} = useUser()
+export const UserProvider = ({ children }: { children: React.ReactNode }) => {
+  const { setUser } = useCurrentUser()
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const { user } = useUser()
 
-    useEffect(() => {
-        if (user) {
-            setIsAuthenticated(true)
-        } else {
-            setIsAuthenticated(false)
-        }
-    }, [user])
+  useEffect(() => {
+    setIsAuthenticated(!!user)
+  }, [user])
 
-    const {data} = useQuery({
-        queryKey: ["currentUser"],
-        queryFn: getMe,
-        enabled: isAuthenticated,
-        staleTime: 1000 * 60 * 5,
-    })
+  const { mutate: createUserOnBackend } = useMutation({
+    mutationFn: createUser,
+    onError: (err) => {
+      console.error("Failed to create user:", err);
+    },
+  });
 
-    useEffect(() => {
-        if (!data) return
-        setUser(data.data)
-    }, [data, setUser]);
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["currentUser"],
+    queryFn: getMe,
+    enabled: isAuthenticated,
+    staleTime: 1000 * 60 * 5,
+    retry: false, 
+  })
 
-    return <>{children}</>
+  useEffect(() => {
+    if (data?.data) {
+      setUser(data.data)
+    }
+  }, [data, setUser]);
+
+  useEffect(() => {
+    if (
+      process.env.NEXT_PUBLIC_SHOULD_CREATE_USER === "true" &&
+      isAuthenticated &&
+      user?.email &&
+      !isLoading &&
+      (isError || !data?.data)
+    ) {
+      createUserOnBackend({
+        auth0Id: user.sub,
+        email: user.email,
+        username: user.nickname || user.name || user.sub,
+      });
+    }
+  }, [user, isAuthenticated, data, isLoading, isError, createUserOnBackend])
+
+  return <>{children}</>
 }
