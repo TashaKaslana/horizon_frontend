@@ -1,7 +1,6 @@
 import ForyouContainer from "../ForyouContainer"
-import {UUID} from "node:crypto";
 
-const Page = async ({params}: { params: Promise<{ postId: UUID }> }) => {
+const Page = async ({params}: { params: Promise<{ postId: string }> }) => {
     const {postId} = await params;
 
     return (

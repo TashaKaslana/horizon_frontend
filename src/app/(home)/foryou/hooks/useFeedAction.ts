@@ -26,6 +26,7 @@ export const useFeedActions = (excludePostId?: string) => {
         queryKey: ['foryou-post', excludePostId],
         queryFn: () => excludePostId ? getFeedById(excludePostId) : undefined,
         enabled: !!excludePostId,
+        throwOnError: true,
     });
 
     const {
@@ -126,8 +127,8 @@ export const useFeedActions = (excludePostId?: string) => {
         bookmarkMutation.mutate({postId, isBookmarked: feed.statistic.isBookmarked});
     }
 
-    const handleShareLink = (postId: string) => {
-        const shareUrl = `${window.location.origin}${window.location.pathname}/${postId}`;
+    const handleShareLink = () => {
+        const shareUrl = `${window.location.origin}${window.location.pathname}`;
 
         navigator.clipboard.writeText(shareUrl)
             .then(() => toast.success("Link copied to clipboard"))
