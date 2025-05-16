@@ -12,7 +12,11 @@ export const NotificationCardAppearance = (props: {
     {props.user ? (
         <Avatar className="h-10 w-10 border">
             <AvatarImage src={props.user?.profileImage} alt={props.user?.displayName}/>
-            <AvatarFallback>{props.user?.displayName?.substring(0, 2).toUpperCase()}</AvatarFallback>
+            <AvatarFallback>{
+                props.user.displayName ?
+                    props.user?.displayName?.substring(0, 2).toUpperCase() :
+                    props.user?.username[0].toUpperCase()
+            }</AvatarFallback>
         </Avatar>
     ) : (
         <div className="mt-1">{props.icons[getGroupType(props.type)]}</div>

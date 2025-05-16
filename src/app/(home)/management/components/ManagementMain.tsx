@@ -16,12 +16,19 @@ export const ManagementMain = () => {
     return (
         <div className={'space-y-5'}>
             <main className={'grid grid-cols-2 gap-5 place-items-center'}>
+                {feeds?.length === 0 && !isFetchingNextPage && (
+                    <div className="col-span-2 text-center text-muted-foreground py-10">
+                        You haven’t posted anything yet.
+                    </div>
+                )}
+
                 <InfiniteScroll isLoading={isFetchingNextPage} hasMore={hasNextPage} next={fetchNextPage}>
                     {feeds?.map((feed) => (
-                        <PostCard feed={feed} key={feed.post.id}/>
+                        <PostCard feed={feed} key={feed.post.id} />
                     ))}
                 </InfiniteScroll>
             </main>
+
             <Spinner show={isFetchingNextPage} className={'text-sky-500'}/>
         </div>
     );

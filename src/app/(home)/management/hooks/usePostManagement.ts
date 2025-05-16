@@ -1,23 +1,27 @@
 import {usePostManagementStore} from "@/app/(home)/management/store/usePostManagementStore";
 import {useInfiniteQuery, useMutation} from "@tanstack/react-query";
-import {deletePost, getFeeds} from "@/api/postApi";
+import {deletePost, getFeedByUserId} from "@/api/postApi";
 import {useEffect, useRef} from "react";
 import { toast } from "sonner";
+import {useCurrentUser} from "@/stores/useCurrentUser";
 
 export const usePostManagement = () => {
     const {feeds, setInitialPosts, setPosts, deletePostById} = usePostManagementStore()
     const deletedPostIdsRef = useRef<Set<string>>(new Set());
+    const {user} = useCurrentUser();
+
 
     const {data, isFetchingNextPage, fetchNextPage, hasNextPage} = useInfiniteQuery({
         queryKey: ['my-posts'],
         queryFn: async ({pageParam = 0}) => {
-            return await getFeeds({page: pageParam, size: 2})
+            return await getFeedByUserId({userId: user!.id, page: pageParam, size: 2})
         },
         getNextPageParam: (lastPage) => {
             const pagination = lastPage.metadata?.pagination;
             return pagination?.hasNext ? pagination.currentPage + 1 : undefined;
         },
-        initialPageParam: 0
+        initialPageParam: 0,
+        enabled: !!user?.id
     })
 
     const postDeleteMutation = useMutation({

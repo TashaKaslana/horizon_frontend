@@ -11,14 +11,31 @@ import {useCurrentUser} from "@/stores/useCurrentUser";
 import {SquareUserRound} from "lucide-react";
 import {UserDialogTrigger} from "@/app/components/user_dialog/UserDialogTrigger";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
+import {useEffect, useState} from "react";
+import {Skeleton} from "@/components/ui/skeleton";
 
 export const UserAssistance = ({isCollapsible}: { isCollapsible?: boolean }) => {
     const {user} = useCurrentUser()
 
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
+
+    if (!mounted || !user) {
+        return (
+            <div className={'flex items-center justify-center gap-2'}>
+                <Skeleton className={'size-10 rounded-full bg-gray-200'}/>
+                <Skeleton className={'flex-1 h-10 bg-zinc-300'}/>
+            </div>
+        )
+    }
+
     return (
         <Popover>
             <PopoverTrigger className={'w-full'}>
-                {isCollapsible ?(
+                {isCollapsible ? (
                     <Avatar className={'w-full'}>
                         <AvatarImage src={user?.profileImage}/>
                         <AvatarFallback>{user?.displayName[0]}</AvatarFallback>
