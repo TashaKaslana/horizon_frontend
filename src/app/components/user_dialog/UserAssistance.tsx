@@ -25,19 +25,10 @@ export const UserAssistance = ({isCollapsible}: { isCollapsible?: boolean }) => 
 
     if (!mounted || !user) {
         return (
-            <>
-                {
-                    isCollapsible ? (
-                            <Avatar className={'w-full'}>
-                                <Skeleton className={'size-10 rounded-full bg-gray-200'}/>
-                            </Avatar>
-                        ) :
-                        (<div className={'flex items-center justify-center gap-2'}>
-                            <Skeleton className={'size-10 rounded-full bg-gray-200'}/>
-                            <Skeleton className={'flex-1 h-10 bg-zinc-300'}/>
-                        </div>)
-                }
-            </>
+            <div className={'flex items-center justify-center gap-2'}>
+                <Skeleton className={'size-10 rounded-full bg-gray-200'}/>
+                <Skeleton className={'flex-1 h-10 bg-zinc-300'}/>
+            </div>
         )
     }
 

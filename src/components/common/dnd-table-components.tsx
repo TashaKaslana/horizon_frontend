@@ -1,10 +1,13 @@
-import React from "react";
+// components/common/dnd-table-components.tsx
+"use client";
+
+import React, { HTMLAttributes } from "react";
 import {
     DndContext,
+    closestCenter,
     KeyboardSensor,
     MouseSensor,
     TouchSensor,
-    closestCenter,
     useSensor,
     useSensors,
     type DragEndEvent,
@@ -17,26 +20,38 @@ import {
     verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { flexRender, Row, RowData } from "@tanstack/react-table";
-import { TableRow, TableCell } from "@/components/ui/table"; // Your existing ui/table
+import { Row, flexRender, RowData, CellContext } from "@tanstack/react-table";
+
+import { TableRow, TableCell } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { GripVerticalIcon } from "lucide-react";
 
-// --- DndTableContext ---
-interface DndTableContextProps<TData extends { id: UniqueIdentifier }> {
-    items: TData[];
-    onDragEnd: (event: DragEndEvent) => void;
+type UseSortableAttributes = ReturnType<typeof useSortable>['attributes'];
+
+// Base type for data that supports DND, used by DraggableRow and DataTable
+export type DraggableItem = RowData & {
+    id: UniqueIdentifier;
+};
+
+// Context for DndKit
+interface DndTableContextProps<TItem extends DraggableItem> {
+    items: TItem[];
+    onDragEndAction: (event: DragEndEvent) => void;
     children: React.ReactNode;
 }
 
-export function DndTableContext<TData extends { id: UniqueIdentifier }>({
-                                                                            items,
-                                                                            onDragEnd,
-                                                                            children,
-                                                                        }: DndTableContextProps<TData>) {
+export function DndTableContext<TItem extends DraggableItem>({
+                                                                 items,
+                                                                 onDragEndAction,
+                                                                 children,
+                                                             }: DndTableContextProps<TItem>) {
     const sensors = useSensors(
-        useSensor(MouseSensor, {}),
-        useSensor(TouchSensor, {}),
+        useSensor(MouseSensor, {
+            activationConstraint: { distance: 5 },
+        }),
+        useSensor(TouchSensor, {
+            activationConstraint: { delay: 100, tolerance: 5 },
+        }),
         useSensor(KeyboardSensor, {})
     );
 
@@ -47,7 +62,7 @@ export function DndTableContext<TData extends { id: UniqueIdentifier }>({
             sensors={sensors}
             collisionDetection={closestCenter}
             modifiers={[restrictToVerticalAxis]}
-            onDragEnd={onDragEnd}
+            onDragEnd={onDragEndAction}
         >
             <SortableContext items={itemIds} strategy={verticalListSortingStrategy}>
                 {children}
@@ -56,32 +71,25 @@ export function DndTableContext<TData extends { id: UniqueIdentifier }>({
     );
 }
 
+// Interface for passing DND attributes/listeners to the cell rendering the handle
+export interface DraggableCellContextExtensions {
+    dndAttributes?: HTMLAttributes<UseSortableAttributes>;
+    dndListeners?: ReturnType<typeof useSortable>['listeners'];
+}
 
-// --- DraggableRow ---
-// This is similar to your existing DraggableRow but more tightly coupled with the assumption
-// that it's used within the DndTableContext and for tanstack-table rows.
-// It also assumes `row.original` has an `id` property.
-interface DraggableRowProps<TData extends { id: UniqueIdentifier } & RowData> {
+// DraggableRow component
+interface DraggableRowProps<TData extends DraggableItem> {
     row: Row<TData>;
 }
 
-export function DraggableRow<TData extends { id: UniqueIdentifier } & RowData>({
-                                                                                   row,
-                                                                               }: DraggableRowProps<TData>) {
-    const {
-        setNodeRef,
-        transform,
-        transition,
-        isDragging,
-    } = useSortable({
+export function DraggableRow<TData extends DraggableItem>({ row }: DraggableRowProps<TData>) {
+    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
         id: row.original.id,
     });
 
     const style = {
         transform: CSS.Transform.toString(transform),
-        transition,
-        opacity: isDragging ? 0.8 : 1,
-        zIndex: isDragging ? 1 : 0,
+        transition: transition,
     };
 
     return (
@@ -90,37 +98,51 @@ export function DraggableRow<TData extends { id: UniqueIdentifier } & RowData>({
             style={style}
             data-state={row.getIsSelected() && "selected"}
             data-dragging={isDragging}
-            // {...attributes} // Listeners are usually on the drag handle, not the whole row
+            className="relative z-0 data-[dragging=true]:z-10 data-[dragging=true]:bg-muted data-[dragging=true]:opacity-80"
         >
-            {/* Render a drag handle cell if configured, or apply listeners to a specific cell */}
-            {row.getVisibleCells().map((cell) => (
-                <TableCell key={cell.id} style={{ touchAction: 'none' /* For touch on specific handle */ }}>
-                    {/* Conditionally render drag handle or apply listeners here */}
-                    {/* For now, assuming a dedicated drag handle column */}
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                </TableCell>
-            ))}
+            {row.getVisibleCells().map((cell) => {
+                const cellContext = cell.getContext();
+                let augmentedContext: CellContext<TData, unknown> & DraggableCellContextExtensions = cellContext;
+
+                // Pass dnd attributes and listeners to the cell designated as the drag handle
+                // This assumes the drag handle column has an id of 'drag'
+                if (cell.column.id === "drag") {
+                    augmentedContext = {
+                        ...cellContext,
+                        dndAttributes: attributes,
+                        dndListeners: listeners,
+                    };
+                }
+
+                return (
+                    <TableCell
+                        key={cell.id}
+                        style={{ width: cell.column.getSize() !== 150 ? cell.column.getSize() : undefined }}
+                    >
+                        {flexRender(cell.column.columnDef.cell, augmentedContext)}
+                    </TableCell>
+                );
+            })}
         </TableRow>
     );
 }
 
-// --- DragHandleCell ---
-// A simple component to be used in a column definition for the drag handle
-interface DragHandleCellProps {
-    rowId: UniqueIdentifier;
-}
-export function DragHandleCell({ rowId }: DragHandleCellProps) {
-    const { attributes, listeners, setActivatorNodeRef } = useSortable({ id: rowId });
+// Standard DragHandle Cell Renderer (consumes context from DraggableRow)
+// To be used in column definitions.
+export function DragHandleCell<TData extends DraggableItem, TValue = unknown>(
+    props: CellContext<TData, TValue> & DraggableCellContextExtensions
+) {
     return (
         <Button
-            ref={setActivatorNodeRef}
+            {...(props.dndAttributes as React.ButtonHTMLAttributes<HTMLButtonElement>)}
+            {...props.dndListeners}
             variant="ghost"
             size="icon"
-            className="size-7 cursor-grab text-muted-foreground hover:bg-transparent"
-            {...attributes}
-            {...listeners}
+            className="size-7 cursor-grab text-muted-foreground hover:bg-transparent active:cursor-grabbing"
+            onClick={(e) => e.stopPropagation()} // Prevent row click if handle is clicked
+            aria-label="Drag to reorder"
         >
-            <GripVerticalIcon className="size-4" />
+            <GripVerticalIcon className="size-4 text-muted-foreground" />
             <span className="sr-only">Drag to reorder</span>
         </Button>
     );

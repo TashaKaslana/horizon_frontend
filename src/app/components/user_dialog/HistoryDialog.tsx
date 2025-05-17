@@ -59,7 +59,7 @@ export const HistoryDialog = () => {
                            data={histories ?? []}
                            fetchNextPage={fetchNextPage}
                            hasNextPage={hasNextPage}
-                           totalPageCount={totalPage}
+                           // totalPageCount={totalPage} //TODO: disable temp
                 />
             </DialogContent>
         </Dialog>

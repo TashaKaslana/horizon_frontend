@@ -1,62 +1,97 @@
-// Your existing DataTable.tsx
-"use client"
+// components/datatable/DataTable.tsx
+"use client";
 
+import React from "react";
 import {
-    ColumnDef, ColumnFiltersState,
+    ColumnDef,
+    ColumnFiltersState,
     flexRender,
-    getCoreRowModel, getFilteredRowModel, getPaginationRowModel, getSortedRowModel, SortingState,
+    getCoreRowModel,
+    getFilteredRowModel,
+    getPaginationRowModel,
+    getSortedRowModel,
+    SortingState,
     useReactTable,
-    RowData, // Import RowData
-    Table as TanstackTable, Row, // Alias to avoid conflict
-} from "@tanstack/react-table"
+    Table as TanstackTableType,
+    Row,
+    TableMeta,
+    VisibilityState,
+    FilterFn,
+    RowModel,
+} from "@tanstack/react-table";
+import type { DragEndEvent } from "@dnd-kit/core";
+import { arrayMove } from "@dnd-kit/sortable";
 
 import {
-    Table,
+    Table, // Your ShadCN UI Table
     TableBody,
     TableCell,
     TableHead,
     TableHeader,
     TableRow,
-} from "@/components/ui/table"
+} from "@/components/ui/table";
+import { Input } from "@/components/ui/input";
+import { Spinner } from "@/components/ui/spinner";
 import {
     DataTablePagination,
     DataTableViewOptions,
-    // Assuming DataTableColumnHeader is also here or imported elsewhere
-} from "@/components/common/data-table-components"; // Your existing file for these
-import {DndTableContext, DraggableRow} from "@/components/common/dnd-table-components"; // New DND components
-import React from "react";
-import {Input} from "@/components/ui/input";
-import {Spinner} from "@/components/ui/spinner";
-import type {UniqueIdentifier, DragEndEvent} from "@dnd-kit/core";
-import { arrayMove } from "@dnd-kit/sortable";
-// For DND types
+} from "@/components/common/data-table-components"; // Corrected import path
+import {
+    DndTableContext,
+    DraggableRow,
+    DraggableItem, // Import DraggableItem type
+} from "@/components/common/dnd-table-components"; // Corrected import path
 
-// Define a base type for data that supports DND
-export type DraggableItem = RowData & {
-    id: UniqueIdentifier;
-};
-
-interface DataTableProps<TData extends RowData, TValue> {
+interface DataTableProps<TData extends DraggableItem, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
-    setData?: React.Dispatch<React.SetStateAction<TData[]>>; // For DND reordering
+    setData?: React.Dispatch<React.SetStateAction<TData[]>>;
     fetchNextPage?: () => void;
     hasNextPage?: boolean;
     isLoading?: boolean;
-    isFetchingNextPage?: boolean; // More specific loading state for infinite scroll
-    totalPageCount?: number; // Tanstack table computes this if pagination is client-side
-    enableDnd?: boolean; // New prop to enable drag and drop
-    onDragEnd?: (event: DragEndEvent, currentData: TData[]) => TData[]; // Custom drag end logic that returns new data array
+    isFetchingNextPage?: boolean;
+    enableDnd?: boolean;
+    onDragEnd?: (event: DragEndEvent, currentData: TData[]) => TData[]; // Custom logic can return new array
     filterPlaceholder?: string;
     initialSort?: SortingState;
-    // Add other TanStack Table options you want to expose as props
+    initialColumnVisibility?: VisibilityState; // Allow initial column visibility
     enableRowSelection?: boolean | ((row: Row<TData>) => boolean);
+    meta?: TableMeta<TData>;
+    showGlobalFilter?: boolean;
+    showViewOptions?: boolean;
+    showPagination?: boolean;
+    globalFilterFn?: FilterFn<TData> | 'auto' | null;
 }
+
+const genericGlobalFilterFn: FilterFn<any> = (
+    row: Row<any>,
+    columnId: string, // Not used by global filter, but part of FilterFn signature
+    filterValue: string
+): boolean => {
+    const lowercasedFilterValue = filterValue.toLowerCase();
+
+    // Iterate over all values in the original row data
+    for (const key in row.original) {
+        if (Object.prototype.hasOwnProperty.call(row.original, key)) {
+            const value = row.original[key];
+
+            // Check if the value is a string or number and if it includes the filter text
+            if ((typeof value === 'string' || typeof value === 'number') &&
+                String(value).toLowerCase().includes(lowercasedFilterValue)) {
+                return true; // Match found
+            }
+            // Optional: If you have nested objects/arrays you want to search,
+            // you might need a more recursive approach here, but for flat
+            // or mostly flat data, this is usually sufficient.
+        }
+    }
+    return false; // No match found in any property
+};
 
 export function DataTable<TData extends DraggableItem, TValue>({
                                                                    columns,
                                                                    data,
-                                                                   setData, // Required if enableDnd is true and onDragEnd is not custom
+                                                                   setData,
                                                                    fetchNextPage,
                                                                    hasNextPage,
                                                                    isLoading,
@@ -65,67 +100,68 @@ export function DataTable<TData extends DraggableItem, TValue>({
                                                                    onDragEnd: customOnDragEnd,
                                                                    filterPlaceholder = "Search...",
                                                                    initialSort = [],
+                                                                   initialColumnVisibility = {},
                                                                    enableRowSelection = false,
+                                                                   meta,
+                                                                   showGlobalFilter = true,
+                                                                   showViewOptions = true,
+                                                                   showPagination = true,
+                                                                   globalFilterFn: providedGlobalFilterFn = genericGlobalFilterFn,
                                                                }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>(initialSort);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [globalFilter, setGlobalFilter] = React.useState("");
     const [rowSelection, setRowSelection] = React.useState({});
+    const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>(initialColumnVisibility);
 
-    // Memoize data if it's not managed by an external setData
-    // This is important if `data` prop changes frequently from parent
     const memoizedData = React.useMemo(() => data, [data]);
+    const memoizedColumns = React.useMemo(() => columns, [columns]); // Memoize columns if they can change
 
     const table = useReactTable({
         data: memoizedData,
-        columns,
-        getCoreRowModel: getCoreRowModel(),
-        getPaginationRowModel: getPaginationRowModel(),
-        onSortingChange: setSorting,
-        getSortedRowModel: getSortedRowModel(),
-        onColumnFiltersChange: setColumnFilters,
-        getFilteredRowModel: getFilteredRowModel(),
-        onGlobalFilterChange: setGlobalFilter, // Ensure this is set if using global filter
-        onRowSelectionChange: enableRowSelection ? setRowSelection : undefined,
+        columns: memoizedColumns,
+        meta,
         state: {
             sorting,
             columnFilters,
             globalFilter,
             rowSelection: enableRowSelection ? rowSelection : {},
+            columnVisibility,
         },
-        globalFilterFn: (row, columnId, filterValue) => {
-            const cellValue = row.getValue(columnId);
-            return String(cellValue).toLowerCase().includes(filterValue.toLowerCase());
-        },
-        enableRowSelection, // Pass this to the table instance
-        getRowId: enableDnd || enableRowSelection ? (row: any) => row.id?.toString() : undefined, // Required for DND and stable row selection
+        enableRowSelection,
+        onSortingChange: setSorting,
+        onColumnFiltersChange: setColumnFilters,
+        onGlobalFilterChange: setGlobalFilter,
+        onRowSelectionChange: enableRowSelection ? setRowSelection : undefined,
+        onColumnVisibilityChange: setColumnVisibility,
+        getCoreRowModel: getCoreRowModel(),
+        getPaginationRowModel: getPaginationRowModel(),
+        getSortedRowModel: getSortedRowModel(),
+        getFilteredRowModel: getFilteredRowModel(),
+        getRowId: (row: TData) => row.id.toString(),
+        globalFilterFn: providedGlobalFilterFn === null ? undefined : providedGlobalFilterFn,
     });
 
     const handleDragEnd = (event: DragEndEvent) => {
-        if (!setData && !customOnDragEnd) {
-            console.warn("DataTable: setData or onDragEnd prop is required for DND functionality.");
-            return;
-        }
+        if (!enableDnd) return;
+
         if (customOnDragEnd) {
-            // Caller handles data update
-            const reorderedData = customOnDragEnd(event, memoizedData as TData[]);
-            if (setData && reorderedData) setData(reorderedData); // Optionally allow customOnDragEnd to update via setData too
-        } else if (setData && (memoizedData[0] as DraggableItem)?.id !== undefined) {
-            // Default arrayMove logic
-            const {active, over} = event;
+            const reorderedData = customOnDragEnd(event, memoizedData);
+            if (setData && reorderedData) setData(reorderedData);
+        } else if (setData) {
+            const { active, over } = event;
             if (active && over && active.id !== over.id) {
                 setData((currentData) => {
-                    // Ensure currentData is treated as DraggableItem[] for id access
                     const oldIndex = currentData.findIndex(item => item.id === active.id);
                     const newIndex = currentData.findIndex(item => item.id === over.id);
                     if (oldIndex === -1 || newIndex === -1) return currentData;
-
                     return arrayMove(currentData, oldIndex, newIndex);
                 });
             }
+        } else {
+            console.warn("DataTable: 'setData' prop or a custom 'onDragEnd' prop is required for DND reordering.");
         }
     };
-
 
     const tableContent = (
         <Table>
@@ -133,8 +169,7 @@ export function DataTable<TData extends DraggableItem, TValue>({
                 {table.getHeaderGroups().map((headerGroup) => (
                     <TableRow key={headerGroup.id}>
                         {headerGroup.headers.map((header) => (
-                            <TableHead key={header.id}
-                                       style={{width: header.getSize() !== 150 ? header.getSize() : undefined}}>
+                            <TableHead key={header.id} style={{ width: header.getSize() !== 150 ? header.getSize() : undefined }} colSpan={header.colSpan}>
                                 {header.isPlaceholder
                                     ? null
                                     : flexRender(
@@ -147,41 +182,40 @@ export function DataTable<TData extends DraggableItem, TValue>({
                 ))}
             </TableHeader>
             <TableBody>
-                {isLoading && !isFetchingNextPage ? ( // Show main loader only if not fetching next page
+                {isLoading && !isFetchingNextPage ? (
                     <TableRow>
-                        <TableCell colSpan={columns.length} className="h-24 text-center">
-                            <Spinner/>
+                        <TableCell colSpan={memoizedColumns.length} className="h-24 text-center">
+                            <Spinner />
                         </TableCell>
                     </TableRow>
                 ) : table.getRowModel().rows?.length ? (
                     table.getRowModel().rows.map((row) =>
                         enableDnd ? (
-                            <DraggableRow key={row.original.id} row={row as Row<TData>}/>
+                            <DraggableRow key={row.id} row={row as Row<TData>} />
                         ) : (
                             <TableRow
                                 key={row.id}
                                 data-state={row.getIsSelected() && "selected"}
                             >
                                 {row.getVisibleCells().map((cell) => (
-                                    <TableCell key={cell.id}
-                                               style={{width: cell.column.getSize() !== 150 ? cell.column.getSize() : undefined}}>
+                                    <TableCell key={cell.id} style={{ width: cell.column.getSize() !== 150 ? cell.column.getSize() : undefined }}>
                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                     </TableCell>
                                 ))}
                             </TableRow>
                         )
                     )
-                ) : !isLoading ? ( // Only show "No results" if not loading
+                ) : !isLoading ? (
                     <TableRow>
-                        <TableCell colSpan={columns.length} className="h-24 text-center">
-                            No results.
+                        <TableCell colSpan={memoizedColumns.length} className="h-24 text-center">
+                            No results found.
                         </TableCell>
                     </TableRow>
                 ) : null}
-                {isFetchingNextPage && ( // Loader for infinite scroll
+                {isFetchingNextPage && (
                     <TableRow>
-                        <TableCell colSpan={columns.length} className="h-12 text-center">
-                            <Spinner size="small"/>
+                        <TableCell colSpan={memoizedColumns.length} className="h-12 text-center">
+                            <Spinner size="small" />
                         </TableCell>
                     </TableRow>
                 )}
@@ -191,31 +225,36 @@ export function DataTable<TData extends DraggableItem, TValue>({
 
     return (
         <div className="space-y-4">
-            <div className="flex items-center justify-between">
-                <Input
-                    placeholder={filterPlaceholder}
-                    value={globalFilter ?? ""}
-                    onChange={(event) => setGlobalFilter(event.target.value)}
-                    className="h-8 w-[150px] lg:w-[250px]"
-                />
-                <DataTableViewOptions table={table as TanstackTable<TData>}/>
-            </div>
+            {(showGlobalFilter || showViewOptions) && (
+                <div className="flex items-center justify-between p-1">
+                    {showGlobalFilter ? (
+                        <Input
+                            placeholder={filterPlaceholder}
+                            value={globalFilter ?? ""}
+                            onChange={(event) => setGlobalFilter(event.target.value)}
+                            className="h-8 w-[150px] lg:w-[250px]"
+                        />
+                    ) : <div />} {/* Placeholder for spacing if only view options shown */}
+                    {showViewOptions && <DataTableViewOptions table={table as TanstackTableType<TData>} />}
+                </div>
+            )}
             <div className="rounded-md border">
-                {enableDnd ? (
-                    <DndTableContext items={memoizedData} onDragEnd={handleDragEnd}>
+                {enableDnd && memoizedData.length > 0 ? (
+                    <DndTableContext items={memoizedData} onDragEndAction={handleDragEnd}>
                         {tableContent}
                     </DndTableContext>
                 ) : (
                     tableContent
                 )}
             </div>
-            <div>
+            {showPagination && (
                 <DataTablePagination
-                    table={table as TanstackTable<TData>}
+                    table={table as TanstackTableType<TData>}
                     fetchNextPage={fetchNextPage}
                     hasNextPage={hasNextPage}
+                    isFetchingNextPage={isFetchingNextPage}
                 />
-            </div>
+            )}
         </div>
     );
 }

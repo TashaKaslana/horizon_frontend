@@ -1,36 +1,44 @@
-import {Column, Table} from "@tanstack/react-table"
-import {ArrowDown, ArrowUp, ChevronsUpDown, EyeOff, Settings2} from "lucide-react"
+// components/common/data-table-utils.tsx
+"use client";
 
-import {cn} from "@/lib/utils"
-import {Button} from "@/components/ui/button"
-import {
-    DropdownMenu, DropdownMenuCheckboxItem,
-    DropdownMenuContent,
-    DropdownMenuItem, DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
 import React from "react";
-
+import { Table as TanstackTable, Column } from "@tanstack/react-table"; // Renamed to avoid conflict
 import {
+    ArrowDown,
+    ArrowUp,
+    ChevronsUpDown,
+    EyeOff,
     ChevronLeft,
     ChevronRight,
     ChevronsLeft,
     ChevronsRight,
-} from "lucide-react"
+    Settings2,
+} from "lucide-react";
 
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import {
+    DropdownMenu,
+    DropdownMenuCheckboxItem,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
     Select,
     SelectContent,
     SelectItem,
     SelectTrigger,
     SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 
+// DataTableColumnHeader
 interface DataTableColumnHeaderProps<TData, TValue>
     extends React.HTMLAttributes<HTMLDivElement> {
-    column: Column<TData, TValue>
-    title: string
+    column: Column<TData, TValue>;
+    title: string;
 }
 
 export function DataTableColumnHeader<TData, TValue>({
@@ -39,7 +47,7 @@ export function DataTableColumnHeader<TData, TValue>({
                                                          className,
                                                      }: DataTableColumnHeaderProps<TData, TValue>) {
     if (!column.getCanSort()) {
-        return <div className={cn(className)}>{title}</div>
+        return <div className={cn(className)}>{title}</div>;
     }
 
     return (
@@ -53,56 +61,60 @@ export function DataTableColumnHeader<TData, TValue>({
                     >
                         <span>{title}</span>
                         {column.getIsSorted() === "desc" ? (
-                            <ArrowDown/>
+                            <ArrowDown className="ml-2 h-4 w-4" />
                         ) : column.getIsSorted() === "asc" ? (
-                            <ArrowUp/>
+                            <ArrowUp className="ml-2 h-4 w-4" />
                         ) : (
-                            <ChevronsUpDown/>
+                            <ChevronsUpDown className="ml-2 h-4 w-4" />
                         )}
                     </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start">
                     <DropdownMenuItem onClick={() => column.toggleSorting(false)}>
-                        <ArrowUp className="h-3.5 w-3.5 text-muted-foreground/70"/>
+                        <ArrowUp className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
                         Asc
                     </DropdownMenuItem>
                     <DropdownMenuItem onClick={() => column.toggleSorting(true)}>
-                        <ArrowDown className="h-3.5 w-3.5 text-muted-foreground/70"/>
+                        <ArrowDown className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
                         Desc
                     </DropdownMenuItem>
-                    <DropdownMenuSeparator/>
-                    <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
-                        <EyeOff className="h-3.5 w-3.5 text-muted-foreground/70"/>
-                        Hide
-                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    {column.getCanHide() && ( // Only show hide if column can be hidden
+                        <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
+                            <EyeOff className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+                            Hide
+                        </DropdownMenuItem>
+                    )}
                 </DropdownMenuContent>
             </DropdownMenu>
         </div>
-    )
+    );
 }
 
+// DataTablePagination
 interface DataTablePaginationProps<TData> {
-    table: Table<TData>,
-    fetchNextPage?: (() => void) | undefined,
-    hasNextPage?: boolean | undefined
+    table: TanstackTable<TData>; // Use aliased TanstackTable
+    fetchNextPage?: () => void;
+    hasNextPage?: boolean;
+    isFetchingNextPage?: boolean;
 }
 
 export function DataTablePagination<TData>({
                                                table,
                                                fetchNextPage,
-                                               hasNextPage
+                                               hasNextPage,
+                                               isFetchingNextPage,
                                            }: DataTablePaginationProps<TData>) {
     const handleNextPage = () => {
-        table.nextPage();
-
-        if (!table.getCanNextPage() && fetchNextPage && hasNextPage) {
+        if (fetchNextPage && table.getState().pagination.pageIndex === table.getPageCount() - 1 && hasNextPage) {
             fetchNextPage();
+        } else {
+            table.nextPage();
         }
     };
 
-
     return (
-        <div className="flex items-center justify-between px-2">
+        <div className="flex items-center justify-between px-2 py-2">
             <div className="flex-1 text-sm text-muted-foreground">
                 {table.getFilteredSelectedRowModel().rows.length} of{" "}
                 {table.getFilteredRowModel().rows.length} row(s) selected.
@@ -113,11 +125,11 @@ export function DataTablePagination<TData>({
                     <Select
                         value={`${table.getState().pagination.pageSize}`}
                         onValueChange={(value) => {
-                            table.setPageSize(Number(value))
+                            table.setPageSize(Number(value));
                         }}
                     >
                         <SelectTrigger className="h-8 w-[70px]">
-                            <SelectValue placeholder={table.getState().pagination.pageSize}/>
+                            <SelectValue placeholder={table.getState().pagination.pageSize} />
                         </SelectTrigger>
                         <SelectContent side="top">
                             {[10, 20, 30, 40, 50].map((pageSize) => (
@@ -130,7 +142,7 @@ export function DataTablePagination<TData>({
                 </div>
                 <div className="flex w-[100px] items-center justify-center text-sm font-medium">
                     Page {table.getState().pagination.pageIndex + 1} of{" "}
-                    {table.getPageCount()}
+                    {table.getPageCount() > 0 ? table.getPageCount() : 1}
                 </div>
                 <div className="flex items-center space-x-2">
                     <Button
@@ -140,7 +152,7 @@ export function DataTablePagination<TData>({
                         disabled={!table.getCanPreviousPage()}
                     >
                         <span className="sr-only">Go to first page</span>
-                        <ChevronsLeft/>
+                        <ChevronsLeft className="h-4 w-4" />
                     </Button>
                     <Button
                         variant="outline"
@@ -149,34 +161,35 @@ export function DataTablePagination<TData>({
                         disabled={!table.getCanPreviousPage()}
                     >
                         <span className="sr-only">Go to previous page</span>
-                        <ChevronLeft/>
+                        <ChevronLeft className="h-4 w-4" />
                     </Button>
                     <Button
                         variant="outline"
                         className="h-8 w-8 p-0"
                         onClick={handleNextPage}
-                        disabled={!table.getCanNextPage() && !hasNextPage}
+                        disabled={(!table.getCanNextPage() && !hasNextPage) || isFetchingNextPage}
                     >
                         <span className="sr-only">Go to next page</span>
-                        <ChevronRight/>
+                        <ChevronRight className="h-4 w-4" />
                     </Button>
                     <Button
                         variant="outline"
                         className="hidden h-8 w-8 p-0 lg:flex"
                         onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                        disabled={!table.getCanNextPage()}
+                        disabled={!table.getCanNextPage() && !hasNextPage} // Corrected: should be disabled if can't go next OR if it's infinite scroll without next page
                     >
                         <span className="sr-only">Go to last page</span>
-                        <ChevronsRight/>
+                        <ChevronsRight className="h-4 w-4" />
                     </Button>
                 </div>
             </div>
         </div>
-    )
+    );
 }
 
+// DataTableViewOptions
 interface DataTableViewOptionsProps<TData> {
-    table: Table<TData>
+    table: TanstackTable<TData>; // Use aliased TanstackTable
 }
 
 export function DataTableViewOptions<TData>({
@@ -190,13 +203,13 @@ export function DataTableViewOptions<TData>({
                     size="sm"
                     className="ml-auto hidden h-8 lg:flex"
                 >
-                    <Settings2/>
+                    <Settings2 className="mr-2 h-4 w-4" />
                     View
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-[150px]">
                 <DropdownMenuLabel>Toggle columns</DropdownMenuLabel>
-                <DropdownMenuSeparator/>
+                <DropdownMenuSeparator />
                 {table
                     .getAllColumns()
                     .filter(
@@ -204,18 +217,24 @@ export function DataTableViewOptions<TData>({
                             typeof column.accessorFn !== "undefined" && column.getCanHide()
                     )
                     .map((column) => {
+                        // Helper to try and make IDs more readable
+                        const friendlyName = column.id
+                            .replace(/([A-Z0-9])/g, ' $1') // Add space before caps/numbers
+                            .replace(/_/g, ' ')           // Replace underscores with spaces
+                            .replace(/^./, str => str.toUpperCase()); // Capitalize first letter
+
                         return (
                             <DropdownMenuCheckboxItem
                                 key={column.id}
-                                className="capitalize"
+                                className="capitalize" // May not be needed if friendlyName is good
                                 checked={column.getIsVisible()}
-                                onCheckedChange={(value) => column.toggleVisibility(value)}
+                                onCheckedChange={(value) => column.toggleVisibility(!!value)}
                             >
-                                {column.id}
+                                {friendlyName}
                             </DropdownMenuCheckboxItem>
-                        )
+                        );
                     })}
             </DropdownMenuContent>
         </DropdownMenu>
-    )
+    );
 }

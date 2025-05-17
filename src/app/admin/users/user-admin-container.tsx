@@ -1,8 +1,7 @@
 import {SiteHeader} from "@/app/admin/components/site-header";
 import {UserCardList} from "@/app/admin/users/user-card-list";
 import {UserAttendanceChart} from "@/app/admin/users/user-attending-chart";
-import {UserTableSection} from "@/app/admin/users/user-admin-table";
-
+import {UserAdminTable} from "@/app/admin/users/user-admin-table";
 
 const UserAdminContainer = () => {
     return (
@@ -10,7 +9,7 @@ const UserAdminContainer = () => {
             <SiteHeader text={'Users'}/>
             <UserCardList/>
             <UserAttendanceChart/>
-            <UserTableSection/>
+            <UserAdminTable/>
         </div>
     )
 }
