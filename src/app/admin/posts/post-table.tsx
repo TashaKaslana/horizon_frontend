@@ -38,35 +38,35 @@ import {getFixedNumberFormat} from "@/lib/utils";
 
 const mockPostsData: PostData[] = [
     {
-        id: '1', title: "Getting Started with Next.js 14", slug: "getting-started-with-nextjs-14",
+        id: '1', title: "Getting Started with Next.js 14", description: "An introductory guide to the latest features in Next.js 14, including server actions and improved image handling.",
         content: "Next.js 14 introduces server actions, improved image handling, and more. This post explores the key features...",
         authorId: "user-1", authorName: "Alice Wonderland", category: "Technology", status: "Published",
         tags: ["Next.js", "React", "Web Development"], featuredImage: "https://picsum.photos/seed/nextjs/400/200",
         publishedAt: "2024-03-10T10:00:00Z", createdAt: "2024-03-08T09:00:00Z", updatedAt: "2024-03-10T10:00:00Z", viewCount: 1500,
     },
     {
-        id: '2', title: "The Future of AI in Art", slug: "future-of-ai-in-art",
+        id: '2', title: "The Future of AI in Art", description: "Exploring the transformative impact of artificial intelligence on the art world, from creation to curation.",
         content: "Exploring how artificial intelligence is reshaping the art world, from generation to curation.",
         authorId: "user-2", authorName: "Bob The Builder", category: "Art", status: "Draft",
         tags: ["AI", "Art", "Technology"],
         createdAt: "2024-03-15T14:30:00Z", updatedAt: "2024-03-16T11:00:00Z", viewCount: 250,
     },
     {
-        id: '3', title: "A Guide to Sustainable Travel", slug: "guide-to-sustainable-travel",
+        id: '3', title: "A Guide to Sustainable Travel", description: "Practical tips and advice for traveling more sustainably and minimizing your environmental footprint.",
         content: "Tips and tricks for traveling more sustainably and reducing your carbon footprint.",
         authorId: "user-1", authorName: "Alice Wonderland", category: "Travel", status: "Pending Review",
         tags: ["Sustainability", "Travel", "Eco-friendly"], featuredImage: "https://picsum.photos/seed/travel/400/200",
         createdAt: "2024-02-20T12:00:00Z", updatedAt: "2024-03-01T16:00:00Z", viewCount: 780,
     },
     {
-        id: '4', title: "Mastering Remote Work Productivity", slug: "mastering-remote-work-productivity",
+        id: '4', title: "Mastering Remote Work Productivity", description: "Proven strategies and tools to enhance focus and achieve more when working from home.",
         content: "Proven strategies to stay focused and achieve more while working from home.",
         authorId: "user-3", authorName: "Charlie Brown", category: "Business", status: "Published",
         tags: ["Remote Work", "Productivity"],
         publishedAt: "2024-01-25T09:00:00Z", createdAt: "2024-01-20T10:00:00Z", updatedAt: "2024-01-25T09:00:00Z", viewCount: 12034,
     },
     {
-        id: '5', title: "The Science of Sleep: Why It Matters", slug: "science-of-sleep",
+        id: '5', title: "The Science of Sleep: Why It Matters", description: "An in-depth look at the critical role sleep plays in physical and mental well-being.",
         content: "Delving into the crucial role sleep plays in our physical and mental well-being.",
         authorId: "user-4", authorName: "Diana Prince", category: "Science", status: "Archived",
         tags: ["Health", "Science", "Well-being"], featuredImage: "https://picsum.photos/seed/sleep/400/200",
@@ -133,7 +133,7 @@ export function PostTable() {
             cell: ({ row }) => {
                 const post = row.original;
                 return (
-                    <div className="flex items-center gap-2 py-0.5 min-w-[250px] max-w-md">
+                    <div className="flex items-center gap-2 py-0.5 min-w-[180px] max-w-[240px]">
                         {post.featuredImage ?
                             <Image src={post.featuredImage} alt={post.title} width={48} height={36} className="h-9 w-12 object-cover rounded-sm flex-shrink-0"/> :
                             <div className="h-9 w-12 bg-muted rounded-sm flex items-center justify-center flex-shrink-0">
@@ -142,7 +142,7 @@ export function PostTable() {
                         }
                         <div className="flex flex-col gap-0.5">
                             <PostDetailViewerSheet post={post} onUpdate={handleUpdatePost} />
-                            <span className="text-xs text-muted-foreground truncate">/{post.slug}</span>
+                            {post.description && <span className="text-xs text-muted-foreground truncate max-w-48" title={post.description}>{post.description}</span>}
                         </div>
                     </div>
                 );
@@ -224,13 +224,13 @@ export function PostTable() {
             accessorKey: "publishedAt",
             header: ({ column }) => <DataTableColumnHeader column={column} title="Published" />,
             cell: ({ row }) => row.original.publishedAt ?
-                <div className="text-xs text-muted-foreground min-w-[90px]">{new Date(row.original.publishedAt).toLocaleDateString()}</div> :
+                <div className="text-xs text-muted-foreground min-w-[64px]">{new Date(row.original.publishedAt).toLocaleDateString()}</div> :
                 <span className="text-xs text-muted-foreground/70">Not published</span>,
         },
         {
             accessorKey: "updatedAt",
             header: ({ column }) => <DataTableColumnHeader column={column} title="Last Updated" />,
-            cell: ({ row }) => <div className="text-xs text-muted-foreground min-w-[90px]">{new Date(row.original.updatedAt).toLocaleDateString()}</div>,
+            cell: ({ row }) => <div className="text-xs text-muted-foreground min-w-[64px]">{new Date(row.original.updatedAt).toLocaleDateString()}</div>,
         },
         {
             id: "actions",
@@ -252,7 +252,7 @@ export function PostTable() {
                                         <EditIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
                                         View / Edit
                                     </DropdownMenuItem>
-                                    <DropdownMenuItem onSelect={() => window.open(`/blog/${post.slug}`, '_blank')}>
+                                    <DropdownMenuItem onSelect={() => window.open(`/foryou/${post.id}`, '_blank')}>
                                         <EyeIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
                                         Preview Post
                                     </DropdownMenuItem>
@@ -274,7 +274,7 @@ export function PostTable() {
     const currentMockUser = { id: "user-current", name: "Current Admin" };
 
     return (
-        <div className="flex w-full flex-col justify-start gap-6 p-4 md:p-6">
+        <div className="flex w-full flex-col justify-start gap-6 p-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
                 <h1 className="text-2xl font-semibold">Manage Posts</h1>
                 <CreatePostSheet onCreate={handleCreatePost} currentAuthor={currentMockUser}/>

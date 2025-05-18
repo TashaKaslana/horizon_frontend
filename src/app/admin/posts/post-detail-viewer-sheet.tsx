@@ -157,7 +157,7 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
                         <div>
                             <SheetTitle className="text-2xl">{isEditing ? "Edit Post" : post.title}</SheetTitle>
                             <SheetDescription>
-                                {isEditing ? "Modify the details of the post." : `Slug: ${post.slug}`}
+                                {isEditing ? "Modify the details of the post." : post.description ? post.description : "No description provided."}
                             </SheetDescription>
                         </div>
                         {!isEditing && (
@@ -176,9 +176,9 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
                                 {errors.title && <p className="text-xs text-red-500">{errors.title}</p>}
                             </div>
                             <div className="space-y-1.5">
-                                <Label htmlFor="edit-slug">Slug</Label>
-                                <Input id="edit-slug" name="slug" value={formData.slug} onChange={handleChange} disabled={isSubmitting}/>
-                                {errors.slug && <p className="text-xs text-red-500">{errors.slug}</p>}
+                                <Label htmlFor="edit-description">Description (Optional)</Label>
+                                <Input id="edit-description" name="description" value={formData.description || ''} onChange={handleChange} disabled={isSubmitting}/>
+                                {errors.description && <p className="text-xs text-red-500">{errors.description}</p>}
                             </div>
                         </div>
                         <div className="space-y-1.5">
@@ -281,3 +281,4 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
         </Sheet>
     );
 };
+

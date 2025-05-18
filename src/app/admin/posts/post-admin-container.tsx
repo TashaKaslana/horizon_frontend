@@ -5,7 +5,7 @@ import {PostTable} from "@/app/admin/posts/post-table";
 
 const PostAdminContainer = () => {
     return (
-        <div className={'space-y-4'}>
+        <div className={'space-y-4 size-full'}>
             <SiteHeader text={'Posts'}/>
             <PostCardList/>
             <PostChart/>
