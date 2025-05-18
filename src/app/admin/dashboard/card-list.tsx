@@ -2,34 +2,34 @@ import {OverviewCard} from "@/app/admin/components/card-overview";
 
 const dashboardCards = [
     {
-        title: "Total Revenue",
-        value: "$1,250.00",
-        trend: 12.5,
-        message: "Trending up this month",
-        description: "Visitors for the last 6 months"
+        title: "Total Users",
+        value: "12,450",
+        trend: 8.2,
+        message: "Up 8.2% this month",
+        description: "User growth over the last 30 days"
     },
     {
-        title: "New Customers",
-        value: "1,234",
-        trend: -20,
-        message: "Down 20% this period",
-        description: "Acquisition needs attention"
+        title: "Total Posts",
+        value: "87,932",
+        trend: 5.4,
+        message: "Steady content creation",
+        description: "Posts uploaded in the last 30 days"
     },
     {
-        title: "Active Accounts",
-        value: "45,678",
-        trend: 12.5,
-        message: "Strong user retention",
-        description: "Engagement exceed targets"
+        title: "Active Users",
+        value: "6,723",
+        trend: 10.1,
+        message: "High engagement this week",
+        description: "Users active in the last 7 days"
     },
     {
-        title: "Growth Rate",
-        value: "4.5%",
-        trend: 4.5,
-        message: "Steady performance",
-        description: "Meets growth projections"
+        title: "Pending Reports",
+        value: "43",
+        trend: -12.0,
+        message: "Fewer reports than last week",
+        description: "Reports requiring admin review"
     }
-]
+];
 
 export const CardList = () => {
     return (

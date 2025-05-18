@@ -21,11 +21,21 @@ export const UserProvider = ({children}: { children: React.ReactNode }) => {
 
     const {mutate: createUserOnBackend} = useMutation({
         mutationFn: createUser,
+        onSuccess: () => {
+            toast.success("User created successfully", { duration: 8000 });
+            toast("User needs to fill the profile form. Click to redirect profile edit page...", {
+                action: {
+                    label: "Go to Profile Edit",
+                    onClick: () => router.push("/profile/edit"),
+                },
+                duration: 8000,
+            });
+        },
         onError: (err) => {
             console.error("Failed to create user:", err);
         },
     });
-
+    
     const {data, isLoading, isError} = useQuery({
         queryKey: ["currentUser"],
         queryFn: getMe,
@@ -41,33 +51,22 @@ export const UserProvider = ({children}: { children: React.ReactNode }) => {
     }, [data, setUser]);
 
     useEffect(() => {
-        if (
-            process.env.NEXT_PUBLIC_SHOULD_CREATE_USER === "true" &&
-            isAuthenticated &&
-            user?.email &&
-            !isLoading &&
-            (isError || !data?.data)
-        ) {
-            createUserOnBackend({
-                auth0Id: user.sub,
-                email: user.email,
-                username: user.nickname || user.name || user.sub,
-            });
-
-            toast.success("User created successfully", {
-                duration: 8000,
-            })
-            toast("User needs to fill the profile form. Click to redirect profile edit page...", {
-                action: {
-                    label: "Go to Profile Edit",
-                    onClick: () => {
-                        router.push('/profile/edit');
-                    },
-                },
-                duration: 8000,
-            });
-        }
-    }, [user, isAuthenticated, data, isLoading, isError, createUserOnBackend, router])
+            if (
+                process.env.NEXT_PUBLIC_SHOULD_CREATE_USER === "true" &&
+                isAuthenticated &&
+                user?.email &&
+                !isLoading &&
+                (isError || !data?.data)
+            ) {
+                createUserOnBackend({
+                    auth0Id: user.sub,
+                    email: user.email,
+                    username: user.nickname || user.name || user.sub,
+                });
+            }
+        },
+        [createUserOnBackend, data, isAuthenticated, isError, isLoading, user?.email, user?.name, user?.nickname, user?.sub]
+    )
 
     useEffect(() => {
         if (currentUser &&
