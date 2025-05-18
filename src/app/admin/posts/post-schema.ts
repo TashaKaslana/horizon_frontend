@@ -20,6 +20,7 @@ export const PostSchema = z.object({
     publishedAt: z.string().datetime({ message: "Invalid date format." }).optional(), // ISO string
     createdAt: z.string().datetime({ message: "Invalid date format." }), // ISO string
     updatedAt: z.string().datetime({ message: "Invalid date format." }), // ISO string
+    viewCount: z.number().int().nonnegative("View count must be a non-negative integer.").optional().default(0), // Added viewCount
 });
 
 export type PostData = z.infer<typeof PostSchema> & DraggableItem;
@@ -29,3 +30,4 @@ export const PostFormSchema = PostSchema.extend({
     tagsInput: z.string().optional(), // For handling comma-separated tags in a form
 });
 export type PostFormData = z.infer<typeof PostFormSchema>;
+

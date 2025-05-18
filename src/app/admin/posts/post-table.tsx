@@ -27,13 +27,14 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { DataTable } from "@/components/ui/data-table";
-import { DraggableItem, DragHandleCell } from "@/components/common/dnd-table-components";
+import { DragHandleCell } from "@/components/common/dnd-table-components";
 import { DataTableColumnHeader } from "@/components/common/data-table-components";
 import { PostData } from "./post-schema"; // Adjust path
 import { PostDetailViewerSheet } from "./post-detail-viewer-sheet"; // Adjust path
 import { CreatePostSheet } from "./create-post-sheet"; // Adjust path
 import { UserTableCellViewer } from "../users/user-table-cell-viewer";
 import { UserAdminData, UserAdminSchema } from "../users/user-admin-table";
+import {getFixedNumberFormat} from "@/lib/utils";
 
 const mockPostsData: PostData[] = [
     {
@@ -41,35 +42,35 @@ const mockPostsData: PostData[] = [
         content: "Next.js 14 introduces server actions, improved image handling, and more. This post explores the key features...",
         authorId: "user-1", authorName: "Alice Wonderland", category: "Technology", status: "Published",
         tags: ["Next.js", "React", "Web Development"], featuredImage: "https://picsum.photos/seed/nextjs/400/200",
-        publishedAt: "2024-03-10T10:00:00Z", createdAt: "2024-03-08T09:00:00Z", updatedAt: "2024-03-10T10:00:00Z"
+        publishedAt: "2024-03-10T10:00:00Z", createdAt: "2024-03-08T09:00:00Z", updatedAt: "2024-03-10T10:00:00Z", viewCount: 1500,
     },
     {
         id: '2', title: "The Future of AI in Art", slug: "future-of-ai-in-art",
         content: "Exploring how artificial intelligence is reshaping the art world, from generation to curation.",
         authorId: "user-2", authorName: "Bob The Builder", category: "Art", status: "Draft",
         tags: ["AI", "Art", "Technology"],
-        createdAt: "2024-03-15T14:30:00Z", updatedAt: "2024-03-16T11:00:00Z"
+        createdAt: "2024-03-15T14:30:00Z", updatedAt: "2024-03-16T11:00:00Z", viewCount: 250,
     },
     {
         id: '3', title: "A Guide to Sustainable Travel", slug: "guide-to-sustainable-travel",
         content: "Tips and tricks for traveling more sustainably and reducing your carbon footprint.",
         authorId: "user-1", authorName: "Alice Wonderland", category: "Travel", status: "Pending Review",
         tags: ["Sustainability", "Travel", "Eco-friendly"], featuredImage: "https://picsum.photos/seed/travel/400/200",
-        createdAt: "2024-02-20T12:00:00Z", updatedAt: "2024-03-01T16:00:00Z"
+        createdAt: "2024-02-20T12:00:00Z", updatedAt: "2024-03-01T16:00:00Z", viewCount: 780,
     },
     {
         id: '4', title: "Mastering Remote Work Productivity", slug: "mastering-remote-work-productivity",
         content: "Proven strategies to stay focused and achieve more while working from home.",
         authorId: "user-3", authorName: "Charlie Brown", category: "Business", status: "Published",
         tags: ["Remote Work", "Productivity"],
-        publishedAt: "2024-01-25T09:00:00Z", createdAt: "2024-01-20T10:00:00Z", updatedAt: "2024-01-25T09:00:00Z"
+        publishedAt: "2024-01-25T09:00:00Z", createdAt: "2024-01-20T10:00:00Z", updatedAt: "2024-01-25T09:00:00Z", viewCount: 12034,
     },
     {
         id: '5', title: "The Science of Sleep: Why It Matters", slug: "science-of-sleep",
         content: "Delving into the crucial role sleep plays in our physical and mental well-being.",
         authorId: "user-4", authorName: "Diana Prince", category: "Science", status: "Archived",
         tags: ["Health", "Science", "Well-being"], featuredImage: "https://picsum.photos/seed/sleep/400/200",
-        publishedAt: "2023-11-10T14:00:00Z", createdAt: "2023-11-08T11:00:00Z", updatedAt: "2023-12-01T10:00:00Z"
+        publishedAt: "2023-11-10T14:00:00Z", createdAt: "2023-11-08T11:00:00Z", updatedAt: "2023-12-01T10:00:00Z", viewCount: 5600,
     }
 ];
 
@@ -78,7 +79,7 @@ export function PostTable() {
     const [data, setData] = React.useState<PostData[]>(() => mockPostsData);
 
     const handleCreatePost = React.useCallback((newPost: PostData) => {
-        setData(currentData => [newPost, ...currentData]); // Add to the beginning
+        setData(currentData => [newPost, ...currentData]);
     }, []);
 
     const handleUpdatePost = React.useCallback((updatedPost: Partial<PostData>) => {
@@ -90,13 +91,13 @@ export function PostTable() {
     }, []);
 
     const handleDeletePost = React.useCallback((postId: string, postTitle: string) => {
-        toast.promise(new Promise(res => setTimeout(res, 500)), { // Simulate async delete
-            loading: `Deleting "${postTitle}"...`,
+        toast.promise(new Promise(res => setTimeout(res, 500)), {
+            loading: `Deleting \"${postTitle}\"...`,
             success: () => {
                 setData(prev => prev.filter(item => item.id !== postId));
-                return `"${postTitle}" deleted.`;
+                return `\"${postTitle}\" deleted.`;
             },
-            error: `Failed to delete "${postTitle}".`,
+            error: `Failed to delete \"${postTitle}\".`,
         });
     }, []);
 
@@ -149,11 +150,19 @@ export function PostTable() {
             enableHiding: false,
         },
         {
+            accessorKey: "viewCount",
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Views" />,
+            cell: ({ row }) => {
+                const views = row.original.viewCount || 0;
+                return <div className="text-xs text-muted-foreground text-right min-w-[60px]">{getFixedNumberFormat(views)}</div>;
+            },
+            size: 80,
+        },
+        {
             accessorKey: "authorName",
             header: ({ column }) => <DataTableColumnHeader column={column} title="Author" />,
             cell: ({ row }) => {
                 const post = row.original;
-
                 const authorPlaceholder: UserAdminData = {
                     id: post.authorId as string | number,
                     name: post.authorName,
@@ -238,7 +247,7 @@ export function PostTable() {
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end" className="w-40">
                                     <DropdownMenuItem onSelect={() => {
-                                        toast.info(`View/Edit "${post.title}" (use title link or add programmatic open)`);
+                                        toast.info(`View/Edit \"${post.title}\" (use title link or add programmatic open)`);
                                     }}>
                                         <EditIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
                                         View / Edit
@@ -278,8 +287,9 @@ export function PostTable() {
                 enableDnd={true}
                 enableRowSelection={true}
                 filterPlaceholder="Search posts by title, author, tags..."
-                // searchableColumn="title"
+                searchableColumn="title"
             />
         </div>
     );
 }
+
