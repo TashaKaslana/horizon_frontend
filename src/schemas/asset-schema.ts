@@ -5,12 +5,11 @@ export const AssetSummarySchema = z.object({
     publicId: z.string(),
     resourceType: z.string(),
     format: z.string(),
-    secureUrl: z.string().url(),
     bytes: z.number(),
     width: z.number(),
     height: z.number(),
     originalFilename: z.string(),
-    createdAt: z.string(), // or z.coerce.date()
+    createdAt: z.string(),
     createdBy: z.string(),
 });
 
@@ -20,6 +19,5 @@ export const CreateAssetSchema = AssetSummarySchema.omit({
     createdAt: true,
 });
 
-// Inferred types (optional)
 export type AssetSummary = z.infer<typeof AssetSummarySchema>;
 export type CreateAsset = z.infer<typeof CreateAssetSchema>;

@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { DraggableItem } from "@/components/common/dnd-table-components";
 import { UserAdminSchema } from "../../users/all/user-admin-table"; // Assuming this path is correct
-import { PostSchema } from "../../posts/all/post-schema"; // Assuming this path is correct
+import { PostSchema } from "@/schemas/post-schema"; // Assuming this path is correct
 import { CommentAdminSchema } from "../../comments/all/comment-admin-table"; // Assuming this path is correct
 
 export const ModerationItemTypeSchema = z.enum(["Post", "Comment", "User"]);

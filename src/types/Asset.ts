@@ -3,7 +3,6 @@ export interface AssetSummary {
     publicId: string;
     resourceType: string;
     format: string;
-    secureUrl: string;
     bytes: number;
     width: number;
     height: number;

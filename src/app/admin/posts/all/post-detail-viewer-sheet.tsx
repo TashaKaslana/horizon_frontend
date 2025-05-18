@@ -5,7 +5,8 @@ import { toast } from "sonner";
 import {
     CalendarDaysIcon,
     CheckIcon,
-    ImageIcon,
+    EyeIcon,
+    FileTextIcon,
     Loader2Icon,
     SaveIcon,
     TagIcon,
@@ -33,22 +34,21 @@ import {
     SheetTitle,
     SheetTrigger,
 } from "@/components/ui/sheet";
-import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { PostData, PostSchema, PostStatusEnum, PostCategoryEnum, PostFormSchema, PostFormData } from "./post-schema"; // Adjust path as needed
+import { PostData, PostStatusEnum, PostCategoryEnum, PostFormData } from "./post-schema";
+import {PostSchema} from "@/schemas/post-schema"; // Adjust path as needed
 
 interface PostDetailViewerSheetProps {
-    post: PostData;
     onUpdateAction: (updatedPost: Partial<PostData>) => void;
-    triggerElement?: React.ReactNode; // Allow custom trigger
+    triggerElement?: React.ReactNode;
 }
 
 export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
-                                                                                post,
                                                                                 onUpdateAction,
                                                                                 triggerElement,
                                                                             }) => {
+    const [post, setPost] = React.useState<PostData>({} as PostData);
     const [isEditing, setIsEditing] = React.useState(false);
     const [formData, setFormData] = React.useState<PostFormData>({
         ...post,
@@ -57,12 +57,55 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
     const [errors, setErrors] = React.useState<Partial<Record<keyof PostFormData, string>>>({});
     const [isSubmitting, setIsSubmitting] = React.useState(false);
 
+
+    React.useEffect(() => {
+        const oldMockData = {
+            id: 'post-001',
+            createdAt: '2024-05-01T10:00:00Z',
+            updatedAt: '2024-05-01T12:00:00Z',
+            createdBy: 'user-1',
+            updatedBy: 'user-1',
+            user: {
+                id: 'user-1',
+                displayName: 'Alice Wonderland',
+                username: 'alice123',
+                profileImage: 'https://picsum.photos/seed/alice/100/100',
+                coverImage: 'https://picsum.photos/seed/alice-cover/400/200',
+                createdAt: '2023-01-01T00:00:00Z',
+            },
+            caption: 'Mastering Next.js 14 Features',
+            description: 'A deep dive into the new Server Actions, metadata routing, and performance improvements.',
+            visibility: 'PUBLIC' as const as const,
+            duration: 135,
+            categoryName: 'Web Development',
+            tags: ['Next.js', 'JavaScript', 'Frontend'],
+            videoPlaybackUrl: 'https://cdn.example.com/videos/next14.mp4',
+            videoThumbnailUrl: 'https://cdn.example.com/thumbnails/next14.jpg',
+            videoAsset: {
+                id: 'asset-001',
+                publicId: 'videos/next14',
+                resourceType: 'video',
+                format: 'mp4',
+                secureUrl: 'https://cdn.example.com/videos/next14.mp4',
+                bytes: 10485760,
+                width: 1920,
+                height: 1080,
+                originalFilename: 'next14.mp4',
+                createdAt: '2024-05-01T09:59:00Z',
+                createdBy: 'user-1',
+            },
+            isAuthorDeleted: false,
+            status: 'Draft'
+        };
+        setPost(oldMockData);
+    }, []);
+
     React.useEffect(() => {
         setFormData({
             ...post,
             tagsInput: post.tags?.join(", ") || "",
         });
-        setIsEditing(false); // Reset editing state when post changes
+        setIsEditing(false);
         setErrors({});
     }, [post]);
 
@@ -88,16 +131,13 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
         setErrors({});
         setIsSubmitting(true);
 
+        // Construct the object to be validated and submitted based on PostSchema
         const postToSubmit: Partial<PostData> = {
-            ...formData,
-            id: post.id, // Ensure ID is included
+            ...event.target, 
             tags: formData.tagsInput?.split(",").map((t) => t.trim()).filter(Boolean) || [],
-        };
-        // Remove tagsInput as it's not part of PostSchema
-        delete (postToSubmit as any).tagsInput;
+        }
 
-
-        const validationResult = PostSchema.partial().safeParse(postToSubmit); // Partial for updates
+        const validationResult = PostSchema.partial().safeParse(postToSubmit);
 
         if (!validationResult.success) {
             const fieldErrors: Partial<Record<keyof PostFormData, string>> = {};
@@ -113,27 +153,31 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
             return;
         }
 
+        // Ensure we're only passing data that's part of PostData
+        const validatedDataForAction = validationResult.data as Partial<PostData>;
+
+
         const updatePromise = new Promise((resolve) => setTimeout(resolve, 700))
             .then(() => {
-                onUpdateAction(validationResult.data as Partial<PostData>); // Pass only validated & changed data
+                onUpdateAction(validatedDataForAction);
             });
 
         toast.promise(updatePromise, {
-            loading: `Updating "${post.title}"...`,
+            loading: `Updating "${formData.caption}"...`,
             success: () => {
                 setIsEditing(false);
-                return `"${post.title}" updated successfully!`;
+                return `"${formData.caption}" updated successfully!`;
             },
             error: "Error updating post.",
             finally: () => setIsSubmitting(false)
         });
     };
 
-    const renderInfoField = (label: string, value: string | undefined, icon?: React.ReactNode) => (
-        value ? <div className="flex items-start gap-2">
-            {icon || <div className="w-3.5 h-3.5"/>}
+    const renderInfoField = (label: string, value: string | number | undefined, icon?: React.ReactNode) => (
+        value !== undefined && value !== null && value !== '' ? <div className="flex items-start gap-2">
+            {icon || <div className="w-4 h-4"/>} {/* Adjusted icon placeholder size */}
             <div>
-                <span className="font-medium text-muted-foreground">{label}:</span> {value}
+                <span className="font-medium text-muted-foreground">{label}:</span> {String(value)}
             </div>
         </div> : null
     );
@@ -147,7 +191,7 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
                         variant="link"
                         className="w-fit px-0 py-0 h-fit text-left font-medium text-foreground hover:text-primary hover:no-underline whitespace-normal"
                     >
-                        {post.title}
+                        {post.caption}
                     </Button>
                 )}
             </SheetTrigger>
@@ -155,7 +199,7 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
                 <SheetHeader className="pb-4">
                     <div className="flex justify-between items-start">
                         <div>
-                            <SheetTitle className="text-2xl">{isEditing ? "Edit Post" : post.title}</SheetTitle>
+                            <SheetTitle className="text-2xl">{isEditing ? "Edit Post" : post.caption}</SheetTitle>
                             <SheetDescription>
                                 {isEditing ? "Modify the details of the post." : post.description ? post.description : "No description provided."}
                             </SheetDescription>
@@ -171,9 +215,9 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
                     <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto py-4 space-y-4 pr-2">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-1.5">
-                                <Label htmlFor="edit-title">Title</Label>
-                                <Input id="edit-title" name="title" value={formData.title} onChange={handleChange} disabled={isSubmitting}/>
-                                {errors.title && <p className="text-xs text-red-500">{errors.title}</p>}
+                                <Label htmlFor="edit-caption">caption</Label>
+                                <Input id="edit-caption" name="caption" value={formData.caption} onChange={handleChange} disabled={isSubmitting}/>
+                                {errors.caption && <p className="text-xs text-red-500">{errors.caption}</p>}
                             </div>
                             <div className="space-y-1.5">
                                 <Label htmlFor="edit-description">Description (Optional)</Label>
@@ -181,21 +225,16 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
                                 {errors.description && <p className="text-xs text-red-500">{errors.description}</p>}
                             </div>
                         </div>
-                        <div className="space-y-1.5">
-                            <Label htmlFor="edit-content">Content</Label>
-                            <Textarea id="edit-content" name="content" value={formData.content} onChange={handleChange} rows={10} disabled={isSubmitting}/>
-                            {errors.content && <p className="text-xs text-red-500">{errors.content}</p>}
-                        </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-1.5">
-                                <Label htmlFor="edit-category">Category</Label>
-                                <Select name="category" value={formData.category} onValueChange={handleSelectChange('category')} disabled={isSubmitting}>
-                                    <SelectTrigger id="edit-category"><SelectValue placeholder="Select category" /></SelectTrigger>
+                                <Label htmlFor="edit-categoryName">categoryName</Label>
+                                <Select name="categoryName" value={formData.categoryName} onValueChange={handleSelectChange('categoryName')} disabled={isSubmitting}>
+                                    <SelectTrigger id="edit-categoryName"><SelectValue placeholder="Select categoryName" /></SelectTrigger>
                                     <SelectContent>
                                         {PostCategoryEnum.options.map(cat => <SelectItem key={cat} value={cat}>{cat}</SelectItem>)}
                                     </SelectContent>
                                 </Select>
-                                {errors.category && <p className="text-xs text-red-500">{errors.category}</p>}
+                                {errors.categoryName && <p className="text-xs text-red-500">{errors.categoryName}</p>}
                             </div>
                             <div className="space-y-1.5">
                                 <Label htmlFor="edit-status">Status</Label>
@@ -214,19 +253,22 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
                             {errors.tagsInput && <p className="text-xs text-red-500">{errors.tagsInput}</p>}
                         </div>
                         <div className="space-y-1.5">
-                            <Label htmlFor="edit-featuredImage">Featured Image URL</Label>
-                            <Input id="edit-featuredImage" name="featuredImage" value={formData.featuredImage || ""} onChange={handleChange} placeholder="https://example.com/image.png" disabled={isSubmitting}/>
-                            {errors.featuredImage && <p className="text-xs text-red-500">{errors.featuredImage}</p>}
+                            <Label htmlFor="edit-videoThumbnailUrl">Featured Image URL</Label>
+                            <Input id="edit-videoThumbnailUrl" name="videoThumbnailUrl" value={formData.videoThumbnailUrl || ""} onChange={handleChange} placeholder="https://example.com/image.png" disabled={isSubmitting}/>
+                            {errors.videoThumbnailUrl && <p className="text-xs text-red-500">{errors.videoThumbnailUrl}</p>}
                         </div>
                         <div className="space-y-1.5">
-                            <Label htmlFor="edit-publishedAt">Published Date (Optional)</Label>
-                            <Input id="edit-publishedAt" name="publishedAt" type="datetime-local"
-                                   value={formData.publishedAt ? new Date(formData.publishedAt).toISOString().substring(0, 16) : ""}
+                            <Label htmlFor="edit-updatedAt">Published Date (Optional)</Label>
+                            <Input id="edit-updatedAt" name="updatedAt" type="datetime-local"
+                                   value={formData.updatedAt ? new Date(formData.updatedAt).toISOString().substring(0, 16) : ""}
                                    onChange={(e) => {
                                        const dateVal = e.target.value ? new Date(e.target.value).toISOString() : undefined;
-                                       setFormData(prev => ({...prev, publishedAt: dateVal }));
+                                       setFormData(prev => ({...prev, updatedAt: dateVal }));
+                                       if (errors.updatedAt) {
+                                           setErrors(prevErrors => ({...prevErrors, updatedAt: undefined}));
+                                       }
                                    }} disabled={isSubmitting}/>
-                            {errors.publishedAt && <p className="text-xs text-red-500">{errors.publishedAt}</p>}
+                            {errors.updatedAt && <p className="text-xs text-red-500">{errors.updatedAt}</p>}
                         </div>
 
                         <SheetFooter className="mt-auto flex flex-col-reverse sm:flex-row sm:justify-end gap-2 pt-6">
@@ -241,17 +283,17 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
                     </form>
                 ) : (
                     <div className="flex-1 overflow-y-auto py-4 space-y-5 text-sm pr-2">
-                        {post.featuredImage && (
+                        {post.videoThumbnailUrl && (
                             <div className="mb-4">
-                                <img src={post.featuredImage} alt={post.title} className="rounded-md max-h-60 w-full object-cover" />
+                                <img src={post.videoThumbnailUrl} alt={post.caption} className="rounded-md max-h-80 w-full object-cover" />
                             </div>
                         )}
-                        <p className="text-base leading-relaxed whitespace-pre-wrap">{post.content}</p>
                         <Separator />
-                        <div className="space-y-2">
-                            {renderInfoField("Author", post.authorName, <UserCircleIcon className="h-4 w-4 text-muted-foreground"/>)}
-                            {renderInfoField("Category", post.category, <TagIcon className="h-4 w-4 text-muted-foreground"/>)}
+                        <div className="space-y-3">
+                            {renderInfoField("Author", post.user?.displayName, <UserCircleIcon className="h-4 w-4 text-muted-foreground"/>)}
+                            {renderInfoField("Category", post.categoryName, <TagIcon className="h-4 w-4 text-muted-foreground"/>)}
                             {renderInfoField("Status", post.status, <CheckIcon className="h-4 w-4 text-muted-foreground"/>)}
+                            {renderInfoField("Views", post?.viewCount ?? 0, <EyeIcon className="h-4 w-4 text-muted-foreground"/>)}
                             {post.tags && post.tags.length > 0 && (
                                 <div className="flex items-start gap-2">
                                     <TagIcon className="h-4 w-4 text-muted-foreground mt-0.5"/>
@@ -268,7 +310,7 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
                         <div className="space-y-2 text-xs text-muted-foreground">
                             {renderInfoField("Created", new Date(post.createdAt).toLocaleString(), <CalendarDaysIcon className="h-3.5 w-3.5"/>)}
                             {renderInfoField("Last Updated", new Date(post.updatedAt).toLocaleString(), <CalendarDaysIcon className="h-3.5 w-3.5"/>)}
-                            {post.publishedAt && renderInfoField("Published", new Date(post.publishedAt).toLocaleString(), <CalendarDaysIcon className="h-3.5 w-3.5"/>)}
+                            {post.updatedAt && renderInfoField("Published", new Date(post.updatedAt).toLocaleString(), <CalendarDaysIcon className="h-3.5 w-3.5"/>)}
                         </div>
                         <SheetFooter className="mt-auto pt-6">
                             <SheetClose asChild>
@@ -281,4 +323,3 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
         </Sheet>
     );
 };
-

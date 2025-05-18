@@ -17,11 +17,13 @@ export const PostSchema = z.object({
     visibility: PostVisibilitySchema,
     duration: z.number(),
     categoryName: z.string(),
-    tags: z.array(z.string()),
+    tags: z.array(z.string()).optional().default([]),
     videoPlaybackUrl: z.string().url(),
     videoThumbnailUrl: z.string().url(),
     videoAsset: AssetSummarySchema,
     isAuthorDeleted: z.boolean(),
+
+    status: z.string(),
 });
 
 // PostSummary = Omit<Post, 'videoAsset' | 'createdBy' | 'updatedBy' | 'isAuthorDeleted'>

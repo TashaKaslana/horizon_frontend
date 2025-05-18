@@ -1,6 +1,8 @@
 import { z } from 'zod';
 import { UserSummarySchema } from '@/schemas/user-schema';
 
+export const CommentStatus = z.enum(["Approved", "Pending", "Spam", "Rejected"])
+
 export const CommentResponseSchema = z.object({
     id: z.string(),
     postId: z.string(),
@@ -11,6 +13,8 @@ export const CommentResponseSchema = z.object({
     isPinned: z.boolean(),
     createdAt: z.string(),
     updatedAt: z.string(),
+
+    status: CommentStatus.default("Pending"),
 });
 
 export type CommentResponse = z.infer<typeof CommentResponseSchema>;

@@ -3,13 +3,11 @@
 import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import {
-    ArchiveIcon,
     CheckCircle2Icon,
     EditIcon,
     FileTextIcon,
     LoaderIcon,
     MoreVerticalIcon,
-    HourglassIcon,
     EyeIcon,
 } from "lucide-react";
 import { toast } from "sonner";
@@ -29,49 +27,76 @@ import {
 import { DataTable } from "@/components/ui/data-table";
 import { DragHandleCell } from "@/components/common/dnd-table-components";
 import { DataTableColumnHeader } from "@/components/common/data-table-components";
-import { PostData } from "./post-schema"; // Adjust path
-import { PostDetailViewerSheet } from "./post-detail-viewer-sheet"; // Adjust path
-import { CreatePostSheet } from "./create-post-sheet"; // Adjust path
+import { PostData } from "./post-schema";
+import { PostDetailViewerSheet } from "./post-detail-viewer-sheet";
+import { CreatePostSheet } from "./create-post-sheet";
 import { UserTableCellViewer } from "../../users/all/user-table-cell-viewer";
 import { UserAdminData, UserAdminSchema } from "../../users/all/user-admin-table";
 import {getFixedNumberFormat} from "@/lib/utils";
 
 const mockPostsData: PostData[] = [
     {
-        id: '1', title: "Getting Started with Next.js 14", description: "An introductory guide to the latest features in Next.js 14, including server actions and improved image handling.",
-        content: "Next.js 14 introduces server actions, improved image handling, and more. This post explores the key features...",
-        authorId: "user-1", authorName: "Alice Wonderland", category: "Technology", status: "Published",
-        tags: ["Next.js", "React", "Web Development"], featuredImage: "https://picsum.photos/seed/nextjs/400/200",
-        publishedAt: "2024-03-10T10:00:00Z", createdAt: "2024-03-08T09:00:00Z", updatedAt: "2024-03-10T10:00:00Z", viewCount: 1500,
+        id: '1',
+        createdAt: '2024-05-01T10:00:00Z',
+        updatedAt: '2024-05-01T11:00:00Z',
+        createdBy: 'user-1',
+        updatedBy: 'user-1',
+        user: {
+            id: 'user-1',
+            displayName: 'Alice Wonderland',
+            username: 'alice123',
+            profileImage: 'https://picsum.photos/seed/alice/100/100',
+            coverImage: 'https://picsum.photos/seed/cover1/400/200',
+            createdAt: '2023-01-01T00:00:00Z',
+        },
+        caption: 'Exploring Next.js Server Actions',
+        description: 'An overview of how Server Actions simplify mutation handling.',
+        visibility: 'PUBLIC',
+        duration: 120,
+        categoryName: 'Technology',
+        tags: ['Next.js', 'React', 'WebDev'],
+        videoPlaybackUrl: 'https://videos.example.com/nextjs-server-actions.mp4',
+        videoThumbnailUrl: 'https://picsum.photos/seed/video1/400/200',
+        videoAsset: {
+            id: 'asset-1',
+            originalFilename: 'Next.js Server Actions',
+            resourceType: 'video/mp4',
+            bytes: 123456,
+            createdAt: '2024-05-01T09:00:00Z',
+        },
+        isAuthorDeleted: false,
     },
     {
-        id: '2', title: "The Future of AI in Art", description: "Exploring the transformative impact of artificial intelligence on the art world, from creation to curation.",
-        content: "Exploring how artificial intelligence is reshaping the art world, from generation to curation.",
-        authorId: "user-2", authorName: "Bob The Builder", category: "Art", status: "Draft",
-        tags: ["AI", "Art", "Technology"],
-        createdAt: "2024-03-15T14:30:00Z", updatedAt: "2024-03-16T11:00:00Z", viewCount: 250,
+        id: '2',
+        createdAt: '2024-05-02T12:00:00Z',
+        updatedAt: '2024-05-02T12:30:00Z',
+        createdBy: 'user-2',
+        updatedBy: 'user-2',
+        user: {
+            id: 'user-2',
+            displayName: 'Bob The Builder',
+            username: 'bobthebuilder',
+            profileImage: 'https://picsum.photos/seed/bob/100/100',
+            coverImage: 'https://picsum.photos/seed/cover2/400/200',
+            createdAt: '2023-02-15T00:00:00Z',
+        },
+        caption: 'AI in Modern Art',
+        description: 'How artificial intelligence is transforming creative expression.',
+        visibility: 'PRIVATE',
+        duration: 180,
+        categoryName: 'Art',
+        tags: ['AI', 'Creativity', 'Art'],
+        videoPlaybackUrl: 'https://videos.example.com/ai-art.mp4',
+        videoThumbnailUrl: 'https://picsum.photos/seed/video2/400/200',
+        videoAsset: {
+            id: 'asset-2',
+            originalFilename: 'AI Art',
+            resourceType: 'video/mp4',
+            bytes: 654321,
+            createdAt: '2024-05-02T11:00:00Z',
+        },
+        isAuthorDeleted: false,
     },
-    {
-        id: '3', title: "A Guide to Sustainable Travel", description: "Practical tips and advice for traveling more sustainably and minimizing your environmental footprint.",
-        content: "Tips and tricks for traveling more sustainably and reducing your carbon footprint.",
-        authorId: "user-1", authorName: "Alice Wonderland", category: "Travel", status: "Pending Review",
-        tags: ["Sustainability", "Travel", "Eco-friendly"], featuredImage: "https://picsum.photos/seed/travel/400/200",
-        createdAt: "2024-02-20T12:00:00Z", updatedAt: "2024-03-01T16:00:00Z", viewCount: 780,
-    },
-    {
-        id: '4', title: "Mastering Remote Work Productivity", description: "Proven strategies and tools to enhance focus and achieve more when working from home.",
-        content: "Proven strategies to stay focused and achieve more while working from home.",
-        authorId: "user-3", authorName: "Charlie Brown", category: "Business", status: "Published",
-        tags: ["Remote Work", "Productivity"],
-        publishedAt: "2024-01-25T09:00:00Z", createdAt: "2024-01-20T10:00:00Z", updatedAt: "2024-01-25T09:00:00Z", viewCount: 12034,
-    },
-    {
-        id: '5', title: "The Science of Sleep: Why It Matters", description: "An in-depth look at the critical role sleep plays in physical and mental well-being.",
-        content: "Delving into the crucial role sleep plays in our physical and mental well-being.",
-        authorId: "user-4", authorName: "Diana Prince", category: "Science", status: "Archived",
-        tags: ["Health", "Science", "Well-being"], featuredImage: "https://picsum.photos/seed/sleep/400/200",
-        publishedAt: "2023-11-10T14:00:00Z", createdAt: "2023-11-08T11:00:00Z", updatedAt: "2023-12-01T10:00:00Z", viewCount: 5600,
-    }
 ];
 
 
@@ -134,8 +159,8 @@ export function PostTable() {
                 const post = row.original;
                 return (
                     <div className="flex items-center gap-2 py-0.5 min-w-[180px] max-w-[240px]">
-                        {post.featuredImage ?
-                            <Image src={post.featuredImage} alt={post.title} width={48} height={36} className="h-9 w-12 object-cover rounded-sm flex-shrink-0"/> :
+                        {post.videoThumbnailUrl ?
+                            <Image src={post.videoThumbnailUrl} alt={post.caption} width={48} height={36} className="h-9 w-12 object-cover rounded-sm flex-shrink-0"/> :
                             <div className="h-9 w-12 bg-muted rounded-sm flex items-center justify-center flex-shrink-0">
                                 <FileTextIcon className="h-5 w-5 text-muted-foreground"/>
                             </div>
@@ -153,7 +178,7 @@ export function PostTable() {
             accessorKey: "viewCount",
             header: ({ column }) => <DataTableColumnHeader column={column} title="Views" />,
             cell: ({ row }) => {
-                const views = row.original.viewCount || 0;
+                const views = /*row.original.viewCount || 0;*/ 10 //TODO: add later
                 return <div className="text-xs text-muted-foreground text-right min-w-[60px]">{getFixedNumberFormat(views)}</div>;
             },
             size: 80,
@@ -162,13 +187,13 @@ export function PostTable() {
             accessorKey: "authorName",
             header: ({ column }) => <DataTableColumnHeader column={column} title="Author" />,
             cell: ({ row }) => {
-                const post = row.original;
+                const user = row.original.user;
                 const authorPlaceholder: UserAdminData = {
-                    id: post.authorId as string | number,
-                    name: post.authorName,
-                    username: post.authorName.toLowerCase().replace(/\s+/g, '') || 'author',
-                    email: `${post.authorName.toLowerCase().replace(/\s+/g, '') || 'author'}@example.com`,
-                    profileImage: undefined,
+                    id: user.id,
+                    name: user.displayName,
+                    username: user.username.toLowerCase().replace(/\s+/g, '') || 'author',
+                    email: 'author@example.com',
+                    profileImage: user.profileImage,
                     type: UserAdminSchema.shape.type.options[0],
                     status: UserAdminSchema.shape.status.options[0],
                     createdAt: new Date(0).toISOString(),
@@ -178,7 +203,7 @@ export function PostTable() {
                 return (
                     <div className="flex items-center gap-2 py-0.5 min-w-[200px]">
                         <Avatar className="h-9 w-9 flex-shrink-0">
-                            <AvatarFallback>{post.authorName.split(' ').map(n=>n[0]).join('').toUpperCase()}</AvatarFallback>
+                            <AvatarFallback>{user.displayName.split(' ').map(n=>n[0]).join('').toUpperCase()}</AvatarFallback>
                         </Avatar>
                         <div className="flex flex-col gap-0.5">
                             <UserTableCellViewer
@@ -187,7 +212,7 @@ export function PostTable() {
                                     toast.info("Author details are managed in the Users section.");
                                 }}
                             />
-                            <span className="text-xs text-muted-foreground">ID: {post.authorId}</span>
+                            <span className="text-xs text-muted-foreground">ID: {user.id}</span>
                         </div>
                     </div>
                 );
@@ -196,21 +221,21 @@ export function PostTable() {
         {
             accessorKey: "category",
             header: ({ column }) => <DataTableColumnHeader column={column} title="Category" />,
-            cell: ({ row }) => <Badge variant="outline" className="text-xs">{row.original.category}</Badge>,
+            cell: ({ row }) => <Badge variant="outline" className="text-xs">{row.original.categoryName}</Badge>,
         },
         {
-            accessorKey: "status",
-            header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
+            accessorKey: "visibility",
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Visibilty" />,
             cell: ({ row }) => {
-                const status = row.original.status;
+                const status = row.original.visibility;
                 let icon: React.ReactNode;
                 let variant: "default" | "secondary" | "outline" | "destructive" = "secondary";
 
                 switch (status) {
-                    case "Published": icon = <CheckCircle2Icon className="size-3.5 text-green-500" />; variant = "default"; break;
-                    case "Draft": icon = <EditIcon className="size-3.5 text-blue-500" />; variant = "secondary"; break;
-                    case "Pending Review": icon = <HourglassIcon className="size-3.5 text-amber-500" />; variant = "outline"; break;
-                    case "Archived": icon = <ArchiveIcon className="size-3.5 text-slate-500" />; variant = "outline"; break;
+                    case "PUBLIC": icon = <CheckCircle2Icon className="size-3.5 text-green-500" />; variant = "default"; break;
+                    case "PRIVATE": icon = <EditIcon className="size-3.5 text-blue-500" />; variant = "secondary"; break;
+                    // case "Pending Review": icon = <HourglassIcon className="size-3.5 text-amber-500" />; variant = "outline"; break;
+                    // case "Archived": icon = <ArchiveIcon className="size-3.5 text-slate-500" />; variant = "outline"; break;
                     default: icon = <LoaderIcon className="size-3.5 text-muted-foreground" />;
                 }
                 return (
@@ -221,16 +246,16 @@ export function PostTable() {
             },
         },
         {
-            accessorKey: "publishedAt",
-            header: ({ column }) => <DataTableColumnHeader column={column} title="Published" />,
-            cell: ({ row }) => row.original.publishedAt ?
-                <div className="text-xs text-muted-foreground min-w-[64px]">{new Date(row.original.publishedAt).toLocaleDateString()}</div> :
-                <span className="text-xs text-muted-foreground/70">Not published</span>,
+            accessorKey: "createdAt",
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Created At"/>,
+            cell: ({ row }) => <div className="text-xs text-muted-foreground min-w-[64px]">{new Date(row.original.createdAt).toLocaleDateString()}</div>,
         },
         {
-            accessorKey: "updatedAt",
-            header: ({ column }) => <DataTableColumnHeader column={column} title="Last Updated" />,
-            cell: ({ row }) => <div className="text-xs text-muted-foreground min-w-[64px]">{new Date(row.original.updatedAt).toLocaleDateString()}</div>,
+            accessorKey: "lastUpdate",
+            header: ({ column }) => <DataTableColumnHeader column={column} title="Update At"/>,
+            cell: ({ row }) => row.original.updatedAt ?
+                <div className="text-xs text-muted-foreground min-w-[64px]">{new Date(row.original.updatedAt).toLocaleDateString()}</div> :
+                <span className="text-xs text-muted-foreground/70">Not published</span>,
         },
         {
             id: "actions",
@@ -247,7 +272,7 @@ export function PostTable() {
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end" className="w-40">
                                     <DropdownMenuItem onSelect={() => {
-                                        toast.info(`View/Edit \"${post.title}\" (use title link or add programmatic open)`);
+                                        toast.info(`View/Edit \"${post.caption}\" (use title link or add programmatic open)`);
                                     }}>
                                         <EditIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
                                         View / Edit
@@ -258,7 +283,7 @@ export function PostTable() {
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem className="text-red-600 hover:!text-red-600 focus:text-red-600 focus:bg-red-50 dark:hover:!bg-red-700/50"
-                                                      onSelect={() => handleDeletePost(post.id, post.title)}>
+                                                      onSelect={() => handleDeletePost(post.id, post.caption)}>
                                         Delete Post
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>

@@ -26,6 +26,7 @@ interface TableCellViewerProps {
 
 export const UserTableCellViewer: React.FC<TableCellViewerProps> = ({item, onUpdate}) => {
     const [formData, setFormData] = React.useState<Partial<UserAdminData>>(item);
+    const [user, setUser] = React.useState<UserAdminData | null>(null);
 
     React.useEffect(() => {
         setFormData(item);

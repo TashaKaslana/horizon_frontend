@@ -26,7 +26,8 @@ import {
 } from "@/components/ui/sheet";
 import { Textarea } from "@/components/ui/textarea";
 import { Separator } from "@/components/ui/separator";
-import { PostData, PostSchema, PostStatusEnum, PostCategoryEnum, PostFormData } from "./post-schema"; // Adjust path
+import { PostData, PostStatusEnum, PostCategoryEnum, PostFormData } from "./post-schema";
+import {PostSchema} from "@/schemas/post-schema"; // Adjust path
 
 interface CreatePostSheetProps {
     onCreateAction: (newPost: PostData) => void;
