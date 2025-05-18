@@ -29,11 +29,11 @@ import { Separator } from "@/components/ui/separator";
 import { PostData, PostSchema, PostStatusEnum, PostCategoryEnum, PostFormData } from "./post-schema"; // Adjust path
 
 interface CreatePostSheetProps {
-    onCreate: (newPost: PostData) => void;
+    onCreateAction: (newPost: PostData) => void;
     currentAuthor?: { id: string; name: string };
 }
 
-export const CreatePostSheet: React.FC<CreatePostSheetProps> = ({ onCreate, currentAuthor }) => {
+export const CreatePostSheet: React.FC<CreatePostSheetProps> = ({ onCreateAction, currentAuthor }) => {
     const [isOpen, setIsOpen] = React.useState(false);
     const [isSubmitting, setIsSubmitting] = React.useState(false);
     const [errors, setErrors] = React.useState<Partial<Record<keyof PostFormData, string>>>({});
@@ -122,7 +122,7 @@ export const CreatePostSheet: React.FC<CreatePostSheetProps> = ({ onCreate, curr
 
         const creationPromise = new Promise((resolve) => setTimeout(resolve, 700))
             .then(() => {
-                onCreate(validationResult.data as PostData);
+                onCreateAction(validationResult.data as PostData);
             });
 
         toast.promise(creationPromise, {

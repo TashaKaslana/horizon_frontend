@@ -17,7 +17,7 @@ import {
     TableMeta,
     VisibilityState,
     FilterFn,
-    RowModel,
+
 } from "@tanstack/react-table";
 import type { DragEndEvent } from "@dnd-kit/core";
 import { arrayMove } from "@dnd-kit/sortable";

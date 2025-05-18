@@ -40,13 +40,13 @@ import { PostData, PostSchema, PostStatusEnum, PostCategoryEnum, PostFormSchema,
 
 interface PostDetailViewerSheetProps {
     post: PostData;
-    onUpdate: (updatedPost: Partial<PostData>) => void;
+    onUpdateAction: (updatedPost: Partial<PostData>) => void;
     triggerElement?: React.ReactNode; // Allow custom trigger
 }
 
 export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
                                                                                 post,
-                                                                                onUpdate,
+                                                                                onUpdateAction,
                                                                                 triggerElement,
                                                                             }) => {
     const [isEditing, setIsEditing] = React.useState(false);
@@ -115,7 +115,7 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
 
         const updatePromise = new Promise((resolve) => setTimeout(resolve, 700))
             .then(() => {
-                onUpdate(validationResult.data as Partial<PostData>); // Pass only validated & changed data
+                onUpdateAction(validationResult.data as Partial<PostData>); // Pass only validated & changed data
             });
 
         toast.promise(updatePromise, {

@@ -141,7 +141,7 @@ export function PostTable() {
                             </div>
                         }
                         <div className="flex flex-col gap-0.5">
-                            <PostDetailViewerSheet post={post} onUpdate={handleUpdatePost} />
+                            <PostDetailViewerSheet post={post} onUpdateAction={handleUpdatePost} />
                             {post.description && <span className="text-xs text-muted-foreground truncate max-w-48" title={post.description}>{post.description}</span>}
                         </div>
                     </div>
@@ -277,7 +277,7 @@ export function PostTable() {
         <div className="flex w-full flex-col justify-start gap-6 p-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
                 <h1 className="text-2xl font-semibold">Manage Posts</h1>
-                <CreatePostSheet onCreate={handleCreatePost} currentAuthor={currentMockUser}/>
+                <CreatePostSheet onCreateAction={handleCreatePost} currentAuthor={currentMockUser}/>
             </div>
 
             <DataTable

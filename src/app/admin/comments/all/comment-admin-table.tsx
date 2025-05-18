@@ -262,7 +262,7 @@ export function CommentAdminTable() {
                         <div className="flex flex-col gap-0.5">
                             <PostDetailViewerSheet
                                 post={postForSheet}
-                                onUpdate={() => {
+                                onUpdateAction={() => {
                                     toast.info("Post details are managed in the Posts section.");
                                 }}
                             />
