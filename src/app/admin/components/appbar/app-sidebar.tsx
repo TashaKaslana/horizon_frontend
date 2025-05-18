@@ -31,6 +31,7 @@ import {NavDocuments} from "@/app/admin/components/appbar/app-document";
 import {NavMain} from "@/app/admin/components/appbar/app-main";
 import {NavSecondary} from "@/app/admin/components/appbar/app-secondary";
 import {useEffect} from "react";
+import { NavCloud } from "@/app/admin/components/appbar/app-cloud"; // Import NavCloud
 
 const data = {
     user: {
@@ -105,21 +106,39 @@ const data = {
                 },
             ]
         },
+        {
+            title: 'Moderation',
+            url: '/admin/moderation',
+            icon: LayoutDashboardIcon,
+            subItems: [
+                {
+                    title: 'All Reports',
+                    url: '/admin/moderation/all',
+                },
+                {
+                    title: 'User Reports',
+                    url: '/admin/moderation/user-reports',
+                },
+                {
+                    title: 'Post Reports',
+                    url: '/admin/moderation/post-reports',
+                },
+                {
+                    title: 'Comment Reports',
+                    url: '/admin/moderation/comment-reports',
+                },
+            ]
+        }
     ],
     navClouds: [
         {
             title: "Notifications",
             icon: BellIcon,
             url: "#",
-            isActive: true,
             items: [
                 {
                     title: "All Notifications",
                     url: "/admin/notifications",
-                },
-                {
-                    title: "Unread",
-                    url: "/admin/notifications/unread",
                 },
             ],
         },
@@ -206,6 +225,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarHeader>
             <SidebarContent>
                 <NavMain items={data.navMain} />
+                <NavCloud items={data.navClouds} />
                 <NavDocuments items={data.documents} />
                 <NavSecondary items={data.navSecondary} className="mt-auto" />
             </SidebarContent>
