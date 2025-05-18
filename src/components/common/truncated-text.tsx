@@ -20,7 +20,7 @@ export default function TruncatedText({text, maxWidth = '600px', textClassName}:
             {!expanded && (
                 <button
                     onClick={() => setExpanded(true)}
-                    className="ml-2 flex-shrink-0 text-blue-500 hover:underline"
+                    className="ml-2 flex-shrink-0 text-blue-500 hover:underline "
                 >
                     See more
                 </button>
