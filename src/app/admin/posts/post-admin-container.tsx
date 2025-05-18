@@ -1,6 +1,7 @@
 import {SiteHeader} from "@/app/admin/components/site-header";
 import {PostCardList} from "@/app/admin/posts/post-card-list";
 import {PostChart} from "@/app/admin/posts/post-attending-chart";
+import {PostTable} from "@/app/admin/posts/post-table";
 
 const PostAdminContainer = () => {
     return (
@@ -8,7 +9,7 @@ const PostAdminContainer = () => {
             <SiteHeader text={'Posts'}/>
             <PostCardList/>
             <PostChart/>
-
+            <PostTable/>
         </div>
     )
 }

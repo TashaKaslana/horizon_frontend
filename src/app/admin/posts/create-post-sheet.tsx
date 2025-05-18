@@ -1,0 +1,240 @@
+"use client";
+
+import React from "react";
+import { toast } from "sonner";
+import { PlusIcon, SaveIcon, Loader2Icon, FileTextIcon, XIcon } from "lucide-react";
+
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
+import {
+    Sheet,
+    SheetClose,
+    SheetContent,
+    SheetDescription,
+    SheetFooter,
+    SheetHeader,
+    SheetTitle,
+    SheetTrigger,
+} from "@/components/ui/sheet";
+import { Textarea } from "@/components/ui/textarea";
+import { Separator } from "@/components/ui/separator";
+import { PostData, PostSchema, PostStatusEnum, PostCategoryEnum, PostFormData } from "./post-schema"; // Adjust path
+
+interface CreatePostSheetProps {
+    onCreate: (newPost: PostData) => void;
+    // Potentially pass current user details for author prefill
+    currentAuthor?: { id: string; name: string };
+}
+
+export const CreatePostSheet: React.FC<CreatePostSheetProps> = ({ onCreate, currentAuthor }) => {
+    const [isOpen, setIsOpen] = React.useState(false);
+    const [isSubmitting, setIsSubmitting] = React.useState(false);
+    const [errors, setErrors] = React.useState<Partial<Record<keyof PostFormData, string>>>({});
+
+    const defaultFormState: PostFormData = {
+        id: '', // Will be generated
+        title: "",
+        slug: "",
+        content: "",
+        authorId: currentAuthor?.id || "",
+        authorName: currentAuthor?.name || "",
+        category: PostCategoryEnum.options[0], // Default to first category
+        status: "Draft",
+        tagsInput: "",
+        tags: [],
+        featuredImage: "",
+        publishedAt: undefined,
+        createdAt: '', // Will be set
+        updatedAt: '', // Will be set
+    };
+    const [formData, setFormData] = React.useState<PostFormData>(defaultFormState);
+
+    const handleOpenChange = (open: boolean) => {
+        setIsOpen(open);
+        if (open) {
+            setFormData({
+                ...defaultFormState,
+                authorId: currentAuthor?.id || "", // Re-apply current author if provided
+                authorName: currentAuthor?.name || ""
+            });
+            setErrors({});
+        }
+    };
+
+    const handleChange = (
+        e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    ) => {
+        const { name, value } = e.target;
+        let newSlug = formData.slug;
+        if (name === "title" && !formData.slug) { // Auto-generate slug if empty
+            newSlug = value.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+        }
+        setFormData((prev) => ({ ...prev, [name]: value, slug: name === "title" ? newSlug : prev.slug }));
+        if (errors[name as keyof PostFormData]) {
+            setErrors(prev => ({...prev, [name]: undefined}));
+        }
+    };
+
+    const handleSelectChange = (name: keyof PostFormData) => (value: string) => {
+        setFormData((prev) => ({ ...prev, [name]: value }));
+        if (errors[name as keyof PostFormData]) {
+            setErrors(prev => ({...prev, [name]: undefined}));
+        }
+    };
+
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        setErrors({});
+        setIsSubmitting(true);
+
+        const now = new Date().toISOString();
+        const newPostPartial: Omit<PostData, 'tags'> & { tagsInput?: string } = {
+            ...formData,
+            id: '1',
+            tags: formData.tagsInput?.split(",").map((t) => t.trim()).filter(Boolean) || [],
+            createdAt: now,
+            updatedAt: now,
+            // publishedAt will be set if status is Published and not already set
+        };
+        if (newPostPartial.status === "Published" && !newPostPartial.publishedAt) {
+            newPostPartial.publishedAt = now;
+        }
+        delete (newPostPartial as any).tagsInput;
+
+
+        const validationResult = PostSchema.safeParse(newPostPartial);
+
+        if (!validationResult.success) {
+            const fieldErrors: Partial<Record<keyof PostFormData, string>> = {};
+            validationResult.error.errors.forEach(err => {
+                if (err.path.length > 0) {
+                    const fieldName = err.path[0] as keyof PostFormData;
+                    fieldErrors[fieldName] = err.message;
+                }
+            });
+            setErrors(fieldErrors);
+            toast.error("Please correct the form errors.");
+            setIsSubmitting(false);
+            return;
+        }
+
+        const creationPromise = new Promise((resolve) => setTimeout(resolve, 700))
+            .then(() => {
+                onCreate(validationResult.data as PostData);
+            });
+
+        toast.promise(creationPromise, {
+            loading: "Creating new post...",
+            success: () => {
+                handleOpenChange(false); // Close sheet
+                return "Post created successfully!";
+            },
+            error: "Error creating post.",
+            finally: () => setIsSubmitting(false)
+        });
+    };
+
+    return (
+        <Sheet open={isOpen} onOpenChange={handleOpenChange}>
+            <SheetTrigger asChild>
+                <Button variant="default" size="sm" className="gap-1.5">
+                    <PlusIcon className="size-4" />
+                    <span className="hidden lg:inline">Create Post</span>
+                    <span className="lg:hidden">New</span>
+                </Button>
+            </SheetTrigger>
+            <SheetContent side="right" className="flex flex-col w-full sm:max-w-xl md:max-w-2xl">
+                <SheetHeader className="pb-4">
+                    <div className="flex items-center gap-3">
+                        <FileTextIcon className="size-6 text-primary" />
+                        <div>
+                            <SheetTitle className="text-2xl">Create New Post</SheetTitle>
+                            <SheetDescription>
+                                Fill in the details to publish a new article.
+                            </SheetDescription>
+                        </div>
+                    </div>
+                </SheetHeader>
+                <Separator />
+                <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto py-4 space-y-4 pr-2">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-1.5">
+                            <Label htmlFor="create-title">Title</Label>
+                            <Input id="create-title" name="title" value={formData.title} onChange={handleChange} placeholder="My Awesome Post" disabled={isSubmitting}/>
+                            {errors.title && <p className="text-xs text-red-500">{errors.title}</p>}
+                        </div>
+                        <div className="space-y-1.5">
+                            <Label htmlFor="create-slug">Slug</Label>
+                            <Input id="create-slug" name="slug" value={formData.slug} onChange={handleChange} placeholder="my-awesome-post" disabled={isSubmitting}/>
+                            {errors.slug && <p className="text-xs text-red-500">{errors.slug}</p>}
+                        </div>
+                    </div>
+                    <div className="space-y-1.5">
+                        <Label htmlFor="create-content">Content</Label>
+                        <Textarea id="create-content" name="content" value={formData.content} onChange={handleChange} rows={10} placeholder="Start writing your masterpiece..." disabled={isSubmitting}/>
+                        {errors.content && <p className="text-xs text-red-500">{errors.content}</p>}
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        {/* If author is not editable or pre-filled, you might hide this or make it read-only */}
+                        <div className="space-y-1.5">
+                            <Label htmlFor="create-authorName">Author Name</Label>
+                            <Input id="create-authorName" name="authorName" value={formData.authorName} onChange={handleChange} placeholder="John Doe" disabled={isSubmitting || !!currentAuthor}/>
+                            {errors.authorName && <p className="text-xs text-red-500">{errors.authorName}</p>}
+                        </div>
+                        <div className="space-y-1.5">
+                            <Label htmlFor="create-category">Category</Label>
+                            <Select name="category" value={formData.category} onValueChange={handleSelectChange('category')} disabled={isSubmitting}>
+                                <SelectTrigger id="create-category"><SelectValue placeholder="Select category" /></SelectTrigger>
+                                <SelectContent>
+                                    {PostCategoryEnum.options.map(cat => <SelectItem key={cat} value={cat}>{cat}</SelectItem>)}
+                                </SelectContent>
+                            </Select>
+                            {errors.category && <p className="text-xs text-red-500">{errors.category}</p>}
+                        </div>
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="space-y-1.5">
+                            <Label htmlFor="create-status">Status</Label>
+                            <Select name="status" value={formData.status} onValueChange={handleSelectChange('status')} disabled={isSubmitting}>
+                                <SelectTrigger id="create-status"><SelectValue placeholder="Select status" /></SelectTrigger>
+                                <SelectContent>
+                                    {PostStatusEnum.options.map(stat => <SelectItem key={stat} value={stat}>{stat}</SelectItem>)}
+                                </SelectContent>
+                            </Select>
+                            {errors.status && <p className="text-xs text-red-500">{errors.status}</p>}
+                        </div>
+                        <div className="space-y-1.5">
+                            <Label htmlFor="create-tagsInput">Tags (comma-separated)</Label>
+                            <Input id="create-tagsInput" name="tagsInput" value={formData.tagsInput} onChange={handleChange} placeholder="e.g., react, nextjs, development" disabled={isSubmitting}/>
+                        </div>
+                    </div>
+                    <div className="space-y-1.5">
+                        <Label htmlFor="create-featuredImage">Featured Image URL (Optional)</Label>
+                        <Input id="create-featuredImage" name="featuredImage" value={formData.featuredImage || ''} onChange={handleChange} placeholder="https://example.com/image.jpg" disabled={isSubmitting}/>
+                        {errors.featuredImage && <p className="text-xs text-red-500">{errors.featuredImage}</p>}
+                    </div>
+
+                    <SheetFooter className="mt-auto flex flex-col-reverse sm:flex-row sm:justify-end gap-2 pt-6">
+                        <SheetClose asChild>
+                            <Button type="button" variant="outline" disabled={isSubmitting}>
+                                <XIcon className="mr-2 h-4 w-4" /> Cancel
+                            </Button>
+                        </SheetClose>
+                        <Button type="submit" disabled={isSubmitting}>
+                            {isSubmitting ? <Loader2Icon className="mr-2 h-4 w-4 animate-spin"/> : <SaveIcon className="mr-2 h-4 w-4" />}
+                            Create Post
+                        </Button>
+                    </SheetFooter>
+                </form>
+            </SheetContent>
+        </Sheet>
+    );
+};
