@@ -17,7 +17,7 @@ import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {CalendarDaysIcon, LogInIcon} from "lucide-react";
-import {UserAdminData, UserAdminSchema} from "@/app/admin/users/user-admin-table";
+import {UserAdminData, UserAdminSchema} from "@/app/admin/users/all/user-admin-table";
 
 interface TableCellViewerProps {
     item: UserAdminData;

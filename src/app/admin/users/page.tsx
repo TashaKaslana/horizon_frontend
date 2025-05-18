@@ -1,9 +1,7 @@
-import UserAdminContainer from "@/app/admin/users/user-admin-container";
+import {redirect} from "next/navigation";
 
 const Page = () => {
-    return (
-        <UserAdminContainer/>
-    )
+    redirect('/admin/users/all');
 }
 
-export default Page;
+export default Page

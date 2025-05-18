@@ -1,7 +1,7 @@
 import { CommentCardList } from "./comment-admin-cards"
 import {SiteHeader} from "@/app/admin/components/site-header";
-import {CommentChart} from "@/app/admin/comments/comment-chart";
-import {CommentAdminTable} from "@/app/admin/comments/comment-admin-table";
+import {CommentChart} from "@/app/admin/comments/all/comment-chart";
+import {CommentAdminTable} from "@/app/admin/comments/all/comment-admin-table";
 
 const CommentAdminContainer = () => {
   return (

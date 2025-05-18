@@ -21,7 +21,7 @@ import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar"; // F
 import {DataTable} from "@/components/ui/data-table";
 import {DraggableItem, DragHandleCell,} from "@/components/common/dnd-table-components";
 import {DataTableColumnHeader} from "@/components/common/data-table-components";
-import {UserTableCellViewer} from "@/app/admin/users/user-table-cell-viewer";
+import {UserTableCellViewer} from "@/app/admin/users/all/user-table-cell-viewer";
 
 export const UserAdminSchema = z.object({
     id: z.number(),

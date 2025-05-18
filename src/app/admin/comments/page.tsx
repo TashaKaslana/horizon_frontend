@@ -1,9 +1,7 @@
-import CommentAdminContainer from "@/app/admin/comments/comment-admin-container";
+import {redirect} from "next/navigation";
 
 const Page = () => {
-    return (
-        <CommentAdminContainer/>
-    );
+    redirect("/admin/comments/all");
 }
 
 export default Page;

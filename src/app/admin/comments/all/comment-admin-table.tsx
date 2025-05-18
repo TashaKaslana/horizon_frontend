@@ -30,10 +30,10 @@ import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {DataTable} from "@/components/ui/data-table";
 import {DataTableColumnHeader} from "@/components/common/data-table-components";
 import {DraggableItem, DragHandleCell} from "@/components/common/dnd-table-components";
-import {UserTableCellViewer} from "../users/user-table-cell-viewer";
-import {UserAdminData, UserAdminSchema} from "../users/user-admin-table";
-import {PostDetailViewerSheet} from "../posts/all/post-detail-viewer-sheet";
-import {PostData} from "../posts/all/post-schema";
+import {UserTableCellViewer} from "../../users/all/user-table-cell-viewer";
+import {UserAdminData, UserAdminSchema} from "../../users/all/user-admin-table";
+import {PostDetailViewerSheet} from "../../posts/all/post-detail-viewer-sheet";
+import {PostData} from "../../posts/all/post-schema";
 import {CommentDetailViewerSheet} from "./comment-detail-viewer-sheet";
 
 export const CommentAdminSchema = z.object({

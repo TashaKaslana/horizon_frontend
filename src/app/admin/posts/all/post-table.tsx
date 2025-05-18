@@ -32,8 +32,8 @@ import { DataTableColumnHeader } from "@/components/common/data-table-components
 import { PostData } from "./post-schema"; // Adjust path
 import { PostDetailViewerSheet } from "./post-detail-viewer-sheet"; // Adjust path
 import { CreatePostSheet } from "./create-post-sheet"; // Adjust path
-import { UserTableCellViewer } from "../../users/user-table-cell-viewer";
-import { UserAdminData, UserAdminSchema } from "../../users/user-admin-table";
+import { UserTableCellViewer } from "../../users/all/user-table-cell-viewer";
+import { UserAdminData, UserAdminSchema } from "../../users/all/user-admin-table";
 import {getFixedNumberFormat} from "@/lib/utils";
 
 const mockPostsData: PostData[] = [
