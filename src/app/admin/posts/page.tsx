@@ -1,11 +1,7 @@
-import PostAdminContainer from "@/app/admin/posts/post-admin-container";
+import {redirect} from "next/navigation";
 
 const Page = () => {
-    return (
-        <>
-            <PostAdminContainer/>
-        </>
-    )
+    redirect('/admin/posts/all');
 }
 
-export default Page
+export default Page;

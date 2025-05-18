@@ -32,8 +32,8 @@ import {DataTableColumnHeader} from "@/components/common/data-table-components";
 import {DraggableItem, DragHandleCell} from "@/components/common/dnd-table-components";
 import {UserTableCellViewer} from "../users/user-table-cell-viewer";
 import {UserAdminData, UserAdminSchema} from "../users/user-admin-table";
-import {PostDetailViewerSheet} from "../posts/post-detail-viewer-sheet";
-import {PostData} from "../posts/post-schema";
+import {PostDetailViewerSheet} from "../posts/all/post-detail-viewer-sheet";
+import {PostData} from "../posts/all/post-schema";
 import {CommentDetailViewerSheet} from "./comment-detail-viewer-sheet";
 
 export const CommentAdminSchema = z.object({

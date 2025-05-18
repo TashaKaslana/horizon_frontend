@@ -7,7 +7,6 @@ import {
     DatabaseIcon,
     FileIcon,
     FileTextIcon,
-    FolderIcon,
     HelpCircleIcon,
     LayoutDashboardIcon,
     ListIcon,
@@ -49,21 +48,62 @@ const data = {
             title: "Users",
             url: "/admin/users",
             icon: UsersIcon,
+            subItems: [
+                {
+                    title: "All Users",
+                    url: "/admin/users/all",
+                },
+                {
+                    title: "Reports",
+                    url: "/admin/users/reports",
+                },
+                {
+                    title: "Roles",
+                    url: "/admin/users/roles",
+                },
+                {
+                    title: "Permissions",
+                    url: "/admin/users/permissions",
+                },
+            ]
         },
         {
             title: "Posts",
             url: "/admin/posts",
             icon: FileTextIcon,
+            subItems: [
+                {
+                    title: "All Posts",
+                    url: "/admin/posts/all",
+                },
+                {
+                    title: "Reports",
+                    url: "/admin/posts/reports",
+                },
+                {
+                    title: "Categories",
+                    url: "/admin/posts/categories",
+                },
+                {
+                    title: "Tags",
+                    url: "/admin/posts/tags",
+                },
+            ]
         },
         {
             title: "Comments",
             url: "/admin/comments",
             icon: MessageSquareIcon,
-        },
-        {
-            title: "Categories",
-            url: "/admin/categories",
-            icon: FolderIcon,
+            subItems: [
+                {
+                    title: "All Comments",
+                    url: "/admin/comments/all",
+                },
+                {
+                    title: "Reports",
+                    url: "/admin/comments/reports",
+                },
+            ]
         },
     ],
     navClouds: [

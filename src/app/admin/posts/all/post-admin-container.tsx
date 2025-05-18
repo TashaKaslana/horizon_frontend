@@ -1,7 +1,7 @@
 import {SiteHeader} from "@/app/admin/components/site-header";
-import {PostCardList} from "@/app/admin/posts/post-card-list";
-import {PostChart} from "@/app/admin/posts/post-attending-chart";
-import {PostTable} from "@/app/admin/posts/post-table";
+import {PostCardList} from "@/app/admin/posts/all/post-card-list";
+import {PostChart} from "@/app/admin/posts/all/post-attending-chart";
+import {PostTable} from "@/app/admin/posts/all/post-table";
 
 const PostAdminContainer = () => {
     return (
