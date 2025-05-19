@@ -31,7 +31,6 @@ import {DataTable} from "@/components/ui/data-table";
 import {DataTableColumnHeader} from "@/components/common/data-table-components";
 import {DraggableItem, DragHandleCell} from "@/components/common/dnd-table-components";
 import {UserTableCellViewer} from "../../users/all/user-table-cell-viewer";
-import {UserAdminData, UserAdminSchema} from "../../users/all/user-admin-table";
 import {PostDetailViewerSheet} from "../../posts/all/post-detail-viewer-sheet";
 import {PostData} from "../../posts/all/post-schema";
 import {CommentDetailViewerSheet} from "./comment-detail-viewer-sheet";
@@ -190,18 +189,6 @@ export function CommentAdminTable() {
             header: ({column}) => <DataTableColumnHeader column={column} title="Author"/>,
             cell: ({row}) => {
                 const comment = row.original;
-                const authorPlaceholder: UserAdminData = {
-                    id: comment.authorId as string | number,
-                    name: comment.authorName,
-                    username: comment.authorUsername,
-                    email: comment.authorEmail,
-                    profileImage: comment.authorProfileImage,
-                    type: UserAdminSchema.shape.type.options[0],
-                    status: UserAdminSchema.shape.status.options[0],
-                    createdAt: new Date(0).toISOString(),
-                    lastLogin: undefined,
-                };
-
                 return (
                     <div className="flex items-center gap-2 py-0.5 min-w-[200px]">
                         <Avatar className="h-9 w-9 flex-shrink-0">
@@ -210,7 +197,6 @@ export function CommentAdminTable() {
                         </Avatar>
                         <div className="flex flex-col gap-0.5">
                             <UserTableCellViewer
-                                item={authorPlaceholder}
                                 onUpdate={() => {
                                     toast.info("Author details are managed in the Users section.");
                                 }}
@@ -228,28 +214,49 @@ export function CommentAdminTable() {
                 const comment = row.original;
 
                 const postForSheet: PostData = {
-                    id: comment.postId,
-                    title: comment.postTitle,
-                    description: undefined,
-                    content: "",
-                    authorId: "",
-                    authorName: "",
-                    category: "",
-                    status: "Draft",
-                    tags: [],
-                    featuredImage: undefined,
-                    publishedAt: undefined,
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString(),
-                    viewCount: 0,
-                };
+                    id: 'post-001',
+                    createdAt: '2024-05-01T10:00:00Z',
+                    updatedAt: '2024-05-01T12:00:00Z',
+                    createdBy: 'user-1',
+                    updatedBy: 'user-1',
+                    user: {
+                        id: 'user-1',
+                        displayName: 'Alice Wonderland',
+                        username: 'alice123',
+                        profileImage: 'https://picsum.photos/seed/alice/100/100',
+                        coverImage: 'https://picsum.photos/seed/alice-cover/400/200',
+                        createdAt: '2023-01-01T00:00:00Z',
+                    },
+                    caption: 'Mastering Next.js 14 Features',
+                    description: 'A deep dive into the new Server Actions, metadata routing, and performance improvements.',
+                    visibility: 'PUBLIC' as const,
+                    duration: 135,
+                    categoryName: 'Web Development',
+                    tags: ['Next.js', 'JavaScript', 'Frontend'],
+                    videoPlaybackUrl: 'https://cdn.example.com/videos/next14.mp4',
+                    videoThumbnailUrl: 'https://cdn.example.com/thumbnails/next14.jpg',
+                    videoAsset: {
+                        id: 'asset-001',
+                        publicId: 'videos/next14',
+                        resourceType: 'video',
+                        format: 'mp4',
+                        bytes: 10485760,
+                        width: 1920,
+                        height: 1080,
+                        originalFilename: 'next14.mp4',
+                        createdAt: '2024-05-01T09:59:00Z',
+                        createdBy: 'user-1',
+                    },
+                    isAuthorDeleted: false,
+                    status: 'Draft'
+                }
 
                 return (
                     <div className="flex items-center gap-2 py-0.5 min-w-[180px] max-w-[240px]">
                         <div className="h-9 w-12 bg-muted rounded-sm flex items-center justify-center flex-shrink-0">
-                            {postForSheet.featuredImage ? (
+                            {postForSheet.videoThumbnailUrl ? (
                                 <Image
-                                    src={postForSheet.featuredImage}
+                                    src={postForSheet.videoThumbnailUrl}
                                     alt={comment.postTitle.split(" ").slice(0, 2).join(" ")}
                                     width={48}
                                     height={48}
@@ -261,7 +268,6 @@ export function CommentAdminTable() {
                         </div>
                         <div className="flex flex-col gap-0.5">
                             <PostDetailViewerSheet
-                                post={postForSheet}
                                 onUpdateAction={() => {
                                     toast.info("Post details are managed in the Posts section.");
                                 }}

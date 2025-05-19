@@ -14,26 +14,106 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import { CommentAdminData } from "./comment-admin-table"; // Adjust path as necessary
+import { CommentAdminData } from "./comment-admin-table";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { MessageSquareIcon, UserIcon, FileTextIcon, CalendarIcon, TagIcon, Edit3Icon, ShieldAlertIcon } from "lucide-react";
+// import { useQuery } from "@tanstack/react-query"; // Example import for TanStack Query
 
 interface CommentDetailViewerSheetProps {
-    comment: CommentAdminData;
-    children: React.ReactNode; // To use as SheetTrigger
-    onUpdate?: (updatedComment: Partial<CommentAdminData>) => void; // Optional: for future edit functionality
+    commentId: string; // Changed: Expect commentId instead of full comment object
+    children: React.ReactNode;
+    // Removed onUpdate prop
 }
 
+// Placeholder: Replace with your actual fetch function
+// const fetchCommentById = async (commentId: string): Promise<CommentAdminData> => {
+//     // Example: return apiClient.get(`/api/comments/${commentId}`);
+//     // For demonstration, returning a mock. Replace with actual API call.
+//     console.log(`Fetching comment with ID: ${commentId}`);
+//     return new Promise(resolve => setTimeout(() => resolve({
+//         id: commentId,
+//         content: "This is a fetched comment content.",
+//         authorId: "author-123",
+//         authorName: "Fetched Author",
+//         authorUsername: "fetchedauthor",
+//         authorEmail: "fetched@example.com",
+//         authorProfileImage: "https://avatar.vercel.sh/fetched.png",
+//         postId: "post-456",
+//         postTitle: "Fetched Post Title",
+//         status: "Approved",
+//         createdAt: new Date().toISOString(),
+//         updatedAt: null,
+//     } as CommentAdminData), 1000));
+// };
+
 export function CommentDetailViewerSheet({
-    comment,
+    commentId,
     children,
-    onUpdate,
 }: CommentDetailViewerSheetProps) {
+    // const { data: comment, isLoading, isError, error } = useQuery<CommentAdminData, Error>(
+    //     ['comment', commentId],
+    //     () => fetchCommentById(commentId),
+    //     { enabled: !!commentId } // Only run query if commentId is available
+    // );
+
+    // Placeholder data and states until TanStack Query is fully implemented
+    // Replace these with actual data from useQuery
+    const isLoading = false; // Example: replace with query.isLoading
+    const isError = false;   // Example: replace with query.isError
+    const error = null;      // Example: replace with query.error
+    const comment: CommentAdminData | undefined = { // Example: replace with query.data
+        id: commentId,
+        content: "This is a placeholder comment. Implement TanStack Query to fetch real data.",
+        authorId: "author-placeholder",
+        authorName: "Placeholder Author",
+        authorUsername: "placeholderuser",
+        authorEmail: "placeholder@example.com",
+        authorProfileImage: "",
+        postId: "post-placeholder",
+        postTitle: "Placeholder Post Title",
+        status: "Pending",
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+    };
+    // End of placeholder data
+
     const handleEdit = () => {
         // Placeholder for edit functionality
-        console.log("Edit comment:", comment.id);
-        // Example: onUpdate?.({ ...comment, content: "Updated content" });
+        // This would likely involve opening a modal/form or navigating,
+        // and then re-fetching or updating the cache via TanStack Query.
+        console.log("Edit comment action for ID:", commentId);
+        // Example: onUpdate?.({ ...comment, content: "Updated content" }); // onUpdate is removed
     };
+
+    if (isLoading) {
+        return (
+            <Sheet>
+                <SheetTrigger asChild>{children}</SheetTrigger>
+                <SheetContent className="sm:max-w-lg w-[90vw] p-0">
+                    <SheetHeader className="p-6 border-b">
+                        <SheetTitle>Loading Comment...</SheetTitle>
+                    </SheetHeader>
+                    <div className="p-6">Loading details...</div>
+                </SheetContent>
+            </Sheet>
+        );
+    }
+
+    if (isError || !comment) {
+        return (
+            <Sheet>
+                <SheetTrigger asChild>{children}</SheetTrigger>
+                <SheetContent className="sm:max-w-lg w-[90vw] p-0">
+                    <SheetHeader className="p-6 border-b">
+                        <SheetTitle>Error</SheetTitle>
+                    </SheetHeader>
+                    <div className="p-6">
+                        {isError && error ? (error as any).message : "Comment not found or failed to load."}
+                    </div>
+                </SheetContent>
+            </Sheet>
+        );
+    }
 
     return (
         <Sheet>
@@ -136,12 +216,11 @@ export function CommentDetailViewerSheet({
                                 Report
                             </Button>
                             <div className="flex gap-2">
-                                {onUpdate && (
-                                    <Button variant="default" size="sm" onClick={handleEdit} className="gap-1.5">
-                                        <Edit3Icon className="size-4" />
-                                        Edit Comment
-                                    </Button>
-                                )}
+                                {/* Edit button is kept, handleEdit would be adapted for TanStack Query flows */}
+                                <Button variant="default" size="sm" onClick={handleEdit} className="gap-1.5">
+                                    <Edit3Icon className="size-4" />
+                                    Edit Comment
+                                </Button>
                                 <SheetClose asChild>
                                     <Button variant="outline" size="sm">Close</Button>
                                 </SheetClose>
