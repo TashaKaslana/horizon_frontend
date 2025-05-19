@@ -63,8 +63,14 @@ const mockPostsData: PostData[] = [
             resourceType: 'video/mp4',
             bytes: 123456,
             createdAt: '2024-05-01T09:00:00Z',
+            createdBy: "",
+            publicId: "",
+            format: "",
+            width: 0,
+            height: 0
         },
         isAuthorDeleted: false,
+        status: "Published",
     },
     {
         id: '2',
@@ -94,8 +100,14 @@ const mockPostsData: PostData[] = [
             resourceType: 'video/mp4',
             bytes: 654321,
             createdAt: '2024-05-02T11:00:00Z',
+            createdBy: "",
+            publicId: "",
+            format: "",
+            width: 0,
+            height: 0
         },
         isAuthorDeleted: false,
+        status: "Published",
     },
 ];
 
