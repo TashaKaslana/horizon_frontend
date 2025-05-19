@@ -2,7 +2,6 @@
 
 import React from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import Link from "next/link";
 import { toast } from "sonner";
 import {
     CheckCircle2Icon,
@@ -14,7 +13,6 @@ import {
     MessageSquareIcon,
     UserIcon,
     AlertTriangleIcon,
-    EyeIcon,
     BanIcon,
     ShieldCheckIcon,
     ShieldXIcon,
@@ -32,21 +30,42 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { DataTableColumnHeader } from "@/components/common/data-table-components";
-import { DragHandleCell } from "@/components/common/dnd-table-components";
-import {
-    ModerationItemData,
-    ModerationStatus,
-} from "./moderation-schema";
+import {DraggableItem, DragHandleCell} from "@/components/common/dnd-table-components";
 import { PostDetailViewerSheet } from '../../posts/all/post-detail-viewer-sheet';
 import { CommentDetailViewerSheet } from '../../comments/all/comment-detail-viewer-sheet';
 import { UserTableCellViewer } from '../../users/all/user-table-cell-viewer';
-import { statusFilterOptions } from "./moderation-table-mock-data";
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar"; // Assuming this is created/moved
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
+import {ModerationStatus, ModerationStatusSchema, Report} from "@/schemas/report-schema";
 
 interface ModerationTableColumnsProps {
     onUpdateStatusAction: (itemIds: string[], newStatus: ModerationStatus) => void;
     onDeleteEntriesAction: (itemIds: string[]) => void;
 }
+
+type ModerationItemData = Report & DraggableItem
+
+export const statusFilterOptions = ModerationStatusSchema.options.map(status => ({
+    value: status,
+    label: status.replace(/_/g, ' '),
+    icon: (() => {
+        switch (status) {
+            case "Pending":
+                return LoaderIcon;
+            case "Reviewed_Approved":
+                return ShieldCheckIcon;
+            case "Reviewed_Rejected":
+                return ShieldXIcon;
+            case "ActionTaken_ContentRemoved":
+            case "ActionTaken_UserWarned":
+            case "ActionTaken_UserBanned":
+                return AlertTriangleIcon;
+            case "Resolved":
+                return CheckCircle2Icon;
+            default:
+                return ShieldQuestionIcon;
+        }
+    })()
+}));
 
 export const getModerationTableColumns = ({
     onUpdateStatusAction,
@@ -86,60 +105,52 @@ export const getModerationTableColumns = ({
             if (item.itemType === "Comment") icon = <MessageSquareIcon className="h-5 w-5 text-muted-foreground mt-0.5 flex-shrink-0" />;
             if (item.itemType === "User") icon = <UserIcon className="h-5 w-5 text-muted-foreground mt-0.5 flex-shrink-0" />;
 
-            const contentPreview = (
+            const contentPreview = (content: string) => (
                 <div className="flex flex-col">
-                    <span className="font-medium text-sm group-hover:underline">{item.itemPreview || item.itemId}</span>
-                    {item.itemLink &&
-                        <Link href={item.itemLink} target="_blank" rel="noopener noreferrer"
-                              className="text-xs text-blue-500 hover:underline"
-                              onClick={(e) => e.stopPropagation()}
-                        >
-                            View Original (ID: {item.itemId})
-                        </Link>
-                    }
+                    <span className="font-medium text-sm group-hover:underline">{content}</span>
                 </div>
             );
 
             const wrapperClass = "flex items-start gap-2 py-1 min-w-32 max-w-54 group cursor-pointer truncate";
 
-            if (item.itemType === "Post" && item.postDetails) {
+            if (item.itemType === "Post" && item.post) {
                 return (
                     <PostDetailViewerSheet
-                        post={item.postDetails}
+                        postId={item.post.id}
                         onUpdateAction={(updatedPost) => {
                             console.log("Post update from sheet (moderation table):", updatedPost);
                             toast.info("Post details updated (mock).");
                         }}
                     >
                         <div className={wrapperClass}>
-                            {icon} {contentPreview}
+                            {icon} {contentPreview(item.post.caption)}
                         </div>
                     </PostDetailViewerSheet>
                 );
             }
-            if (item.itemType === "Comment" && item.commentDetails) {
+            if (item.itemType === "Comment" && item.comment) {
                 return (
-                    <CommentDetailViewerSheet comment={item.commentDetails}>
+                    <CommentDetailViewerSheet commentId={item.comment.id}>
                          <div className={wrapperClass}>
-                            {icon} {contentPreview}
+                            {icon} {contentPreview(item.comment.content)}
                         </div>
                     </CommentDetailViewerSheet>
                 );
             }
-            if (item.itemType === "User" && item.userDetails) {
+            if (item.itemType === "User" && item.reportedUser) {
                 return (
-                     <div className={wrapperClass} onClick={() => toast.info('User details view TBD or click UserTableCellViewer if interactive')}>
-                        {icon}
-                        <UserTableCellViewer item={item.userDetails} onUpdate={() => {}} />
+                    <div className="flex items-center gap-1 py-0.5 min-w-[200px]">
+                        <Avatar className="h-9 w-9 flex-shrink-0">
+                            <AvatarImage src={item.reportedUser.profileImage} alt={item.reportedUser.displayName} />
+                            <AvatarFallback>{item.reportedUser?.displayName?.split(' ').map(n=>n[0]).join('').toUpperCase()}</AvatarFallback>
+                        </Avatar>
+                        <div className="flex flex-col gap-1">
+                            <UserTableCellViewer userId={item.reportedUser.id} initialDisplayName={item.reportedUser.displayName} />
+                            <span className="text-xs text-muted-foreground italic">@{item.reportedUser.username}</span>
+                        </div>
                     </div>
                 );
             }
-
-            return (
-                <div className={wrapperClass} onClick={() => item.itemLink && window.open(item.itemLink, '_blank')}>
-                    {icon} {contentPreview}
-                </div>
-            );
         },
         enableHiding: false,
     },
@@ -148,23 +159,21 @@ export const getModerationTableColumns = ({
         header: ({ column }) => <DataTableColumnHeader column={column} title="Reporter" />,
         cell: ({ row }) => {
             const item = row.original;
-
-            const user = { id: 15, name: "Olivia Benson", username: "oliviab", email: "olivia@example.com", type: "Viewer", status: "Active", createdAt: "2024-03-01T19:00:00Z", lastLogin: "2024-03-09T19:00:00Z" }
-
             return (
                 <div className="flex items-center gap-2 py-0.5 min-w-[200px]">
                     <Avatar className="h-9 w-9 flex-shrink-0">
-                        <AvatarImage src={item.userDetails?.profileImage} alt={item.userDetails?.name}/>
-                        <AvatarFallback>{item.userDetails?.name?.split(' ').map(n => n[0]).join('').toUpperCase()}</AvatarFallback>
+                        <AvatarImage src={item.reporter?.profileImage} alt={item.reporter?.displayName}/>
+                        <AvatarFallback>{item.reporter?.displayName?.split(' ').map(n => n[0]).join('').toUpperCase()}</AvatarFallback>
                     </Avatar>
                     <div className="flex flex-col gap-0.5">
                         <UserTableCellViewer
-                            item={user}
+                            userId={item.reporter.id}
+                            initialDisplayName={item.reporter.displayName}
                             onUpdate={() => {
                                 toast.info("Author details are managed in the Users section.");
                             }}
                         />
-                        <span className="text-xs text-muted-foreground">ID: {item.userDetails?.id}</span>
+                        <span className="text-xs text-muted-foreground">ID: {item.reporter?.id}</span>
                     </div>
                 </div>
             )
@@ -221,11 +230,11 @@ export const getModerationTableColumns = ({
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-[220px]">
-                            {item.itemLink && (
-                                <DropdownMenuItem onSelect={() => window.open(item.itemLink, '_blank')}>
-                                    <EyeIcon className="mr-2 h-4 w-4" /> View Original Item
-                                </DropdownMenuItem>
-                            )}
+                            {/*{item.itemLink && (*/}
+                            {/*    <DropdownMenuItem onSelect={() => window.open(item.itemLink, '_blank')}>*/}
+                            {/*        <EyeIcon className="mr-2 h-4 w-4" /> View Original Item*/}
+                            {/*    </DropdownMenuItem>*/}
+                            {/*)}*/}
                             <DropdownMenuItem onSelect={() => toast.info(`Editing notes for ${item.id}`)}>
                                 <Edit3Icon className="mr-2 h-4 w-4" /> Edit Moderation Notes
                             </DropdownMenuItem>

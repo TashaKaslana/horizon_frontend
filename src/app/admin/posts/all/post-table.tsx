@@ -177,7 +177,7 @@ export function PostTable() {
                             </div>
                         }
                         <div className="flex flex-col gap-0.5">
-                            <PostDetailViewerSheet onUpdateAction={handleUpdatePost} />
+                            <PostDetailViewerSheet onUpdateAction={handleUpdatePost} postId={post.id}/>
                             {post.description && <span className="text-xs text-muted-foreground truncate max-w-48" title={post.description}>{post.description}</span>}
                         </div>
                     </div>

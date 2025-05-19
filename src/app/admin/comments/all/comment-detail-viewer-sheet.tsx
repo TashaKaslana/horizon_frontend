@@ -17,6 +17,7 @@ import { Separator } from "@/components/ui/separator";
 import { CommentAdminData } from "./comment-admin-table";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { MessageSquareIcon, UserIcon, FileTextIcon, CalendarIcon, TagIcon, Edit3Icon, ShieldAlertIcon } from "lucide-react";
+import {commentData} from "@/app/admin/components/mockData";
 // import { useQuery } from "@tanstack/react-query"; // Example import for TanStack Query
 
 interface CommentDetailViewerSheetProps {
@@ -61,20 +62,7 @@ export function CommentDetailViewerSheet({
     const isLoading = false; // Example: replace with query.isLoading
     const isError = false;   // Example: replace with query.isError
     const error = null;      // Example: replace with query.error
-    const comment: CommentAdminData | undefined = { // Example: replace with query.data
-        id: commentId,
-        content: "This is a placeholder comment. Implement TanStack Query to fetch real data.",
-        authorId: "author-placeholder",
-        authorName: "Placeholder Author",
-        authorUsername: "placeholderuser",
-        authorEmail: "placeholder@example.com",
-        authorProfileImage: "",
-        postId: "post-placeholder",
-        postTitle: "Placeholder Post Title",
-        status: "Pending",
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-    };
+    const comment: CommentAdminData | undefined = commentData;
     // End of placeholder data
 
     const handleEdit = () => {
@@ -150,13 +138,13 @@ export function CommentDetailViewerSheet({
                             </h4>
                             <div className="flex items-center gap-3">
                                 <Avatar className="h-12 w-12">
-                                    <AvatarImage src={comment.authorProfileImage} alt={comment.authorName} />
-                                    <AvatarFallback>{comment.authorName.split(' ').map(n => n[0]).join('').toUpperCase()}</AvatarFallback>
+                                    <AvatarImage src={comment.user.profileImage} alt={comment.user.profileImage} />
+                                    <AvatarFallback>{comment.user.displayName.split(' ').map(n => n[0]).join('').toUpperCase()}</AvatarFallback>
                                 </Avatar>
                                 <div>
-                                    <p className="font-medium">{comment.authorName} <span className="text-xs text-muted-foreground">(@{comment.authorUsername})</span></p>
-                                    <p className="text-xs text-muted-foreground">{comment.authorEmail}</p>
-                                    <p className="text-xs text-muted-foreground">Author ID: {comment.authorId}</p>
+                                    <p className="font-medium">{comment.user.displayName} <span className="text-xs text-muted-foreground">(@{comment.user.username})</span></p>
+                                    {/*<p className="text-xs text-muted-foreground">{comment.user.email}</p>*/}
+                                    <p className="text-xs text-muted-foreground">Author ID: {comment.user.id}</p>
                                 </div>
                             </div>
                         </div>
@@ -168,8 +156,8 @@ export function CommentDetailViewerSheet({
                             <h4 className="text-sm font-semibold text-muted-foreground flex items-center gap-1.5">
                                 <FileTextIcon className="size-4" /> Related Post
                             </h4>
-                            <p className="text-sm font-medium">{comment.postTitle}</p>
-                            <p className="text-xs text-muted-foreground">Post ID: {comment.postId}</p>
+                            <p className="text-sm font-medium">{comment.post.caption}</p>
+                            <p className="text-xs text-muted-foreground">Post ID: {comment.post.id}</p>
                             {/* Future: Could add a button to navigate to post management page */}
                         </div>
 

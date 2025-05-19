@@ -14,7 +14,6 @@ import {
 } from "lucide-react";
 import {toast} from "sonner";
 import Image from "next/image";
-import {z} from "zod";
 
 import {Badge} from "@/components/ui/badge";
 import {Button} from "@/components/ui/button";
@@ -34,90 +33,13 @@ import {UserTableCellViewer} from "../../users/all/user-table-cell-viewer";
 import {PostDetailViewerSheet} from "../../posts/all/post-detail-viewer-sheet";
 import {PostData} from "../../posts/all/post-schema";
 import {CommentDetailViewerSheet} from "./comment-detail-viewer-sheet";
+import {CommentResponseFull} from "@/schemas/comment-schema";
+import {commentData} from "@/app/admin/components/mockData";
 
-export const CommentAdminSchema = z.object({
-    id: z.string(),
-    content: z.string().min(1, "Content cannot be empty"),
-    authorId: z.string(),
-    authorName: z.string(),
-    authorUsername: z.string(),
-    authorEmail: z.string().email(),
-    authorProfileImage: z.string().url().optional(),
-    postId: z.string(),
-    postTitle: z.string(),
-    status: z.enum(["Approved", "Pending", "Spam", "Rejected"]),
-    createdAt: z.string(),
-    updatedAt: z.string().optional(),
-});
-
-export type CommentAdminData = z.infer<typeof CommentAdminSchema> & DraggableItem;
+export type CommentAdminData = CommentResponseFull & DraggableItem;
 
 const mockCommentAdminData: CommentAdminData[] = [
-    {
-        id: "cmt001",
-        content: "This is a great post! Really insightful.",
-        authorId: "usr001",
-        authorName: "Alice Wonderland",
-        authorUsername: "alicew",
-        authorEmail: "alice@example.com",
-        authorProfileImage: "https://avatar.vercel.sh/alice.png",
-        postId: "post001",
-        postTitle: "The Future of AI",
-        status: "Approved",
-        createdAt: "2024-03-10T10:00:00Z",
-        updatedAt: "2024-03-10T10:05:00Z"
-    },
-    {
-        id: "cmt002",
-        content: "I have a question about the second paragraph. Could you elaborate?",
-        authorId: "usr002",
-        authorName: "Bob The Builder",
-        authorUsername: "bobthebuilder",
-        authorEmail: "bob@example.com",
-        authorProfileImage: "https://avatar.vercel.sh/bob.png",
-        postId: "post001",
-        postTitle: "The Future of AI",
-        status: "Pending",
-        createdAt: "2024-03-10T11:30:00Z"
-    },
-    {
-        id: "cmt003",
-        content: "Check out my website for more info: spamlink.com",
-        authorId: "usr003",
-        authorName: "Charlie Spammer",
-        authorUsername: "charliespam",
-        authorEmail: "charlie@example.com",
-        postId: "post002",
-        postTitle: "Exploring New Technologies",
-        status: "Spam",
-        createdAt: "2024-03-09T09:15:00Z"
-    },
-    {
-        id: "cmt004",
-        content: "Not sure I agree with this point.",
-        authorId: "usr004",
-        authorName: "Diana Prince",
-        authorUsername: "wonderwoman",
-        authorEmail: "diana@example.com",
-        authorProfileImage: "https://avatar.vercel.sh/diana.png",
-        postId: "post003",
-        postTitle: "A Deep Dive into Web3",
-        status: "Rejected",
-        createdAt: "2024-03-08T16:45:00Z"
-    },
-    {
-        id: "cmt005",
-        content: "Thanks for sharing!",
-        authorId: "usr005",
-        authorName: "Edward Scissorhands",
-        authorUsername: "edwardscissor",
-        authorEmail: "edward@example.com",
-        postId: "post002",
-        postTitle: "Exploring New Technologies",
-        status: "Approved",
-        createdAt: "2024-03-07T14:00:00Z",
-        updatedAt: "2024-03-07T14:00:00Z"
-    },
+    {...commentData}
 ];
 
 export function CommentAdminTable() {
@@ -172,7 +94,7 @@ export function CommentAdminTable() {
             cell: ({row}) => {
                 const comment = row.original;
                 return (
-                    <CommentDetailViewerSheet comment={comment}>
+                    <CommentDetailViewerSheet commentId={comment.id}>
                         <div className="flex items-start gap-2 py-1 min-w-36 max-w-xs cursor-pointer hover:underline decoration-sky-500 decoration-1">
                             <MessageSquareIcon className="h-4 w-4 text-muted-foreground mt-1 flex-shrink-0" />
                             <span className="overflow-hidden text-ellipsis whitespace-nowrap flex-grow min-w-0">
@@ -192,16 +114,18 @@ export function CommentAdminTable() {
                 return (
                     <div className="flex items-center gap-2 py-0.5 min-w-[200px]">
                         <Avatar className="h-9 w-9 flex-shrink-0">
-                            <AvatarImage src={comment.authorProfileImage} alt={comment.authorName}/>
-                            <AvatarFallback>{comment.authorName.split(' ').map(n => n[0]).join('').toUpperCase()}</AvatarFallback>
+                            <AvatarImage src={comment.user.profileImage} alt={comment.user.displayName}/>
+                            <AvatarFallback>{comment.user.displayName.split(' ').map(n => n[0]).join('').toUpperCase()}</AvatarFallback>
                         </Avatar>
                         <div className="flex flex-col gap-0.5">
                             <UserTableCellViewer
+                                userId={comment.user.id}
+                                initialDisplayName={comment.user.displayName}
                                 onUpdate={() => {
                                     toast.info("Author details are managed in the Users section.");
                                 }}
                             />
-                            <span className="text-xs text-muted-foreground">ID: {comment.authorId}</span>
+                            <span className="text-xs text-muted-foreground">ID: {comment.user.id}</span>
                         </div>
                     </div>
                 );
@@ -257,7 +181,7 @@ export function CommentAdminTable() {
                             {postForSheet.videoThumbnailUrl ? (
                                 <Image
                                     src={postForSheet.videoThumbnailUrl}
-                                    alt={comment.postTitle.split(" ").slice(0, 2).join(" ")}
+                                    alt={comment.post.caption.split(" ").slice(0, 2).join(" ")}
                                     width={48}
                                     height={48}
                                     className="object-cover rounded-sm"
@@ -268,6 +192,7 @@ export function CommentAdminTable() {
                         </div>
                         <div className="flex flex-col gap-0.5">
                             <PostDetailViewerSheet
+                                postId={comment.post.id}
                                 onUpdateAction={() => {
                                     toast.info("Post details are managed in the Posts section.");
                                 }}
@@ -362,12 +287,12 @@ export function CommentAdminTable() {
         },
     ], [handleUpdateCommentStatus, handleDeleteComment]);
 
-    const statusFilterOptions = [
-        {label: "Approved", value: "Approved", icon: CheckCircle2Icon, color: "text-green-500"},
-        {label: "Pending", value: "Pending", icon: LoaderIcon, color: "text-amber-500"},
-        {label: "Spam", value: "Spam", icon: XCircleIcon, color: "text-red-500"},
-        {label: "Rejected", value: "Rejected", icon: XCircleIcon, color: "text-orange-500"},
-    ];
+    // const statusFilterOptions = [
+    //     {label: "Approved", value: "Approved", icon: CheckCircle2Icon, color: "text-green-500"},
+    //     {label: "Pending", value: "Pending", icon: LoaderIcon, color: "text-amber-500"},
+    //     {label: "Spam", value: "Spam", icon: XCircleIcon, color: "text-red-500"},
+    //     {label: "Rejected", value: "Rejected", icon: XCircleIcon, color: "text-orange-500"},
+    // ];
 
     return (
         <div className="flex w-full flex-col justify-start gap-6 p-4 md:p-6">

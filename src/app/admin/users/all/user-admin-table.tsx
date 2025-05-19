@@ -96,7 +96,7 @@ export function UserAdminTable() {
                         </Avatar>
                         <div className="flex flex-col gap-1">
                             {/* TableCellViewer provides its own trigger (user.displayName) */}
-                            <UserTableCellViewer onUpdate={handleUpdateItem} />
+                            <UserTableCellViewer userId={user.id} onUpdate={handleUpdateItem} initialDisplayName={'Halle'}/>
                             <span className="text-xs text-muted-foreground italic">@{user.username}</span>
                         </div>
                     </div>

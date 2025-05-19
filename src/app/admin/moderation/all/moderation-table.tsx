@@ -14,7 +14,6 @@ import {
     ShieldXIcon,
 } from "lucide-react";
 import {toast} from "sonner";
-import {z} from "zod";
 
 import {Button} from "@/components/ui/button";
 import {
@@ -24,59 +23,12 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {DataTable} from "@/components/ui/data-table";
-import {
-    ModerationItemData,
-    ModerationStatus,
-    generateMockModerationItem,
-    ModerationItemTypeSchema,
-    ModerationStatusSchema
-} from "./moderation-schema";
-import {PostSchema} from '../../posts/all/post-schema';
-import {UserAdminSchema} from '../../users/all/user-admin-table';
-import {Input} from "@/components/ui/input";
 import {getModerationTableColumns} from "@/app/admin/moderation/all/moderation-table-columns";
-import {CommentAdminSchema} from "@/app/admin/comments/all/comment-admin-table";
+import {ModerationItemTypeSchema, ModerationStatus, ModerationStatusSchema, Report} from "@/schemas/report-schema";
+import {DraggableItem} from "@/components/common/dnd-table-components";
+import {reportData} from "@/app/admin/components/mockData";
 
-const mockPostForModeration = (id: string, title: string): z.infer<typeof PostSchema> => ({
-    id, title, content: `Content for ${title}`, authorId: `user-${id}`, authorName: `Author ${id}`,
-    category: "Technology", status: "Published", createdAt: new Date().toISOString(), viewCount: 100,
-    description: `Description for ${title}`, tags: [],
-    updatedAt: new Date().toISOString(),
-});
-
-const mockCommentForModeration = (id: string, content: string): z.infer<typeof CommentAdminSchema> => ({
-    id, content, authorId: `user-${id}`, authorName: `User ${id}`, authorUsername: `user${id}`,
-    authorEmail: `user${id}@example.com`, postId: `post-${id}`, postTitle: `Post Title ${id}`,
-    status: "Approved", createdAt: new Date().toISOString(),
-});
-
-const mockUserForModeration = (id: string, name: string): z.infer<typeof UserAdminSchema> => ({
-    id, name, username: name.toLowerCase(), email: `${name.toLowerCase()}@example.com`,
-    type: "Viewer", status: "Active", createdAt: new Date().toISOString(),
-    profileImage: undefined,
-    bio: undefined,
-    location: undefined,
-    website: undefined,
-    lastLogin: undefined,
-    role: 'User',
-    emailVerified: true,
-    postsCount: 0,
-    commentsCount: 0,
-    followersCount: 0,
-    followingCount: 0,
-});
-
-const mockModerationData: ModerationItemData[] = [
-    generateMockModerationItem("mod001", "post001", "Post", "Pending", 1, mockPostForModeration("post001", "A Post Needing Review")),
-    generateMockModerationItem("mod002", "cmt002", "Comment", "Reviewed_Approved", 2, mockCommentForModeration("cmt002", "This comment is fine.")),
-    generateMockModerationItem("mod003", "usr003", "User", "ActionTaken_UserWarned", 3, mockUserForModeration("usr003", "WarnedUser123")),
-    generateMockModerationItem("mod004", "post004", "Post", "Reviewed_Rejected", 0, mockPostForModeration("post004", "Inappropriate Post Content")),
-    generateMockModerationItem("mod005", "cmt005", "Comment", "Pending", 1, mockCommentForModeration("cmt005", "Questionable comment content here.")),
-    generateMockModerationItem("mod006", "usr006", "User", "Pending", 0, mockUserForModeration("usr006", "NewUserReport")),
-    generateMockModerationItem("mod007", "post007", "Post", "ActionTaken_ContentRemoved", 5, mockPostForModeration("post007", "Removed Post due to violations")),
-    generateMockModerationItem("mod008", "usr008", "User", "ActionTaken_UserBanned", 10, mockUserForModeration("usr008", "BannedUserAccount")),
-    generateMockModerationItem("mod009", "cmt009", "Comment", "Resolved", 4, mockCommentForModeration("cmt009", "This was a misunderstanding.")),
-];
+type ModerationItemData = Report & DraggableItem
 
 ModerationStatusSchema.options.map(status => ({
     value: status,
@@ -119,9 +71,8 @@ ModerationItemTypeSchema.options.map(type => ({
 }));
 
 export function ModerationTable() {
-    const [data, setData] = React.useState<ModerationItemData[]>(() => mockModerationData);
+    const [data, setData] = React.useState<ModerationItemData[]>(reportData);
     const [rowSelection, setRowSelection] = React.useState<any>({});
-    const [columnFilters, setColumnFilters] = React.useState<any[]>([]);
 
 
     const handleUpdateStatus = React.useCallback((itemIds: string[], newStatus: ModerationStatus) => {
@@ -147,28 +98,13 @@ export function ModerationTable() {
 
     return (
         <div className="space-y-4 p-4">
-            <div className="flex items-center justify-between gap-2">
-                <Input
-                    placeholder="Filter reports by item, reporter, reason..."
-                    value={(columnFilters.find(f => f.id === 'itemPreview')?.[0] as string) ?? ''}
-                    onChange={(event) => {
-                        const newFilters = columnFilters.filter(f => f.id !== 'itemPreview');
-                        if (event.target.value) {
-                            newFilters.push({id: 'itemPreview', value: event.target.value});
-                        }
-                        setColumnFilters(newFilters);
-                        toast.info("Global text search needs TanStack Table's globalFilter setup.")
-                    }}
-                    className="h-9 max-w-sm"
-                />
-            </div>
             <DataTable
                 columns={columns}
                 data={data}
                 setData={setData}
                 enableDnd={true}
                 enableRowSelection={true}
-                columnFilters={columnFilters}
+                showGlobalFilter={true}
                 filterPlaceholder="Search user, post, comment reports..."
             />
             {selectedRowIds().length > 0 && (
