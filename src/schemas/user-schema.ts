@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
-export const UserStatus = z.enum(["Active", "Pending", "Suspended", "Deactivated"])
+export const UserStatusSchema = z.enum(["Active", "Pending", "Suspended", "Deactivated"])
+export const UserRoleSchema = z.enum(["Owner", "Admin", "Moderator", "User"]);
 
 export const UserSchema = z.object({
     id: z.string(),
@@ -37,10 +38,13 @@ export const UserSummaryAdminSchema = UserSchema.pick({
     profileImage: true,
     coverImage: true,
     createdAt: true,
+    email: true,
 }).extend({
-    status: UserStatus,
+    status: UserStatusSchema,
     lastLogin: z.string().optional(),
+    role: z.string().optional(),
 });
 
 export type User = z.infer<typeof UserSchema>;
 export type UserSummary = z.infer<typeof UserSummarySchema>;
+export type UserSummaryAdmin = z.infer<typeof UserSummaryAdminSchema>;

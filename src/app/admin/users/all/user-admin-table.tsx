@@ -4,7 +4,6 @@ import React from "react";
 import {ColumnDef} from "@tanstack/react-table";
 import {CheckCircle2Icon, LoaderIcon, MailIcon, MoreVerticalIcon, PlusIcon,} from "lucide-react";
 import {toast} from "sonner";
-import {z} from "zod";
 
 import {Badge} from "@/components/ui/badge";
 import {Button} from "@/components/ui/button";
@@ -17,42 +16,31 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {Tabs, TabsContent, TabsList, TabsTrigger,} from "@/components/ui/tabs";
-import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar"; // For profile images
+import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {DataTable} from "@/components/ui/data-table";
 import {DraggableItem, DragHandleCell,} from "@/components/common/dnd-table-components";
 import {DataTableColumnHeader} from "@/components/common/data-table-components";
 import {UserTableCellViewer} from "@/app/admin/users/all/user-table-cell-viewer";
+import {UserSummaryAdmin} from "@/schemas/user-schema";
 
-export const UserAdminSchema = z.object({
-    id: z.number(),
-    profileImage: z.string().optional(),
-    name: z.string(),
-    username: z.string(),
-    email: z.string().email(),
-    type: z.enum(["Admin", "Editor", "Viewer", "Support", "Billing"]),
-    status: z.enum(["Active", "Pending", "Suspended", "Deactivated"]),
-    createdAt: z.string(),
-    lastLogin: z.string().optional(),
-});
+export type UserAdminData = UserSummaryAdmin & DraggableItem;
 
-export type UserAdminData = z.infer<typeof UserAdminSchema> & DraggableItem;
-
-const mockUserAdminData: UserAdminData[] = [
-    { id: 1, profileImage: "https://avatar.vercel.sh/alice.png", name: "Alice Wonderland", username: "alicew", email: "alice@example.com", type: "Admin", status: "Active", createdAt: "2023-01-15T10:00:00Z", lastLogin: "2024-03-10T10:00:00Z" },
-    { id: 2, profileImage: "https://avatar.vercel.sh/bob.png", name: "Bob The Builder", username: "bobthebuilder", email: "bob@example.com", type: "Editor", status: "Pending", createdAt: "2023-02-20T11:30:00Z", lastLogin: "2024-03-09T11:30:00Z" },
-    { id: 3, name: "Charlie Brown", username: "charlieb", email: "charlie@example.com", type: "Viewer", status: "Active", createdAt: "2023-03-10T09:15:00Z", lastLogin: "2024-03-10T09:15:00Z" },
-    { id: 4, profileImage: "https://avatar.vercel.sh/diana.png", name: "Diana Prince", username: "wonderwoman", email: "diana@example.com", type: "Admin", status: "Suspended", createdAt: "2023-04-05T16:45:00Z" },
-    { id: 5, name: "Edward Scissorhands", username: "edwardscissor", email: "edward@example.com", type: "Editor", status: "Active", createdAt: "2023-05-12T14:00:00Z", lastLogin: "2024-03-08T14:00:00Z" },
-    { id: 6, profileImage: "https://avatar.vercel.sh/fiona.png", name: "Fiona Gallagher", username: "fionag", email: "fiona@example.com", type: "Support", status: "Active", createdAt: "2023-06-18T10:00:00Z", lastLogin: "2024-03-10T08:00:00Z" },
-    { id: 7, name: "George Costanza", username: "georgec", email: "george@example.com", type: "Billing", status: "Deactivated", createdAt: "2023-07-22T11:00:00Z" },
-    { id: 8, profileImage: "https://avatar.vercel.sh/harry.png", name: "Harry Potter", username: "hpotter", email: "harry@example.com", type: "Admin", status: "Active", createdAt: "2023-08-01T12:00:00Z", lastLogin: "2024-03-10T12:00:00Z" },
-    { id: 9, name: "Irene Adler", username: "ireneadler", email: "irene@example.com", type: "Editor", status: "Pending", createdAt: "2023-09-10T13:00:00Z" },
-    { id: 10, profileImage: "https://avatar.vercel.sh/jack.png", name: "Jack Sparrow", username: "captainjack", email: "jack@example.com", type: "Viewer", status: "Active", createdAt: "2023-10-15T14:00:00Z", lastLogin: "2024-03-05T14:00:00Z" },
-    { id: 11, name: "Kevin McCallister", username: "kevinhome", email: "kevin@example.com", type: "Support", status: "Suspended", createdAt: "2023-11-20T15:00:00Z", lastLogin: "2024-02-20T15:00:00Z" },
-    { id: 12, profileImage: "https://avatar.vercel.sh/lucy.png", name: "Lucy Pevensie", username: "lucyp", email: "lucy@example.com", type: "Billing", status: "Active", createdAt: "2023-12-01T16:00:00Z", lastLogin: "2024-03-10T10:30:00Z" },
-    { id: 13, name: "Michael Scott", username: "michaelscott", email: "michael@example.com", type: "Admin", status: "Active", createdAt: "2024-01-05T17:00:00Z", lastLogin: "2024-03-10T17:00:00Z" },
-    { id: 14, profileImage: "https://avatar.vercel.sh/neo.png", name: "Neo Anderson", username: "theone", email: "neo@example.com", type: "Editor", status: "Pending", createdAt: "2024-02-10T18:00:00Z" },
-    { id: 15, name: "Olivia Benson", username: "oliviab", email: "olivia@example.com", type: "Viewer", status: "Active", createdAt: "2024-03-01T19:00:00Z", lastLogin: "2024-03-09T19:00:00Z" },
+const mockUserAdminData: UserSummaryAdmin[] = [
+    { id: '1', profileImage: "https://avatar.vercel.sh/alice.png", displayName: "Alice Wonderland", username: "alicew", email: "alice@example.com", role: "Admin", status: "Active", createdAt: "2023-01-15T10:00:00Z", lastLogin: "2024-03-10T10:00:00Z", coverImage: "" },
+    { id: '2', profileImage: "https://avatar.vercel.sh/bob.png", displayName: "Bob The Builder", username: "bobthebuilder", email: "bob@example.com", role: "Editor", status: "Pending", createdAt: "2023-02-20T11:30:00Z", lastLogin: "2024-03-09T11:30:00Z", coverImage: "" },
+    { id: '3', profileImage: "https://avatar.vercel.sh/diana.png",displayName: "Charlie Brown", username: "charlieb", email: "charlie@example.com", role: "Viewer", status: "Active", createdAt: "2023-03-10T09:15:00Z", lastLogin: "2024-03-10T09:15:00Z", coverImage: "" },
+    { id: '4', profileImage: "https://avatar.vercel.sh/diana.png", displayName: "Diana Prince", username: "wonderwoman", email: "diana@example.com", role: "Admin", status: "Suspended", createdAt: "2023-04-05T16:45:00Z", coverImage: "" },
+    { id: '5', profileImage: "https://avatar.vercel.sh/diana.png",displayName: "Edward Scissorhands", username: "edwardscissor", email: "edward@example.com", role: "Editor", status: "Active", createdAt: "2023-05-12T14:00:00Z", lastLogin: "2024-03-08T14:00:00Z" , coverImage: ""},
+    { id: '6', profileImage: "https://avatar.vercel.sh/fiona.png", displayName: "Fiona Gallagher", username: "fionag", email: "fiona@example.com", role: "Support", status: "Active", createdAt: "2023-06-18T10:00:00Z", lastLogin: "2024-03-10T08:00:00Z", coverImage: "" },
+    { id: '7', profileImage: "https://avatar.vercel.sh/diana.png",displayName: "George Costanza", username: "georgec", email: "george@example.com", role: "Billing", status: "Deactivated", createdAt: "2023-07-22T11:00:00Z" , coverImage: ""},
+    { id: '8', profileImage: "https://avatar.vercel.sh/harry.png", displayName: "Harry Potter", username: "hpotter", email: "harry@example.com", role: "Admin", status: "Active", createdAt: "2023-08-01T12:00:00Z", lastLogin: "2024-03-10T12:00:00Z", coverImage: "" },
+    { id: '9', profileImage: "https://avatar.vercel.sh/diana.png",displayName: "Irene Adler", username: "ireneadler", email: "irene@example.com", role: "Editor", status: "Pending", createdAt: "2023-09-10T13:00:00Z" , coverImage: ""},
+    { id: '10', profileImage: "https://avatar.vercel.sh/jack.png", displayName: "Jack Sparrow", username: "captainjack", email: "jack@example.com", role: "Viewer", status: "Active", createdAt: "2023-10-15T14:00:00Z", lastLogin: "2024-03-05T14:00:00Z", coverImage: "" },
+    { id: '11', profileImage: "https://avatar.vercel.sh/diana.png",displayName: "Kevin McCallister", username: "kevinhome", email: "kevin@example.com", role: "Support", status: "Suspended", createdAt: "2023-11-20T15:00:00Z", lastLogin: "2024-02-20T15:00:00Z" , coverImage: ""},
+    { id: '12', profileImage: "https://avatar.vercel.sh/lucy.png", displayName: "Lucy Pevensie", username: "lucyp", email: "lucy@example.com", role: "Billing", status: "Active", createdAt: "2023-12-01T16:00:00Z", lastLogin: "2024-03-10T10:30:00Z", coverImage: "" },
+    { id: '13', profileImage: "https://avatar.vercel.sh/diana.png",displayName: "Michael Scott", username: "michaelscott", email: "michael@example.com", role: "Admin", status: "Active", createdAt: "2024-01-05T17:00:00Z", lastLogin: "2024-03-10T17:00:00Z", coverImage: "" },
+    { id: '14', profileImage: "https://avatar.vercel.sh/neo.png", displayName: "Neo Anderson", username: "theone", email: "neo@example.com", role: "Editor", status: "Pending", createdAt: "2024-02-10T18:00:00Z" , coverImage: ""},
+    { id: '15', profileImage: "https://avatar.vercel.sh/diana.png", displayName: "Olivia Benson", username: "oliviab", email: "olivia@example.com", role: "Viewer", status: "Active", createdAt: "2024-03-01T19:00:00Z", lastLogin: "2024-03-09T19:00:00Z" , coverImage: ""},
 ];
 
 export function UserAdminTable() {
@@ -103,12 +91,12 @@ export function UserAdminTable() {
                 return (
                     <div className="flex items-center gap-1 py-0.5 min-w-[200px]">
                         <Avatar className="h-9 w-9 flex-shrink-0">
-                            <AvatarImage src={user.profileImage} alt={user.name} />
-                            <AvatarFallback>{user.name.split(' ').map(n=>n[0]).join('').toUpperCase()}</AvatarFallback>
+                            <AvatarImage src={user.profileImage} alt={user.displayName} />
+                            <AvatarFallback>{user.displayName.split(' ').map(n=>n[0]).join('').toUpperCase()}</AvatarFallback>
                         </Avatar>
                         <div className="flex flex-col gap-1">
-                            {/* TableCellViewer provides its own trigger (user.name) */}
-                            <UserTableCellViewer item={user} onUpdate={handleUpdateItem} />
+                            {/* TableCellViewer provides its own trigger (user.displayName) */}
+                            <UserTableCellViewer onUpdate={handleUpdateItem} />
                             <span className="text-xs text-muted-foreground italic">@{user.username}</span>
                         </div>
                     </div>
@@ -131,7 +119,7 @@ export function UserAdminTable() {
         {
             accessorKey: "type",
             header: ({ column }) => <DataTableColumnHeader column={column} title="Role" />,
-            cell: ({ row }) => <Badge variant="outline" className="px-2 py-0.5 text-xs">{row.original.type}</Badge>,
+            cell: ({ row }) => <Badge variant="outline" className="px-2 py-0.5 text-xs">{row.original.role}</Badge>,
         },
         {
             accessorKey: "status",
@@ -168,11 +156,11 @@ export function UserAdminTable() {
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-32">
-                            <DropdownMenuItem onSelect={() => toast.info(`Editing ${row.original.name}`)}>Edit</DropdownMenuItem>
-                            <DropdownMenuItem onSelect={() => toast.info(`Viewing details for ${row.original.name}`)}>View Details</DropdownMenuItem>
+                            <DropdownMenuItem onSelect={() => toast.info(`Editing ${row.original.displayName}`)}>Edit</DropdownMenuItem>
+                            <DropdownMenuItem onSelect={() => toast.info(`Viewing details for ${row.original.displayName}`)}>View Details</DropdownMenuItem>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem className="text-red-600 hover:!text-red-600 hover:!bg-red-100 dark:hover:!bg-red-700/50" onSelect={() => {
-                                toast.error(`Deleting ${row.original.name}`);
+                                toast.error(`Deleting ${row.original.displayName}`);
                                 setData(prev => prev.filter(item => item.id !== row.original.id));
                             }}>
                                 Delete

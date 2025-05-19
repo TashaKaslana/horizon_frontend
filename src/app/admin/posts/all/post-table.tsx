@@ -31,7 +31,6 @@ import { PostData } from "./post-schema";
 import { PostDetailViewerSheet } from "./post-detail-viewer-sheet";
 import { CreatePostSheet } from "./create-post-sheet";
 import { UserTableCellViewer } from "../../users/all/user-table-cell-viewer";
-import { UserAdminData, UserAdminSchema } from "../../users/all/user-admin-table";
 import {getFixedNumberFormat} from "@/lib/utils";
 
 const mockPostsData: PostData[] = [
@@ -178,7 +177,7 @@ export function PostTable() {
                             </div>
                         }
                         <div className="flex flex-col gap-0.5">
-                            <PostDetailViewerSheet post={post} onUpdateAction={handleUpdatePost} />
+                            <PostDetailViewerSheet onUpdateAction={handleUpdatePost} />
                             {post.description && <span className="text-xs text-muted-foreground truncate max-w-48" title={post.description}>{post.description}</span>}
                         </div>
                     </div>
@@ -200,18 +199,6 @@ export function PostTable() {
             header: ({ column }) => <DataTableColumnHeader column={column} title="Author" />,
             cell: ({ row }) => {
                 const user = row.original.user;
-                const authorPlaceholder: UserAdminData = {
-                    id: user.id,
-                    name: user.displayName,
-                    username: user.username.toLowerCase().replace(/\s+/g, '') || 'author',
-                    email: 'author@example.com',
-                    profileImage: user.profileImage,
-                    type: UserAdminSchema.shape.type.options[0],
-                    status: UserAdminSchema.shape.status.options[0],
-                    createdAt: new Date(0).toISOString(),
-                    lastLogin: undefined,
-                };
-
                 return (
                     <div className="flex items-center gap-2 py-0.5 min-w-[200px]">
                         <Avatar className="h-9 w-9 flex-shrink-0">
@@ -219,7 +206,6 @@ export function PostTable() {
                         </Avatar>
                         <div className="flex flex-col gap-0.5">
                             <UserTableCellViewer
-                                item={authorPlaceholder}
                                 onUpdate={() => {
                                     toast.info("Author details are managed in the Users section.");
                                 }}
