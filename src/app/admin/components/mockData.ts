@@ -1,6 +1,5 @@
 import {CommentResponseFull} from "@/schemas/comment-schema";
 import {Report} from "@/schemas/report-schema";
-import {undefined} from "zod";
 
 export const postData = {
     id: 'post-001',

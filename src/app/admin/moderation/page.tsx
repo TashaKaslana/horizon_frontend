@@ -1,7 +1,9 @@
-import {redirect} from "next/navigation";
+import ModerationContainer from "@/app/admin/moderation/moderation-container";
 
 const Page = () => {
-    redirect('/admin/moderation/all');
+    return (
+        <ModerationContainer/>
+    )
 }
 
-export default Page
+export default Page;

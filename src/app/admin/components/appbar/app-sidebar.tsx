@@ -110,24 +110,6 @@ const data = {
             title: 'Moderation',
             url: '/admin/moderation',
             icon: LayoutDashboardIcon,
-            subItems: [
-                {
-                    title: 'All Reports',
-                    url: '/admin/moderation/all',
-                },
-                {
-                    title: 'User Reports',
-                    url: '/admin/moderation/user-reports',
-                },
-                {
-                    title: 'Post Reports',
-                    url: '/admin/moderation/post-reports',
-                },
-                {
-                    title: 'Comment Reports',
-                    url: '/admin/moderation/comment-reports',
-                },
-            ]
         }
     ],
     navClouds: [

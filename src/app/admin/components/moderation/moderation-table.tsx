@@ -23,10 +23,9 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {DataTable} from "@/components/ui/data-table";
-import {getModerationTableColumns} from "@/app/admin/moderation/all/moderation-table-columns";
+import {getModerationTableColumns} from "@/app/admin/components/moderation/moderation-table-columns";
 import {ModerationItemTypeSchema, ModerationStatus, ModerationStatusSchema, Report} from "@/schemas/report-schema";
 import {DraggableItem} from "@/components/common/dnd-table-components";
-import {reportData} from "@/app/admin/components/mockData";
 
 type ModerationItemData = Report & DraggableItem
 
@@ -70,7 +69,13 @@ ModerationItemTypeSchema.options.map(type => ({
     })()
 }));
 
-export function ModerationTable() {
+type ModerationTableProps = {
+    data: ModerationItemData[];
+    onUpdateStatusAction?: (itemIds: string[], newStatus: ModerationStatus) => void;
+    onDeleteEntriesAction?: (itemIds: string[]) => void;
+}
+
+export function ModerationTable({data: reportData}: ModerationTableProps) {
     const [data, setData] = React.useState<ModerationItemData[]>(reportData);
     const [rowSelection, setRowSelection] = React.useState<any>({});
 
