@@ -209,7 +209,8 @@ export function PostTable() {
                                 onUpdate={() => {
                                     toast.info("Author details are managed in the Users section.");
                                 }}
-                            />
+                                userId={user.id}
+                                initialDisplayName={user.displayName}                            />
                             <span className="text-xs text-muted-foreground">ID: {user.id}</span>
                         </div>
                     </div>
@@ -310,7 +311,6 @@ export function PostTable() {
                 enableDnd={true}
                 enableRowSelection={true}
                 filterPlaceholder="Search posts by title, author, tags..."
-                searchableColumn="title"
             />
         </div>
     );

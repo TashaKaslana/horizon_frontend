@@ -10,6 +10,8 @@ export const PostCategoryEnum = z.enum(["Technology", "Lifestyle", "Travel", "Bu
 
 export type PostData = z.infer<typeof PostSchema> & DraggableItem;
 
+export type PostDataWithMetadata = PostData & { views: number; likes: number; comments: number };
+
 export const PostFormSchema = PostSchema.extend({
     tagsInput: z.string().optional(),
 });

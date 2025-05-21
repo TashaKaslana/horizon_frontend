@@ -35,7 +35,7 @@ import {
 } from "@/components/ui/sheet";
 import {Separator} from "@/components/ui/separator";
 import {Badge} from "@/components/ui/badge";
-import {PostData, PostStatusEnum, PostCategoryEnum, PostFormData} from "./post-schema";
+import {PostData, PostStatusEnum, PostCategoryEnum, PostFormData, PostDataWithMetadata} from "./post-schema";
 import {PostSchema} from "@/schemas/post-schema";
 import {postData} from "@/app/admin/components/mockData"; // Adjust path as needed
 
@@ -50,7 +50,7 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
                                                                                 onUpdateAction,
                                                                                 children,
                                                                             }) => {
-    const [post, setPost] = React.useState<PostData>({} as PostData);
+    const [post, setPost] = React.useState<PostDataWithMetadata>({} as PostDataWithMetadata);
     const [isEditing, setIsEditing] = React.useState(false);
     const [formData, setFormData] = React.useState<PostFormData>({
         ...post,
@@ -61,8 +61,8 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
 
 
     React.useEffect(() => {
-        setPost(postData);
-    }, []);
+        setPost({...postData, id: postId, views: 0, likes: 0, comments: 0});
+    }, [postId]);
 
     React.useEffect(() => {
         setFormData({
@@ -241,7 +241,7 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
                                    value={formData.updatedAt ? new Date(formData.updatedAt).toISOString().substring(0, 16) : ""}
                                    onChange={(e) => {
                                        const dateVal = e.target.value ? new Date(e.target.value).toISOString() : undefined;
-                                       setFormData(prev => ({...prev, updatedAt: dateVal}));
+                                       setFormData(prev => ({...prev, updatedAt: dateVal ?? ''}));
                                        if (errors.updatedAt) {
                                            setErrors(prevErrors => ({...prevErrors, updatedAt: undefined}));
                                        }
@@ -277,7 +277,7 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
                                 className="h-4 w-4 text-muted-foreground"/>)}
                             {renderInfoField("Status", post.status, <CheckIcon
                                 className="h-4 w-4 text-muted-foreground"/>)}
-                            {renderInfoField("Views", post?.viewCount ?? 0, <EyeIcon
+                            {renderInfoField("Views", post?.views ?? 0, <EyeIcon
                                 className="h-4 w-4 text-muted-foreground"/>)}
                             {post.tags && post.tags.length > 0 && (
                                 <div className="flex items-start gap-2">
