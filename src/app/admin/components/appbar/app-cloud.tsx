@@ -28,12 +28,12 @@ interface NavCloudSubItemType {
     url: string;
 }
 
-export function NavCloud({ items }: { items: NavCloudItemType[] }) {
+export function NavSystem({ items }: { items: NavCloudItemType[] }) {
     const pathname = usePathname();
 
     return (
         <SidebarGroup>
-            <SidebarGroupLabel>Cloud</SidebarGroupLabel>
+            <SidebarGroupLabel>System</SidebarGroupLabel>
             <SidebarGroupContent className="flex flex-col gap-2">
                 <SidebarMenu>
                     {items.map((item) => {

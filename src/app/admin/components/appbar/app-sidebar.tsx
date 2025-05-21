@@ -14,7 +14,7 @@ import {
     MessageSquareIcon,
     SettingsIcon,
     UsersIcon,
-    BellIcon,
+    ShieldCheckIcon, ServerIcon,
 } from "lucide-react"
 
 import {
@@ -31,7 +31,7 @@ import {NavDocuments} from "@/app/admin/components/appbar/app-document";
 import {NavMain} from "@/app/admin/components/appbar/app-main";
 import {NavSecondary} from "@/app/admin/components/appbar/app-secondary";
 import {useEffect} from "react";
-import { NavCloud } from "@/app/admin/components/appbar/app-cloud"; // Import NavCloud
+import { NavSystem } from "@/app/admin/components/appbar/app-cloud";
 
 const data = {
     user: {
@@ -50,78 +50,55 @@ const data = {
             url: "/admin/users",
             icon: UsersIcon,
             subItems: [
-                {
-                    title: "All Users",
-                    url: "/admin/users/all",
-                },
-                {
-                    title: "Reports",
-                    url: "/admin/users/reports",
-                },
-                {
-                    title: "Roles",
-                    url: "/admin/users/roles",
-                },
-                {
-                    title: "Permissions",
-                    url: "/admin/users/permissions",
-                },
-            ]
+                { title: "All Users", url: "/admin/users/all" },
+                { title: "Reports", url: "/admin/users/reports" },
+                { title: "Roles", url: "/admin/users/roles" },
+                { title: "Permissions", url: "/admin/users/permissions" },
+            ],
         },
         {
             title: "Posts",
             url: "/admin/posts",
             icon: FileTextIcon,
             subItems: [
-                {
-                    title: "All Posts",
-                    url: "/admin/posts/all",
-                },
-                {
-                    title: "Reports",
-                    url: "/admin/posts/reports",
-                },
-                {
-                    title: "Categories",
-                    url: "/admin/posts/categories",
-                },
-                {
-                    title: "Tags",
-                    url: "/admin/posts/tags",
-                },
-            ]
+                { title: "All Posts", url: "/admin/posts/all" },
+                { title: "Reports", url: "/admin/posts/reports" },
+                { title: "Categories", url: "/admin/posts/categories" },
+                { title: "Tags", url: "/admin/posts/tags" },
+            ],
         },
         {
             title: "Comments",
             url: "/admin/comments",
             icon: MessageSquareIcon,
             subItems: [
-                {
-                    title: "All Comments",
-                    url: "/admin/comments/all",
-                },
-                {
-                    title: "Reports",
-                    url: "/admin/comments/reports",
-                },
-            ]
+                { title: "All Comments", url: "/admin/comments/all" },
+                { title: "Reports", url: "/admin/comments/reports" },
+            ],
         },
         {
-            title: 'Moderation',
-            url: '/admin/moderation',
-            icon: LayoutDashboardIcon,
-        }
+            title: "Moderation",
+            url: "/admin/moderation",
+            icon: ShieldCheckIcon,
+            subItems: [
+                { title: "All Reports", url: "/admin/moderation/reports" },
+                { title: "User Reports", url: "/admin/users/reports" },
+                { title: "Post Reports", url: "/admin/posts/reports" },
+                { title: "Comment Reports", url: "/admin/comments/reports" },
+                { title: "Notifications", url: "/admin/notifications" },
+            ],
+        },
     ],
-    navClouds: [
+
+    navSystem: [
         {
-            title: "Notifications",
-            icon: BellIcon,
+            title: "System",
+            icon: ServerIcon,
             url: "#",
             items: [
-                {
-                    title: "All Notifications",
-                    url: "/admin/notifications",
-                },
+                { title: "Status & Uptime", url: "/admin/system/status" },
+                { title: "Maintenance Mode", url: "/admin/system/maintenance" },
+                { title: "External Services", url: "/admin/system/services" },
             ],
         },
         {
@@ -129,17 +106,12 @@ const data = {
             icon: ListIcon,
             url: "#",
             items: [
-                {
-                    title: "System Logs",
-                    url: "/admin/logs/system",
-                },
-                {
-                    title: "User Activity",
-                    url: "/admin/logs/activity",
-                },
+                { title: "System Logs", url: "/admin/logs/system" },
+                { title: "User Activity", url: "/admin/logs/activity" },
             ],
         },
     ],
+
     navSecondary: [
         {
             title: "Settings",
@@ -157,6 +129,7 @@ const data = {
             icon: SearchIcon,
         },
     ],
+
     documents: [
         {
             name: "User Guide",
@@ -174,7 +147,7 @@ const data = {
             icon: DatabaseIcon,
         },
     ],
-}
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const [isCollapsible, setIsCollapsible] = React.useState(false)
@@ -207,7 +180,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             </SidebarHeader>
             <SidebarContent>
                 <NavMain items={data.navMain} />
-                <NavCloud items={data.navClouds} />
+                <NavSystem items={data.navSystem} />
                 <NavDocuments items={data.documents} />
                 <NavSecondary items={data.navSecondary} className="mt-auto" />
             </SidebarContent>
