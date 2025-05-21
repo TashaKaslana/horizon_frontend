@@ -106,3 +106,40 @@ export const reportData: Report[] = [{
     updatedAt: "2024-05-01T12:00:00Z",
     itemType: "User" as const,
 }];
+
+export const mockTagsData = [
+  {
+    id: "tag-001",
+    name: "Next.js",
+    slug: "next-js",
+    description: "A popular React framework for building server-side rendered and static web applications.",
+    postsCount: 120,
+    createdAt: "2023-05-10T08:00:00Z",
+    updatedAt: "2023-12-01T14:30:00Z",
+    createdBy: "user-admin-01",
+    updatedBy: "user-editor-02",
+  },
+  {
+    id: "tag-002",
+    name: "TypeScript",
+    slug: "typescript",
+    description: "A superset of JavaScript that adds static typing.",
+    postsCount: 250,
+    createdAt: "2022-11-20T10:15:00Z",
+    updatedAt: "2024-01-15T11:00:00Z",
+    createdBy: "user-dev-03",
+    updatedBy: "user-dev-03",
+  },
+  {
+    id: "tag-003",
+    name: "Tailwind CSS",
+    slug: "tailwind-css",
+    description: "A utility-first CSS framework for rapidly building custom user interfaces.",
+    postsCount: 180,
+    createdAt: "2023-02-01T16:45:00Z",
+    // updatedAt: undefined, // Example of optional field
+    createdBy: "user-designer-04",
+    // updatedBy: undefined, // Example of optional field
+  },
+];
+
