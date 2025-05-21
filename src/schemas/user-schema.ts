@@ -48,3 +48,23 @@ export const UserSummaryAdminSchema = UserSchema.pick({
 export type User = z.infer<typeof UserSchema>;
 export type UserSummary = z.infer<typeof UserSummarySchema>;
 export type UserSummaryAdmin = z.infer<typeof UserSummaryAdminSchema>;
+
+export const RoleSchema = z.object({
+    id: z.string().uuid(),
+    name: z.string(),
+    slug: z.string(),
+    description: z.string().optional(),
+    created_at: z.string().datetime(),
+});
+
+
+export const PermissionSchema = z.object({
+    id: z.string().uuid(),
+    name: z.string(),
+    slug: z.string(),
+    module: z.string(),
+    created_at: z.string().datetime(),
+});
+
+export type PermissionSummary = z.infer<typeof PermissionSchema>;
+export type RoleSummary = z.infer<typeof RoleSchema>;

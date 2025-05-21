@@ -2,6 +2,7 @@ import {CommentResponseFull} from "@/schemas/comment-schema";
 import { AdminNotification } from "@/schemas/notification-schema";
 import {Report} from "@/schemas/report-schema";
 import {LogEntry} from "@/schemas/log-schema";
+import {PermissionSummary, RoleSummary} from "@/schemas/user-schema";
 
 export const postData = {
     id: 'post-001',
@@ -251,4 +252,60 @@ export const mockErrors: LogEntry[] = [
         }
     },
 ];
+
+export const mockRoles : RoleSummary[] = [
+    {
+        id: "3a2b1c4d-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
+        name: "Admin",
+        slug: "admin",
+        description: "Full access to all system features",
+        created_at: new Date().toISOString()
+    },
+    {
+        id: "9f8e7d6c-5b4a-3c2d-1e0f-9a8b7c6d5e4f",
+        name: "Moderator",
+        slug: "moderator",
+        description: "Can manage content and users",
+        created_at: new Date().toISOString()
+    },
+    {
+        id: "6c5d4b3a-2e1f-0a9b-8c7d-6e5f4a3b2c1d",
+        name: "User",
+        slug: "user",
+        description: "Standard user role with basic access",
+        created_at: new Date().toISOString()
+    }
+];
+
+export const mockPermissions : PermissionSummary[] = [
+    {
+        id: "abcd1234-5678-90ef-ghij-klmnopqrstuv",
+        name: "Create Post",
+        slug: "create_post",
+        module: "posts",
+        created_at: new Date().toISOString()
+    },
+    {
+        id: "1234abcd-5678-ef90-ghij-klmnopqrstuv",
+        name: "Edit User",
+        slug: "edit_user",
+        module: "users",
+        created_at: new Date().toISOString()
+    },
+    {
+        id: "ef901234-abcd-5678-ghij-klmnopqrstuv",
+        name: "Delete Comment",
+        slug: "delete_comment",
+        module: "comments",
+        created_at: new Date().toISOString()
+    },
+    {
+        id: "ghij1234-abcd-5678-ef90-klmnopqrstuv",
+        name: "View Analytics",
+        slug: "view_analytics",
+        module: "dashboard",
+        created_at: new Date().toISOString()
+    }
+];
+
 
