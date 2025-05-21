@@ -7,7 +7,7 @@ import {DragHandleCell} from "@/components/common/dnd-table-components";
 import React from "react";
 import {TagRowData} from "@/app/admin/posts/tags/types";
 import {formatDateTS} from "@/lib/utils";
-import { MoreVerticalIcon, EditIcon, TrashIcon } from "lucide-react";
+import {MoreVerticalIcon, EditIcon, TrashIcon} from "lucide-react";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -15,8 +15,9 @@ import {
     DropdownMenuTrigger,
     DropdownMenuSeparator
 } from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
-import { toast } from "sonner";
+import {Button} from "@/components/ui/button";
+import {toast} from "sonner";
+import {TagDetailViewerSheet} from "@/app/admin/posts/tags/tag-detail-viewer-sheet";
 
 export const columns: ColumnDef<TagRowData>[] = [
     {
@@ -57,11 +58,15 @@ export const columns: ColumnDef<TagRowData>[] = [
         ),
         cell: ({row}) => {
             return (
-                <div className="flex space-x-2">
-          <span className="max-w-[300px] truncate font-medium">
-            {row.getValue("name")}
-          </span>
-                </div>
+                <TagDetailViewerSheet tagInitialData={row.original}
+                                      onUpdateAction={() => toast.info("Update not implemented")}
+                >
+                    <div className="flex space-x-2">
+                      <span className="max-w-[300px] truncate font-medium hover:underline">
+                        {row.getValue("name")}
+                      </span>
+                    </div>
+                </TagDetailViewerSheet>
             );
         },
         enableSorting: true,
@@ -83,7 +88,7 @@ export const columns: ColumnDef<TagRowData>[] = [
     {
         accessorKey: "postsCount",
         header: ({column}) => (
-            <DataTableColumnHeader column={column} title="# of Posts"/>
+            <DataTableColumnHeader column={column} title="Tag of Posts"/>
         ),
         cell: ({row}) => {
             return (
@@ -96,10 +101,10 @@ export const columns: ColumnDef<TagRowData>[] = [
     },
     {
         accessorKey: "createdBy",
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Created By" />
+        header: ({column}) => (
+            <DataTableColumnHeader column={column} title="Created By"/>
         ),
-        cell: ({ row }) => {
+        cell: ({row}) => {
             const createdById = row.getValue("createdBy") as string | undefined;
             return <div className="min-w-[100px] truncate">{createdById || "N/A"}</div>;
         },
@@ -120,7 +125,7 @@ export const columns: ColumnDef<TagRowData>[] = [
     {
         id: "actions",
         header: () => <div className="text-right">Actions</div>,
-        cell: ({ row }) => {
+        cell: ({row}) => {
             const tag = row.original;
 
             const handleEdit = () => {
@@ -135,18 +140,18 @@ export const columns: ColumnDef<TagRowData>[] = [
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="ghost" className="flex size-8 p-0 data-[state=open]:bg-muted">
-                                <MoreVerticalIcon className="size-4" />
+                                <MoreVerticalIcon className="size-4"/>
                                 <span className="sr-only">Open menu</span>
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-[160px]">
                             <DropdownMenuItem onSelect={handleEdit}>
-                                <EditIcon className="mr-2 h-4 w-4" />
+                                <EditIcon className="mr-2 h-4 w-4"/>
                                 Edit
                             </DropdownMenuItem>
-                            <DropdownMenuSeparator />
+                            <DropdownMenuSeparator/>
                             <DropdownMenuItem onSelect={handleDelete} className="text-red-600 focus:text-red-600">
-                                <TrashIcon className="mr-2 h-4 w-4" />
+                                <TrashIcon className="mr-2 h-4 w-4"/>
                                 Delete
                             </DropdownMenuItem>
                         </DropdownMenuContent>
