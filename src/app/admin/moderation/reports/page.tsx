@@ -1,4 +1,4 @@
-import ModerationContainer from "@/app/admin/moderation/moderation-container";
+import ModerationContainer from "@/app/admin/moderation/reports/moderation-container";
 
 const Page = () => {
     return (

@@ -1,5 +1,6 @@
 import {CommentResponseFull} from "@/schemas/comment-schema";
 import {Report} from "@/schemas/report-schema";
+import {AdminNotification} from "@/schemas/notification-schema";
 
 export const postData = {
     id: 'post-001',
@@ -141,5 +142,44 @@ export const mockTagsData = [
     createdBy: "user-designer-04",
     // updatedBy: undefined, // Example of optional field
   },
+];
+
+export const adminNotifications : AdminNotification[] = [
+    {
+        id: "notif-1",
+        title: "Post flagged multiple times",
+        message: "Post #8493 has been reported 5 times for hate speech.",
+        type: "report",
+        severity: "warning",
+        source: "ModerationService",
+        relatedType: "post",
+        relatedId: "8493",
+        isRead: false,
+        createdAt: "2025-05-17T10:45:00Z",
+    },
+    {
+        id: "notif-2",
+        title: "High Cloudinary usage",
+        message: "Cloudinary storage is at 91% of its capacity.",
+        type: "quota",
+        severity: "critical",
+        source: "StorageService",
+        relatedType: "storage",
+        relatedId: "cloudinary",
+        isRead: false,
+        createdAt: "2025-05-17T09:20:00Z",
+    },
+    {
+        id: "notif-3",
+        title: "API Gateway downtime",
+        message: "API Gateway returned 503 errors for 12 minutes.",
+        type: "system",
+        severity: "critical",
+        source: "GatewayService",
+        relatedType: "system",
+        relatedId: "gateway",
+        isRead: true,
+        createdAt: "2025-05-16T22:13:00Z",
+    },
 ];
 

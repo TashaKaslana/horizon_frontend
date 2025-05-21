@@ -1,5 +1,5 @@
-import {ModerationCardList} from "@/app/admin/moderation/moderation-card-list";
-import {ModerationChart} from "@/app/admin/moderation/moderation-chart";
+import {ModerationCardList} from "@/app/admin/moderation/reports/moderation-card-list";
+import {ModerationChart} from "@/app/admin/moderation/reports/moderation-chart";
 import {SiteHeader} from "@/app/admin/components/site-header";
 import {ModerationTable} from "@/app/admin/components/moderation/moderation-table";
 import {reportData} from "@/app/admin/components/mockData";

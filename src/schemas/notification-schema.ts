@@ -40,3 +40,30 @@ export const NotificationSchema = z.object({
 });
 
 export type Notification = z.infer<typeof NotificationSchema>;
+
+export const AdminNotificationSchema = z.object({
+    id: z.string(),
+    title: z.string(),
+    message: z.string(),
+
+    type: z.enum([
+        "report",
+        "system",
+        "auth",
+        "moderation",
+        "error",
+        "quota",
+    ]),
+    severity: z.enum(["info", "warning", "critical"]),
+
+    source: z.string().optional(),
+
+    relatedType: z.enum(["user", "post", "comment", "storage", "auth", "system"]).optional(),
+    relatedId: z.string().optional(),
+
+    isRead: z.boolean(),
+    createdAt: z.string(),
+});
+
+export type AdminNotification = z.infer<typeof AdminNotificationSchema>;
+

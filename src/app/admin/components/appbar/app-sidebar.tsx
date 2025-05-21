@@ -85,7 +85,7 @@ const data = {
                 { title: "User Reports", url: "/admin/users/reports" },
                 { title: "Post Reports", url: "/admin/posts/reports" },
                 { title: "Comment Reports", url: "/admin/comments/reports" },
-                { title: "Notifications", url: "/admin/notifications" },
+                { title: "Notifications", url: "/admin/moderation/notifications" },
             ],
         },
     ],
