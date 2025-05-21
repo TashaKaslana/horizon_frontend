@@ -277,12 +277,13 @@ export const mockRoles : RoleSummary[] = [
     }
 ];
 
-export const mockPermissions : PermissionSummary[] = [
+export const mockPermissions: PermissionSummary[] = [
     {
         id: "abcd1234-5678-90ef-ghij-klmnopqrstuv",
         name: "Create Post",
         slug: "create_post",
         module: "posts",
+        description: "Allows user to create new posts",
         created_at: new Date().toISOString()
     },
     {
@@ -290,6 +291,7 @@ export const mockPermissions : PermissionSummary[] = [
         name: "Edit User",
         slug: "edit_user",
         module: "users",
+        description: "Grants permission to modify user information",
         created_at: new Date().toISOString()
     },
     {
@@ -297,6 +299,7 @@ export const mockPermissions : PermissionSummary[] = [
         name: "Delete Comment",
         slug: "delete_comment",
         module: "comments",
+        description: "Allows removal of user comments",
         created_at: new Date().toISOString()
     },
     {
@@ -304,8 +307,8 @@ export const mockPermissions : PermissionSummary[] = [
         name: "View Analytics",
         slug: "view_analytics",
         module: "dashboard",
+        description: "Access to view platform analytics and reports",
         created_at: new Date().toISOString()
     }
 ];
-
 

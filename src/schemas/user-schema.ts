@@ -61,6 +61,7 @@ export const RoleSchema = z.object({
 export const PermissionSchema = z.object({
     id: z.string().uuid(),
     name: z.string(),
+    description: z.string().optional(),
     slug: z.string(),
     module: z.string(),
     created_at: z.string().datetime(),

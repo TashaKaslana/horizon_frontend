@@ -15,7 +15,7 @@ export const RolesTable = () => {
     
     return (
         <div className={'space-y-4 p-4'}>
-            <div className={'w-full flex '}>
+            <div className={'w-full flex justify-end'}>
                 <AddRoleSheet>
                     <Button>Add new role</Button>
                 </AddRoleSheet>
