@@ -104,11 +104,7 @@ const data = {
         {
             title: "Logs",
             icon: ListIcon,
-            url: "#",
-            items: [
-                { title: "System Logs", url: "/admin/logs/system" },
-                { title: "User Activity", url: "/admin/logs/activity" },
-            ],
+            url: "/admin/logs",
         },
     ],
 

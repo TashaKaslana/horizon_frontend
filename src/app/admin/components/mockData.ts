@@ -1,5 +1,6 @@
 import {CommentResponseFull} from "@/schemas/comment-schema";
 import {Report} from "@/schemas/report-schema";
+import {LogEntry} from "@/schemas/log-schema";
 
 export const postData = {
     id: 'post-001',
@@ -141,5 +142,73 @@ export const mockTagsData = [
     createdBy: "user-designer-04",
     // updatedBy: undefined, // Example of optional field
   },
+];
+
+
+export const mockActivity: LogEntry[] = [
+    {
+        id: "log_001",
+        timestamp: new Date().toISOString(),
+        severity: "info",
+        message: "Comment successfully posted",
+        source: "CommentService",
+        userId: "user_123",
+        context: {
+            commentId: "cmt_987",
+            postId: "post_456"
+        }
+    },
+]
+
+export const mockSystemActivity: LogEntry[] = [
+    {
+        id: "log_002",
+        timestamp: new Date().toISOString(),
+        severity: "warning",
+        message: "High memory usage detected",
+        source: "SystemMonitor",
+        userId: undefined,
+        context: {
+            serverId: "server_01",
+            memoryUsage: "85%"
+        }
+    },
+    {
+        id: "log_003",
+        timestamp: new Date().toISOString(),
+        severity: "error",
+        message: "Database connection failed",
+        source: "DatabaseService",
+        userId: undefined,
+        context: {
+            dbInstanceId: "db_01"
+        }
+    },
+];
+
+export const mockErrors: LogEntry[] = [
+    {
+        id: "log_004",
+        timestamp: new Date().toISOString(),
+        severity: "critical",
+        message: "Unhandled exception in video processing",
+        source: "VideoService",
+        userId: "user_456",
+        context: {
+            videoId: "vid_123",
+            errorDetails: "Stack trace here"
+        }
+    },
+    {
+        id: "log_005",
+        timestamp: new Date().toISOString(),
+        severity: "error",
+        message: "Failed to send notification email",
+        source: "NotificationService",
+        userId: undefined,
+        context: {
+            emailId: "email_789"
+        }
+    },
 ];
 
