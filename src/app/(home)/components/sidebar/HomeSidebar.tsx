@@ -5,7 +5,7 @@ import {HomeSidebarFooter} from "@/app/(home)/components/sidebar/HomeSidebarFoot
 
 const HomeSidebar = () => {
     return (
-        <Sidebar>
+        <Sidebar collapsible={'icon'}>
             <HomeSidebarHeader/>
             <HomeSidebarContent/>
             <HomeSidebarFooter/>
