@@ -20,7 +20,7 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { PermissionSchema } from "@/schemas/user-schema";
 
-const CreatePermissionFormSchema = PermissionSchema.omit({ id: true, created_at: true });
+const CreatePermissionFormSchema = PermissionSchema.omit({ id: true, createdAt: true });
 type CreatePermissionFormValues = z.infer<typeof CreatePermissionFormSchema>;
 
 interface AddPermissionSheetProps {

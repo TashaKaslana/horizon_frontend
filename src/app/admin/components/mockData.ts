@@ -284,7 +284,7 @@ export const mockPermissions: PermissionSummary[] = [
         slug: "create_post",
         module: "posts",
         description: "Allows user to create new posts",
-        created_at: new Date().toISOString()
+        createdAt: new Date().toISOString()
     },
     {
         id: "1234abcd-5678-ef90-ghij-klmnopqrstuv",
@@ -292,7 +292,7 @@ export const mockPermissions: PermissionSummary[] = [
         slug: "edit_user",
         module: "users",
         description: "Grants permission to modify user information",
-        created_at: new Date().toISOString()
+        createdAt: new Date().toISOString()
     },
     {
         id: "ef901234-abcd-5678-ghij-klmnopqrstuv",
@@ -300,7 +300,7 @@ export const mockPermissions: PermissionSummary[] = [
         slug: "delete_comment",
         module: "comments",
         description: "Allows removal of user comments",
-        created_at: new Date().toISOString()
+        createdAt: new Date().toISOString()
     },
     {
         id: "ghij1234-abcd-5678-ef90-klmnopqrstuv",
@@ -308,7 +308,7 @@ export const mockPermissions: PermissionSummary[] = [
         slug: "view_analytics",
         module: "dashboard",
         description: "Access to view platform analytics and reports",
-        created_at: new Date().toISOString()
+        createdAt: new Date().toISOString()
     }
 ];
 

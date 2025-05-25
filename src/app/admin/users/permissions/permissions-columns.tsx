@@ -4,7 +4,6 @@ import {ColumnDef} from "@tanstack/react-table";
 import {Checkbox} from "@/components/ui/checkbox";
 import {DataTableColumnHeader} from "@/components/common/data-table-components";
 import React from "react";
-import {PermissionSummary} from "@/schemas/user-schema";
 import {formatDateTS} from "@/lib/utils";
 import {MoreVerticalIcon, EditIcon, TrashIcon, EyeIcon} from "lucide-react";
 import {
@@ -17,8 +16,12 @@ import {
 import {Button} from "@/components/ui/button";
 import {toast} from "sonner";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
+import {PermissionDto} from "@/api/client";
+import {DraggableItem} from "@/components/common/dnd-table-components";
 
-export const permissionsColumns: ColumnDef<PermissionSummary>[] = [
+type PermissionDraggable = PermissionDto & DraggableItem;
+
+export const permissionsColumns: ColumnDef<PermissionDraggable>[] = [
     {
         id: "select",
         header: ({table}) => (
@@ -43,6 +46,21 @@ export const permissionsColumns: ColumnDef<PermissionSummary>[] = [
         enableSorting: false,
         enableHiding: false,
         size: 40,
+    },
+    {
+        accessorKey: "id",
+        header: ({column}) => (
+            <DataTableColumnHeader column={column} title="ID"/>
+        ),
+        cell: ({row}) => {
+            return (
+                <div className="max-w-[100px] truncate">
+                    {row.getValue("id")}
+                </div>
+            );
+        },
+        enableSorting: true,
+        enableHiding: true,
     },
     {
         accessorKey: "name",
@@ -114,13 +132,14 @@ export const permissionsColumns: ColumnDef<PermissionSummary>[] = [
         enableSorting: true,
     },
     {
-        accessorKey: "created_at",
+        accessorKey: "createdAt",
         header: ({column}) => (
             <DataTableColumnHeader column={column} title="Created At"/>
         ),
         cell: ({row}) => {
-            const dateValue = row.getValue("created_at") as string | undefined;
-            const formattedDate = dateValue ? formatDateTS(new Date(dateValue)) : "N/A";
+            const dateValue = row.getValue("createdAt") as Date | undefined;
+            const formattedDate = dateValue ? formatDateTS(dateValue) : "N/A";
+
             return <div className="min-w-[150px]">{formattedDate}</div>;
         },
         enableSorting: true,
@@ -133,8 +152,11 @@ export const permissionsColumns: ColumnDef<PermissionSummary>[] = [
 
             const handleViewDetails = () => {
                 toast.info(`Viewing permission: ${permission.name}`, {
-                    description: <pre
-                        className="max-h-60 overflow-y-auto bg-muted p-2 rounded-md">{JSON.stringify(permission, null, 2)}</pre>
+                    description:
+                        <div className={'flex flex-1'}>
+                            <pre
+                                className="max-h-60 overflow-y-auto bg-muted p-2 rounded-md break-words">{JSON.stringify(permission, null, 2)}</pre>
+                        </div>
                 });
             };
 

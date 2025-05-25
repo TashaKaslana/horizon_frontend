@@ -64,7 +64,7 @@ export const PermissionSchema = z.object({
     description: z.string().optional(),
     slug: z.string(),
     module: z.string(),
-    created_at: z.string().datetime(),
+    createdAt: z.string().datetime(),
 });
 
 export type PermissionSummary = z.infer<typeof PermissionSchema>;
