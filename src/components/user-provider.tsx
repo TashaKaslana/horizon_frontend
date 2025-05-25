@@ -7,6 +7,7 @@ import {useUser} from "@auth0/nextjs-auth0";
 import {createUser, getMe} from "@/api/userApi";
 import {usePathname, useRouter} from "next/navigation";
 import {toast} from "sonner";
+import {isUserExistsByAuth0Id} from "@/api/client";
 
 export const UserProvider = ({children}: { children: React.ReactNode }) => {
     const {setUser, user: currentUser} = useCurrentUser()
@@ -35,11 +36,23 @@ export const UserProvider = ({children}: { children: React.ReactNode }) => {
             console.error("Failed to create user:", err);
         },
     });
+
+    const {data: isExist} = useQuery({
+        queryKey: ["user", user?.sub],
+        queryFn: () => isUserExistsByAuth0Id({
+            path: {
+                auth0Id: user?.sub || "",
+            }
+        }),
+        enabled: isAuthenticated,
+        staleTime: 1000 * 60 * 5,
+        retry: false,
+    })
     
     const {data, isLoading, isError} = useQuery({
         queryKey: ["currentUser"],
         queryFn: getMe,
-        enabled: isAuthenticated,
+        enabled: isAuthenticated && !isExist?.data,
         staleTime: 1000 * 60 * 5,
         retry: false,
     })
@@ -56,6 +69,7 @@ export const UserProvider = ({children}: { children: React.ReactNode }) => {
                 isAuthenticated &&
                 user?.email &&
                 !isLoading &&
+                !isExist?.data &&
                 (isError || !data?.data)
             ) {
                 createUserOnBackend({
@@ -65,7 +79,8 @@ export const UserProvider = ({children}: { children: React.ReactNode }) => {
                 });
             }
         },
-        [createUserOnBackend, data, isAuthenticated, isError, isLoading, user?.email, user?.name, user?.nickname, user?.sub]
+        [createUserOnBackend, data?.data, isAuthenticated, isError, isExist?.data, isLoading,
+            user?.email, user?.name, user?.nickname, user?.sub]
     )
 
     useEffect(() => {

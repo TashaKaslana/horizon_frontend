@@ -7,6 +7,7 @@ import {ThemeProvider} from "@/components/theme-provider";
 import {Auth0Provider} from "@auth0/nextjs-auth0";
 import QueryProvider from "@/components/query-provider";
 import {UserProvider} from "@/components/user-provider";
+import ClientSetupProvider from "@/components/client-setup-provider";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -34,19 +35,21 @@ export default function RootLayout({
             className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
         <Auth0Provider>
-            <QueryProvider>
-                <UserProvider>
-                    <ThemeProvider
-                        attribute="class"
-                        defaultTheme="system"
-                        enableSystem
-                        disableTransitionOnChange
-                    >
-                        {children}
-                        <Toaster richColors/>
-                    </ThemeProvider>
-                </UserProvider>
-            </QueryProvider>
+            <ClientSetupProvider>
+                <QueryProvider>
+                    <UserProvider>
+                        <ThemeProvider
+                            attribute="class"
+                            defaultTheme="system"
+                            enableSystem
+                            disableTransitionOnChange
+                        >
+                            {children}
+                            <Toaster richColors/>
+                        </ThemeProvider>
+                    </UserProvider>
+                </QueryProvider>
+            </ClientSetupProvider>
         </Auth0Provider>
         </body>
         </html>
