@@ -12,7 +12,7 @@ export default defineConfig({
         ...defaultPlugins,
         '@hey-api/transformers',
         'zod',
-        // '@tanstack/react-query',
+        '@tanstack/react-query',
         {
             name: '@hey-api/client-axios',
             runtimeConfigPath: './src/lib/hey-api.ts',
