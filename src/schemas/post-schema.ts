@@ -4,6 +4,13 @@ import {AssetSummarySchema} from "@/schemas/asset-schema";
 
 export const PostVisibilitySchema = z.enum(['PUBLIC', 'PRIVATE', 'UNLISTED']); // Adjust if other values are possible
 export type PostVisibility = z.infer<typeof PostVisibilitySchema>;
+export const PostStatus = z.enum([
+  "Draft",
+  "PendingReview",
+  "Published",
+  "Rejected",
+  "Archived"
+]);
 
 export const PostSchema = z.object({
     id: z.string(),
@@ -23,7 +30,7 @@ export const PostSchema = z.object({
     videoAsset: AssetSummarySchema,
     isAuthorDeleted: z.boolean(),
 
-    status: z.string(),
+    status: PostStatus.default("Draft")
 });
 
 // PostSummary = Omit<Post, 'videoAsset' | 'createdBy' | 'updatedBy' | 'isAuthorDeleted'>
