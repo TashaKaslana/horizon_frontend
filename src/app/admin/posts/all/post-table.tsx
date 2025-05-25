@@ -30,7 +30,7 @@ import { DataTableColumnHeader } from "@/components/common/data-table-components
 import { PostData } from "./post-schema";
 import { PostDetailViewerSheet } from "./post-detail-viewer-sheet";
 import { CreatePostSheet } from "./create-post-sheet";
-import { UserTableCellViewer } from "../../users/all/user-table-cell-viewer";
+import { UserTableCellViewer } from "../../users/all/components/user-table-cell-viewer";
 import {getFixedNumberFormat} from "@/lib/utils";
 
 const mockPostsData: PostData[] = [

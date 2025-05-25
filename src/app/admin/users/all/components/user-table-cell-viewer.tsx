@@ -17,7 +17,7 @@ import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {CalendarDaysIcon, LogInIcon} from "lucide-react";
-import {UserAdminData} from "@/app/admin/users/all/user-admin-table";
+import {UserAdminData} from "@/app/admin/users/all/components/user-admin-table";
 import {UserStatusSchema, UserRoleSchema} from "@/schemas/user-schema";
 import {userData} from "@/app/admin/components/mockData";
 

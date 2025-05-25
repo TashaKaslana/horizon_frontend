@@ -33,7 +33,7 @@ import { DataTableColumnHeader } from "@/components/common/data-table-components
 import {DraggableItem, DragHandleCell} from "@/components/common/dnd-table-components";
 import { PostDetailViewerSheet } from '../../posts/all/post-detail-viewer-sheet';
 import { CommentDetailViewerSheet } from '../../comments/all/comment-detail-viewer-sheet';
-import { UserTableCellViewer } from '../../users/all/user-table-cell-viewer';
+import { UserTableCellViewer } from '../../users/all/components/user-table-cell-viewer';
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {ModerationStatus, ModerationStatusSchema, Report} from "@/schemas/report-schema";
 
