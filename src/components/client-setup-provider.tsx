@@ -2,13 +2,12 @@
 
 import {ReactNode} from "react";
 import {
-    setupClientInterceptorsResponse,
-    useSetupClientInterceptorsRequest
+    setupRequestInterceptor, setupResponseInterceptor,
 } from "@/lib/setupClient";
 
 const ClientSetupProvider = ({children} : {children: ReactNode}) => {
-    useSetupClientInterceptorsRequest()
-    setupClientInterceptorsResponse()
+    setupRequestInterceptor()
+    setupResponseInterceptor()
 
     return (
         <>

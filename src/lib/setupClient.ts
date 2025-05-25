@@ -1,28 +1,28 @@
-'use client'
-import {client} from '@/api/client/client.gen';
-import {useEffect} from "react";
+import { AXIOS_INSTANCE } from './axiosInstance';
+import {AxiosHeaders} from "axios";
 
-export const useSetupClientInterceptorsRequest = () => {
-    useEffect(() => {
-        const interceptor = client.instance.interceptors.request.use(async (config) => {
+export const setupRequestInterceptor = () => {
+    AXIOS_INSTANCE.interceptors.request.use(
+        async (config) => {
             const res = await fetch('/api/token');
             const data = await res.json();
-            const token = data.accessToken.token;
+            const token = data.accessToken?.token;
 
-            config.headers.set('Authorization', `Bearer ${token}`);
-            return config;
-        });
-
-        return () => {
-            if (interceptor !== undefined) {
-                client.instance.interceptors.request.eject(interceptor);
+            if (token) {
+                if (config.headers) {
+                    config.headers['Authorization'] = `Bearer ${token}`;
+                } else {
+                    config.headers = new AxiosHeaders({ Authorization: `Bearer ${token}` });
+                }
             }
-        };
-    }, []);
+            return config;
+        },
+        (error) => Promise.reject(error)
+    );
 };
 
-export const setupClientInterceptorsResponse = () => {
-    client.instance.interceptors.response.use(
+export const setupResponseInterceptor = () => {
+    AXIOS_INSTANCE.interceptors.response.use(
         (response) => {
             if (response.status === 204) {
                 return response;

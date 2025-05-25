@@ -7,7 +7,7 @@ import {useUser} from "@auth0/nextjs-auth0";
 import {createUser, getMe} from "@/api/userApi";
 import {usePathname, useRouter} from "next/navigation";
 import {toast} from "sonner";
-import {isUserExistsByAuth0Id} from "@/api/client";
+import {isUserExistsByAuth0Id} from "@/api/generated/user-controller/user-controller";
 
 export const UserProvider = ({children}: { children: React.ReactNode }) => {
     const {setUser, user: currentUser} = useCurrentUser()
@@ -39,11 +39,7 @@ export const UserProvider = ({children}: { children: React.ReactNode }) => {
 
     const {data: isExist} = useQuery({
         queryKey: ["user", user?.sub],
-        queryFn: () => isUserExistsByAuth0Id({
-            path: {
-                auth0Id: user?.sub || "",
-            }
-        }),
+        queryFn: () => isUserExistsByAuth0Id(user?.sub || ""),
         enabled: isAuthenticated,
         staleTime: 1000 * 60 * 5,
         retry: false,
