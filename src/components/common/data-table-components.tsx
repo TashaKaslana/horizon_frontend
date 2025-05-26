@@ -1,8 +1,7 @@
-// components/common/data-table-utils.tsx
 "use client";
 
 import React from "react";
-import { Table as TanstackTable, Column } from "@tanstack/react-table"; // Renamed to avoid conflict
+import { Table as TanstackTable, Column } from "@tanstack/react-table";
 import {
     ArrowDown,
     ArrowUp,
@@ -34,7 +33,6 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 
-// DataTableColumnHeader
 interface DataTableColumnHeaderProps<TData, TValue>
     extends React.HTMLAttributes<HTMLDivElement> {
     column: Column<TData, TValue>;
@@ -79,7 +77,7 @@ export function DataTableColumnHeader<TData, TValue>({
                         Desc
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    {column.getCanHide() && ( // Only show hide if column can be hidden
+                    {column.getCanHide() && (
                         <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
                             <EyeOff className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
                             Hide
@@ -91,12 +89,12 @@ export function DataTableColumnHeader<TData, TValue>({
     );
 }
 
-// DataTablePagination
 interface DataTablePaginationProps<TData> {
-    table: TanstackTable<TData>; // Use aliased TanstackTable
-    fetchNextPage?: () => void;
+    table: TanstackTable<TData>;
+    fetchNextPage?: () => Promise<unknown>;
     hasNextPage?: boolean;
     isFetchingNextPage?: boolean;
+    serverPageCount?: number;
 }
 
 export function DataTablePagination<TData>({
@@ -104,14 +102,40 @@ export function DataTablePagination<TData>({
                                                fetchNextPage,
                                                hasNextPage,
                                                isFetchingNextPage,
+                                               serverPageCount,
                                            }: DataTablePaginationProps<TData>) {
+    const tableState = table.getState().pagination;
+    const currentPageIndex = tableState.pageIndex;
+    const clientSidePageCount = table.getPageCount();
+
+    const [isWaitingForDataToAdvance, setIsWaitingForDataToAdvance] = React.useState(false);
+
+    const displayPageCount = (serverPageCount !== undefined && serverPageCount > 0) ? serverPageCount : (clientSidePageCount > 0 ? clientSidePageCount : 1);
+
     const handleNextPage = () => {
-        if (fetchNextPage && table.getState().pagination.pageIndex === table.getPageCount() - 1 && hasNextPage) {
-            fetchNextPage();
-        } else {
+        if (table.getCanNextPage()) {
             table.nextPage();
+            setIsWaitingForDataToAdvance(false);
+        } else if (hasNextPage && fetchNextPage && !isFetchingNextPage) {
+            fetchNextPage().then();
+            setIsWaitingForDataToAdvance(true);
         }
     };
+
+    React.useEffect(() => {
+        if (isWaitingForDataToAdvance && !isFetchingNextPage) {
+            const timerId = setTimeout(() => {
+                if (table.getCanNextPage()) {
+                    table.nextPage();
+                }
+                setIsWaitingForDataToAdvance(false);
+            }, 0);
+
+            return () => clearTimeout(timerId);
+        }
+    }, [isFetchingNextPage, table, isWaitingForDataToAdvance]);
+
+    const canGoToNextServerPage = hasNextPage || currentPageIndex < displayPageCount -1;
 
     return (
         <div className="flex items-center justify-between px-2 py-2">
@@ -141,8 +165,8 @@ export function DataTablePagination<TData>({
                     </Select>
                 </div>
                 <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-                    Page {table.getState().pagination.pageIndex + 1} of{" "}
-                    {table.getPageCount() > 0 ? table.getPageCount() : 1}
+                    Page {currentPageIndex + 1} of{" "}
+                    {displayPageCount}
                 </div>
                 <div className="flex items-center space-x-2">
                     <Button
@@ -167,7 +191,7 @@ export function DataTablePagination<TData>({
                         variant="outline"
                         className="h-8 w-8 p-0"
                         onClick={handleNextPage}
-                        disabled={(!table.getCanNextPage() && !hasNextPage) || isFetchingNextPage}
+                        disabled={!canGoToNextServerPage || isFetchingNextPage}
                     >
                         <span className="sr-only">Go to next page</span>
                         <ChevronRight className="h-4 w-4" />
@@ -175,8 +199,9 @@ export function DataTablePagination<TData>({
                     <Button
                         variant="outline"
                         className="hidden h-8 w-8 p-0 lg:flex"
-                        onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                        disabled={!table.getCanNextPage() && !hasNextPage} // Corrected: should be disabled if can't go next OR if it's infinite scroll without next page
+                        onClick={() => table.setPageIndex(displayPageCount - 1)}
+
+                        disabled={currentPageIndex >= displayPageCount - 1 || (!table.getCanNextPage() && !hasNextPage)}
                     >
                         <span className="sr-only">Go to last page</span>
                         <ChevronsRight className="h-4 w-4" />
@@ -187,9 +212,8 @@ export function DataTablePagination<TData>({
     );
 }
 
-// DataTableViewOptions
 interface DataTableViewOptionsProps<TData> {
-    table: TanstackTable<TData>; // Use aliased TanstackTable
+    table: TanstackTable<TData>;
 }
 
 export function DataTableViewOptions<TData>({
@@ -228,7 +252,7 @@ export function DataTableViewOptions<TData>({
                                 key={column.id}
                                 className="capitalize" // May not be needed if friendlyName is good
                                 checked={column.getIsVisible()}
-                                onCheckedChange={(value) => column.toggleVisibility(!!value)}
+                                onCheckedChange={(value) => column.toggleVisibility(value)}
                             >
                                 {friendlyName}
                             </DropdownMenuCheckboxItem>
@@ -238,3 +262,4 @@ export function DataTableViewOptions<TData>({
         </DropdownMenu>
     );
 }
+

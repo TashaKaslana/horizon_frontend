@@ -7,7 +7,7 @@ export function isFullPagination(
         pagination !== undefined &&
         typeof pagination.currentPage === 'number' &&
         typeof pagination.pageSize === 'number' &&
-        typeof pagination.totalItems === 'bigint' &&
+        typeof pagination.totalItems === 'number' &&
         typeof pagination.totalPages === 'number' &&
         typeof pagination.hasNext === 'boolean' &&
         typeof pagination.hasPrevious === 'boolean'

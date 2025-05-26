@@ -15,7 +15,7 @@ type PermissionDraggable = PermissionDto & DraggableItem;
 export const PermissionsTable = () => {
     const [data, setData] = useState<PermissionDraggable[]>([]);
     const {permissions} = usePermissionsStore();
-    const {isLoading, hasNextPage, isFetchingNextPage, fetchNextPage, createPermission} = usePermissionsManagement()
+    const {totalPages, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage, createPermission} = usePermissionsManagement()
 
     useEffect(() => {
         const draggablePermissions: PermissionDraggable[] = permissions.map(permissionFromStore => {
@@ -40,6 +40,7 @@ export const PermissionsTable = () => {
                 </AddPermissionSheet>
             </div>
             <DataTable
+                pageCount={totalPages}
                 isLoading={isLoading}
                 isFetchingNextPage={isFetchingNextPage}
                 hasNextPage={hasNextPage}

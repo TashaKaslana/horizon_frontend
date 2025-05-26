@@ -125,6 +125,7 @@ const usePermissionsManagement = () => {
         isFetchingNextPage,
         isLoading,
         isError,
+        totalPages: permissionListData?.pages[0].metadata?.pagination?.totalPages || 0,
         error,
         createPermission,
         isCreatingPermission,
