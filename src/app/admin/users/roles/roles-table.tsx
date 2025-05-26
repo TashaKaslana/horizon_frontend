@@ -3,15 +3,25 @@ import {Button} from "@/components/ui/button";
 import {DataTable} from "@/components/ui/data-table";
 import {rolesColumns} from "@/app/admin/users/roles/roles-columns";
 import {useEffect, useState} from "react";
-import {RoleSummary} from "@/schemas/user-schema";
-import {mockRoles} from "@/app/admin/components/mockData";
+import {RoleDto} from "@/api/client";
+import {DraggableItem} from "@/components/common/dnd-table-components";
+import useRolesStore from "@/app/admin/users/roles/store/useRolesStore";
+
+type RoleDraggable = RoleDto & DraggableItem
 
 export const RolesTable = () => {
-    const [data, setData] = useState<RoleSummary[]>([])
+    const [data, setData] = useState<RoleDraggable[]>([])
+    const {roles} = useRolesStore()
     
     useEffect(() => {
-        setData(mockRoles)
-    }, [])
+        setData(roles.map(roleFromStore => {
+            const roleDto: RoleDto = {
+                ...roleFromStore,
+                id: String(roleFromStore.id),
+            };
+            return roleDto as RoleDraggable;
+        }))
+    }, [roles])
     
     return (
         <div className={'space-y-4 p-4'}>

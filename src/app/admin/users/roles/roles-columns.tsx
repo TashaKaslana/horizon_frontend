@@ -4,7 +4,6 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DataTableColumnHeader } from "@/components/common/data-table-components";
 import React from "react";
-import { RoleSummary } from "@/schemas/user-schema";
 import { formatDateTS } from "@/lib/utils";
 import { MoreVerticalIcon, EditIcon, TrashIcon, EyeIcon } from "lucide-react";
 import {
@@ -16,9 +15,12 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
+import {RoleDto} from "@/api/client";
+import {DraggableItem} from "@/components/common/dnd-table-components";
 
+type RoleDraggable = RoleDto & DraggableItem
 
-export const rolesColumns: ColumnDef<RoleSummary>[] = [
+export const rolesColumns: ColumnDef<RoleDraggable>[] = [
     {
         id: "select",
         header: ({ table }) => (
@@ -91,13 +93,13 @@ export const rolesColumns: ColumnDef<RoleSummary>[] = [
         enableSorting: true,
     },
     {
-        accessorKey: "created_at",
+        accessorKey: "createdAt",
         header: ({ column }) => (
             <DataTableColumnHeader column={column} title="Created At" />
         ),
         cell: ({ row }) => {
-            const dateValue = row.getValue("created_at") as string | undefined;
-            const formattedDate = dateValue ? formatDateTS(new Date(dateValue)) : "N/A";
+            const dateValue = row.getValue("createdAt") as Date
+            const formattedDate = dateValue ? formatDateTS(dateValue) : "N/A";
             return <div className="min-w-[150px]">{formattedDate}</div>;
         },
         enableSorting: true,
