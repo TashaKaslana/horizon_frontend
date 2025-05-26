@@ -5,15 +5,17 @@ import {Button} from "@/components/ui/button";
 import {DataTable} from "@/components/ui/data-table";
 import {permissionsColumns} from "./permissions-columns";
 import {AddPermissionSheet} from "./add-permission-sheet";
-import usePermissionsManagement from "@/app/admin/users/permissions/hooks/usePermissionsManagement";
-import {PermissionDto} from "@/api/client";
+import {CreatePermissionRequest, PermissionDto} from "@/api/client";
 import {DraggableItem} from "@/components/common/dnd-table-components";
+import usePermissionsStore from "@/app/admin/users/permissions/stores/usePermissionsStore";
+import usePermissionsManagement from "@/app/admin/users/permissions/hooks/usePermissionsManagement";
 
 type PermissionDraggable = PermissionDto & DraggableItem;
 
 export const PermissionsTable = () => {
     const [data, setData] = useState<PermissionDraggable[]>([]);
-    const {permissions} = usePermissionsManagement();
+    const {permissions} = usePermissionsStore();
+    const {isLoading, hasNextPage, isFetchingNextPage, fetchNextPage, createPermission} = usePermissionsManagement()
 
     useEffect(() => {
         const draggablePermissions: PermissionDraggable[] = permissions.map(permissionFromStore => {
@@ -26,16 +28,8 @@ export const PermissionsTable = () => {
         setData(draggablePermissions);
     }, [permissions]);
 
-    const handlePermissionAdded = (newPermissionData: Omit<PermissionDto, 'id' | 'created_at'>) => {
-        const optimisticDto: PermissionDto = {
-            ...newPermissionData,
-            id: `perm-${Math.random().toString(36).substring(2, 9)}`,
-            createdAt: new Date(),
-        };
-
-        const optimisticPermission: PermissionDraggable = optimisticDto as PermissionDraggable;
-
-        setData(prevData => [optimisticPermission, ...prevData]);
+    const handlePermissionAdded = (newPermissionData: CreatePermissionRequest) => {
+        createPermission(newPermissionData)
     };
 
     return (
@@ -46,6 +40,10 @@ export const PermissionsTable = () => {
                 </AddPermissionSheet>
             </div>
             <DataTable
+                isLoading={isLoading}
+                isFetchingNextPage={isFetchingNextPage}
+                hasNextPage={hasNextPage}
+                fetchNextPage={fetchNextPage}
                 columns={permissionsColumns}
                 data={data}
                 setData={setData}
