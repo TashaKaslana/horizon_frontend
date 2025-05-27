@@ -2,22 +2,28 @@
 
 import {DataTable} from "@/components/ui/data-table";
 import {columns} from "@/app/admin/posts/categories/category-columns";
-import {TagRowData} from "@/app/admin/posts/tags/types";
-import {useState} from "react";
-import { mockTagsData } from "../../components/mockData";
+import {useCategoryManagement} from "@/app/admin/posts/categories/hooks/useCategoryManagement";
+import useCategoryStore from "@/app/admin/posts/categories/store/useCategoryStore";
 
 export const CategoryTable = () => {
-    const [data, setData] = useState<TagRowData[]>(mockTagsData.map(tag => ({...tag, postsCount: tag.postsCount || 0})));
+    const {categories} = useCategoryStore()
+    const {fetchNextPage, isFetchingNextPage, hasNextPage, totalPages} = useCategoryManagement()
+
 
     return (
         <div className={'p-4'}>
             <DataTable
                 columns={columns}
-                data={data}
-                setData={setData}
+                data={categories}
                 enableDnd={true}
                 enableRowSelection={true}
                 filterPlaceholder={"Search tags by slug, name, or description..."}
+                fetchNextPage={fetchNextPage}
+                isFetchingNextPage={isFetchingNextPage}
+                hasNextPage={hasNextPage}
+                totalPages={totalPages}
+                enablePagination={true}
+                initialColumnVisibility={{id: false}}
             />
         </div>
     )
