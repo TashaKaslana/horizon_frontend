@@ -4,19 +4,19 @@ import {PostSummarySchema} from "@/schemas/post-schema";
 import {CommentResponseSchema} from "@/schemas/comment-schema";
 
 export const ModerationStatusSchema = z.enum([
-    "Pending",
-    "Reviewed_Approved",
-    "Reviewed_Rejected",
-    "ActionTaken_ContentRemoved",
-    "ActionTaken_UserWarned",
-    "ActionTaken_UserBanned",
-    "Resolved",
+    "PENDING",
+    "REVIEWED_APPROVED",
+    "REVIEWED_REJECTED",
+    "ACTIONTAKEN_CONTENTREMOVED",
+    "ACTIONTAKEN_USERWARNED",
+    "ACTIONTAKEN_USERBANNED",
+    "RESOLVED",
 ]);
 
 export const ModerationItemTypeSchema = z.enum([
-    "Post",
-    "Comment",
-    "User",
+    "POST",
+    "COMMENT",
+    "USER",
 ]);
 
 export const ReportSchema = z.object({

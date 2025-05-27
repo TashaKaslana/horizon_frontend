@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, {useEffect} from "react";
 import {
     CheckCircle2Icon,
     LoaderIcon,
@@ -24,27 +24,30 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {DataTable} from "@/components/ui/data-table";
 import {getModerationTableColumns} from "@/app/admin/components/moderation/moderation-table-columns";
-import {ModerationItemTypeSchema, ModerationStatus, ModerationStatusSchema, Report} from "@/schemas/report-schema";
 import {DraggableItem} from "@/components/common/dnd-table-components";
+import {ModerationItemTypeSchema, ModerationStatus, ModerationStatusSchema} from "@/schemas/report-schema";
+import {ReportDto} from "@/api/client";
+import useReportStore from "@/app/admin/moderation/reports/useReportStore";
+import {ModerationProps, useModeration} from "@/app/admin/moderation/reports/useModeration";
 
-type ModerationItemData = Report & DraggableItem
+type ModerationItemData = ReportDto & DraggableItem
 
 ModerationStatusSchema.options.map(status => ({
     value: status,
     label: status.replace(/_/g, ' '),
     icon: (() => {
         switch (status) {
-            case "Pending":
+            case "PENDING":
                 return LoaderIcon;
-            case "Reviewed_Approved":
+            case "REVIEWED_APPROVED":
                 return ShieldCheckIcon;
-            case "Reviewed_Rejected":
+            case "REVIEWED_REJECTED":
                 return ShieldXIcon;
-            case "ActionTaken_ContentRemoved":
-            case "ActionTaken_UserWarned":
-            case "ActionTaken_UserBanned":
+            case "ACTIONTAKEN_CONTENTREMOVED":
+            case "ACTIONTAKEN_USERWARNED":
+            case "ACTIONTAKEN_USERBANNED":
                 return AlertTriangleIcon;
-            case "Resolved":
+            case "RESOLVED":
                 return CheckCircle2Icon;
             default:
                 return ShieldQuestionIcon;
@@ -57,11 +60,11 @@ ModerationItemTypeSchema.options.map(type => ({
     label: type,
     icon: (() => {
         switch (type) {
-            case "Post":
+            case "POST":
                 return FileTextIcon;
-            case "Comment":
+            case "COMMENT":
                 return MessageSquareIcon;
-            case "User":
+            case "USER":
                 return UserIcon;
             default:
                 return ShieldQuestionIcon;
@@ -70,29 +73,47 @@ ModerationItemTypeSchema.options.map(type => ({
 }));
 
 type ModerationTableProps = {
-    data: ModerationItemData[];
+    options: ModerationProps
     onUpdateStatusAction?: (itemIds: string[], newStatus: ModerationStatus) => void;
     onDeleteEntriesAction?: (itemIds: string[]) => void;
 }
 
-export function ModerationTable({data: reportData}: ModerationTableProps) {
-    const [data, setData] = React.useState<ModerationItemData[]>(reportData);
+export function ModerationTable({options}: ModerationTableProps) {
+    const {reports} = useReportStore()
+    const {fetchNextPage, isFetchingNextPage, hasNextPage, totalPages} = useModeration(options);
+    const [data, setData] = React.useState<ModerationItemData[]>([]);
     const [rowSelection, setRowSelection] = React.useState<any>({});
 
+    useEffect(() => {
+        setData(reports.map(report => ({
+                ...report,
+                id: report.id,
+            })) as ModerationItemData[]
+        )
+        console.log(options)
+    }, [options, reports]);
 
     const handleUpdateStatus = React.useCallback((itemIds: string[], newStatus: ModerationStatus) => {
-        setData(currentData =>
-            currentData.map(item =>
-                itemIds.includes(item.id) ? {...item, status: newStatus, updatedAt: new Date().toISOString()} : item
-            )
-        );
+        setData(prev => {
+            return prev.map(item => {
+                if (itemIds.includes(item.id)) {
+                    return {
+                        ...item,
+                        status: newStatus,
+                        updatedAt: new Date(),
+                    };
+                }
+                return item;
+            });
+        });
+        // setRowSelection({});
         toast.success(`Selected item(s) status updated to ${newStatus.replace(/_/g, ' ')}`);
     }, []);
 
     const handleDeleteModerationEntries = React.useCallback((itemIds: string[]) => {
         setData(prev => prev.filter(item => !itemIds.includes(item.id)));
         toast.error(`${itemIds.length} moderation entr${itemIds.length > 1 ? 'ies' : 'y'} removed.`);
-        setRowSelection({});
+        // setRowSelection({});
     }, []);
 
     const columns = getModerationTableColumns({
@@ -111,6 +132,11 @@ export function ModerationTable({data: reportData}: ModerationTableProps) {
                 enableRowSelection={true}
                 showGlobalFilter={true}
                 filterPlaceholder="Search user, post, comment reports..."
+                fetchNextPage={fetchNextPage}
+                isFetchingNextPage={isFetchingNextPage}
+                hasNextPage={hasNextPage}
+                pageCount={totalPages}
+                initialColumnVisibility={{id: false}}
             />
             {selectedRowIds().length > 0 && (
                 <div className="fixed bottom-4 right-4 z-50 rounded-md border bg-background p-3 shadow-lg">

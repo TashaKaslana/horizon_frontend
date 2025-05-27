@@ -22,8 +22,8 @@ import {UserStatusSchema, UserRoleSchema} from "@/schemas/user-schema";
 import {userData} from "@/app/admin/components/mockData";
 
 interface UserTableCellViewerProps {
-    userId: string;
-    initialDisplayName: string;
+    userId?: string;
+    initialDisplayName?: string;
     onUpdate?: (updatedItem: Partial<UserAdminData>) => void;
 }
 

@@ -11,7 +11,7 @@ import {useEffect} from "react";
 import {ResponseMetadata} from "@/api/client";
 
 export interface ModerationProps {
-    options: UseInfiniteQueryOptions
+    options: UseInfiniteQueryOptions<any>
 }
 
 export const useModeration = ({options} : ModerationProps) => {

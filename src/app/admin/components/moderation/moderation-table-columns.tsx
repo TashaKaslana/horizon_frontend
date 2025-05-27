@@ -1,8 +1,8 @@
 "use client";
 
 import React from "react";
-import { ColumnDef } from "@tanstack/react-table";
-import { toast } from "sonner";
+import {ColumnDef} from "@tanstack/react-table";
+import {toast} from "sonner";
 import {
     CheckCircle2Icon,
     LoaderIcon,
@@ -19,9 +19,9 @@ import {
     Edit3Icon
 } from "lucide-react";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
+import {Badge} from "@/components/ui/badge";
+import {Button} from "@/components/ui/button";
+import {Checkbox} from "@/components/ui/checkbox";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -29,37 +29,38 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { DataTableColumnHeader } from "@/components/common/data-table-components";
+import {DataTableColumnHeader} from "@/components/common/data-table-components";
 import {DraggableItem, DragHandleCell} from "@/components/common/dnd-table-components";
-import { PostDetailViewerSheet } from '../../posts/all/post-detail-viewer-sheet';
-import { CommentDetailViewerSheet } from '../../comments/all/comment-detail-viewer-sheet';
-import { UserTableCellViewer } from '../../users/all/components/user-table-cell-viewer';
+import {PostDetailViewerSheet} from '../../posts/all/post-detail-viewer-sheet';
+import {CommentDetailViewerSheet} from '../../comments/all/comment-detail-viewer-sheet';
+import {UserTableCellViewer} from '../../users/all/components/user-table-cell-viewer';
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
-import {ModerationStatus, ModerationStatusSchema, Report} from "@/schemas/report-schema";
+import {ModerationStatus, ModerationStatusSchema} from "@/schemas/report-schema";
+import {ReportDto} from "@/api/client";
 
 interface ModerationTableColumnsProps {
     onUpdateStatusAction: (itemIds: string[], newStatus: ModerationStatus) => void;
     onDeleteEntriesAction: (itemIds: string[]) => void;
 }
 
-type ModerationItemData = Report & DraggableItem
+type ModerationItemData = ReportDto & DraggableItem
 
 export const statusFilterOptions = ModerationStatusSchema.options.map(status => ({
     value: status,
     label: status.replace(/_/g, ' '),
     icon: (() => {
-        switch (status) {
-            case "Pending":
+        switch (status.toUpperCase()) {
+            case "PENDING":
                 return LoaderIcon;
-            case "Reviewed_Approved":
+            case "REVIEWED_APPROVED":
                 return ShieldCheckIcon;
-            case "Reviewed_Rejected":
+            case "REVIEWED_REJECTED":
                 return ShieldXIcon;
-            case "ActionTaken_ContentRemoved":
-            case "ActionTaken_UserWarned":
-            case "ActionTaken_UserBanned":
+            case "ACTIONTAKEN_CONTENTREMOVED":
+            case "ACTIONTAKEN_USERWARNED":
+            case "ACTIONTAKEN_USERBANNED":
                 return AlertTriangleIcon;
-            case "Resolved":
+            case "RESOLVED":
                 return CheckCircle2Icon;
             default:
                 return ShieldQuestionIcon;
@@ -68,9 +69,9 @@ export const statusFilterOptions = ModerationStatusSchema.options.map(status => 
 }));
 
 export const getModerationTableColumns = ({
-    onUpdateStatusAction,
-    onDeleteEntriesAction,
-}: ModerationTableColumnsProps): ColumnDef<ModerationItemData>[] => [
+                                              onUpdateStatusAction,
+                                              onDeleteEntriesAction,
+                                          }: ModerationTableColumnsProps): ColumnDef<ModerationItemData>[] => [
     {
         id: "drag",
         header: () => null,
@@ -79,14 +80,14 @@ export const getModerationTableColumns = ({
     },
     {
         id: "select",
-        header: ({ table }) => (
+        header: ({table}) => (
             <Checkbox
                 checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
                 onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
                 aria-label="Select all" onClick={(e) => e.stopPropagation()}
             />
         ),
-        cell: ({ row }) => (
+        cell: ({row}) => (
             <Checkbox
                 checked={row.getIsSelected()}
                 onCheckedChange={(value) => row.toggleSelected(!!value)}
@@ -96,14 +97,28 @@ export const getModerationTableColumns = ({
         enableSorting: false, enableHiding: false, size: 40,
     },
     {
+        accessorKey: "id",
+        header: ({column}) => <DataTableColumnHeader column={column} title="Report ID"/>,
+        cell: ({row}) => (
+            <div className="text-sm text-muted-foreground max-w-32 truncate" title={row.original.id}>
+                {row.original.id}
+            </div>
+        ),
+        enableHiding: false,
+        enableSorting: false,
+    },
+    {
         accessorKey: "itemPreview",
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Reported Item" />,
-        cell: ({ row }) => {
+        header: ({column}) => <DataTableColumnHeader column={column} title="Reported Item"/>,
+        cell: ({row}) => {
             const item = row.original;
-            let icon = <ShieldQuestionIcon className="h-5 w-5 text-muted-foreground mt-0.5 flex-shrink-0" />;
-            if (item.itemType === "Post") icon = <FileTextIcon className="h-5 w-5 text-muted-foreground mt-0.5 flex-shrink-0" />;
-            if (item.itemType === "Comment") icon = <MessageSquareIcon className="h-5 w-5 text-muted-foreground mt-0.5 flex-shrink-0" />;
-            if (item.itemType === "User") icon = <UserIcon className="h-5 w-5 text-muted-foreground mt-0.5 flex-shrink-0" />;
+            let icon = <ShieldQuestionIcon className="h-5 w-5 text-muted-foreground mt-0.5 flex-shrink-0"/>;
+            if (item.itemType === "POST") icon =
+                <FileTextIcon className="h-5 w-5 text-muted-foreground mt-0.5 flex-shrink-0"/>;
+            if (item.itemType === "COMMENT") icon =
+                <MessageSquareIcon className="h-5 w-5 text-muted-foreground mt-0.5 flex-shrink-0"/>;
+            if (item.itemType === "USER") icon =
+                <UserIcon className="h-5 w-5 text-muted-foreground mt-0.5 flex-shrink-0"/>;
 
             const contentPreview = (content: string) => (
                 <div className="flex flex-col">
@@ -113,39 +128,47 @@ export const getModerationTableColumns = ({
 
             const wrapperClass = "flex items-start gap-2 py-1 min-w-32 max-w-54 group cursor-pointer truncate";
 
-            if (item.itemType === "Post" && item.post) {
+            if (item.itemType === "POST" && item.post) {
                 return (
                     <PostDetailViewerSheet
-                        postId={item.post.id}
+                        postId={item.post.id!}
                         onUpdateAction={(updatedPost) => {
                             console.log("Post update from sheet (moderation table):", updatedPost);
                             toast.info("Post details updated (mock).");
                         }}
                     >
                         <div className={wrapperClass}>
-                            {icon} {contentPreview(item.post.caption)}
+                            {icon} {contentPreview(item.post.caption!)}
                         </div>
                     </PostDetailViewerSheet>
                 );
             }
-            if (item.itemType === "Comment" && item.comment) {
+            if (item.itemType === "COMMENT" && item.comment) {
                 return (
-                    <CommentDetailViewerSheet commentId={item.comment.id}>
-                         <div className={wrapperClass}>
-                            {icon} {contentPreview(item.comment.content)}
+                    <CommentDetailViewerSheet commentId={item.comment.id!}>
+                        <div className={wrapperClass}>
+                            {icon} {contentPreview(item.comment.content!)}
                         </div>
                     </CommentDetailViewerSheet>
                 );
             }
-            if (item.itemType === "User" && item.reportedUser) {
+            if (item.itemType === "USER" && item.reportedUser!) {
                 return (
                     <div className="flex items-center gap-1 py-0.5 min-w-[200px]">
                         <Avatar className="h-9 w-9 flex-shrink-0">
-                            <AvatarImage src={item.reportedUser.profileImage} alt={item.reportedUser.displayName} />
-                            <AvatarFallback>{item.reportedUser?.displayName?.split(' ').map(n=>n[0]).join('').toUpperCase()}</AvatarFallback>
+                            <AvatarImage src={item.reportedUser.profileImage}
+                                         alt={item.reportedUser.displayName
+                                             ? item.reportedUser.displayName : item.reportedUser?.username?.[0] || "?"}
+                            />
+                            <AvatarFallback>
+                                {item.reportedUser.displayName ?
+                                    item.reportedUser?.displayName?.split(' ').map(n => n[0]).join('').toUpperCase()
+                                    : item.reportedUser?.username?.[0]?.toUpperCase() || "?"}
+                            </AvatarFallback>
                         </Avatar>
                         <div className="flex flex-col gap-1">
-                            <UserTableCellViewer userId={item.reportedUser.id} initialDisplayName={item.reportedUser.displayName} />
+                            <UserTableCellViewer userId={item.reportedUser.id!}
+                                                 initialDisplayName={item.reportedUser.displayName!}/>
                             <span className="text-xs text-muted-foreground italic">@{item.reportedUser.username}</span>
                         </div>
                     </div>
@@ -156,24 +179,26 @@ export const getModerationTableColumns = ({
     },
     {
         accessorKey: "reporterInfo",
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Reporter" />,
-        cell: ({ row }) => {
+        header: ({column}) => <DataTableColumnHeader column={column} title="Reporter"/>,
+        cell: ({row}) => {
             const item = row.original;
             return (
-                <div className="flex items-center gap-2 py-0.5 min-w-[200px]">
+                <div className="flex items-center gap-1 py-0.5 min-w-[200px]">
                     <Avatar className="h-9 w-9 flex-shrink-0">
-                        <AvatarImage src={item.reporter?.profileImage} alt={item.reporter?.displayName}/>
-                        <AvatarFallback>{item.reporter?.displayName?.split(' ').map(n => n[0]).join('').toUpperCase()}</AvatarFallback>
-                    </Avatar>
-                    <div className="flex flex-col gap-0.5">
-                        <UserTableCellViewer
-                            userId={item.reporter.id}
-                            initialDisplayName={item.reporter.displayName}
-                            onUpdate={() => {
-                                toast.info("Author details are managed in the Users section.");
-                            }}
+                        <AvatarImage src={item.reportedUser?.profileImage}
+                                     alt={item.reportedUser?.displayName
+                                         ? item.reportedUser?.displayName : item.reportedUser?.username?.[0] || "?"}
                         />
-                        <span className="text-xs text-muted-foreground">ID: {item.reporter?.id}</span>
+                        <AvatarFallback>
+                            {item.reportedUser?.displayName ?
+                                item.reportedUser?.displayName?.split(' ').map(n => n[0]).join('').toUpperCase()
+                                : item.reportedUser?.username?.[0]?.toUpperCase() || "?"}
+                        </AvatarFallback>
+                    </Avatar>
+                    <div className="flex flex-col gap-1">
+                        <UserTableCellViewer userId={item.reportedUser?.id}
+                                             initialDisplayName={item.reportedUser?.displayName}/>
+                        <span className="text-xs text-muted-foreground italic">@{item.reportedUser?.username}</span>
                     </div>
                 </div>
             )
@@ -181,22 +206,25 @@ export const getModerationTableColumns = ({
     },
     {
         accessorKey: "reason",
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Reason" />,
-        cell: ({ row }) => <div className="text-sm text-muted-foreground max-w-64 truncate" title={row.original.reason}>{row.original.reason}</div>,
+        header: ({column}) => <DataTableColumnHeader column={column} title="Reason"/>,
+        cell: ({row}) => <div className="text-sm text-muted-foreground max-w-64 truncate"
+                              title={row.original.reason}>{row.original.reason}</div>,
     },
     {
         accessorKey: "status",
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Status" />,
-        cell: ({ row }) => {
+        header: ({column}) => <DataTableColumnHeader column={column} title="Status"/>,
+        cell: ({row}) => {
             const status = row.original.status;
             const option = statusFilterOptions.find(opt => opt.value === status); // Ensure statusFilterOptions is imported/available
             return (
                 <Badge variant={
-                    status.includes("Rejected") || status.includes("Banned") || status.includes("Removed") ? "destructive" :
-                        status.includes("Approved") || status.includes("Resolved") ? "default" :
-                            status.includes("Pending") ? "outline" : "secondary"
+                    !status ? "secondary" :
+                        status === "REVIEWED_REJECTED" || status.includes("BANNED") || status.includes("REMOVED") ? "destructive" :
+                            status.includes("APPROVED") || status.includes("RESOLVED") ? "default" :
+                                status.includes("PENDING") ? "outline" : "secondary"
                 } className="flex w-fit items-center gap-1.5 px-2 py-1 text-xs min-w-[120px] justify-center">
-                    {option?.icon && <option.icon className={`size-3.5 ${option.icon === LoaderIcon ? 'animate-spin' : ''}`} />}
+                    {option?.icon &&
+                        <option.icon className={`size-3.5 ${option.icon === LoaderIcon ? 'animate-spin' : ''}`}/>}
                     {option?.label || status}
                 </Badge>
             );
@@ -209,74 +237,72 @@ export const getModerationTableColumns = ({
     },
     {
         accessorKey: "createdAt",
-        header: ({ column }) => <DataTableColumnHeader column={column} title="Reported On" />,
-        cell: ({ row }) => (
+        header: ({column}) => <DataTableColumnHeader column={column} title="Reported On"/>,
+        cell: ({row}) => (
             <div className="text-xs text-muted-foreground min-w-[90px]">
-                {new Date(row.original.createdAt).toLocaleDateString()}
-                <div className="text-gray-400">{new Date(row.original.createdAt).toLocaleTimeString()}</div>
+                {row.original.createdAt ? new Date(row.original.createdAt).toLocaleDateString() : ""}
+                <div className="text-gray-400">
+                    {row.original.createdAt ? new Date(row.original.createdAt).toLocaleTimeString() : ""}
+                </div>
             </div>
         ),
     },
     {
         id: "actions",
-        cell: ({ row }) => {
+        cell: ({row}) => {
             const item = row.original;
             return (
                 <div className="flex justify-end">
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
                             <Button variant="ghost" className="flex size-8 p-0 data-[state=open]:bg-muted">
-                                <MoreVerticalIcon className="size-4" /> <span className="sr-only">Open menu</span>
+                                <MoreVerticalIcon className="size-4"/> <span className="sr-only">Open menu</span>
                             </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-[220px]">
-                            {/*{item.itemLink && (*/}
-                            {/*    <DropdownMenuItem onSelect={() => window.open(item.itemLink, '_blank')}>*/}
-                            {/*        <EyeIcon className="mr-2 h-4 w-4" /> View Original Item*/}
-                            {/*    </DropdownMenuItem>*/}
-                            {/*)}*/}
                             <DropdownMenuItem onSelect={() => toast.info(`Editing notes for ${item.id}`)}>
-                                <Edit3Icon className="mr-2 h-4 w-4" /> Edit Moderation Notes
+                                <Edit3Icon className="mr-2 h-4 w-4"/> Edit Moderation Notes
                             </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            {item.status !== "Reviewed_Approved" && item.status !== "Resolved" && (
-                                <DropdownMenuItem onSelect={() => onUpdateStatusAction([item.id], "Reviewed_Approved")}>
-                                    <ShieldCheckIcon className="mr-2 h-4 w-4 text-green-500" /> Approve Content
+                            <DropdownMenuSeparator/>
+                            {item.status !== "REVIEWED_APPROVED" && item.status !== "RESOLVED" && (
+                                <DropdownMenuItem onSelect={() => onUpdateStatusAction([item.id], "REVIEWED_APPROVED")}>
+                                    <ShieldCheckIcon className="mr-2 h-4 w-4 text-green-500"/> Approve Content
                                 </DropdownMenuItem>
                             )}
-                            {item.status !== "Reviewed_Rejected" && item.status !== "Resolved" && (
-                                <DropdownMenuItem onSelect={() => onUpdateStatusAction([item.id], "Reviewed_Rejected")}>
-                                    <ShieldXIcon className="mr-2 h-4 w-4 text-orange-500" /> Reject Content
+                            {item.status !== "REVIEWED_REJECTED" && item.status !== "RESOLVED" && (
+                                <DropdownMenuItem onSelect={() => onUpdateStatusAction([item.id], "REVIEWED_REJECTED")}>
+                                    <ShieldXIcon className="mr-2 h-4 w-4 text-orange-500"/> Reject Content
                                 </DropdownMenuItem>
                             )}
-                            <DropdownMenuSeparator />
-                            {item.itemType === "User" && item.status !== "ActionTaken_UserWarned" && (
-                                <DropdownMenuItem onSelect={() => onUpdateStatusAction([item.id], "ActionTaken_UserWarned")}>
-                                    <AlertTriangleIcon className="mr-2 h-4 w-4 text-amber-600" /> Warn User
+                            <DropdownMenuSeparator/>
+                            {item.itemType === "USER" && item.status !== "ACTIONTAKEN_USERWARNED" && (
+                                <DropdownMenuItem
+                                    onSelect={() => onUpdateStatusAction([item.id], "ACTIONTAKEN_USERWARNED")}>
+                                    <AlertTriangleIcon className="mr-2 h-4 w-4 text-amber-600"/> Warn User
                                 </DropdownMenuItem>
                             )}
-                            {item.itemType === "User" && item.status !== "ActionTaken_UserBanned" && (
+                            {item.itemType === "USER" && item.status !== "ACTIONTAKEN_USERBANNED" && (
                                 <DropdownMenuItem className="text-red-600 focus:text-red-600"
-                                                  onSelect={() => onUpdateStatusAction([item.id], "ActionTaken_UserBanned")}>
-                                    <BanIcon className="mr-2 h-4 w-4" /> Ban User
+                                                  onSelect={() => onUpdateStatusAction([item.id], "ACTIONTAKEN_USERBANNED")}>
+                                    <BanIcon className="mr-2 h-4 w-4"/> Ban User
                                 </DropdownMenuItem>
                             )}
-                            {(item.itemType === "Post" || item.itemType === "Comment") && item.status !== "ActionTaken_ContentRemoved" && (
-                                 <DropdownMenuItem className="text-red-600 focus:text-red-600"
-                                                   onSelect={() => onUpdateStatusAction([item.id], "ActionTaken_ContentRemoved")}>
-                                     <Trash2Icon className="mr-2 h-4 w-4" /> Remove Content
-                                 </DropdownMenuItem>
-                            )}
-                            {item.status !== "Resolved" && <DropdownMenuSeparator />}
-                            {item.status !== "Resolved" && (
-                                <DropdownMenuItem onSelect={() => onUpdateStatusAction([item.id], "Resolved")}>
-                                    <CheckCircle2Icon className="mr-2 h-4 w-4 text-blue-500" /> Mark as Resolved
+                            {(item.itemType === "POST" || item.itemType === "COMMENT") && item.status !== "ACTIONTAKEN_CONTENTREMOVED" && (
+                                <DropdownMenuItem className="text-red-600 focus:text-red-600"
+                                                  onSelect={() => onUpdateStatusAction([item.id], "ACTIONTAKEN_CONTENTREMOVED")}>
+                                    <Trash2Icon className="mr-2 h-4 w-4"/> Remove Content
                                 </DropdownMenuItem>
                             )}
-                            <DropdownMenuSeparator />
+                            {item.status !== "RESOLVED" && <DropdownMenuSeparator/>}
+                            {item.status !== "RESOLVED" && (
+                                <DropdownMenuItem onSelect={() => onUpdateStatusAction([item.id], "RESOLVED")}>
+                                    <CheckCircle2Icon className="mr-2 h-4 w-4 text-blue-500"/> Mark as Resolved
+                                </DropdownMenuItem>
+                            )}
+                            <DropdownMenuSeparator/>
                             <DropdownMenuItem className="text-red-600 hover:!text-red-600 focus:text-red-600"
                                               onSelect={() => onDeleteEntriesAction([item.id])}>
-                                <Trash2Icon className="mr-2 h-4 w-4" /> Delete Report
+                                <Trash2Icon className="mr-2 h-4 w-4"/> Delete Report
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -286,4 +312,3 @@ export const getModerationTableColumns = ({
         size: 50, enableSorting: false, enableHiding: false,
     },
 ];
-
