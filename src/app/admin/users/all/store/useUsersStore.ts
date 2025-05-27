@@ -14,6 +14,7 @@ interface UsersState {
     actions: {
         setInfiniteQueryData: (data: InfiniteData<UserPage> | null) => void;
         clearAllData: () => void;
+        addUser: (user: UserSummaryRespond) => void;
         updateUser: (user: UserSummaryRespond) => void;
         removeUser: (userId: string) => void;
     };
@@ -29,6 +30,19 @@ const useUsersStore = create<UsersState>()(
                     state.infiniteQueryData = data;
                     state.users = data?.pages?.flatMap((page: UserPage) => page.data ?? []) ?? [];
                 }),
+
+            addUser: (newUser) =>
+                set((state) => {
+                    state.users.unshift(newUser);
+
+                    if (state.infiniteQueryData) {
+                        const firstPage = state.infiniteQueryData.pages[0];
+                        if (firstPage) {
+                            firstPage.data = [newUser, ...(firstPage.data ?? [])];
+                        }
+                    }
+                }),
+
             updateUser: (updatedUser) =>
                 set((state) => {
                     state.users = state.users.map((u) => (u.id === updatedUser.id ? updatedUser : u));

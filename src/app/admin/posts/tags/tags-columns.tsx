@@ -52,6 +52,21 @@ export const columns: ColumnDef<TagRowData>[] = [
         size: 40,
     },
     {
+        accessorKey: "id",
+        header: ({column}) => (
+            <DataTableColumnHeader column={column} title="ID"/>
+        ),
+        cell: ({row}) => {
+            return (
+                <div className="min-w-[100px] truncate">
+                    {row.getValue("id")}
+                </div>
+            );
+        },
+        enableSorting: false,
+        enableHiding: false,
+    },
+    {
         accessorKey: "name",
         header: ({column}) => (
             <DataTableColumnHeader column={column} title="Name"/>
@@ -88,7 +103,7 @@ export const columns: ColumnDef<TagRowData>[] = [
     {
         accessorKey: "postsCount",
         header: ({column}) => (
-            <DataTableColumnHeader column={column} title="Tag of Posts"/>
+            <DataTableColumnHeader column={column} title="Posts"/>
         ),
         cell: ({row}) => {
             return (
@@ -106,6 +121,10 @@ export const columns: ColumnDef<TagRowData>[] = [
         ),
         cell: ({row}) => {
             const createdById = row.getValue("createdBy") as string | undefined;
+            if (createdById === '00000000-0000-0000-0000-000000000000') {
+                return <div className="min-w-[100px] truncate">System</div>;
+            }
+
             return <div className="min-w-[100px] truncate">{createdById || "N/A"}</div>;
         },
         enableSorting: true,

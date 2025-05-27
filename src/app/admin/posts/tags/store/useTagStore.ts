@@ -1,30 +1,30 @@
 import {create} from "zustand";
 import {immer} from "zustand/middleware/immer";
 import { InfiniteData } from "@tanstack/react-query";
-import {RoleDto, ResponseMetadata} from "@/api/client/types.gen";
+import {ResponseMetadata, TagResponse} from "@/api/client/types.gen"; // Assuming PostTag type exists similar to PostCategory
 
-export interface RolePage {
-    data?: RoleDto[];
+export interface TagPage {
+    data?: TagResponse[];
     metadata?: ResponseMetadata;
 }
 
-type SetInfiniteDataFunction = (data: InfiniteData<RolePage> | null | ((prev: InfiniteData<RolePage> | null) => InfiniteData<RolePage> | null)) => void;
+type SetInfiniteDataFunction = (data: InfiniteData<TagPage> | null | ((prev: InfiniteData<TagPage> | null) => InfiniteData<TagPage> | null)) => void;
 
-interface RolesState {
-    roles: RoleDto[];
-    infiniteQueryData: InfiniteData<RolePage> | null;
+interface TagState {
+    tags: TagResponse[];
+    infiniteQueryData: InfiniteData<TagPage> | null;
     actions: {
         setInfiniteQueryData: SetInfiniteDataFunction;
         clearAllData: () => void;
-        addRole: (role: RoleDto) => void;
-        updateRole: (updatedRole: RoleDto) => void;
-        removeRole: (roleId: string | number) => void;
+        addTag: (tag: TagResponse) => void;
+        updateTag: (updatedTag: TagResponse) => void;
+        removeTag: (tagId: string | number) => void;
     };
 }
 
-const useRolesStore = create<RolesState>()(
+const useTagStore = create<TagState>()(
     immer((set) => ({
-        roles: [],
+        tags: [],
         infiniteQueryData: null,
         actions: {
             setInfiniteQueryData: (data) =>
@@ -34,13 +34,13 @@ const useRolesStore = create<RolesState>()(
                     } else {
                         state.infiniteQueryData = data;
                     }
-                    state.roles = state.infiniteQueryData?.pages?.flatMap((page: RolePage) => page.data ?? []) ?? [];
+                    state.tags = state.infiniteQueryData?.pages?.flatMap((page: TagPage) => page.data ?? []) ?? [];
                 }),
-            addRole: (role) =>
+            addTag: (tag) =>
                 set((state) => {
-                    state.roles = [role, ...state.roles];
+                    state.tags = [tag, ...state.tags];
                     if (state.infiniteQueryData && state.infiniteQueryData.pages.length > 0) {
-                        const updatedFirstPageData = [role, ...(state.infiniteQueryData.pages[0]?.data ?? [])];
+                        const updatedFirstPageData = [tag, ...(state.infiniteQueryData.pages[0]?.data ?? [])];
                         const updatedFirstPage = {
                             ...(state.infiniteQueryData.pages[0] || {}),
                             data: updatedFirstPageData,
@@ -48,24 +48,24 @@ const useRolesStore = create<RolesState>()(
                         state.infiniteQueryData.pages = [updatedFirstPage, ...state.infiniteQueryData.pages.slice(1)];
                     } else {
                         state.infiniteQueryData = {
-                            pages: [{ data: [role], metadata: {} }], // Added metadata placeholder
+                            pages: [{ data: [tag], metadata: {} }],
                             pageParams: [0],
                         };
                     }
                 }),
-            updateRole: (updatedRole) =>
+            updateTag: (updatedTag) =>
                 set((state) => {
-                    state.roles = state.roles.map(r =>
-                        r.id === updatedRole.id ? updatedRole : r
+                    state.tags = state.tags.map(t =>
+                        t.id === updatedTag.id ? updatedTag : t
                     );
                     if (state.infiniteQueryData) {
                         state.infiniteQueryData.pages = state.infiniteQueryData.pages.map(page => {
                             const pageData = page.data ?? [];
-                            if (pageData.some(r => r.id === updatedRole.id)) {
+                            if (pageData.some(t => t.id === updatedTag.id)) {
                                 return {
                                     ...page,
-                                    data: pageData.map(r =>
-                                        r.id === updatedRole.id ? updatedRole : r
+                                    data: pageData.map(t =>
+                                        t.id === updatedTag.id ? updatedTag : t
                                     ),
                                 };
                             }
@@ -73,16 +73,16 @@ const useRolesStore = create<RolesState>()(
                         });
                     }
                 }),
-            removeRole: (roleId) =>
+            removeTag: (tagId) =>
                 set((state) => {
-                    state.roles = state.roles.filter(r => r.id !== roleId);
+                    state.tags = state.tags.filter(t => t.id !== tagId);
                     if (state.infiniteQueryData) {
                         state.infiniteQueryData.pages = state.infiniteQueryData.pages.map(page => {
                             const pageData = page.data ?? [];
-                            if (pageData.some(r => r.id === roleId)) {
+                            if (pageData.some(t => t.id === tagId)) {
                                 return {
                                     ...page,
-                                    data: pageData.filter(r => r.id !== roleId),
+                                    data: pageData.filter(t => t.id !== tagId),
                                 };
                             }
                             return page;
@@ -93,12 +93,12 @@ const useRolesStore = create<RolesState>()(
                 }),
             clearAllData: () =>
                 set((state) => {
-                    state.roles = [];
+                    state.tags = [];
                     state.infiniteQueryData = null;
                 }),
         },
     }))
 );
 
-export default useRolesStore;
+export default useTagStore;
 
