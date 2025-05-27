@@ -1,32 +1,13 @@
 "use client";
 
-import React, {useEffect, useState} from "react";
+import React from "react";
 import {Button} from "@/components/ui/button";
-import {DataTable} from "@/components/ui/data-table";
-import {permissionsColumns} from "./permissions-columns";
 import {AddPermissionSheet} from "./add-permission-sheet";
-import {CreatePermissionRequest, PermissionDto} from "@/api/client";
-import {DraggableItem} from "@/components/common/dnd-table-components";
-import usePermissionsStore from "@/app/admin/users/permissions/stores/usePermissionsStore";
+import {CreatePermissionRequest} from "@/api/client";
 import usePermissionsManagement from "@/app/admin/users/permissions/hooks/usePermissionsManagement";
-
-type PermissionDraggable = PermissionDto & DraggableItem;
-
+import {PermissionsDataTable} from "./permissions-data-table";
 export const PermissionsTable = () => {
-    const [data, setData] = useState<PermissionDraggable[]>([]);
-    const {permissions} = usePermissionsStore();
-    const {totalPages, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage, createPermission} = usePermissionsManagement()
-
-    useEffect(() => {
-        const draggablePermissions: PermissionDraggable[] = permissions.map(permissionFromStore => {
-            const permissionDto: PermissionDto = {
-                ...permissionFromStore,
-                id: String(permissionFromStore.id),
-            };
-            return permissionDto as PermissionDraggable;
-        });
-        setData(draggablePermissions);
-    }, [permissions]);
+    const {createPermission} = usePermissionsManagement();
 
     const handlePermissionAdded = (newPermissionData: CreatePermissionRequest) => {
         createPermission(newPermissionData)
@@ -39,19 +20,10 @@ export const PermissionsTable = () => {
                     <Button>Add New Permission</Button>
                 </AddPermissionSheet>
             </div>
-            <DataTable
-                pageCount={totalPages}
-                isLoading={isLoading}
-                isFetchingNextPage={isFetchingNextPage}
-                hasNextPage={hasNextPage}
-                fetchNextPage={fetchNextPage}
-                columns={permissionsColumns}
-                data={data}
-                setData={setData}
+            <PermissionsDataTable
                 enableRowSelection={true}
-                initialColumnVisibility={{id: false}}
+                columnVisibility={{id: false}}
             />
         </div>
     );
 };
-

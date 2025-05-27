@@ -201,7 +201,7 @@ export function UserAdminTable() {
                     setData={setData}
                     enableDnd={true}
                     enableRowSelection={true}
-                    filterPlaceholder="Search users, emails, roles..."
+                    filterPlaceholder="Search users, emails, reports..."
                 />
             </TabsContent>
 

@@ -1,4 +1,3 @@
-// components/datatable/DataTable.tsx
 "use client";
 
 import React from "react";
@@ -56,13 +55,15 @@ interface DataTableProps<TData extends DraggableItem, TValue> {
     hasNextPage?: boolean;
     isFetchingNextPage?: boolean;
 
+    enableRowSelection?: boolean | ((row: Row<TData>) => boolean);
+    setRowSelectionFn?: React.Dispatch<React.SetStateAction<TData[]>>;
+
     isLoading?: boolean;
     enableDnd?: boolean;
     onDragEnd?: (event: DragEndEvent, currentData: TData[]) => TData[];
     filterPlaceholder?: string;
     initialSort?: SortingState;
     initialColumnVisibility?: VisibilityState;
-    enableRowSelection?: boolean | ((row: Row<TData>) => boolean);
     meta?: TableMeta<TData>;
     showGlobalFilter?: boolean;
     showViewOptions?: boolean;
@@ -103,13 +104,16 @@ export function DataTable<TData extends DraggableItem, TValue>({
                                                                    hasNextPage,
                                                                    isFetchingNextPage,
 
+                                                                   enableRowSelection = false,
+                                                                   setRowSelectionFn,
+
+
                                                                    isLoading,
                                                                    enableDnd = false,
                                                                    onDragEnd: customOnDragEnd,
                                                                    filterPlaceholder = "Search...",
                                                                    initialSort = [],
                                                                    initialColumnVisibility = {},
-                                                                   enableRowSelection = false,
                                                                    meta,
                                                                    showGlobalFilter = true,
                                                                    showViewOptions = true,
@@ -128,6 +132,19 @@ export function DataTable<TData extends DraggableItem, TValue>({
         pageIndex: 0,
         pageSize: 10,
     });
+
+    React.useEffect(() => {
+        if (setRowSelectionFn) {
+            const selectedRows = Object.keys(rowSelection)
+                .flatMap(key => {
+                    const found = data.find(item => item.id === key);
+                    return found ? [found] : [];
+                });
+
+            setRowSelectionFn(selectedRows);
+        }
+    }, [rowSelection, data, setRowSelectionFn]);
+
 
     const pagination = isPaginationControlled ? controlledPagination! : internalPagination;
     const onPaginationChange = isPaginationControlled ? setControlledPagination : setInternalPagination;
