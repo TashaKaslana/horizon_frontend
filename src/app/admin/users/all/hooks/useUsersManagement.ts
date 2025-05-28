@@ -1,76 +1,219 @@
 'use client'
 
 import {
-    createUserMutation, deleteUserMutation,
-    getAllUsersInfiniteOptions, updateUserAccountMutation,
+    createUserMutation,
+    deleteUserMutation,
+    getAllUserIntroductionsInfiniteOptions,
+    getUserOptions,
+    updateUserAccount1Mutation,
+    updateUserImageMutation,
     updateUserInfoMutation
-} from "@/api/client/@tanstack/react-query.gen"
-import {useInfiniteQuery, useMutation} from "@tanstack/react-query";
+} from "@/api/client/@tanstack/react-query.gen";
+import {useInfiniteQuery, useMutation, useQuery} from "@tanstack/react-query";
 import {getNextPageParam} from "@/lib/utils";
 import useUsersStore from "@/app/admin/users/all/store/useUsersStore";
 import {useEffect} from "react";
-import {updateUserAccount, updateUserInfo} from "@/api/client";
-import {updateUserImage} from "@/api/userApi";
+import {toast} from "sonner";
+import {
+    UserCreateDto,
+    UserUpdateInfoDto,
+    UserAccountUpdate,
+    UserRespondDto,
+    UserImageUpdate
+} from "@/api/client/types.gen";
+import {
+    zUserCreateDto,
+    zUserUpdateInfoDto,
+    zUserAccountUpdate,
+    zUserImageUpdate
+} from "@/api/client/zod.gen";
 
-const useUsersManagement = () => {
-    const {actions} = useUsersStore()
-    
-    const {data : userListData} = useInfiniteQuery({
-        ...getAllUsersInfiniteOptions({
+const useUsersManagement = (userId?: string) => {
+    const {actions} = useUsersStore();
+
+    const {
+        data: userListData,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+        isLoading,
+        isError,
+        error
+    } = useInfiniteQuery({
+        ...getAllUserIntroductionsInfiniteOptions({
             query: {
                 page: 0,
                 size: 10,
                 sort: ["createdAt", "desc"],
             },
         }),
-        getNextPageParam: (lastPage) => {
-            return getNextPageParam(lastPage);
-        },
+        getNextPageParam: (lastPage) => getNextPageParam(lastPage),
         initialPageParam: 0
+    });
+
+    const {data: selectedUserData, isLoading: isSelectedUserLoading} = useQuery({
+        ...getUserOptions({
+            path: {
+                id: userId || "",
+            }
+        }),
     })
 
     useEffect(() => {
-        actions.setInfiniteQueryData(userListData)
+        if (selectedUserData?.data) {
+            actions.setSelectedUser(selectedUserData.data);
+        }
+    }, [actions, selectedUserData]);
+
+    useEffect(() => {
+        actions.setInfiniteQueryData(userListData);
     }, [actions, userListData]);
 
-    const {} = useMutation({
+    const {mutate: createUserFn, isPending: isCreatingUser} = useMutation({
         ...createUserMutation(),
-        onSuccess: (data) => {
-            actions.addUser(data.data)
+        onSuccess: (res) => {
+            if (res.data) {
+                actions.addUser(res.data as UserRespondDto);
+                toast.success("User created successfully.");
+            }
         },
-    })
+        onError: (err) => {
+            console.error("Create user error:", err);
+            toast.error("Failed to create user.");
+        }
+    });
 
-    const {} = useMutation({
+    const createUser = (data: UserCreateDto) => {
+        const validationResult = zUserCreateDto.safeParse(data);
+        if (!validationResult.success) {
+            const firstError = validationResult.error.errors[0];
+            toast.error(firstError.message);
+            return;
+        }
+        createUserFn({body: validationResult.data});
+    };
+
+    const {mutate: updateUserInfoFn, isPending: isUpdatingUserInfo} = useMutation({
         ...updateUserInfoMutation(),
-        onSuccess: (data) => {
-            actions.updateUser(data.data)
+        onSuccess: (res) => {
+            if (res.data) {
+                actions.updateUser(res.data as UserRespondDto);
+                toast.success("User info updated.");
+            }
         },
-    })
+        onError: (err) => {
+            console.error("Update info error:", err);
+            toast.error("Failed to update user info.");
+        }
+    });
 
-    const {} = useMutation({
-        ...updateUserAccountMutation(),
-        onSuccess: (data) => {
-            actions.updateUser(data.data)
+    const updateUserInfo = (id: string, data: UserUpdateInfoDto) => {
+        const validationResult = zUserUpdateInfoDto.safeParse(data);
+        if (!validationResult.success) {
+            const firstError = validationResult.error.errors[0];
+            toast.error(firstError.message);
+            return;
+        }
+        updateUserInfoFn({
+            path: {id}, body: {
+                ...validationResult.data,
+                dateOfBirth: validationResult.data.dateOfBirth ?
+                    new Date(validationResult.data.dateOfBirth) : undefined,
+            }
+        });
+    };
+
+    const {mutate: updateUserAccountFn, isPending: isUpdatingUserAccount} = useMutation({
+        ...updateUserAccount1Mutation(),
+        onSuccess: (res) => {
+            if (res.data) {
+                actions.updateUser(res.data as UserRespondDto);
+                toast.success("User account updated.");
+            }
         },
-    })
+        onError: (err) => {
+            console.error("Update account error:", err);
+            toast.error("Failed to update user account.");
+        }
+    });
 
-    const {} = useMutation({
-        ...updateUserImage(),
-        onSuccess: (data) => {
-            actions.updateUser(data.data)
+    const updateUserAccount = (id: string, data: UserAccountUpdate) => {
+        const validationResult = zUserAccountUpdate.safeParse(data);
+        if (!validationResult.success) {
+            const firstError = validationResult.error.errors[0];
+            toast.error(firstError.message);
+            return;
+        }
+        updateUserAccountFn({path: {id}, body: validationResult.data});
+    };
+
+    const {mutate: updateUserImageMutateFn, isPending: isUpdatingUserImage} = useMutation({
+        ...updateUserImageMutation(),
+        onSuccess: (res) => {
+            if (res.data) {
+                actions.updateUser(res.data as UserRespondDto);
+                toast.success("User image updated.");
+            }
         },
-    })
+        onError: (err) => {
+            console.error("Update image error:", err);
+            toast.error("Failed to update user image.");
+        }
+    });
 
-    const {} = useMutation({
+    const updateUserImage = (data: UserImageUpdate) => {
+        const validationResult = zUserImageUpdate.safeParse(data);
+        if (!validationResult.success) {
+            const firstError = validationResult.error.errors[0];
+            toast.error(firstError.message);
+            return;
+        }
+        updateUserImageMutateFn({body: validationResult.data});
+    };
+
+    const {mutate: deleteUserFn, isPending: isDeletingUser} = useMutation({
         ...deleteUserMutation(),
         onSuccess: (_, variables) => {
-            actions.removeUser(variables.path.id)
+            actions.removeUser(variables.path.id);
+            toast.success("User deleted.");
         },
-    })
+        onError: (err) => {
+            console.error("Delete user error:", err);
+            toast.error("Failed to delete user.");
+        }
+    });
+
+    const deleteUser = (id: string) => {
+        deleteUserFn({path: {id}});
+    };
 
     return {
+        userListData,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+        isLoading,
+        isError,
+        error,
 
-    }
-}
+        selectedUserData: selectedUserData,
+        isSelectedUserLoading,
+
+        createUser,
+        isCreatingUser,
+
+        updateUserInfo,
+        isUpdatingUserInfo,
+
+        updateUserAccount,
+        isUpdatingUserAccount,
+
+        updateUserImage,
+        isUpdatingUserImage,
+
+        deleteUser,
+        isDeletingUser,
+    };
+};
 
 export default useUsersManagement;

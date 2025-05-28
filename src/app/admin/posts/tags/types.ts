@@ -1,6 +1,6 @@
 import {DraggableItem} from "@/components/common/dnd-table-components";
 import {TagResponse} from "@/api/client";
 
-export type TagRowData = TagResponse & DraggableItem & {
+export type TagRowData = TagResponse & {
     postsCount: number;
 };

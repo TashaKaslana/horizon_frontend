@@ -19,7 +19,7 @@ import {
     PaginationState,
     OnChangeFn,
 } from "@tanstack/react-table";
-import type {DragEndEvent} from "@dnd-kit/core";
+import type {DragEndEvent, UniqueIdentifier} from "@dnd-kit/core";
 import {arrayMove} from "@dnd-kit/sortable";
 
 import {
@@ -42,7 +42,11 @@ import {
     DraggableItem,
 } from "@/components/common/dnd-table-components";
 
-interface DataTableProps<TData extends DraggableItem, TValue> {
+// Interface for data items when DND is enabled.
+// They must have an 'id' for dnd-kit.
+type DataWithDndId = { id: UniqueIdentifier };
+
+interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     setData?: React.Dispatch<React.SetStateAction<TData[]>>;
@@ -60,7 +64,7 @@ interface DataTableProps<TData extends DraggableItem, TValue> {
 
     isLoading?: boolean;
     enableDnd?: boolean;
-    onDragEnd?: (event: DragEndEvent, currentData: TData[]) => TData[];
+    onDragEnd?: (event: DragEndEvent, currentData: (TData & DataWithDndId)[]) => (TData & DataWithDndId)[];
     filterPlaceholder?: string;
     initialSort?: SortingState;
     initialColumnVisibility?: VisibilityState;
@@ -69,6 +73,7 @@ interface DataTableProps<TData extends DraggableItem, TValue> {
     showViewOptions?: boolean;
     showPagination?: boolean;
     globalFilterFn?: FilterFn<TData> | 'auto' | null;
+    customGetRowId?: (originalRow: TData, index: number) => string;
 }
 
 const genericGlobalFilterFn: FilterFn<any> = (
@@ -91,7 +96,7 @@ const genericGlobalFilterFn: FilterFn<any> = (
     return false;
 };
 
-export function DataTable<TData extends DraggableItem, TValue>({
+export function DataTable<TData, TValue>({
                                                                    columns,
                                                                    data,
                                                                    setData,
@@ -119,6 +124,7 @@ export function DataTable<TData extends DraggableItem, TValue>({
                                                                    showViewOptions = true,
                                                                    showPagination = true,
                                                                    globalFilterFn: providedGlobalFilterFn = genericGlobalFilterFn,
+                                                                   customGetRowId,
                                                                }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>(initialSort);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
@@ -132,19 +138,6 @@ export function DataTable<TData extends DraggableItem, TValue>({
         pageIndex: 0,
         pageSize: 10,
     });
-
-    React.useEffect(() => {
-        if (setRowSelectionFn) {
-            const selectedRows = Object.keys(rowSelection)
-                .flatMap(key => {
-                    const found = data.find(item => item.id === key);
-                    return found ? [found] : [];
-                });
-
-            setRowSelectionFn(selectedRows);
-        }
-    }, [rowSelection, data, setRowSelectionFn]);
-
 
     const pagination = isPaginationControlled ? controlledPagination! : internalPagination;
     const onPaginationChange = isPaginationControlled ? setControlledPagination : setInternalPagination;
@@ -178,26 +171,56 @@ export function DataTable<TData extends DraggableItem, TValue>({
         getPaginationRowModel: getPaginationRowModel(),
         getSortedRowModel: getSortedRowModel(),
         getFilteredRowModel: getFilteredRowModel(),
-        getRowId: (row: TData) => row.id.toString(),
+        getRowId: customGetRowId ?? ((originalRow: TData, index: number): string => {
+            const idSource = originalRow as TData & { id?: UniqueIdentifier };
+            if (idSource.id !== undefined && (typeof idSource.id === 'string')) {
+                return String(idSource.id);
+            }
+            if (enableDnd) {
+                console.error(`DataTable: When 'enableDnd' is true, data items must have an 'id' property (string or number) usable by 'getRowId', or a 'customGetRowId' must be provided that yields such an ID. Row at index ${index} is problematic.`);
+                throw new Error(`DND Error: Item at index ${index} missing required 'id' for getRowId when DND enabled.`);
+            }
+            console.error(`DataTable: Row at index ${index} is missing an 'id' property for 'getRowId' and no 'customGetRowId' was provided. Table operations may fail.`);
+            throw new Error(`Configuration Error: Item at index ${index} missing 'id' for getRowId and no 'customGetRowId' provided.`);
+        }),
         globalFilterFn: providedGlobalFilterFn === null ? undefined : providedGlobalFilterFn,
 
         manualPagination: isPaginationControlled,
         pageCount: isPaginationControlled ? pageCount : undefined,
     });
 
+    React.useEffect(() => {
+        if (setRowSelectionFn) {
+            const selectedRowOriginals = Object.keys(rowSelection)
+                .map(rowId => {
+                    const row = table.getRow(rowId);
+                    return row ? row.original : undefined;
+                })
+                .filter(original => original !== undefined) as TData[];
+
+            setRowSelectionFn(selectedRowOriginals);
+        }
+    }, [rowSelection, table, setRowSelectionFn]);
+
     const handleDragEnd = (event: DragEndEvent) => {
         if (!enableDnd) return;
 
+        const currentDataForDnd = memoizedData as (TData & DataWithDndId)[];
+
         if (customOnDragEnd) {
-            const reorderedData = customOnDragEnd(event, memoizedData);
-            if (setData && reorderedData) setData(reorderedData);
+            const reorderedData = customOnDragEnd(event, currentDataForDnd);
+            if (setData && reorderedData) setData(reorderedData as TData[]);
         } else if (setData) {
             const {active, over} = event;
             if (active && over && active.id !== over.id) {
                 setData((currentData) => {
-                    const oldIndex = currentData.findIndex(item => item.id === active.id);
-                    const newIndex = currentData.findIndex(item => item.id === over.id);
-                    if (oldIndex === -1 || newIndex === -1) return currentData;
+                    const currentDataWithIds = currentData as (TData & DataWithDndId)[];
+                    const oldIndex = currentDataWithIds.findIndex(item => item.id === active.id);
+                    const newIndex = currentDataWithIds.findIndex(item => item.id === over.id);
+                    if (oldIndex === -1 || newIndex === -1) {
+                        console.warn("DataTable DND: Could not find items for reordering. Ensure 'id' properties are consistent.");
+                        return currentData;
+                    }
                     return arrayMove(currentData, oldIndex, newIndex);
                 });
             }
@@ -234,9 +257,21 @@ export function DataTable<TData extends DraggableItem, TValue>({
                         </TableCell>
                     </TableRow>
                 ) : table.getRowModel().rows?.length ? (
-                    table.getRowModel().rows.map((row) =>
-                        enableDnd ? (
-                            <DraggableRow key={row.id} row={row as Row<TData>}/>
+                    table.getRowModel().rows.map((row, rowIndex) => {
+                        const originalItem = row.original as TData & { id?: UniqueIdentifier };
+
+                        if (enableDnd && (originalItem.id === undefined || (typeof originalItem.id !== 'string' && typeof originalItem.id !== 'number'))) {
+                            console.error("DataTable critical error: Attempting to render DraggableRow for an item missing a valid 'id'. This indicates an issue with getRowId configuration or data integrity for DND.");
+                            return (
+                                <TableRow key={`error-${row.id}-${rowIndex}`} data-state="error">
+                                    <TableCell colSpan={memoizedColumns.length} className="h-12 text-center text-destructive">
+                                        Error: Item missing ID for DND.
+                                    </TableCell>
+                                </TableRow>
+                            );
+                        }
+                        return enableDnd ? (
+                            <DraggableRow key={String(originalItem.id)} row={row as Row<TData & DraggableItem>}/>
                         ) : (
                             <TableRow
                                 key={row.id}
@@ -249,8 +284,8 @@ export function DataTable<TData extends DraggableItem, TValue>({
                                     </TableCell>
                                 ))}
                             </TableRow>
-                        )
-                    )
+                        );
+                    })
                 ) : !isLoading ? (
                     <TableRow>
                         <TableCell colSpan={memoizedColumns.length} className="h-24 text-center">
@@ -286,7 +321,7 @@ export function DataTable<TData extends DraggableItem, TValue>({
             )}
             <div className="rounded-md border">
                 {enableDnd && memoizedData.length > 0 ? (
-                    <DndTableContext items={memoizedData} onDragEndAction={handleDragEnd}>
+                    <DndTableContext items={memoizedData as (TData & DraggableItem)[]} onDragEndAction={handleDragEnd}>
                         {tableContent}
                     </DndTableContext>
                 ) : (
