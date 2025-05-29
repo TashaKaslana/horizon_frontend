@@ -1,52 +1,76 @@
 import {DataTable} from "@/components/ui/data-table";
 import {useEffect, useState} from "react";
-import {LogItem} from "@/app/admin/(system)/logs/types";
 import {columns} from "@/app/admin/(system)/logs/logs-columns";
-import {mockActivity, mockErrors, mockSystemActivity} from "@/app/admin/components/mockData";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import useAdminLogEntriesStore from "@/app/admin/(system)/logs/useLoggingStore";
+import {useLoggingManagement} from "@/app/admin/(system)/logs/useLoggingManagement";
+import {LogEntryDto} from "@/api/client";
 
 export const LogsTable = () => {
-    const [tab, setTab] = useState("system");
-    const [data, setData] = useState<LogItem[]>([]);
-
-    useEffect(() => {
-        switch (tab) {
-            case "system":
-                setData(mockSystemActivity);
-                break;
-            case "activity":
-                setData(mockActivity);
-                break;
-            // case "api":
-            //     setData(mockApiLogs);
-            //     break;
-            case "error":
-                setData(mockErrors);
-                break;
-            default:
-                setData([]);
-        }
-    }, [tab]);
+    const [tab, setTab] = useState("all");
 
     return (
         <div className="p-4">
-            <Tabs defaultValue="system" value={tab} onValueChange={setTab}>
+            <Tabs defaultValue="all" value={tab} onValueChange={setTab}>
                 <TabsList className="mb-4">
+                    <TabsTrigger value="all">All Logs</TabsTrigger>
                     <TabsTrigger value="system">System Logs</TabsTrigger>
-                    <TabsTrigger value="activity">Activity Logs</TabsTrigger>
-                    {/*<TabsTrigger value="api">API Logs</TabsTrigger>*/}
                     <TabsTrigger value="error">Error Logs</TabsTrigger>
                 </TabsList>
 
-                <TabsContent value={tab}>
-                    <DataTable
-                        columns={columns}
-                        data={data}
-                        setData={setData}
-                        enableRowSelection={true}
-                    />
-                </TabsContent>
+                {tab === "all" && <LogTab severities={["INFO", "WARNING", "ERROR", "CRITICAL"]}/>}
+                {tab === "system" && <LogTab severities={["INFO", "WARNING"]} />}
+                {tab === "error" && <LogTab severities={["ERROR", "CRITICAL"]} />}
             </Tabs>
         </div>
     );
-}
+};
+
+const LogTab = ({ severities }: { severities: ("INFO" | "WARNING" | "ERROR" | "CRITICAL")[] }) => {
+    const [data, setData] = useState<LogEntryDto[]>([]);
+    const { logEntries } = useAdminLogEntriesStore();
+    const {
+        fetchNextPage,
+        isFetchingNextPage,
+        isLoading,
+        hasNextPage,
+        totalPages
+    } = useLoggingManagement(severities);
+
+    useEffect(() => {
+        if (logEntries) {
+            setData(logEntries);
+        }
+    }, [logEntries]);
+
+    return (
+        <TabsContent value={getTabKeyFromSeverities(severities)}>
+            <DataTable
+                columns={columns}
+                data={data}
+                setData={setData}
+                enableRowSelection={true}
+                isLoading={isLoading}
+                isFetchingNextPage={isFetchingNextPage}
+                fetchNextPage={fetchNextPage}
+                hasNextPage={hasNextPage}
+                pageCount={totalPages}
+            />
+        </TabsContent>
+    );
+};
+
+
+const getTabKeyFromSeverities = (severities: ("INFO" | "WARNING" | "ERROR" | "CRITICAL")[]) => {
+    const key = severities.join(",");
+    switch (key) {
+        case "INFO,WARNING,ERROR,CRITICAL":
+            return "all";
+        case "INFO,WARNING":
+            return "system";
+        case "ERROR,CRITICAL":
+            return "error";
+        default:
+            return "all";
+    }
+};
