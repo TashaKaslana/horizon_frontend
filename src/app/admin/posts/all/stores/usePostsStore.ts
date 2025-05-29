@@ -3,24 +3,24 @@
 import {create} from "zustand";
 import {immer} from "zustand/middleware/immer";
 import { InfiniteData } from "@tanstack/react-query";
-import { PostResponse } from "@/api/client/types.gen";
+import {PostAdminViewDto, PostCategorySummary, PostResponse} from "@/api/client/types.gen";
 
 export interface PostPage {
-    data?: PostResponse[];
+    data?: PostAdminViewDto[];
 }
 
 interface PostsState {
-    posts: PostResponse[];
-    selectedPost: PostResponse | null;
+    posts: PostAdminViewDto[];
+    selectedPost: PostAdminViewDto | null;
     infiniteQueryData: InfiniteData<PostPage> | null;
     actions: {
-        setInfiniteQueryData: (data: InfiniteData<PostPage> | null) => void;
-        setSelectedPost: (post: PostResponse | null) => void;
+        setInfiniteQueryData: (data: InfiniteData<PostPage>) => void;
+        setSelectedPost: (post: PostAdminViewDto | null) => void;
         clearAllData: () => void;
-        addPost: (post: PostResponse) => void;
-        updatePost: (post: PostResponse) => void;
+        addPost: (post: PostAdminViewDto) => void;
+        updatePost: (postUpdate: PostResponse) => void;
         removePost: (postId: string) => void;
-        setPosts: (posts: PostResponse[]) => void;
+        setPosts: (posts: PostAdminViewDto[]) => void;
     };
 }
 
@@ -52,16 +52,33 @@ const usePostsStore = create<PostsState>()(
                     }
                 }),
 
-            updatePost: (updatedPost) =>
+            updatePost: (postUpdate) =>
                 set((state) => {
-                    state.posts = state.posts.map((p) => (p.id === updatedPost.id ? updatedPost : p));
-                    if (state.selectedPost?.id === updatedPost.id) {
-                        state.selectedPost = { ...state.selectedPost, ...updatedPost }
+                    const { id, categoryName, ...otherUpdateData } = postUpdate;
+
+                    const applyUpdate = (post: PostAdminViewDto): PostAdminViewDto => ({
+                        ...post,
+                        ...otherUpdateData,
+                        id: id,
+                        visibility: otherUpdateData.visibility as PostAdminViewDto['visibility'],
+                        category: categoryName ? { ...(post.category || {}), name: categoryName } as PostCategorySummary : post.category,
+                    });
+
+                    state.posts = state.posts.map((p) =>
+                        p.id === id ? applyUpdate(p) : p
+                    );
+
+                    const selected = state.selectedPost;
+                    if (selected && selected.id === id) {
+                        state.selectedPost = applyUpdate(selected);
                     }
+
                     if (state.infiniteQueryData) {
                         state.infiniteQueryData.pages = state.infiniteQueryData.pages.map((page) => ({
                             ...page,
-                            data: (page.data ?? []).map((p) => (p.id === updatedPost.id ? updatedPost : p)),
+                            data: (page.data ?? []).map((p) =>
+                                p.id === id ? applyUpdate(p) : p
+                            ),
                         }));
                     }
                 }),

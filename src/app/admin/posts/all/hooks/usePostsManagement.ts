@@ -2,19 +2,27 @@
 
 import {
     createPostMutation,
-    deletePostMutation, getAllPostsForAdminInfiniteOptions, getPostByIdOptions,
+    deletePostMutation, getAllPostsForAdminInfiniteOptions, getPostByIdForAdminOptions,
     updatePostMutation
 } from "@/api/client/@tanstack/react-query.gen";
-import {useInfiniteQuery, useMutation, useQuery} from "@tanstack/react-query";
+import {InfiniteData, useInfiniteQuery, useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {toast} from "sonner";
-import {CreatePostRequest, UpdatePostRequest} from "@/api/client/types.gen";
+import {
+    CreatePostRequest,
+    PostAdminViewDto,
+    UpdatePostRequest,
+    PostResponse,
+    PostCategorySummary,
+    RestApiResponseVoid
+} from "@/api/client/types.gen";
 import {zCreatePostRequest, zUpdatePostRequest} from "@/api/client/zod.gen";
-import usePostsStore from "../stores/usePostsStore";
+import usePostsStore, {PostPage} from "../stores/usePostsStore";
 import {useEffect} from "react";
 import {getNextPageParam} from "@/lib/utils";
 
 export const usePostsManagement = (postId?: string) => {
     const {actions} = usePostsStore();
+    const queryClient = useQueryClient();
 
     const {
         data: postListData,
@@ -36,30 +44,55 @@ export const usePostsManagement = (postId?: string) => {
         initialPageParam: 0
     });
 
-
     const {
-        data: selectedPostDataResponse,
+        data: selectedPostData,
         isLoading: isSelectedPostLoading,
         isError: isSelectedPostError
     } = useQuery({
-        ...getPostByIdOptions({
+        ...getPostByIdForAdminOptions({
             path: {
-                postId: postId || "",
+                postId: postId!,
             }
         }),
+        staleTime: 1000 * 60 * 5,
+        gcTime: 1000 * 60 * 10,
         enabled: !!postId,
+        throwOnError: true,
     });
 
     useEffect(() => {
-        actions.setInfiniteQueryData(postListData );
-    }, [actions, postListData]);
+        if (!postId && !postListData) return;
+
+        const postResponseToAdminViewDto = (post: PostResponse): PostAdminViewDto => {
+            const { categoryName, visibility, createdAt, updatedAt, ...rest } = post;
+            return {
+                ...rest,
+                id: post.id,
+                visibility: visibility as PostAdminViewDto['visibility'],
+                category: categoryName ? ({ name: categoryName } as PostCategorySummary) : undefined,
+                createdAt: new Date(createdAt ?? '') ,
+                updatedAt: new Date(updatedAt ?? ''),
+            };
+        };
+
+        const transformedData: InfiniteData<PostPage> = {
+            ...postListData,
+            pages: postListData?.pages?.map(page => ({
+                ...page,
+                data: page.data?.map(postResponseToAdminViewDto) ?? [],
+            })),
+        };
+        actions.setInfiniteQueryData(transformedData);
+    }, [postId, actions, postListData]);
 
     const {mutate: createPostMutateFn, isPending: isCreatingPost} = useMutation({
         ...createPostMutation(),
         onSuccess: (res) => {
-            if (res.data) {
-                actions.addPost(res.data);
+            if (res.data?.id) {
+                queryClient.invalidateQueries({queryKey: getAllPostsForAdminInfiniteOptions().queryKey}).then();
                 toast.success("Post created successfully.");
+            } else {
+                toast.error("Failed to create post: No ID returned or creation failed.");
             }
         },
         onError: (err) => {
@@ -78,28 +111,28 @@ export const usePostsManagement = (postId?: string) => {
         createPostMutateFn({body: validationResult.data});
     };
 
-    const {mutate: updatePostMutateFn, isPending: isUpdatingPost} = useMutation({
+    const {
+        mutate: updatePostMutateFn,
+        mutateAsync: updatePostMutateAsyncFn,
+        isPending: isUpdatingPost
+    } = useMutation({
         ...updatePostMutation(),
         onSuccess: (res) => {
-            if (res.data) {
-                actions.updatePost(res.data);
-                toast.success("Post updated successfully.");
-            }
+            actions.updatePost(res.data!);
         },
         onError: (err) => {
-            console.error("Update post error:", err);
-            toast.error("Failed to update post.");
+            console.error("Update post error in hook:", err);
         }
     });
 
-    const updatePost = (id: string, data: UpdatePostRequest) => {
+    const updatePost = async (id: string, data: UpdatePostRequest): Promise<RestApiResponseVoid> => {
         const validationResult = zUpdatePostRequest.safeParse(data);
         if (!validationResult.success) {
             const firstError = validationResult.error.errors[0];
             toast.error(firstError.message);
-            return;
+            throw validationResult.error;
         }
-        updatePostMutateFn({
+        return updatePostMutateAsyncFn({
             body: validationResult.data,
             path: {
                 postId: id
@@ -107,20 +140,22 @@ export const usePostsManagement = (postId?: string) => {
         });
     };
 
-    const {mutate: deletePostFn, isPending: isDeletingPost} = useMutation({
+    const {
+        mutateAsync: deletePostAsyncFn,
+        isPending: isDeletingPost
+    } = useMutation({
         ...deletePostMutation(),
         onSuccess: (_, variables) => {
             actions.removePost(variables.path.postId);
-            toast.success("Post deleted.");
         },
         onError: (err) => {
-            console.error("Delete post error:", err);
-            toast.error("Failed to delete post.");
+            console.error("Delete post error in hook:", err);
+            // Toast will be handled by the component using toast.promise
         }
     });
 
-    const deletePost = (id: string) => {
-        deletePostFn({path: {postId: id}});
+    const deletePost = (id: string): Promise<RestApiResponseVoid> => {
+        return deletePostAsyncFn({path: {postId: id}});
     };
 
     return {
@@ -132,9 +167,10 @@ export const usePostsManagement = (postId?: string) => {
         isError,
         error,
 
-        selectedPostData: selectedPostDataResponse,
+        selectedPostData,
         isSelectedPostLoading,
         isSelectedPostError,
+
 
         createPost,
         isCreatingPost,
@@ -146,3 +182,4 @@ export const usePostsManagement = (postId?: string) => {
         isDeletingPost,
     };
 }
+

@@ -2,27 +2,41 @@ import {NextResponse, type NextRequest } from "next/server";
 import { auth0 } from "./lib/auth0";
 
 export async function middleware(request: NextRequest) {
-    const authRes = await auth0.middleware(request)
+    // Let auth0 process the request first
+    const authRes = await auth0.middleware(request);
 
-    if (request.nextUrl.pathname.startsWith("/auth")) {
-        return authRes
+    // If Auth0 middleware already responded (redirect, etc.), honor it
+    if (authRes) {
+        return authRes;
     }
 
-    const session = await auth0.getSession(request)
+    const pathname = request.nextUrl.pathname;
+
+    // Skip auth check for login-related routes
+    if (pathname.startsWith("/auth")) {
+        return NextResponse.next();
+    }
+
+    let session;
+    try {
+        session = await auth0.getSession(request);
+    } catch (err) {
+        console.error("Error getting session:", err);
+        return NextResponse.redirect(new URL("/auth/login", request.url));
+    }
 
     if (!session) {
-        // user is not authenticated, redirect to login page
-        return NextResponse.redirect(new URL("/auth/login", request.nextUrl.origin))
+        return NextResponse.redirect(new URL("/auth/login", request.url));
     }
 
     try {
-        await auth0.getAccessToken(request, authRes);
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    } catch (e) {
-        return NextResponse.redirect(new URL("/auth/login", request.nextUrl.origin))
+        await auth0.getAccessToken(request, authRes)
+    } catch (err) {
+        console.error("Error getting access token:", err);
+        return NextResponse.redirect(new URL("/auth/login", request.url));
     }
 
-    return authRes
+    return NextResponse.next();
 }
 
 export const config = {

@@ -7,10 +7,7 @@ import {PostSchema} from "@/schemas/post-schema";
 export const PostStatusEnum = z.enum(["Draft", "Published", "Archived", "Pending Review"]);
 export const PostCategoryEnum = z.enum(["Technology", "Lifestyle", "Travel", "Business", "Art", "Science", "Tutorial"]);
 
-
 export type PostData = z.infer<typeof PostSchema> & DraggableItem;
-
-export type PostDataWithMetadata = PostData & { views: number; likes: number; comments: number };
 
 export const PostFormSchema = PostSchema.extend({
     tagsInput: z.string().optional(),

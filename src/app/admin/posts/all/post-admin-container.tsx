@@ -1,3 +1,5 @@
+'use client';
+
 import {SiteHeader} from "@/app/admin/components/site-header";
 import {PostCardList} from "@/app/admin/posts/all/post-card-list";
 import {PostChart} from "@/app/admin/posts/all/post-attending-chart";
@@ -15,3 +17,4 @@ const PostAdminContainer = () => {
 }
 
 export default PostAdminContainer
+
