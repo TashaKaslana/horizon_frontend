@@ -1,7 +1,6 @@
 "use client";
 
 import {ColumnDef} from "@tanstack/react-table";
-import {NotificationItem} from "@/app/admin/moderation/notifications/types";
 import {Checkbox} from "@/components/ui/checkbox";
 import {DataTableColumnHeader} from "@/components/common/data-table-components";
 import {formatDateTS} from "@/lib/utils";
@@ -17,8 +16,9 @@ import {Button} from "@/components/ui/button";
 import {toast} from "sonner";
 import {Badge} from "@/components/ui/badge";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
+import {AdminNotificationDto} from "@/api/client";
 
-export const notificationColumns: ColumnDef<NotificationItem>[] = [
+export const notificationColumns: ColumnDef<AdminNotificationDto>[] = [
     {
         id: "select",
         header: ({table}) => (
