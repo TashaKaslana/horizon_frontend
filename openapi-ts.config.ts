@@ -17,5 +17,9 @@ export default defineConfig({
             name: '@hey-api/client-axios',
             runtimeConfigPath: './src/lib/hey-api.ts',
         },
+        {
+            enums: 'javascript',
+            name: '@hey-api/typescript',
+        },
     ],
 });

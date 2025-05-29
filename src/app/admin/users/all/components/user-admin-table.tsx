@@ -23,29 +23,13 @@ import {DataTableColumnHeader} from "@/components/common/data-table-components";
 import {UserTableCellViewer} from "@/app/admin/users/all/components/user-table-cell-viewer";
 import {UserIntroduction} from "@/api/client";
 import useUsersStore from "@/app/admin/users/all/store/useUsersStore";
+import useUsersManagement from "../hooks/useUsersManagement";
 
 export type UserAdminData = UserIntroduction & DraggableItem;
 
-// const mockUserAdminData: UserSummaryAdmin[] = [
-//     { id: '1', profileImage: "https://avatar.vercel.sh/alice.png", displayName: "Alice Wonderland", username: "alicew", email: "alice@example.com", role: "Admin", status: "Active", createdAt: "2023-01-15T10:00:00Z", lastLogin: "2024-03-10T10:00:00Z", coverImage: "" },
-//     { id: '2', profileImage: "https://avatar.vercel.sh/bob.png", displayName: "Bob The Builder", username: "bobthebuilder", email: "bob@example.com", role: "Editor", status: "Pending", createdAt: "2023-02-20T11:30:00Z", lastLogin: "2024-03-09T11:30:00Z", coverImage: "" },
-//     { id: '3', profileImage: "https://avatar.vercel.sh/diana.png",displayName: "Charlie Brown", username: "charlieb", email: "charlie@example.com", role: "Viewer", status: "Active", createdAt: "2023-03-10T09:15:00Z", lastLogin: "2024-03-10T09:15:00Z", coverImage: "" },
-//     { id: '4', profileImage: "https://avatar.vercel.sh/diana.png", displayName: "Diana Prince", username: "wonderwoman", email: "diana@example.com", role: "Admin", status: "Suspended", createdAt: "2023-04-05T16:45:00Z", coverImage: "" },
-//     { id: '5', profileImage: "https://avatar.vercel.sh/diana.png",displayName: "Edward Scissorhands", username: "edwardscissor", email: "edward@example.com", role: "Editor", status: "Active", createdAt: "2023-05-12T14:00:00Z", lastLogin: "2024-03-08T14:00:00Z" , coverImage: ""},
-//     { id: '6', profileImage: "https://avatar.vercel.sh/fiona.png", displayName: "Fiona Gallagher", username: "fionag", email: "fiona@example.com", role: "Support", status: "Active", createdAt: "2023-06-18T10:00:00Z", lastLogin: "2024-03-10T08:00:00Z", coverImage: "" },
-//     { id: '7', profileImage: "https://avatar.vercel.sh/diana.png",displayName: "George Costanza", username: "georgec", email: "george@example.com", role: "Billing", status: "Deactivated", createdAt: "2023-07-22T11:00:00Z" , coverImage: ""},
-//     { id: '8', profileImage: "https://avatar.vercel.sh/harry.png", displayName: "Harry Potter", username: "hpotter", email: "harry@example.com", role: "Admin", status: "Active", createdAt: "2023-08-01T12:00:00Z", lastLogin: "2024-03-10T12:00:00Z", coverImage: "" },
-//     { id: '9', profileImage: "https://avatar.vercel.sh/diana.png",displayName: "Irene Adler", username: "ireneadler", email: "irene@example.com", role: "Editor", status: "Pending", createdAt: "2023-09-10T13:00:00Z" , coverImage: ""},
-//     { id: '10', profileImage: "https://avatar.vercel.sh/jack.png", displayName: "Jack Sparrow", username: "captainjack", email: "jack@example.com", role: "Viewer", status: "Active", createdAt: "2023-10-15T14:00:00Z", lastLogin: "2024-03-05T14:00:00Z", coverImage: "" },
-//     { id: '11', profileImage: "https://avatar.vercel.sh/diana.png",displayName: "Kevin McCallister", username: "kevinhome", email: "kevin@example.com", role: "Support", status: "Suspended", createdAt: "2023-11-20T15:00:00Z", lastLogin: "2024-02-20T15:00:00Z" , coverImage: ""},
-//     { id: '12', profileImage: "https://avatar.vercel.sh/lucy.png", displayName: "Lucy Pevensie", username: "lucyp", email: "lucy@example.com", role: "Billing", status: "Active", createdAt: "2023-12-01T16:00:00Z", lastLogin: "2024-03-10T10:30:00Z", coverImage: "" },
-//     { id: '13', profileImage: "https://avatar.vercel.sh/diana.png",displayName: "Michael Scott", username: "michaelscott", email: "michael@example.com", role: "Admin", status: "Active", createdAt: "2024-01-05T17:00:00Z", lastLogin: "2024-03-10T17:00:00Z", coverImage: "" },
-//     { id: '14', profileImage: "https://avatar.vercel.sh/neo.png", displayName: "Neo Anderson", username: "theone", email: "neo@example.com", role: "Editor", status: "Pending", createdAt: "2024-02-10T18:00:00Z" , coverImage: ""},
-//     { id: '15', profileImage: "https://avatar.vercel.sh/diana.png", displayName: "Olivia Benson", username: "oliviab", email: "olivia@example.com", role: "Viewer", status: "Active", createdAt: "2024-03-01T19:00:00Z", lastLogin: "2024-03-09T19:00:00Z" , coverImage: ""},
-// ];
-
 export function UserAdminTable() {
     const {users} = useUsersStore()
+    const {fetchNextPage, isFetchingNextPage, hasNextPage, isLoading} = useUsersManagement()
     const [data, setData] = React.useState<UserAdminData[]>([]);
 
     useEffect(() => {
@@ -107,9 +91,8 @@ export function UserAdminTable() {
                             <AvatarFallback>{user?.displayName?.split(' ').map(n => n[0]).join('').toUpperCase()}</AvatarFallback>
                         </Avatar>
                         <div className="flex flex-col gap-1">
-                            {/* TableCellViewer provides its own trigger (user.displayName) */}
                             <UserTableCellViewer userId={user.id} onUpdate={handleUpdateItem}
-                                                 initialDisplayName={'Halle'}/>
+                                                 initialDisplayName={user?.displayName}/>
                             <span className="text-xs text-muted-foreground italic">@{user.username}</span>
                         </div>
                     </div>
@@ -226,6 +209,10 @@ export function UserAdminTable() {
                     enableDnd={true}
                     enableRowSelection={true}
                     filterPlaceholder="Search users, emails, reports..."
+                    fetchNextPage={fetchNextPage}
+                    isFetchingNextPage={isFetchingNextPage}
+                    hasNextPage={hasNextPage}
+                    isLoading={isLoading}
                 />
             </TabsContent>
 

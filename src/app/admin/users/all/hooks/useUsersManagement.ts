@@ -51,19 +51,18 @@ const useUsersManagement = (userId?: string) => {
         initialPageParam: 0
     });
 
-    const {data: selectedUserData, isLoading: isSelectedUserLoading} = useQuery({
+    const {
+        data: selectedUserData,
+        isLoading: isSelectedUserLoading,
+        isError: isSelectedUserError
+    } = useQuery({
         ...getUserOptions({
             path: {
                 id: userId || "",
             }
         }),
+        enabled: !!userId,
     })
-
-    useEffect(() => {
-        if (selectedUserData?.data) {
-            actions.setSelectedUser(selectedUserData.data);
-        }
-    }, [actions, selectedUserData]);
 
     useEffect(() => {
         actions.setInfiniteQueryData(userListData);
@@ -198,6 +197,7 @@ const useUsersManagement = (userId?: string) => {
 
         selectedUserData: selectedUserData,
         isSelectedUserLoading,
+        isSelectedUserError,
 
         createUser,
         isCreatingUser,
