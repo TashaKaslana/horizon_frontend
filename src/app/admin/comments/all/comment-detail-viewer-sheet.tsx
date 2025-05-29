@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, {useEffect} from "react";
 import {
     Sheet,
     SheetContent,
@@ -14,90 +14,67 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
-import { CommentAdminData } from "./comment-admin-table";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { MessageSquareIcon, UserIcon, FileTextIcon, CalendarIcon, TagIcon, Edit3Icon, ShieldAlertIcon } from "lucide-react";
-import {commentData} from "@/app/admin/components/mockData";
-// import { useQuery } from "@tanstack/react-query"; // Example import for TanStack Query
+import { MessageSquareIcon, UserIcon, FileTextIcon, CalendarIcon, TagIcon, Edit3Icon, ShieldAlertIcon, Loader2Icon } from "lucide-react";
+import useCommentsManagement from "@/app/admin/comments/all/hooks/useCommentsManagement";
+import {CommentRespond} from "@/api/client";
+import useCommentsStore from "@/app/admin/comments/all/stores/useCommentsStore";
+import {formatDateTS} from "@/lib/utils";
 
 interface CommentDetailViewerSheetProps {
-    commentId: string; // Changed: Expect commentId instead of full comment object
+    commentId: string;
     children: React.ReactNode;
-    // Removed onUpdate prop
+    onUpdate?: (updatedComment: Partial<CommentRespond>) => void;
 }
-
-// Placeholder: Replace with your actual fetch function
-// const fetchCommentById = async (commentId: string): Promise<CommentAdminData> => {
-//     // Example: return apiClient.get(`/api/comments/${commentId}`);
-//     // For demonstration, returning a mock. Replace with actual API call.
-//     console.log(`Fetching comment with ID: ${commentId}`);
-//     return new Promise(resolve => setTimeout(() => resolve({
-//         id: commentId,
-//         content: "This is a fetched comment content.",
-//         authorId: "author-123",
-//         authorName: "Fetched Author",
-//         authorUsername: "fetchedauthor",
-//         authorEmail: "fetched@example.com",
-//         authorProfileImage: "https://avatar.vercel.sh/fetched.png",
-//         postId: "post-456",
-//         postTitle: "Fetched Post Title",
-//         status: "Approved",
-//         createdAt: new Date().toISOString(),
-//         updatedAt: null,
-//     } as CommentAdminData), 1000));
-// };
 
 export function CommentDetailViewerSheet({
     commentId,
     children,
+    onUpdate,
 }: CommentDetailViewerSheetProps) {
-    // const { data: comment, isLoading, isError, error } = useQuery<CommentAdminData, Error>(
-    //     ['comment', commentId],
-    //     () => fetchCommentById(commentId),
-    //     { enabled: !!commentId } // Only run query if commentId is available
-    // );
-
-    // Placeholder data and states until TanStack Query is fully implemented
-    // Replace these with actual data from useQuery
-    const isLoading = false; // Example: replace with query.isLoading
-    const isError = false;   // Example: replace with query.isError
-    const error = null;      // Example: replace with query.error
-    const comment: CommentAdminData | undefined = commentData;
-    // End of placeholder data
+    const { selectedCommentData, isLoading, isError, error } = useCommentsManagement(commentId);
+    const {selectedComment, actions} = useCommentsStore()
 
     const handleEdit = () => {
-        // Placeholder for edit functionality
-        // This would likely involve opening a modal/form or navigating,
-        // and then re-fetching or updating the cache via TanStack Query.
-        console.log("Edit comment action for ID:", commentId);
-        // Example: onUpdate?.({ ...comment, content: "Updated content" }); // onUpdate is removed
+        console.log("Edit comment:", selectedCommentData?.data);
     };
+
+    useEffect(() => {
+        if (selectedCommentData?.data) {
+            actions.setSelectedComment(selectedCommentData.data)
+        }
+    }, [actions, selectedCommentData, selectedCommentData?.data]);
 
     if (isLoading) {
         return (
             <Sheet>
                 <SheetTrigger asChild>{children}</SheetTrigger>
-                <SheetContent className="sm:max-w-lg w-[90vw] p-0">
-                    <SheetHeader className="p-6 border-b">
-                        <SheetTitle>Loading Comment...</SheetTitle>
-                    </SheetHeader>
-                    <div className="p-6">Loading details...</div>
+                <SheetContent className="sm:max-w-lg w-[90vw] p-0 flex items-center justify-center">
+                    <Loader2Icon className="h-8 w-8 animate-spin text-muted-foreground" />
                 </SheetContent>
             </Sheet>
         );
     }
 
-    if (isError || !comment) {
+    if (isError || !selectedComment) {
         return (
             <Sheet>
                 <SheetTrigger asChild>{children}</SheetTrigger>
                 <SheetContent className="sm:max-w-lg w-[90vw] p-0">
                     <SheetHeader className="p-6 border-b">
-                        <SheetTitle>Error</SheetTitle>
+                        <SheetTitle className="flex items-center gap-2 text-destructive">
+                            <ShieldAlertIcon className="size-5" />
+                            Error
+                        </SheetTitle>
+                        <SheetDescription>
+                            {error?.message || "Could not load comment details."}
+                        </SheetDescription>
                     </SheetHeader>
-                    <div className="p-6">
-                        {isError && error ? (error as any).message : "Comment not found or failed to load."}
-                    </div>
+                    <SheetFooter className="p-6 border-t mt-auto">
+                        <SheetClose asChild>
+                            <Button variant="outline" size="sm">Close</Button>
+                        </SheetClose>
+                    </SheetFooter>
                 </SheetContent>
             </Sheet>
         );
@@ -105,7 +82,7 @@ export function CommentDetailViewerSheet({
 
     return (
         <Sheet>
-            <SheetTrigger>
+            <SheetTrigger asChild>
                 {children}
             </SheetTrigger>
             <SheetContent className="sm:max-w-lg w-[90vw] p-0">
@@ -116,85 +93,77 @@ export function CommentDetailViewerSheet({
                             Comment Details
                         </SheetTitle>
                         <SheetDescription>
-                            Viewing details for comment ID: {comment.id}
+                            Viewing details for comment ID: {selectedComment?.id}
                         </SheetDescription>
                     </SheetHeader>
 
                     <div className="p-6 space-y-6">
-                        {/* Content Section */}
                         <div className="space-y-2">
                             <h4 className="text-sm font-semibold text-muted-foreground">Comment Content</h4>
                             <div className="p-3 bg-muted/50 rounded-md border text-sm whitespace-pre-wrap break-words">
-                                {comment.content}
+                                {selectedComment?.content}
                             </div>
                         </div>
 
                         <Separator />
 
-                        {/* Author Section */}
                         <div className="space-y-3">
                             <h4 className="text-sm font-semibold text-muted-foreground flex items-center gap-1.5">
                                 <UserIcon className="size-4" /> Author
                             </h4>
                             <div className="flex items-center gap-3">
                                 <Avatar className="h-12 w-12">
-                                    <AvatarImage src={comment.user.profileImage} alt={comment.user.profileImage} />
-                                    <AvatarFallback>{comment.user.displayName.split(' ').map(n => n[0]).join('').toUpperCase()}</AvatarFallback>
+                                    <AvatarImage src={selectedComment?.user?.profileImage || undefined} alt={selectedComment?.user?.displayName || 'User'} />
+                                    <AvatarFallback>{selectedComment?.user?.displayName?.split(' ').map((n: string) => n[0]).join('').toUpperCase() || 'U'}</AvatarFallback>
                                 </Avatar>
                                 <div>
-                                    <p className="font-medium">{comment.user.displayName} <span className="text-xs text-muted-foreground">(@{comment.user.username})</span></p>
-                                    {/*<p className="text-xs text-muted-foreground">{comment.user.email}</p>*/}
-                                    <p className="text-xs text-muted-foreground">Author ID: {comment.user.id}</p>
+                                    <p className="font-medium">{selectedComment?.user?.displayName || 'N/A'} <span className="text-xs text-muted-foreground">(@{selectedComment?.user?.username || 'N/A'})</span></p>
+                                    <p className="text-xs text-muted-foreground">{selectedComment?.user?.username || 'N/A'}</p>
+                                    <p className="text-xs text-muted-foreground">Author ID: {selectedComment?.user?.id}</p>
                                 </div>
                             </div>
                         </div>
 
                         <Separator />
 
-                        {/* Post Section */}
                         <div className="space-y-2">
                             <h4 className="text-sm font-semibold text-muted-foreground flex items-center gap-1.5">
                                 <FileTextIcon className="size-4" /> Related Post
                             </h4>
-                            <p className="text-sm font-medium">{comment.post.caption}</p>
-                            <p className="text-xs text-muted-foreground">Post ID: {comment.post.id}</p>
-                            {/* Future: Could add a button to navigate to post management page */}
+                            <p className="text-sm font-medium">{selectedComment?.post?.caption || 'N/A'}</p>
+                            <p className="text-xs text-muted-foreground">Post ID: {selectedComment?.post?.id}</p>
                         </div>
 
                         <Separator />
 
-                        {/* Status & Timestamps Section */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div className="space-y-1">
                                 <h4 className="text-sm font-semibold text-muted-foreground flex items-center gap-1.5">
                                     <TagIcon className="size-4" /> Status
                                 </h4>
                                 <Badge variant={
-                                    comment.status === "Approved" ? "default" :
-                                    comment.status === "Pending" ? "outline" :
-                                    comment.status === "Spam" || comment.status === "Rejected" ? "destructive" : "secondary"
+                                    selectedComment?.status === "APPROVED" ? "default" :
+                                        selectedComment?.status === "PENDING" ? "outline" :
+                                            selectedComment?.status === "SPAM" || selectedComment?.status === "REJECTED" ? "destructive" : "secondary"
                                 } className="text-xs">
-                                    {comment.status}
+                                    {selectedComment?.status}
                                 </Badge>
                             </div>
                             <div className="space-y-1">
                                 <h4 className="text-sm font-semibold text-muted-foreground flex items-center gap-1.5">
                                     <CalendarIcon className="size-4" /> Submitted At
                                 </h4>
-                                <p className="text-xs">{new Date(comment.createdAt).toLocaleString()}</p>
+                                <p className="text-xs">{formatDateTS(selectedComment?.createdAt ?? '')}</p>
                             </div>
-                            {comment.updatedAt && (
+                            {selectedComment?.updatedAt && (
                                 <div className="space-y-1">
                                     <h4 className="text-sm font-semibold text-muted-foreground flex items-center gap-1.5">
                                         <CalendarIcon className="size-4" /> Last Updated
                                     </h4>
-                                    <p className="text-xs">{new Date(comment.updatedAt).toLocaleString()}</p>
+                                    <p className="text-xs">{new Date(selectedComment?.updatedAt).toLocaleString()}</p>
                                 </div>
                             )}
                         </div>
-
-                        {/* Future: Could add sections for edit history, moderation logs, etc. */}
-
                     </div>
 
                     <SheetFooter className="p-6 border-t mt-auto">
@@ -204,11 +173,12 @@ export function CommentDetailViewerSheet({
                                 Report
                             </Button>
                             <div className="flex gap-2">
-                                {/* Edit button is kept, handleEdit would be adapted for TanStack Query flows */}
-                                <Button variant="default" size="sm" onClick={handleEdit} className="gap-1.5">
-                                    <Edit3Icon className="size-4" />
-                                    Edit Comment
-                                </Button>
+                                {onUpdate && (
+                                    <Button variant="default" size="sm" onClick={handleEdit} className="gap-1.5">
+                                        <Edit3Icon className="size-4" />
+                                        Edit Comment
+                                    </Button>
+                                )}
                                 <SheetClose asChild>
                                     <Button variant="outline" size="sm">Close</Button>
                                 </SheetClose>

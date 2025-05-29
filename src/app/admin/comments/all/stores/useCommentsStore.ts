@@ -84,22 +84,33 @@ const useCommentsStore = create<CommentsState>()(
 
             setComments: (newComments) =>
                 set((state) => {
-                    state.comments = newComments;
-                    if (state.infiniteQueryData) {
-                        const remainingComments = [...newComments];
-                        state.infiniteQueryData.pages = state.infiniteQueryData.pages.map(page => {
-                            const pageCommentsCount = page.data?.length || 0;
-                            const commentsForThisPage = remainingComments.splice(0, pageCommentsCount);
-                            return {
-                                ...page,
-                                data: commentsForThisPage
-                            };
-                        }).filter(page => page.data && page.data.length > 0);
+                    state.comments = newComments; // Update the flat list
 
-                        if (newComments.length > 0 && state.infiniteQueryData.pages.length === 0) {
-                            state.infiniteQueryData.pages = [{ data: newComments }];
-                            state.infiniteQueryData.pageParams = [0]; // Assuming pageParam starts at 0
+                    if (state.infiniteQueryData) {
+                        const pageSize = 10; // Consistent with the fetch size in useCommentsManagement.ts
+                        const newPages: CommentPage[] = [];
+                        const newPageParams: any[] = []; // pageParams type is unknown[]
+
+                        if (newComments.length > 0) {
+                            // Determine the starting page param, assuming numeric and sequential
+                            // Uses the first pageParam from existing data as a base, or defaults to 0
+                            let basePageParam = 0;
+                            if (state.infiniteQueryData.pageParams && state.infiniteQueryData.pageParams.length > 0) {
+                                const firstParam = state.infiniteQueryData.pageParams[0];
+                                if (typeof firstParam === 'number') {
+                                    basePageParam = firstParam;
+                                }
+                            }
+
+                            for (let i = 0; i < newComments.length; i += pageSize) {
+                                newPages.push({ data: newComments.slice(i, i + pageSize) });
+                                newPageParams.push(basePageParam + (newPages.length - 1));
+                            }
                         }
+                        // If newComments.length is 0, newPages and newPageParams will be empty, effectively clearing them.
+
+                        state.infiniteQueryData.pages = newPages;
+                        state.infiniteQueryData.pageParams = newPageParams;
                     }
                 }),
 

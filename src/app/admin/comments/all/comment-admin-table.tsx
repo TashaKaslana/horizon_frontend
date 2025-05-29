@@ -259,14 +259,6 @@ export function CommentAdminTable() {
             size: 50, enableSorting: false, enableHiding: false,
         },
     ], [handleUpdateCommentStatus, handleDeleteComment]);
-
-    // const statusFilterOptions = [
-    //     {label: "Approved", value: "Approved", icon: CheckCircle2Icon, color: "text-green-500"},
-    //     {label: "Pending", value: "Pending", icon: LoaderIcon, color: "text-amber-500"},
-    //     {label: "Spam", value: "Spam", icon: XCircleIcon, color: "text-red-500"},
-    //     {label: "Rejected", value: "Rejected", icon: XCircleIcon, color: "text-orange-500"},
-    // ];
-
     return (
         <div className="flex w-full flex-col justify-start gap-6 p-4 md:p-6">
             <DataTable
