@@ -1,24 +1,21 @@
 'use client'
 import {client} from '@/api/client/client.gen';
-import {useEffect} from "react";
 
-export const useSetupClientInterceptorsRequest = () => {
-    useEffect(() => {
-        const interceptor = client.instance.interceptors.request.use(async (config) => {
-            const res = await fetch('/api/token');
-            const data = await res.json();
-            const token = data.accessToken.token;
+import { useAuthTokenStore } from '@/stores/useTokenStore';
+import {useInterceptorStore} from "@/stores/useInterceptorStore";
 
+export const setupAxiosAuthInterceptor = async () => {
+    await useAuthTokenStore.getState().loadToken(); // load token first
+
+    client.instance.interceptors.request.use(async (config) => {
+        const token = useAuthTokenStore.getState().token;
+        if (token) {
             config.headers.set('Authorization', `Bearer ${token}`);
-            return config;
-        });
+        }
+        return config;
+    });
 
-        return () => {
-            if (interceptor !== undefined) {
-                client.instance.interceptors.request.eject(interceptor);
-            }
-        };
-    }, []);
+    useInterceptorStore.getState().setInitialized(true);
 };
 
 export const setupClientInterceptorsResponse = () => {
