@@ -7,17 +7,10 @@ import {
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
+import {OverviewStatistic} from "@/api/client";
 
-interface CardData {
-    title: string
-    value: string
-    trend: number
-    message: string
-    description: string
-}
-
-export function OverviewCard({data}: { data: CardData }) {
-    const isTrendPositive = data.trend >= 0
+export function OverviewCard({data}: { data: OverviewStatistic }) {
+    const isTrendPositive = (data?.trend ?? 0) >= 0
     const TrendIcon = isTrendPositive ? TrendingUpIcon : TrendingDownIcon
 
     return (

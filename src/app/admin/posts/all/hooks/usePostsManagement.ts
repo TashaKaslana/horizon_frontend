@@ -2,7 +2,11 @@
 
 import {
     createPostMutation,
-    deletePostMutation, getAllPostsForAdminInfiniteOptions, getPostByIdForAdminOptions,
+    deletePostMutation,
+    getAllPostsForAdminInfiniteOptions,
+    getDailyPostCountOptions,
+    getPostAnalyticsOptions,
+    getPostByIdForAdminOptions,
     updatePostMutation
 } from "@/api/client/@tanstack/react-query.gen";
 import {InfiniteData, useInfiniteQuery, useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
@@ -20,7 +24,7 @@ import usePostsStore, {PostPage} from "../stores/usePostsStore";
 import {useEffect} from "react";
 import {getNextPageParam} from "@/lib/utils";
 
-export const usePostsManagement = (postId?: string) => {
+export const usePostsManagement = (postId?: string, dailyRange?: number) => {
     const {actions} = usePostsStore();
     const queryClient = useQueryClient();
 
@@ -84,6 +88,30 @@ export const usePostsManagement = (postId?: string) => {
         };
         actions.setInfiniteQueryData(transformedData);
     }, [postId, actions, postListData]);
+
+    const {data: postOverviewData, isLoading: isPostOverviewLoading} = useQuery({
+        ...getPostAnalyticsOptions(),
+    })
+
+    useEffect(() => {
+        if (postOverviewData?.data) {
+            actions.setOverviewData(postOverviewData.data)
+        }    
+    }, [actions, postOverviewData?.data]);
+
+    const {data: dailyPostCount, isLoading: isDailyPostCountLoading} = useQuery({
+        ...getDailyPostCountOptions({
+            query: {
+                days: dailyRange ?? 30
+            }
+        }),
+    })
+
+    useEffect(() => {
+        if (dailyPostCount?.data) {
+            actions.setChartData(dailyPostCount.data);
+        }
+    }, [actions, dailyPostCount?.data]);
 
     const {mutate: createPostMutateFn, isPending: isCreatingPost} = useMutation({
         ...createPostMutation(),
@@ -171,6 +199,11 @@ export const usePostsManagement = (postId?: string) => {
         isSelectedPostLoading,
         isSelectedPostError,
 
+        postOverviewData,
+        isPostOverviewLoading,
+        
+        dailyPostCount,
+        isDailyPostCountLoading,
 
         createPost,
         isCreatingPost,

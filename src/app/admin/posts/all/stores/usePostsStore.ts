@@ -2,8 +2,14 @@
 
 import {create} from "zustand";
 import {immer} from "zustand/middleware/immer";
-import { InfiniteData } from "@tanstack/react-query";
-import {PostAdminViewDto, PostCategorySummary, PostResponse} from "@/api/client/types.gen";
+import {InfiniteData} from "@tanstack/react-query";
+import {
+    DailyCountDto,
+    OverviewStatistic,
+    PostAdminViewDto,
+    PostCategorySummary,
+    PostResponse
+} from "@/api/client/types.gen";
 
 export interface PostPage {
     data?: PostAdminViewDto[];
@@ -13,9 +19,13 @@ interface PostsState {
     posts: PostAdminViewDto[];
     selectedPost: PostAdminViewDto | null;
     infiniteQueryData: InfiniteData<PostPage> | null;
+    overviewData: OverviewStatistic[];
+    chartData: DailyCountDto[];
     actions: {
         setInfiniteQueryData: (data: InfiniteData<PostPage>) => void;
         setSelectedPost: (post: PostAdminViewDto | null) => void;
+        setOverviewData: (data: OverviewStatistic[]) => void;
+        setChartData: (data: DailyCountDto[]) => void;
         clearAllData: () => void;
         addPost: (post: PostAdminViewDto) => void;
         updatePost: (postUpdate: PostResponse) => void;
@@ -29,6 +39,8 @@ const usePostsStore = create<PostsState>()(
         posts: [],
         infiniteQueryData: null,
         selectedPost: null,
+        overviewData: [],
+        chartData: [],
         actions: {
             setInfiniteQueryData: (data) =>
                 set((state) => {
@@ -39,6 +51,16 @@ const usePostsStore = create<PostsState>()(
             setSelectedPost: (post) =>
                 set((state) => {
                     state.selectedPost = post;
+                }),
+
+            setOverviewData: (data) =>
+                set((state) => {
+                    state.overviewData = data;
+                }),
+
+            setChartData: (data) =>
+                set((state) => {
+                    state.chartData = data;
                 }),
 
             addPost: (newPost) =>
@@ -54,14 +76,17 @@ const usePostsStore = create<PostsState>()(
 
             updatePost: (postUpdate) =>
                 set((state) => {
-                    const { id, categoryName, ...otherUpdateData } = postUpdate;
+                    const {id, categoryName, ...otherUpdateData} = postUpdate;
 
                     const applyUpdate = (post: PostAdminViewDto): PostAdminViewDto => ({
                         ...post,
                         ...otherUpdateData,
                         id: id,
                         visibility: otherUpdateData.visibility as PostAdminViewDto['visibility'],
-                        category: categoryName ? { ...(post.category || {}), name: categoryName } as PostCategorySummary : post.category,
+                        category: categoryName ? {
+                            ...(post.category || {}),
+                            name: categoryName
+                        } as PostCategorySummary : post.category,
                     });
 
                     state.posts = state.posts.map((p) =>
@@ -114,7 +139,7 @@ const usePostsStore = create<PostsState>()(
                         }).filter(page => page.data && page.data.length > 0);
 
                         if (newPosts.length > 0 && state.infiniteQueryData.pages.length === 0) {
-                            state.infiniteQueryData.pages = [{ data: newPosts }];
+                            state.infiniteQueryData.pages = [{data: newPosts}];
                             state.infiniteQueryData.pageParams = [0];
                         }
                     }
