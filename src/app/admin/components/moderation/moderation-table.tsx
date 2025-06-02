@@ -2,16 +2,8 @@
 
 import React, {useEffect} from "react";
 import {
-    CheckCircle2Icon,
-    LoaderIcon,
     Trash2Icon,
     ShieldQuestionIcon,
-    FileTextIcon,
-    MessageSquareIcon,
-    UserIcon,
-    AlertTriangleIcon,
-    ShieldCheckIcon,
-    ShieldXIcon,
 } from "lucide-react";
 import {toast} from "sonner";
 
@@ -23,66 +15,36 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {DataTable} from "@/components/ui/data-table";
-import {getModerationTableColumns} from "@/app/admin/components/moderation/moderation-table-columns";
+import {useModerationTableColumns} from "@/app/admin/components/moderation/moderation-table-columns";
 import {DraggableItem} from "@/components/common/dnd-table-components";
-import {ModerationItemTypeSchema, ModerationStatus, ModerationStatusSchema} from "@/schemas/report-schema";
+import {ModerationStatus, ModerationStatusSchema} from "@/schemas/report-schema";
 import {ReportDto} from "@/api/client";
-import useReportStore from "@/app/admin/moderation/reports/useReportStore";
-import {ModerationProps, useModeration} from "@/app/admin/moderation/reports/useModeration";
+import {useReportStore} from "@/app/admin/moderation/reports/useReportStore";
+import {useModeration} from "@/app/admin/moderation/reports/useModeration";
+import { RowSelectionState } from "@tanstack/react-table";
+import {PostDetailViewerSheet} from "../../posts/all/post-detail-viewer-sheet";
 
 type ModerationItemData = ReportDto & DraggableItem
 
-ModerationStatusSchema.options.map(status => ({
-    value: status,
-    label: status.replace(/_/g, ' '),
-    icon: (() => {
-        switch (status) {
-            case "PENDING":
-                return LoaderIcon;
-            case "REVIEWED_APPROVED":
-                return ShieldCheckIcon;
-            case "REVIEWED_REJECTED":
-                return ShieldXIcon;
-            case "ACTIONTAKEN_CONTENTREMOVED":
-            case "ACTIONTAKEN_USERWARNED":
-            case "ACTIONTAKEN_USERBANNED":
-                return AlertTriangleIcon;
-            case "RESOLVED":
-                return CheckCircle2Icon;
-            default:
-                return ShieldQuestionIcon;
-        }
-    })()
-}));
-
-ModerationItemTypeSchema.options.map(type => ({
-    value: type,
-    label: type,
-    icon: (() => {
-        switch (type) {
-            case "POST":
-                return FileTextIcon;
-            case "COMMENT":
-                return MessageSquareIcon;
-            case "USER":
-                return UserIcon;
-            default:
-                return ShieldQuestionIcon;
-        }
-    })()
-}));
-
 type ModerationTableProps = {
-    options: ModerationProps
+    type?: 'USER' | 'POST' | 'COMMENT';
+    isFull?: boolean;
     onUpdateStatusAction?: (itemIds: string[], newStatus: ModerationStatus) => void;
     onDeleteEntriesAction?: (itemIds: string[]) => void;
 }
 
-export function ModerationTable({options}: ModerationTableProps) {
+export function ModerationTable({
+    type,
+    isFull,
+    onUpdateStatusAction,
+    onDeleteEntriesAction
+}: ModerationTableProps) {
     const {reports} = useReportStore()
-    const {fetchNextPage, isFetchingNextPage, hasNextPage, totalPages} = useModeration(options);
+    const {fetchNextPage, isFetchingNextPage, hasNextPage, totalPages} = useModeration({type, isFull});
     const [data, setData] = React.useState<ModerationItemData[]>([]);
-    const [rowSelection, setRowSelection] = React.useState<any>({});
+    const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
+    const [selectedPostId, setSelectedPostId] = React.useState<string | null>(null);
+    const [isPostSheetOpen, setIsPostSheetOpen] = React.useState(false);
 
     useEffect(() => {
         setData(reports.map(report => ({
@@ -90,10 +52,15 @@ export function ModerationTable({options}: ModerationTableProps) {
                 id: report.id,
             })) as ModerationItemData[]
         )
-        console.log(options)
-    }, [options, reports]);
+    }, [type, reports]);
 
     const handleUpdateStatus = React.useCallback((itemIds: string[], newStatus: ModerationStatus) => {
+        // Use the passed handler if provided, otherwise handle internally
+        if (onUpdateStatusAction) {
+            onUpdateStatusAction(itemIds, newStatus);
+            return;
+        }
+
         setData(prev => {
             return prev.map(item => {
                 if (itemIds.includes(item.id)) {
@@ -106,21 +73,34 @@ export function ModerationTable({options}: ModerationTableProps) {
                 return item;
             });
         });
-        // setRowSelection({});
         toast.success(`Selected item(s) status updated to ${newStatus.replace(/_/g, ' ')}`);
-    }, []);
+    }, [onUpdateStatusAction]);
 
     const handleDeleteModerationEntries = React.useCallback((itemIds: string[]) => {
+        // Use the passed handler if provided, otherwise handle internally
+        if (onDeleteEntriesAction) {
+            onDeleteEntriesAction(itemIds);
+            return;
+        }
+
         setData(prev => prev.filter(item => !itemIds.includes(item.id)));
         toast.error(`${itemIds.length} moderation entr${itemIds.length > 1 ? 'ies' : 'y'} removed.`);
-        // setRowSelection({});
+    }, [onDeleteEntriesAction]);
+
+    const handlePostSelection = React.useCallback((postId: string) => {
+        setSelectedPostId(postId);
+        setIsPostSheetOpen(true);
     }, []);
 
-    const columns = getModerationTableColumns({
+    const columns = useModerationTableColumns({
         onUpdateStatusAction: handleUpdateStatus,
-        onDeleteEntriesAction: handleDeleteModerationEntries
+        onDeleteEntriesAction: handleDeleteModerationEntries,
+        onPostSelection: handlePostSelection
     });
-    const selectedRowIds = () => Object.keys(rowSelection).filter(key => rowSelection[key]);
+
+    const selectedRowIds = React.useCallback(() => {
+        return Object.keys(rowSelection).filter(id => rowSelection[id]);
+    }, [rowSelection]);
 
     return (
         <div className="space-y-4 p-4">
@@ -130,12 +110,14 @@ export function ModerationTable({options}: ModerationTableProps) {
                 setData={setData}
                 enableDnd={true}
                 enableRowSelection={true}
+                setRowSelectionFn={setRowSelection}
+                rowSelection={rowSelection}
                 showGlobalFilter={true}
                 filterPlaceholder="Search user, post, comment reports..."
                 fetchNextPage={fetchNextPage}
                 isFetchingNextPage={isFetchingNextPage}
                 hasNextPage={hasNextPage}
-                pageCount={totalPages}
+                pageCount={totalPages ?? 0}
                 initialColumnVisibility={{id: false}}
             />
             {selectedRowIds().length > 0 && (
@@ -166,8 +148,14 @@ export function ModerationTable({options}: ModerationTableProps) {
                     </div>
                 </div>
             )}
+            {selectedPostId && (
+                <PostDetailViewerSheet
+                    postId={selectedPostId}
+                    isOpen={isPostSheetOpen}
+                    onSetIsOpenAction={setIsPostSheetOpen}
+                />
+            )}
         </div>
     );
 }
-
 

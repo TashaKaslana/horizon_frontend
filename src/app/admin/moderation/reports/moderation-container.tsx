@@ -4,7 +4,6 @@ import {ModerationCardList} from "@/app/admin/moderation/reports/moderation-card
 import {ModerationChart} from "@/app/admin/moderation/reports/moderation-chart";
 import {SiteHeader} from "@/app/admin/components/site-header";
 import {ModerationTable} from "@/app/admin/components/moderation/moderation-table";
-import {getAllReportsInfiniteOptions} from "@/api/client/@tanstack/react-query.gen";
 
 const ModerationContainer = () => {
     return (
@@ -12,11 +11,7 @@ const ModerationContainer = () => {
             <SiteHeader text={'Moderation'}/>
             <ModerationCardList/>
             <ModerationChart/>
-            <ModerationTable
-                options={{
-                    options: getAllReportsInfiniteOptions(),
-                }}
-            />
+            <ModerationTable isFull/>
         </div>
     );
 }

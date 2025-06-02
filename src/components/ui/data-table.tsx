@@ -18,6 +18,7 @@ import {
     FilterFn,
     PaginationState,
     OnChangeFn,
+    RowSelectionState,
 } from "@tanstack/react-table";
 import type {DragEndEvent, UniqueIdentifier} from "@dnd-kit/core";
 import {arrayMove} from "@dnd-kit/sortable";
@@ -60,7 +61,8 @@ interface DataTableProps<TData, TValue> {
     isFetchingNextPage?: boolean;
 
     enableRowSelection?: boolean | ((row: Row<TData>) => boolean);
-    setRowSelectionFn?: React.Dispatch<React.SetStateAction<TData[]>>;
+    rowSelection?: RowSelectionState;
+    setRowSelectionFn?: React.Dispatch<React.SetStateAction<RowSelectionState>>;
 
     isLoading?: boolean;
     enableDnd?: boolean;
@@ -76,9 +78,10 @@ interface DataTableProps<TData, TValue> {
     customGetRowId?: (originalRow: TData, index: number) => string;
 }
 
-const genericGlobalFilterFn: FilterFn<any> = (
+const genericGlobalFilterFn = (
+    // eslint-disable-next-line
     row: Row<any>,
-    columnId: string,
+    _columnId: string,
     filterValue: string
 ): boolean => {
     const lowercasedFilterValue = filterValue.toLowerCase();
@@ -191,14 +194,12 @@ export function DataTable<TData, TValue>({
 
     React.useEffect(() => {
         if (setRowSelectionFn) {
-            const selectedRowOriginals = Object.keys(rowSelection)
-                .map(rowId => {
-                    const row = table.getRow(rowId);
-                    return row ? row.original : undefined;
-                })
-                .filter(original => original !== undefined) as TData[];
+            const newRowSelectionState = table.getSelectedRowModel().rows.reduce((acc, row) => {
+                acc[row.id] = true;
+                return acc;
+            }, {} as RowSelectionState);
 
-            setRowSelectionFn(selectedRowOriginals);
+            setRowSelectionFn(newRowSelectionState);
         }
     }, [rowSelection, table, setRowSelectionFn]);
 
@@ -260,7 +261,7 @@ export function DataTable<TData, TValue>({
                     table.getRowModel().rows.map((row, rowIndex) => {
                         const originalItem = row.original as TData & { id?: UniqueIdentifier };
 
-                        if (enableDnd && (originalItem.id === undefined || (typeof originalItem.id !== 'string' && typeof originalItem.id !== 'number'))) {
+                        if (enableDnd && (originalItem.id === undefined || (typeof originalItem.id !== 'string'))) {
                             console.error("DataTable critical error: Attempting to render DraggableRow for an item missing a valid 'id'. This indicates an issue with getRowId configuration or data integrity for DND.");
                             return (
                                 <TableRow key={`error-${row.id}-${rowIndex}`} data-state="error">

@@ -1,7 +1,7 @@
 import {create} from "zustand";
 import {immer} from "zustand/middleware/immer";
 import { InfiniteData } from "@tanstack/react-query";
-import {ReportDto, ResponseMetadata} from "@/api/client/types.gen";
+import {DailyPendingAndResolvedDto, OverviewStatistic, ReportDto, ResponseMetadata} from "@/api/client/types.gen";
 
 export interface ReportDataWrapper {
     data?: ReportDto[];
@@ -10,22 +10,56 @@ export interface ReportDataWrapper {
 
 type SetInfiniteDataFunction = (data: InfiniteData<ReportDataWrapper> | null | ((prev: InfiniteData<ReportDataWrapper> | null) => InfiniteData<ReportDataWrapper> | null)) => void;
 
-interface UserReportState {
+interface ReportState {
     reports: ReportDto[];
     infiniteQueryData: InfiniteData<ReportDataWrapper> | null;
+
+    overview: OverviewStatistic[],
+    userOverview: OverviewStatistic[],
+    postOverview: OverviewStatistic[],
+    commentOverview: OverviewStatistic[],
+
+    chartData: DailyPendingAndResolvedDto[],
+    userChartData: DailyPendingAndResolvedDto[],
+    postChartData: DailyPendingAndResolvedDto[],
+    commentChartData: DailyPendingAndResolvedDto[],
+
+
     actions: {
         setInfiniteQueryData: SetInfiniteDataFunction;
         clearAllData: () => void;
+
+        setOverview: (data: OverviewStatistic[]) => void;
+        setUserOverview: (data: OverviewStatistic[]) => void;
+        setPostOverview: (data: OverviewStatistic[]) => void;
+        setCommentOverview: (data: OverviewStatistic[]) => void;
+
+        setChartData: (data: DailyPendingAndResolvedDto[]) => void;
+        setUserChartData: (data: DailyPendingAndResolvedDto[]) => void;
+        setPostChartData: (data: DailyPendingAndResolvedDto[]) => void;
+        setCommentChartData: (data: DailyPendingAndResolvedDto[]) => void;
+
         addReport: (report: ReportDto) => void;
         updateReport: (updatedRole: ReportDto) => void;
         removeReport: (reportId: string | number) => void;
     };
 }
 
-const useReportStore = create<UserReportState>()(
+export const useReportStore = create<ReportState>()(
     immer((set) => ({
         reports: [],
         infiniteQueryData: null,
+
+        overview: [],
+        userOverview: [],
+        postOverview: [],
+        commentOverview: [],
+
+        chartData: [],
+        userChartData: [],
+        postChartData: [],
+        commentChartData: [],
+
         actions: {
             setInfiniteQueryData: (data) =>
                 set((state) => {
@@ -36,6 +70,41 @@ const useReportStore = create<UserReportState>()(
                     }
                     state.reports = state.infiniteQueryData?.pages?.flatMap((page: ReportDataWrapper) => page.data ?? []) ?? [];
                 }),
+
+            setOverview: (data) =>
+                set((state) => {
+                    state.overview = data;
+                }),
+            setUserOverview: (data) =>
+                set((state) => {
+                    state.userOverview = data;
+                }),
+            setPostOverview: (data) =>
+                set((state) => {
+                    state.postOverview = data;
+                }),
+            setCommentOverview: (data) =>
+                set((state) => {
+                    state.commentOverview = data;
+                }),
+
+            setChartData: (data) =>
+                set((state) => {
+                    state.chartData = data;
+                }),
+            setUserChartData: (data) =>
+                set((state) => {
+                    state.userChartData = data;
+                }),
+            setPostChartData: (data) =>
+                set((state) => {
+                    state.postChartData = data;
+                }),
+            setCommentChartData: (data) =>
+                set((state) => {
+                    state.commentChartData = data;
+                }),
+
             addReport: (report) =>
                 set((state) => {
                     state.reports = [report, ...state.reports];
@@ -99,6 +168,4 @@ const useReportStore = create<UserReportState>()(
         },
     }))
 );
-
-export default useReportStore;
 

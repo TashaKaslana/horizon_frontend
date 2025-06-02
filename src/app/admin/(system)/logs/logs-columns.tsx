@@ -62,7 +62,7 @@ export const columns: ColumnDef<LogEntryDto>[] = [
             <DataTableColumnHeader column={column} title="Severity"/>
         ),
         cell: ({row}) => {
-            const severity = row.getValue("severity") as string;
+            const severity = row.original.severity;
             let badgeVariant: "default" | "destructive" | "outline" | "secondary";
             switch (severity?.toLowerCase()) {
                 case "critical":

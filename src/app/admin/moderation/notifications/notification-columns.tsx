@@ -164,8 +164,8 @@ export const notificationColumns: ColumnDef<AdminNotificationDto>[] = [
             <DataTableColumnHeader column={column} title="Timestamp"/>
         ),
         cell: ({row}) => {
-            const dateValue = row.getValue("created_at") as string | undefined;
-            const formattedDate = dateValue ? formatDateTS(new Date(dateValue)) : "N/A";
+            const dateValue = row.original.createdAt;
+            const formattedDate = dateValue ? formatDateTS(dateValue) : "N/A";
             return <div className="min-w-[100px]">{formattedDate}</div>;
         },
         enableSorting: true,

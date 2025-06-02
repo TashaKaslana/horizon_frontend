@@ -1,28 +1,39 @@
 'use client';
 
-import useReportStore, {ReportDataWrapper} from "@/app/admin/moderation/reports/useReportStore";
-import {InfiniteData, useInfiniteQuery, UseInfiniteQueryOptions, useMutation} from "@tanstack/react-query";
+import {useReportStore, ReportDataWrapper} from "@/app/admin/moderation/reports/useReportStore";
+import {InfiniteData, useInfiniteQuery, useMutation, useQuery} from "@tanstack/react-query";
 import {
-    deleteReportMutation,
+    deleteReportMutation, getAllReportsInfiniteOptions,
+    getCommentModerationOverviewOptions, getDailyPendingAndResolvedReportsOptions,
+    getModerationOverviewOptions,
+    getPostModerationOverviewOptions, getUserModerationOverviewOptions, searchReportsInfiniteOptions,
     updateReportStatusMutation
 } from "@/api/client/@tanstack/react-query.gen";
 import {getNextPageParam} from "@/lib/utils";
 import {useEffect} from "react";
-import {ResponseMetadata} from "@/api/client";
 
 export interface ModerationProps {
-    options: UseInfiniteQueryOptions<any>
+    timeRange?: number,
+    type?: 'USER' | 'POST' | 'COMMENT',
+    isFull?: boolean,
 }
 
-export const useModeration = ({options} : ModerationProps) => {
+export const useModeration = ({type, timeRange, isFull}: ModerationProps) => {
     const {actions} = useReportStore()
-    const queryKey = Array.isArray(options.queryKey) ? options.queryKey : [options.queryKey].filter(k => k !== undefined);
 
     const {data, isFetchingNextPage, hasNextPage, fetchNextPage} = useInfiniteQuery({
-        ...options,
-        queryKey: queryKey,
+        ...(
+            isFull ? getAllReportsInfiniteOptions() :
+            searchReportsInfiniteOptions({
+                query: {
+                    page: 0,
+                    size: 10,
+                    itemType: type || undefined,
+                }
+            })
+        ),
         getNextPageParam: (lastPage) => {
-            return getNextPageParam(lastPage as { metadata: ResponseMetadata });
+            return getNextPageParam(lastPage);
         },
         initialPageParam: 0,
     })
@@ -32,6 +43,73 @@ export const useModeration = ({options} : ModerationProps) => {
             actions.setInfiniteQueryData(data as InfiniteData<ReportDataWrapper>);
         }
     }, [data, actions]);
+
+    const {data: overview, isLoading: isOverviewLoading} = useQuery(({
+        ...getModerationOverviewOptions(),
+        enabled: type === undefined,
+    }))
+
+    useEffect(() => {
+        if (overview?.data) {
+            actions.setOverview(overview.data);
+        }
+    }, [overview?.data, actions]);
+
+    const {data: userOverview, isLoading: isUserOverviewLoading} = useQuery(({
+        ...getUserModerationOverviewOptions(),
+        enabled: type === 'USER'
+    }))
+
+    useEffect(() => {
+        if (userOverview?.data) {
+            actions.setUserOverview(userOverview.data);
+        }
+    }, [userOverview?.data, actions]);
+
+    const {data: postOverview, isLoading: isPostOverviewLoading} = useQuery(({
+        ...getPostModerationOverviewOptions(),
+        enabled: type === 'POST'
+    }))
+
+    useEffect(() => {
+        if (postOverview?.data) {
+            actions.setPostOverview(postOverview.data);
+        }
+    }, [postOverview?.data, actions]);
+
+    const {data: commentOverview, isLoading: isCommentOverviewLoading} = useQuery(({
+        ...getCommentModerationOverviewOptions(),
+        enabled: type === 'COMMENT'
+    }))
+
+    useEffect(() => {
+        if (commentOverview?.data) {
+            actions.setCommentOverview(commentOverview.data);
+        }
+    }, [commentOverview?.data, actions]);
+
+    const {data: dailyData, isLoading: isDailyDataLoading} = useQuery({
+        ...getDailyPendingAndResolvedReportsOptions({
+            query: {
+                days: timeRange ?? 30,
+                itemType: type || undefined,
+            }
+        })
+    })
+
+    useEffect(() => {
+        if (dailyData?.data) {
+            if (type === undefined) {
+                actions.setChartData(dailyData.data);
+            } else if (type === 'USER') {
+                actions.setUserChartData(dailyData.data);
+            } else if (type === 'POST') {
+                actions.setPostChartData(dailyData.data);
+            } else if (type === 'COMMENT') {
+                actions.setCommentChartData(dailyData.data);
+            }
+        }
+    }, [dailyData?.data, actions, type]);
 
     const {mutate: updateReportMutationFn, isPending: isUpdatingReport} = useMutation({
         ...updateReportStatusMutation(),
@@ -80,11 +158,18 @@ export const useModeration = ({options} : ModerationProps) => {
         isFetchingNextPage,
         hasNextPage,
         fetchNextPage,
-        totalPages: data?.pages[0].metadata?.pagination || 0,
+        totalPages: data?.pages[0].metadata?.pagination?.totalPages || 0,
         updateReport,
         deleteReport,
         isUpdatingReport,
         isDeletingReport,
+
+        isOverviewLoading,
+        isUserOverviewLoading,
+        isPostOverviewLoading,
+        isCommentOverviewLoading,
+
+        isDailyDataLoading,
     }
 }
 

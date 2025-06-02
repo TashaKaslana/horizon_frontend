@@ -1,38 +1,33 @@
-import {OverviewList} from "@/app/admin/components/overview-list";
-import {useState} from "react";
+'use client'
 
-const moderationCards = [
-    {
-        title: "Pending Reports",
-        value: "43",
-        trend: -12.0,
-        message: "Fewer reports than last week",
-        description: "Reports requiring admin review"
-    },
-    {
-        title: "Resolved Today",
-        value: "15",
-        trend: 5.0,
-        message: "More resolutions than yesterday",
-        description: "Reports actioned and resolved today"
-    },
-    {
-        title: "Content Removed (7d)",
-        value: "28",
-        trend: 2.0,
-        message: "Slight increase in content takedowns",
-        description: "Posts/Comments removed in the last 7 days"
-    },
-    {
-        title: "Users Actioned (7d)",
-        value: "5",
-        trend: -1.0,
-        message: "Fewer user actions this week",
-        description: "Users warned or banned in the last 7 days"
-    }
-];
+import {OverviewList} from "@/app/admin/components/overview-list";
+import {useReportStore} from "@/app/admin/moderation/reports/useReportStore";
+import {useModeration} from "@/app/admin/moderation/reports/useModeration";
 
 export const ModerationCardList = () => {
-    const [isLoading] = useState(false);
-    return <OverviewList overviewData={moderationCards} isLoading={isLoading} />
+    const { overview } = useReportStore();
+    const { isOverviewLoading } = useModeration({});
+
+    return <OverviewList overviewData={overview} isLoading={isOverviewLoading} />
+}
+
+export const UserModerationCardList = () => {
+    const { userOverview } = useReportStore();
+    const { isUserOverviewLoading } = useModeration({});
+
+    return <OverviewList overviewData={userOverview} isLoading={isUserOverviewLoading} />
+}
+
+export const PostModerationCardList = () => {
+    const { postOverview } = useReportStore();
+    const { isPostOverviewLoading } = useModeration({});
+
+    return <OverviewList overviewData={postOverview} isLoading={isPostOverviewLoading} />
+}
+
+export const CommentModerationCardList = () => {
+    const { commentOverview } = useReportStore();
+    const { isCommentOverviewLoading } = useModeration({});
+
+    return <OverviewList overviewData={commentOverview} isLoading={isCommentOverviewLoading} />
 }
