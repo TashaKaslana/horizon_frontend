@@ -3,7 +3,7 @@
 import {create} from "zustand";
 import {immer} from "zustand/middleware/immer";
 import { InfiniteData } from "@tanstack/react-query";
-import { CommentResponseWithPostDetails } from "@/api/client/types.gen";
+import {CommentResponseWithPostDetails, DailyCountDto, OverviewStatistic} from "@/api/client/types.gen";
 
 export interface CommentPage {
     data?: CommentResponseWithPostDetails[];
@@ -13,9 +13,13 @@ interface CommentsState {
     comments: CommentResponseWithPostDetails[];
     selectedComment: CommentResponseWithPostDetails | null;
     infiniteQueryData: InfiniteData<CommentPage> | null;
+    overviewData: OverviewStatistic[],
+    chartData?: DailyCountDto[]
     actions: {
         setInfiniteQueryData: (data: InfiniteData<CommentPage> | null) => void;
         setSelectedComment: (comment: CommentResponseWithPostDetails | null) => void;
+        setOverviewStatistic: (overviewStatistics: OverviewStatistic[]) => void;
+        setChartData: (chartData: DailyCountDto[]) => void;
         clearAllData: () => void;
         addComment: (comment: CommentResponseWithPostDetails) => void;
         updateComment: (comment: CommentResponseWithPostDetails) => void;
@@ -29,6 +33,8 @@ const useCommentsStore = create<CommentsState>()(
         comments: [],
         infiniteQueryData: null,
         selectedComment: null,
+        overviewData: [],
+        chartData: [],
         actions: {
             setInfiniteQueryData: (data) =>
                 set((state) => {
@@ -39,6 +45,16 @@ const useCommentsStore = create<CommentsState>()(
             setSelectedComment: (comment) =>
                 set((state) => {
                     state.selectedComment = comment;
+                }),
+
+            setOverviewStatistic: (overviewStatistics) =>
+                set((state) => {
+                    state.overviewData = overviewStatistics;
+                }),
+
+            setChartData: (chartData) =>
+                set((state) => {
+                    state.chartData = chartData;
                 }),
 
             addComment: (newComment) =>
@@ -89,7 +105,7 @@ const useCommentsStore = create<CommentsState>()(
                     if (state.infiniteQueryData) {
                         const pageSize = 10; // Consistent with the fetch size in useCommentsManagement.ts
                         const newPages: CommentPage[] = [];
-                        const newPageParams: any[] = []; // pageParams type is unknown[]
+                        const newPageParams = []; // pageParams type is unknown[]
 
                         if (newComments.length > 0) {
                             // Determine the starting page param, assuming numeric and sequential

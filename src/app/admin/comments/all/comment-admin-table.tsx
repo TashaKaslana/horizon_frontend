@@ -43,6 +43,8 @@ export function CommentAdminTable() {
     const {comments} = useCommentsStore()
     const {isLoading, isFetchingNextPage, hasNextPage, fetchNextPage} = useCommentsManagement()
     const [data, setData] = React.useState<CommentAdminData[]>([]);
+    const [selectedPostId, setSelectedPostId] = React.useState<string | null>(null);
+    const [isPostSheetOpen, setIsPostSheetOpen] = React.useState(false);
 
     useEffect(() => {
         setData(comments.map(comment => ({
@@ -104,7 +106,8 @@ export function CommentAdminTable() {
                         <div
                             className="flex items-start gap-2 py-1 min-w-36 max-w-xs cursor-pointer hover:underline decoration-sky-500 decoration-1">
                             <MessageSquareIcon className="h-4 w-4 text-muted-foreground mt-1 flex-shrink-0"/>
-                            <span className="overflow-hidden text-ellipsis whitespace-nowrap flex-grow min-w-0 truncate">
+                            <span
+                                className="overflow-hidden text-ellipsis whitespace-nowrap flex-grow min-w-0 truncate">
                                 {comment.content}
                             </span>
                         </div>
@@ -144,7 +147,8 @@ export function CommentAdminTable() {
                 const comment = row.original;
                 return (
                     <div className="flex items-center gap-2 py-0.5 min-w-[180px] max-w-[240px]">
-                        <div className="h-12 w-20 bg-muted rounded-sm flex items-center justify-center flex-shrink-0 relative aspect-video">
+                        <div
+                            className="h-12 w-20 bg-muted rounded-sm flex items-center justify-center flex-shrink-0 relative aspect-video">
                             {comment?.post?.videoThumbnailUrl ? (
                                 <Image
                                     src={comment?.post?.videoThumbnailUrl}
@@ -157,14 +161,15 @@ export function CommentAdminTable() {
                             )}
                         </div>
                         <div className="flex flex-col gap-0.5">
-                            <PostDetailViewerSheet
-                                postId={comment?.post?.id}
-                                postCaption={comment?.post?.caption}
-                                postDescription={comment?.post?.description}
-                                onUpdateAction={() => {
-                                    toast.info("Post details are managed in the Posts section.");
-                                }}
-                            />
+                            <h3 onClick={() => {
+                                setSelectedPostId(comment.post!.id!)
+                                setIsPostSheetOpen(true)
+                            }}
+                                className={'font-semibold hover:underline truncate cursor-pointer'}
+                            >
+                                {comment.post?.caption}
+                            </h3>
+                            <p className={'text-sm text-muted-foreground truncate'}>{comment.post?.description}</p>
                         </div>
                     </div>
                 );
@@ -273,6 +278,13 @@ export function CommentAdminTable() {
                 hasNextPage={hasNextPage}
                 fetchNextPage={fetchNextPage}
             />
+            {
+                selectedPostId && <PostDetailViewerSheet
+                    postId={selectedPostId}
+                    isOpen={isPostSheetOpen}
+                    onSetIsOpenAction={setIsPostSheetOpen}
+                />
+            }
         </div>
     );
 }

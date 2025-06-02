@@ -3,8 +3,8 @@
 import {
     createCommentMutation,
     deleteCommentMutation,
-    getAllCommentsWithPostDetailsInfiniteOptions,
-    getCommentByIdOptions,
+    getAllCommentsWithPostDetailsInfiniteOptions, getCommentAnalyticsOverviewOptions,
+    getCommentByIdOptions, getDailyCommentCountsOptions,
     updateCommentMutation
 } from "@/api/client/@tanstack/react-query.gen";
 import {useInfiniteQuery, useMutation, useQuery} from "@tanstack/react-query";
@@ -21,7 +21,7 @@ import {
     zUpdateCommentContentDto,
 } from "@/api/client/zod.gen";
 
-const useCommentsManagement = (commentId?: string) => {
+const useCommentsManagement = (commentId?: string, timeRange?: number) => {
     const {actions} = useCommentsStore();
 
     const {
@@ -60,6 +60,31 @@ const useCommentsManagement = (commentId?: string) => {
     useEffect(() => {
         actions.setInfiniteQueryData(commentListData);
     }, [actions, commentListData]);
+
+    const {data: commentOverviews, isLoading: isCommentOverviewLoading} = useQuery({
+        ...getCommentAnalyticsOverviewOptions()
+    })
+
+    useEffect(() => {
+        if (commentOverviews?.data) {
+            actions.setOverviewStatistic(commentOverviews?.data);
+        }
+    }, [actions, commentOverviews?.data]);
+
+
+    const {data: dailyComment, isLoading: isDailyCommentLoading} = useQuery({
+      ...getDailyCommentCountsOptions({
+          query: {
+              days: timeRange ?? 30,
+          }
+      })
+    })
+
+    useEffect(() => {
+        if (dailyComment?.data) {
+            actions.setChartData(dailyComment?.data);
+        }
+    }, [actions, dailyComment?.data]);
 
     const {mutate: createCommentFn, isPending: isCreatingComment} = useMutation({
         ...createCommentMutation(),
@@ -137,6 +162,12 @@ const useCommentsManagement = (commentId?: string) => {
         selectedCommentData,
         isSelectedCommentLoading,
         isSelectedCommentError,
+
+        commentOverviews,
+        isCommentOverviewLoading,
+
+        dailyComment,
+        isDailyCommentLoading,
 
         createComment,
         isCreatingComment,
