@@ -77,3 +77,30 @@ export const getNextPageParam = (
     return null;
 };
 
+type NormalizedChartData = { date: string } & Record<string, number>
+
+export const normalizeChartData = <
+    T extends Record<string, number | bigint | Date>
+>(
+    chartData: T[]
+): NormalizedChartData[] => {
+    return chartData.map((item) => {
+        const result: Record<string, number | string> = {}
+
+        for (const [key, value] of Object.entries(item)) {
+            if (key === "date") {
+                if (value instanceof Date) {
+                    result.date = value.toISOString().split("T")[0]
+                } else if (typeof value === "string") {
+                    result.date = value
+                }
+            } else if (typeof value === "bigint") {
+                result[key] = Number(value)
+            } else if (typeof value === "number") {
+                result[key] = value
+            }
+        }
+
+        return result as NormalizedChartData
+    })
+}
