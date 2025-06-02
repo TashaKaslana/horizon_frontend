@@ -3,7 +3,7 @@
 import {create} from "zustand";
 import {immer} from "zustand/middleware/immer";
 import { InfiniteData } from "@tanstack/react-query";
-import {LogEntryDto} from "@/api/client";
+import {DailyPendingAndResolvedDto, LogEntryDto, OverviewStatistic} from "@/api/client";
 
 export interface LogEntryPage {
     data?: LogEntryDto[];
@@ -13,9 +13,13 @@ interface LogEntriesState {
     logEntries: LogEntryDto[];
     selectedLogEntry: LogEntryDto | null;
     infiniteQueryData: InfiniteData<LogEntryPage> | null;
+    logChartData: DailyPendingAndResolvedDto[];
+    logOverviewData: OverviewStatistic[];
     actions: {
         setInfiniteQueryData: (data: InfiniteData<LogEntryPage>) => void;
         setSelectedLogEntries: (logEntries: LogEntryDto | null) => void;
+        setLogChartData: (logChartData: DailyPendingAndResolvedDto[]) => void;
+        setLogOverviewData: (logOverviewData: OverviewStatistic[]) => void;
         clearAllData: () => void;
         addLogEntries: (logEntries: LogEntryDto) => void;
         // updateLogEntries: (logEntriesUpdate: UpdateNotificationDto) => void;
@@ -29,6 +33,8 @@ const useAdminLogEntriesStore = create<LogEntriesState>()(
         logEntries: [],
         infiniteQueryData: null,
         selectedLogEntry: null,
+        logChartData: [],
+        logOverviewData: [],
         actions: {
             setInfiniteQueryData: (data) =>
                 set((state) => {
@@ -50,6 +56,16 @@ const useAdminLogEntriesStore = create<LogEntriesState>()(
                             firstPage.data = [newLogEntry, ...(firstPage.data ?? [])];
                         }
                     }
+                }),
+
+            setLogChartData: (logChartData) =>
+                set((state) => {
+                    state.logChartData = logChartData;
+                }),
+
+            setLogOverviewData: (logOverviewData) =>
+                set((state) => {
+                    state.logOverviewData = logOverviewData;
                 }),
 
             // updateLogEntries: (logEntriesUpdate) =>
