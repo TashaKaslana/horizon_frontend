@@ -1,4 +1,5 @@
-import { OverviewCard } from "../../components/card-overview";
+import { OverviewList } from "@/app/admin/components/overview-list";
+import { useState } from "react";
 
 const postReportCards = [
     {
@@ -32,13 +33,6 @@ const postReportCards = [
 ];
 
 export const PostReportCardList = () => {
-    return (
-        <div className="*:data-[slot=card]:shadow-xs @xl/main:grid-cols-2 @5xl/main:grid-cols-4 grid grid-cols-4 gap-4
-        px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:from-primary/5
-        *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card lg:px-6">
-            {postReportCards.map((card, index) => (
-                <OverviewCard key={index} data={card} />
-            ))}
-        </div>
-    );
+    const [isLoading] = useState(false);
+    return <OverviewList overviewData={postReportCards} isLoading={isLoading} />;
 };

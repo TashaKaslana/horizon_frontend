@@ -1,6 +1,6 @@
 'use client';
 
-import {CardList} from "@/app/admin/dashboard/card-list";
+import {DashboardCardList} from "@/app/admin/dashboard/dashboard-card-list";
 import {SiteHeader} from "@/app/admin/components/site-header";
 import {DashboardAdminChart} from "@/app/admin/dashboard/dashboard-admin-chart";
 
@@ -8,7 +8,7 @@ const DashboardContainer = () => {
     return (
         <div className={'space-y-4'}>
             <SiteHeader text={'Dashboard'}/>
-            <CardList/>
+            <DashboardCardList/>
             <div className={'px-2 lg:px-6'}>
                 <DashboardAdminChart />
             </div>
