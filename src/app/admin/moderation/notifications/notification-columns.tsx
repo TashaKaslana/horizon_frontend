@@ -113,13 +113,13 @@ export const notificationColumns: ColumnDef<AdminNotificationDto>[] = [
             const severity = row.getValue("severity") as string;
             let badgeVariant: "default" | "destructive" | "outline" | "secondary";
             switch (severity) {
-                case "critical":
+                case "CRITICAL":
                     badgeVariant = "destructive";
                     break;
-                case "warning":
+                case "WARNING":
                     badgeVariant = "destructive";
                     break;
-                case "info":
+                case "INFO":
                     badgeVariant = "secondary";
                     break;
                 default:

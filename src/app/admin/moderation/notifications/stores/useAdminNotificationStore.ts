@@ -3,7 +3,7 @@
 import {create} from "zustand";
 import {immer} from "zustand/middleware/immer";
 import { InfiniteData } from "@tanstack/react-query";
-import {AdminNotificationDto} from "@/api/client";
+import {AdminNotificationDto, DailyCountDto, OverviewStatistic} from "@/api/client";
 
 export interface NotificationsPage {
     data?: AdminNotificationDto[];
@@ -13,9 +13,13 @@ interface NotificationsState {
     notifications: AdminNotificationDto[];
     selectedNotifications: AdminNotificationDto | null;
     infiniteQueryData: InfiniteData<NotificationsPage> | null;
+    overviewData: OverviewStatistic[];
+    chartData: DailyCountDto[]
     actions: {
         setInfiniteQueryData: (data: InfiniteData<NotificationsPage>) => void;
         setSelectedNotifications: (notifications: AdminNotificationDto | null) => void;
+        setOverviewData: (data: OverviewStatistic[]) => void;
+        setChartData: (data: DailyCountDto[]) => void;
         clearAllData: () => void;
         addNotifications: (notifications: AdminNotificationDto) => void;
         // updateNotifications: (notificationsUpdate: UpdateNotificationDto) => void;
@@ -29,6 +33,8 @@ const useAdminNotificationsStore = create<NotificationsState>()(
         notifications: [],
         infiniteQueryData: null,
         selectedNotifications: null,
+        overviewData: [],
+        chartData: [],
         actions: {
             setInfiniteQueryData: (data) =>
                 set((state) => {
@@ -39,6 +45,16 @@ const useAdminNotificationsStore = create<NotificationsState>()(
             setSelectedNotifications: (notifications) =>
                 set((state) => {
                     state.selectedNotifications = notifications;
+                }),
+
+            setOverviewData: (data) =>
+                set((state) => {
+                    state.overviewData = data;
+                }),
+
+            setChartData: (data) =>
+                set((state) => {
+                    state.chartData = data;
                 }),
 
             addNotifications: (newNotifications) =>

@@ -1,10 +1,13 @@
 import { getNextPageParam } from "@/lib/utils";
 import useAdminNotificationStore from "../stores/useAdminNotificationStore";
-import {getAllNotificationsInfiniteOptions} from "@/api/client/@tanstack/react-query.gen";
-import {useInfiniteQuery} from "@tanstack/react-query";
+import {
+    getAdminNotificationOverviewOptions,
+    getAllNotificationsInfiniteOptions, getNotificationTrendsOptions
+} from "@/api/client/@tanstack/react-query.gen";
+import {useInfiniteQuery, useQuery} from "@tanstack/react-query";
 import {useEffect} from "react";
 
-export const useAdminNotification = () => {
+export const useAdminNotification = (timeRange: number = 30) => {
     const {actions} = useAdminNotificationStore();
 
     const {
@@ -31,6 +34,28 @@ export const useAdminNotification = () => {
         actions.setInfiniteQueryData(notificationListData);
     }, [actions, notificationListData]);
 
+    const {data: overviewData, isLoading: isOverviewLoading} = useQuery({
+        ...getAdminNotificationOverviewOptions(),
+    })
+
+    useEffect(() => {
+        if (!overviewData?.data) return;
+        actions.setOverviewData(overviewData?.data ?? []);
+    }, [actions, overviewData?.data]);
+
+    const {data: chartData, isLoading: isChartLoading} = useQuery({
+        ...getNotificationTrendsOptions({
+            query: {
+                days: timeRange
+            }
+        })
+    })
+
+    useEffect(() => {
+        if (!chartData?.data) return;
+        actions.setChartData(chartData?.data ?? []);
+    }, [actions, chartData?.data]);
+
     return {
         notificationListData,
         fetchNextPage,
@@ -39,5 +64,10 @@ export const useAdminNotification = () => {
         isLoading,
         isError,
         error,
+
+        overviewData: overviewData?.data ?? [],
+        isOverviewLoading,
+        chartData: chartData?.data ?? [],
+        isChartLoading,
     };
 }
