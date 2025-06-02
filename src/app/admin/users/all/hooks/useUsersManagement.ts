@@ -3,7 +3,7 @@
 import {
     createUserMutation,
     deleteUserMutation,
-    getAllUserIntroductionsInfiniteOptions,
+    getAllUserIntroductionsInfiniteOptions, getDailyUserCountsOptions, getUserAnalyticsOverviewOptions,
     getUserOptions,
     updateUserAccount1Mutation,
     updateUserImageMutation,
@@ -28,7 +28,7 @@ import {
     zUserImageUpdate
 } from "@/api/client/zod.gen";
 
-const useUsersManagement = (userId?: string) => {
+const useUsersManagement = (userId?: string, timeRange?: number) => {
     const {actions} = useUsersStore();
 
     const {
@@ -67,6 +67,31 @@ const useUsersManagement = (userId?: string) => {
     useEffect(() => {
         actions.setInfiniteQueryData(userListData);
     }, [actions, userListData]);
+
+    const {data: userOverviewData, isLoading: isUserOverviewLoading} = useQuery({
+        ...getUserAnalyticsOverviewOptions()
+    })
+
+    useEffect(() => {
+        if (userOverviewData?.data) {
+            actions.setOverviewData(userOverviewData.data);
+        }
+    }, [actions, userOverviewData?.data]);
+
+    const {data: userChartData, isLoading: isUserChartLoading} = useQuery({
+        ...getDailyUserCountsOptions({
+            query: {
+                days: timeRange ?? 30,
+            }
+        })
+    });
+
+    useEffect(() => {
+        if (userChartData?.data) {
+            actions.setChartData(userChartData.data);
+        }
+    }, [actions, userChartData?.data]);
+
 
     const {mutate: createUserFn, isPending: isCreatingUser} = useMutation({
         ...createUserMutation(),
@@ -198,6 +223,12 @@ const useUsersManagement = (userId?: string) => {
         selectedUserData: selectedUserData,
         isSelectedUserLoading,
         isSelectedUserError,
+
+        userOverviewData,
+        isUserOverviewLoading,
+
+        userChartData,
+        isUserChartLoading,
 
         createUser,
         isCreatingUser,

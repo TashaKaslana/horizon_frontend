@@ -1,7 +1,7 @@
 import {create} from "zustand";
 import {immer} from "zustand/middleware/immer";
 import { InfiniteData } from "@tanstack/react-query";
-import {UserIntroduction, UserRespondDto} from "@/api/client";
+import {DailyCountDto, OverviewStatistic, UserIntroduction, UserRespondDto} from "@/api/client";
 
 export interface UserPage {
     data?: UserIntroduction[];
@@ -12,9 +12,13 @@ interface UsersState {
     users: UserIntroduction[];
     selectedUser: UserRespondDto | null;
     infiniteQueryData: InfiniteData<UserPage> | null;
+    overviewData: OverviewStatistic[]
+    chartData: DailyCountDto[]
     actions: {
         setInfiniteQueryData: (data: InfiniteData<UserPage> | null) => void;
         setSelectedUser: (user: UserRespondDto | null) => void;
+        setOverviewData: (data: OverviewStatistic[]) => void;
+        setChartData: (data: DailyCountDto[]) => void;
         clearAllData: () => void;
         addUser: (user: UserIntroduction) => void;
         updateUser: (user: UserIntroduction) => void;
@@ -28,6 +32,8 @@ const useUsersStore = create<UsersState>()(
         users: [],
         infiniteQueryData: null,
         selectedUser: null,
+        overviewData: [],
+        chartData: [],
         actions: {
             setInfiniteQueryData: (data) =>
                 set((state) => {
@@ -38,6 +44,16 @@ const useUsersStore = create<UsersState>()(
             setSelectedUser: (user) =>
                 set((state) => {
                     state.selectedUser = user;
+                }),
+
+            setOverviewData: (data) =>
+                set((state) => {
+                    state.overviewData = data;
+                }),
+
+            setChartData: (data) =>
+                set((state) => {
+                    state.chartData = data;
                 }),
 
             addUser: (newUser) =>
