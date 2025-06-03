@@ -1,23 +1,29 @@
 import {create} from "zustand";
 import {immer} from "zustand/middleware/immer";
-import { InfiniteData } from "@tanstack/react-query";
-import {ResponseMetadata, TagResponse} from "@/api/client/types.gen"; // Assuming PostTag type exists similar to PostCategory
+import {InfiniteData} from "@tanstack/react-query";
+import {DailyCountDto, OverviewStatistic, ResponseMetadata, TagWithCountDto, TopTagUsageDto} from "@/api/client";
 
 export interface TagPage {
-    data?: TagResponse[];
+    data?: TagWithCountDto[];
     metadata?: ResponseMetadata;
 }
 
 type SetInfiniteDataFunction = (data: InfiniteData<TagPage> | null | ((prev: InfiniteData<TagPage> | null) => InfiniteData<TagPage> | null)) => void;
 
 interface TagState {
-    tags: TagResponse[];
+    tags: TagWithCountDto[];
     infiniteQueryData: InfiniteData<TagPage> | null;
+    overviewData: OverviewStatistic[];
+    dailyCreatedCount: DailyCountDto[];
+    dailyUsageCount: TopTagUsageDto[]
     actions: {
         setInfiniteQueryData: SetInfiniteDataFunction;
+        setOverviewData: (data: OverviewStatistic[]) => void;
+        setDailyCreatedCount: (data: DailyCountDto[]) => void;
+        setDailyUsageCount: (data: TopTagUsageDto[]) => void;
         clearAllData: () => void;
-        addTag: (tag: TagResponse) => void;
-        updateTag: (updatedTag: TagResponse) => void;
+        addTag: (tag: TagWithCountDto) => void;
+        updateTag: (updatedTag: TagWithCountDto) => void;
         removeTag: (tagId: string | number) => void;
     };
 }
@@ -26,75 +32,53 @@ const useTagStore = create<TagState>()(
     immer((set) => ({
         tags: [],
         infiniteQueryData: null,
+        overviewData: [],
+        dailyCreatedCount: [],
+        dailyUsageCount: [],
         actions: {
             setInfiniteQueryData: (data) =>
                 set((state) => {
-                    if (typeof data === 'function') {
-                        state.infiniteQueryData = data(state.infiniteQueryData);
-                    } else {
-                        state.infiniteQueryData = data;
-                    }
-                    state.tags = state.infiniteQueryData?.pages?.flatMap((page: TagPage) => page.data ?? []) ?? [];
-                }),
-            addTag: (tag) =>
-                set((state) => {
-                    state.tags = [tag, ...state.tags];
-                    if (state.infiniteQueryData && state.infiniteQueryData.pages.length > 0) {
-                        const updatedFirstPageData = [tag, ...(state.infiniteQueryData.pages[0]?.data ?? [])];
-                        const updatedFirstPage = {
-                            ...(state.infiniteQueryData.pages[0] || {}),
-                            data: updatedFirstPageData,
-                        };
-                        state.infiniteQueryData.pages = [updatedFirstPage, ...state.infiniteQueryData.pages.slice(1)];
-                    } else {
-                        state.infiniteQueryData = {
-                            pages: [{ data: [tag], metadata: {} }],
-                            pageParams: [0],
-                        };
+                    state.infiniteQueryData = typeof data === "function" ? data(state.infiniteQueryData) : data;
+                    if (state.infiniteQueryData?.pages) {
+                        // Flatten and deduplicate tags from all pages
+                        const allTags = state.infiniteQueryData.pages.flatMap((page) => page.data || []);
+                        state.tags = Array.from(new Map(allTags.map((tag) => [tag.id, tag])).values());
                     }
                 }),
-            updateTag: (updatedTag) =>
+            setOverviewData: (data) =>
                 set((state) => {
-                    state.tags = state.tags.map(t =>
-                        t.id === updatedTag.id ? updatedTag : t
-                    );
-                    if (state.infiniteQueryData) {
-                        state.infiniteQueryData.pages = state.infiniteQueryData.pages.map(page => {
-                            const pageData = page.data ?? [];
-                            if (pageData.some(t => t.id === updatedTag.id)) {
-                                return {
-                                    ...page,
-                                    data: pageData.map(t =>
-                                        t.id === updatedTag.id ? updatedTag : t
-                                    ),
-                                };
-                            }
-                            return page;
-                        });
-                    }
+                    state.overviewData = data;
                 }),
-            removeTag: (tagId) =>
+            setDailyCreatedCount: (data) =>
                 set((state) => {
-                    state.tags = state.tags.filter(t => t.id !== tagId);
-                    if (state.infiniteQueryData) {
-                        state.infiniteQueryData.pages = state.infiniteQueryData.pages.map(page => {
-                            const pageData = page.data ?? [];
-                            if (pageData.some(t => t.id === tagId)) {
-                                return {
-                                    ...page,
-                                    data: pageData.filter(t => t.id !== tagId),
-                                };
-                            }
-                            return page;
-                        });
+                    state.dailyCreatedCount = data;
+                }),
+            setDailyUsageCount: (data) =>
+                set((state) => {
+                    state.dailyUsageCount = data;
+                }),
 
-                        state.infiniteQueryData.pages = state.infiniteQueryData.pages.filter(page => (page.data?.length ?? 0) > 0);
-                    }
-                }),
             clearAllData: () =>
                 set((state) => {
                     state.tags = [];
                     state.infiniteQueryData = null;
+                    state.overviewData = [];
+                    state.dailyCreatedCount = [];
+                }),
+            addTag: (tag) =>
+                set((state) => {
+                    state.tags.push(tag);
+                }),
+            updateTag: (updatedTag) =>
+                set((state) => {
+                    const index = state.tags.findIndex((tag) => tag.id === updatedTag.id);
+                    if (index !== -1) {
+                        state.tags[index] = { ...state.tags[index], ...updatedTag };
+                    }
+                }),
+            removeTag: (tagId) =>
+                set((state) => {
+                    state.tags = state.tags.filter((tag) => tag.id !== tagId);
                 }),
         },
     }))

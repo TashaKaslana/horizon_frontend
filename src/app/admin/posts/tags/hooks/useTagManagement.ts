@@ -4,9 +4,12 @@ import {
     createTagMutation,
     deleteTagMutation,
     getAllTagsInfiniteOptions,
+    getDailyTagCountsOptions,
+    getTagAnalyticsOverviewOptions, getTagDistributionOptions,
+    getTagsWithCountsInfiniteOptions,
     updateTagMutation,
 } from "@/api/client/@tanstack/react-query.gen";
-import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
+import {useInfiniteQuery, useMutation, useQuery} from "@tanstack/react-query";
 import { getNextPageParam } from "@/lib/utils";
 import useTagStore from "../store/useTagStore";
 import { useEffect } from "react";
@@ -17,9 +20,9 @@ import {
     UpdateTagRequest,
     TagResponse,
 } from "@/api/client/types.gen";
-import { zCreateTagRequest } from "@/api/client/zod.gen"; // Assuming similar zod schema exists for tags
+import { zCreateTagRequest } from "@/api/client/zod.gen";
 
-export const useTagManagement = () => {
+export const useTagManagement = (timeRange: number = 30) => {
     const { infiniteQueryData, actions } = useTagStore();
 
     const {
@@ -31,7 +34,7 @@ export const useTagManagement = () => {
         isError,
         error,
     } = useInfiniteQuery({
-        ...getAllTagsInfiniteOptions({ // Updated to getPostTagsInfiniteOptions
+        ...getTagsWithCountsInfiniteOptions({ // Updated to getPostTagsInfiniteOptions
             query: {
                 page: 0,
                 size: 10,
@@ -48,6 +51,40 @@ export const useTagManagement = () => {
             actions.setInfiniteQueryData(tagsData);
         }
     }, [actions, tagsData]);
+
+    const {data: overviewData, isLoading: isOverviewLoading} = useQuery({
+        ...getTagAnalyticsOverviewOptions()
+    })
+    
+    useEffect(() => {
+        if (overviewData?.data) {
+            actions.setOverviewData(overviewData.data);
+        }
+    }, [actions, overviewData?.data]);
+    
+    const {data: dailyCreatedCount, isLoading: isDailyCreatedCountLoading} = useQuery({
+        ...getDailyTagCountsOptions()
+    });
+
+    useEffect(() => {
+        if (dailyCreatedCount?.data) {
+            actions.setDailyCreatedCount(dailyCreatedCount.data);
+        }
+    }, [actions, dailyCreatedCount?.data]);
+
+    const {data: dailyUsageCount, isLoading: isDailyUsageCountLoading} = useQuery({
+        ...getTagDistributionOptions({
+            query: {
+                days: timeRange
+            }
+        })
+    });
+
+    useEffect(() => {
+        if (dailyUsageCount?.data) {
+            actions.setDailyUsageCount(dailyUsageCount.data);
+        }
+    }, [actions, dailyUsageCount?.data]);
 
     const { mutate: createTagMutationFn, isPending: isCreatingTag } = useMutation({
         ...createTagMutation({}),
@@ -142,6 +179,13 @@ export const useTagManagement = () => {
         isUpdatingTag,
         deleteTag,
         isDeletingTag,
+
+        overviewData: overviewData?.data || [],
+        isOverviewLoading,
+        dailyCreatedCount: dailyCreatedCount?.data || [],
+        isDailyCreatedCountLoading,
+        dailyUsageCount: dailyUsageCount?.data || [],
+        isDailyUsageCountLoading,
     };
 };
 
