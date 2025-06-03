@@ -129,10 +129,9 @@ export const AddRoleSheet: React.FC<AddRoleSheetProps> = ({children}) => {
             </SheetContent>
             <PermissionsSelectionDialog
                 open={isPermissionDialogOpen}
-                onOpenChange={setIsPermissionDialogOpen}
-                onConfirm={handlePermissionsConfirm}
+                onOpenChangeAction={setIsPermissionDialogOpen}
+                onConfirmAction={handlePermissionsConfirm}
                 currentPermissionIds={currentPermissionIds}
-                selectedPermissionsId={[]}
             />
         </Sheet>
     );

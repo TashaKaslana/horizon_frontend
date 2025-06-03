@@ -245,13 +245,11 @@ export function PostTable() {
         },
     ], [handleDeletePost, handleOpenSheet]);
 
-    const currentMockUser = {id: "user-current", name: "Current Admin"};
-
     return (
         <div className="flex w-full flex-col justify-start gap-6 p-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
                 <h1 className="text-2xl font-semibold">Manage Posts</h1>
-                <CreatePostSheet onCreateAction={createPost} currentAuthor={currentMockUser}/>
+                <CreatePostSheet onCreateAction={createPost}/>
             </div>
 
             <DataTable

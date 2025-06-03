@@ -53,10 +53,13 @@ const createPostFormSchema = z.object({
 type CreatePostFormValues = z.infer<typeof createPostFormSchema>;
 
 interface CreatePostSheetProps {
-    onCreateAction: (newPost: z.infer<typeof zCreatePostRequest>) => Promise<void>;
+    onCreateAction: (newPost: z.infer<typeof zCreatePostRequest>) => Promise<unknown>;
 }
 
-export const CreatePostSheet: React.FC<CreatePostSheetProps> = ({ onCreateAction }) => {
+
+export const CreatePostSheet: React.FC<CreatePostSheetProps> = ({
+    onCreateAction
+                                                                }) => {
     const [isOpen, setIsOpen] = React.useState(false);
 
     const form = useForm<CreatePostFormValues>({

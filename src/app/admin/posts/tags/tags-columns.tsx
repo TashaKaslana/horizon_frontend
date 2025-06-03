@@ -3,9 +3,7 @@
 import {ColumnDef} from "@tanstack/react-table";
 import {Checkbox} from "@/components/ui/checkbox";
 import {DataTableColumnHeader} from "@/components/common/data-table-components";
-import {DragHandleCell} from "@/components/common/dnd-table-components";
 import React from "react";
-import {TagRowData} from "@/app/admin/posts/tags/types";
 import {formatDateTS} from "@/lib/utils";
 import {MoreVerticalIcon, EditIcon, TrashIcon} from "lucide-react";
 import {
@@ -18,14 +16,9 @@ import {
 import {Button} from "@/components/ui/button";
 import {toast} from "sonner";
 import {TagDetailViewerSheet} from "@/app/admin/posts/tags/tag-detail-viewer-sheet";
+import {TagWithCountDto} from "@/api/client";
 
-export const columns: ColumnDef<TagRowData>[] = [
-    {
-        id: "drag",
-        header: () => null,
-        cell: (props) => <DragHandleCell {...props} />,
-        size: 40, enableSorting: false, enableHiding: false,
-    },
+export const columns: ColumnDef<TagWithCountDto>[] = [
     {
         id: "select",
         header: ({table}) => (
@@ -101,14 +94,14 @@ export const columns: ColumnDef<TagRowData>[] = [
         enableSorting: true,
     },
     {
-        accessorKey: "postsCount",
+        accessorKey: "postCount",
         header: ({column}) => (
             <DataTableColumnHeader column={column} title="Posts"/>
         ),
         cell: ({row}) => {
             return (
                 <div className="text-center">
-                    {row.getValue("postsCount")}
+                    {row.getValue("postCount")}
                 </div>
             );
         },

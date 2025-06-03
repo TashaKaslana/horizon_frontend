@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {Dispatch, SetStateAction, useEffect, useState} from "react";
 import {DataTable} from "@/components/ui/data-table";
 import usePermissionsStore from "@/app/admin/users/permissions/stores/usePermissionsStore";
 import usePermissionsManagement from "@/app/admin/users/permissions/hooks/usePermissionsManagement";
@@ -6,21 +6,24 @@ import {PermissionDto} from "@/api/client";
 import {DraggableItem} from "@/components/common/dnd-table-components";
 import {permissionsColumns} from "@/app/admin/users/permissions/permissions-columns";
 import {
+    RowSelectionState,
     VisibilityState,
 } from "@tanstack/react-table";
 
+type PermissionDraggable = PermissionDto & DraggableItem;
+
 type PermissionsDataTableProps = {
-    enableRowSelection?: boolean | ((row: any) => boolean);
-    setRowSelection?: React.Dispatch<React.SetStateAction<PermissionDraggable[]>>
+    enableRowSelection?: boolean | ((row: PermissionDraggable) => boolean);
+    rowSelection?: RowSelectionState;
+    onRowSelectionChange?: Dispatch<SetStateAction<RowSelectionState>>;
     columnVisibility?: VisibilityState;
 };
 
-type PermissionDraggable = PermissionDto & DraggableItem;
-
 export function PermissionsDataTable({
                                          enableRowSelection = false,
-                                         setRowSelection,
+                                         rowSelection,
                                          columnVisibility = {},
+                                         onRowSelectionChange
                                      }: PermissionsDataTableProps) {
     const [data, setData] = useState<PermissionDraggable[]>([]);
     const {permissions} = usePermissionsStore();
@@ -48,7 +51,8 @@ export function PermissionsDataTable({
             data={data}
             setData={setData}
             enableRowSelection={enableRowSelection}
-            setRowSelectionFn={setRowSelection}
+            rowSelection={rowSelection}
+            setRowSelectionFn={onRowSelectionChange}
             initialColumnVisibility={columnVisibility}
         />
     );

@@ -9,7 +9,6 @@ import {
     SaveIcon,
     TagIcon,
     TrashIcon,
-    UserCircleIcon,
     XIcon,
 } from "lucide-react";
 
@@ -19,17 +18,18 @@ import { Label } from "@/components/ui/label";
 import { Sheet } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { TagRowData } from "./types";
-import { TagSchema } from "@/schemas/tag-schema";
 import { SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { TagSchema } from "@/schemas/tag-schema";
+import { TagWithCountDto } from "@/api/client";
+
 interface TagDetailViewerSheetProps {
-    tagInitialData: TagRowData;
-    onUpdateAction: (updatedTag: Partial<TagRowData>) => void;
+    tagInitialData: TagWithCountDto;
+    onUpdateAction: (updatedTag: Partial<TagWithCountDto>) => void;
     onDeleteAction?: (tagId: string) => void;
     children?: React.ReactNode;
 }
 
-type TagFormData = Pick<TagRowData, "name" | "slug" | "description">;
+type TagFormData = Pick<TagWithCountDto, "name" | "slug" | "description">;
 
 export const TagDetailViewerSheet: React.FC<TagDetailViewerSheetProps> = ({
     tagInitialData,
@@ -39,18 +39,18 @@ export const TagDetailViewerSheet: React.FC<TagDetailViewerSheetProps> = ({
 }) => {
     const [isEditing, setIsEditing] = React.useState(false);
     const [formData, setFormData] = React.useState<TagFormData>({
-        name: tagInitialData.name,
-        slug: tagInitialData.slug,
-        description: tagInitialData.description || "",
+        name: tagInitialData.name ?? '',
+        slug: tagInitialData.slug ?? '',
+        description: tagInitialData.description ?? '',
     });
     const [errors, setErrors] = React.useState<Partial<Record<keyof TagFormData, string>>>({});
     const [isSubmitting, setIsSubmitting] = React.useState(false);
 
     React.useEffect(() => {
         setFormData({
-            name: tagInitialData.name,
-            slug: tagInitialData.slug,
-            description: tagInitialData.description || "",
+            name: tagInitialData.name ?? '',
+            slug: tagInitialData.slug ?? '',
+            description: tagInitialData.description ?? '',
         });
         setIsEditing(false); // Reset editing state when tag data changes
         setErrors({});
@@ -77,8 +77,7 @@ export const TagDetailViewerSheet: React.FC<TagDetailViewerSheetProps> = ({
             description: formData.description,
         };
 
-        // Validate using the main TagSchema, but only for the fields being edited.
-        // We pick the fields from the main schema to ensure consistency.
+        // Validate using the TagSchema
         const validationSchema = TagSchema.pick({ name: true, slug: true, description: true });
         const validationResult = validationSchema.safeParse(tagToSubmit);
 
@@ -119,9 +118,8 @@ export const TagDetailViewerSheet: React.FC<TagDetailViewerSheetProps> = ({
                 action: {
                     label: "Delete",
                     onClick: () => {
-                        onDeleteAction(tagInitialData.id);
+                        onDeleteAction(tagInitialData.id!);
                         toast.success(`Tag "${tagInitialData.name}" delete process initiated.`);
-                         // Note: Sheet might need to be closed manually after deletion if not handled by parent
                     }
                 },
                 cancel: {
@@ -148,9 +146,9 @@ export const TagDetailViewerSheet: React.FC<TagDetailViewerSheetProps> = ({
             if (!open) {
                 setIsEditing(false); // Reset edit mode when sheet closes
                 setFormData({ // Reset form data to initial
-                    name: tagInitialData.name,
-                    slug: tagInitialData.slug,
-                    description: tagInitialData.description || "",
+                    name: tagInitialData.name ?? '',
+                    slug: tagInitialData.slug ?? '',
+                    description: tagInitialData.description ?? '',
                 });
                 setErrors({});
             }
@@ -217,14 +215,11 @@ export const TagDetailViewerSheet: React.FC<TagDetailViewerSheetProps> = ({
                 ) : (
                     <div className="flex-1 overflow-y-auto py-4 space-y-3 text-sm pr-2">
                         {renderInfoField("Slug", tagInitialData.slug, <TagIcon className="h-4 w-4 text-muted-foreground"/>)}
-                        {renderInfoField("Posts", tagInitialData.postsCount, <TagIcon className="h-4 w-4 text-muted-foreground"/>)}
+                        {renderInfoField("Posts", Number(tagInitialData.postCount), <TagIcon className="h-4 w-4 text-muted-foreground"/>)}
                         {renderInfoField("Description", tagInitialData.description || "No description", <TagIcon className="h-4 w-4 text-muted-foreground"/>)}
                         <Separator />
-                        {renderInfoField("Created By", tagInitialData.createdBy, <UserCircleIcon className="h-4 w-4 text-muted-foreground"/>)}
                         {renderInfoField("Created At", tagInitialData.createdAt ? new Date(tagInitialData.createdAt).toLocaleString() : "N/A", <CalendarDaysIcon className="h-4 w-4 text-muted-foreground"/>)}
                         {renderInfoField("Last Updated", tagInitialData.updatedAt ? new Date(tagInitialData.updatedAt).toLocaleString() : "N/A", <CalendarDaysIcon className="h-4 w-4 text-muted-foreground"/>)}
-                         {renderInfoField("Updated By", tagInitialData.updatedBy, <UserCircleIcon className="h-4 w-4 text-muted-foreground"/>)}
-
 
                         <SheetFooter className="mt-auto pt-6 flex flex-col sm:flex-row justify-between items-center gap-2">
                              <Button variant="destructive" onClick={handleDelete} className="w-full sm:w-auto" disabled={!onDeleteAction}>

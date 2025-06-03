@@ -153,7 +153,7 @@ export function CommentDetailViewerSheet({
                                 <h4 className="text-sm font-semibold text-muted-foreground flex items-center gap-1.5">
                                     <CalendarIcon className="size-4" /> Submitted At
                                 </h4>
-                                <p className="text-xs">{formatDateTS(selectedComment?.createdAt ?? '')}</p>
+                                <p className="text-xs">{selectedComment?.createdAt ? formatDateTS(selectedComment?.createdAt ) :  'N/A'}</p>
                             </div>
                             {selectedComment?.updatedAt && (
                                 <div className="space-y-1">

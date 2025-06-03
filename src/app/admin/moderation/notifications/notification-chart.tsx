@@ -49,6 +49,7 @@ export function NotificationChart() {
                 title="Admin Notifications Statistic"
                 description={`Showing new admin notifications per day for the last ${parseInt(timeRange)} days`}
                 chartConfig={chartConfig}
+                tooltipClassName={'w-24'}
             />
         </>
     )

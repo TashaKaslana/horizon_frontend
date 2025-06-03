@@ -129,7 +129,7 @@ export const usePostsManagement = (postId?: string, dailyRange?: number) => {
         }
     });
 
-    const createPost = (data: CreatePostRequest) => {
+    const createPost = async (data: CreatePostRequest) => {
         const validationResult = zCreatePostRequest.safeParse(data);
         if (!validationResult.success) {
             const firstError = validationResult.error.errors[0];
