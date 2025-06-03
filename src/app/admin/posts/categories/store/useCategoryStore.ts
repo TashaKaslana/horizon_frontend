@@ -1,23 +1,32 @@
 import {create} from "zustand";
 import {immer} from "zustand/middleware/immer";
 import { InfiniteData } from "@tanstack/react-query";
-import {ResponseMetadata, PostCategory} from "@/api/client/types.gen";
+import {
+    ResponseMetadata,
+    PostCategoryWithCountDto,
+    OverviewStatistic,
+    TopCategoryUsageDto
+} from "@/api/client/types.gen";
 
 export interface CategoryPage {
-    data?: PostCategory[];
+    data?: PostCategoryWithCountDto[];
     metadata?: ResponseMetadata;
 }
 
 type SetInfiniteDataFunction = (data: InfiniteData<CategoryPage> | null | ((prev: InfiniteData<CategoryPage> | null) => InfiniteData<CategoryPage> | null)) => void;
 
 interface CategoryState {
-    categories: PostCategory[];
+    categories: PostCategoryWithCountDto[];
     infiniteQueryData: InfiniteData<CategoryPage> | null;
+    overviewData: OverviewStatistic[],
+    chartData: TopCategoryUsageDto[],
     actions: {
         setInfiniteQueryData: SetInfiniteDataFunction;
         clearAllData: () => void;
-        addCategory: (role: PostCategory) => void;
-        updateCategory: (updatedRole: PostCategory) => void;
+        setOverviewData: (data: OverviewStatistic[]) => void;
+        setChartData: (data: TopCategoryUsageDto[]) => void;
+        addCategory: (role: PostCategoryWithCountDto) => void;
+        updateCategory: (updatedRole: PostCategoryWithCountDto) => void;
         removeCategory: (roleId: string | number) => void;
     };
 }
@@ -26,6 +35,8 @@ const useCategoryStore = create<CategoryState>()(
     immer((set) => ({
         categories: [],
         infiniteQueryData: null,
+        overviewData: [],
+        chartData: [],
         actions: {
             setInfiniteQueryData: (data) =>
                 set((state) => {
@@ -36,6 +47,16 @@ const useCategoryStore = create<CategoryState>()(
                     }
                     state.categories = state.infiniteQueryData?.pages?.flatMap((page: CategoryPage) => page.data ?? []) ?? [];
                 }),
+
+            setOverviewData: (data) =>
+                set((state) => {
+                    state.overviewData = data;
+                }),
+            setChartData: (data) =>
+                set((state) => {
+                    state.chartData = data;
+                }),
+
             addCategory: (category) =>
                 set((state) => {
                     state.categories = [category, ...state.categories];

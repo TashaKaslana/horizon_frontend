@@ -3,9 +3,7 @@
 import {ColumnDef} from "@tanstack/react-table";
 import {Checkbox} from "@/components/ui/checkbox";
 import {DataTableColumnHeader} from "@/components/common/data-table-components";
-import {DragHandleCell} from "@/components/common/dnd-table-components";
 import React from "react";
-import {TagRowData} from "@/app/admin/posts/tags/types";
 import {formatDateTS} from "@/lib/utils";
 import {MoreVerticalIcon, EditIcon, TrashIcon} from "lucide-react";
 import {
@@ -18,14 +16,9 @@ import {
 import {Button} from "@/components/ui/button";
 import {toast} from "sonner";
 import {CategoryDetailViewerSheet} from "@/app/admin/posts/categories/category-detail-viewer-sheet";
+import {PostCategoryWithCountDto} from "@/api/client";
 
-export const columns: ColumnDef<TagRowData>[] = [
-    {
-        id: "drag",
-        header: () => null,
-        cell: (props) => <DragHandleCell {...props} />,
-        size: 40, enableSorting: false, enableHiding: false,
-    },
+export const columns: ColumnDef<PostCategoryWithCountDto>[] = [
     {
         id: "select",
         header: ({table}) => (
@@ -72,8 +65,10 @@ export const columns: ColumnDef<TagRowData>[] = [
             <DataTableColumnHeader column={column} title="Name"/>
         ),
         cell: ({row}) => {
+            const categoryId = row.getValue("id") as string;
+
             return (
-                <CategoryDetailViewerSheet tagInitialData={row.original}
+                <CategoryDetailViewerSheet categoryInitial={{...row.original,  id: categoryId}}
                                       onUpdateAction={() => toast.info("Update not implemented")}
                 >
                     <div className="flex space-x-2">
@@ -101,14 +96,14 @@ export const columns: ColumnDef<TagRowData>[] = [
         enableSorting: true,
     },
     {
-        accessorKey: "postsCount",
+        accessorKey: "postCount",
         header: ({column}) => (
             <DataTableColumnHeader column={column} title="Category of Posts"/>
         ),
         cell: ({row}) => {
             return (
                 <div className="text-center">
-                    {row.getValue("postsCount")}
+                    {row.getValue("postCount")}
                 </div>
             );
         },

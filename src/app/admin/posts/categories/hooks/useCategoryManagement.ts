@@ -3,10 +3,11 @@
 import {
     createPostCategoryMutation,
     deletePostCategoryMutation,
-    getPostCategoriesInfiniteOptions,
+    getCategoriesWithCountsInfiniteOptions,
+    getCategoryAnalyticsOverviewOptions, getCategoryDistributionOptions,
     updatePostCategoryMutation,
 } from "@/api/client/@tanstack/react-query.gen";
-import { useInfiniteQuery, useMutation } from "@tanstack/react-query";
+import {useInfiniteQuery, useMutation, useQuery} from "@tanstack/react-query";
 import { getNextPageParam } from "@/lib/utils";
 import useCategoryStore from "../store/useCategoryStore";
 import { useEffect } from "react";
@@ -19,7 +20,7 @@ import {
 } from "@/api/client/types.gen";
 import { zCreatePostCategoryRequest } from "@/api/client/zod.gen";
 
-export const useCategoryManagement = () => {
+export const useCategoryManagement = (timeRange: number = 7) => {
     const { infiniteQueryData, actions } = useCategoryStore();
 
     const {
@@ -31,7 +32,7 @@ export const useCategoryManagement = () => {
         isError,
         error,
     } = useInfiniteQuery({
-        ...getPostCategoriesInfiniteOptions({
+        ...getCategoriesWithCountsInfiniteOptions({
             query: {
                 page: 0,
                 size: 10,
@@ -48,6 +49,30 @@ export const useCategoryManagement = () => {
             actions.setInfiniteQueryData(categoriesData);
         }
     }, [actions, categoriesData]);
+
+    const {data: overviewData, isLoading: isOverviewLoading} = useQuery({
+        ...getCategoryAnalyticsOverviewOptions(),
+    })
+
+    useEffect(() => {
+        if (overviewData?.data) {
+            actions.setOverviewData(overviewData.data);
+        }
+    }, [actions, overviewData?.data]);
+
+    const {data: dailyCount, isLoading: isDailyCountLoading} = useQuery({
+        ...getCategoryDistributionOptions({
+            query: {
+                days: timeRange ?? 30,
+            },
+        })
+    })
+
+    useEffect(() => {
+        if (dailyCount?.data) {
+            actions.setChartData(dailyCount.data);
+        }
+    }, [actions, dailyCount?.data]);
 
     const { mutate: createCategoryMutationFn, isPending: isCreatingCategory } = useMutation({
         ...createPostCategoryMutation({}),
@@ -142,5 +167,10 @@ export const useCategoryManagement = () => {
         isUpdatingCategory,
         deleteCategory,
         isDeletingCategory,
+
+        overviewData: overviewData?.data,
+        isOverviewLoading,
+        dailyCountData: dailyCount?.data,
+        isDailyCountLoading,
     };
 };

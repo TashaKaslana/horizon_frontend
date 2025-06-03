@@ -3,7 +3,7 @@ import {OverviewCard} from "@/app/admin/components/card-overview";
 import {OverviewStatistic} from "@/api/client";
 
 interface OverviewListProps {
-    overviewData: OverviewStatistic[];
+    overviewData?: OverviewStatistic[];
     isLoading: boolean;
 }
 
@@ -11,7 +11,7 @@ export const OverviewList = ({overviewData, isLoading}: OverviewListProps) => {
     return (
         <>
             {
-                isLoading ? (
+                (isLoading || overviewData === undefined) ? (
                         <div className={'h-32 w-full flex-col space-y-2 px-4'}>
                             <Skeleton className={'h-3 w-1/5 bg-zinc-500'}/>
                             <Skeleton className={'h-3 w-2/5 bg-zinc-500'}/>

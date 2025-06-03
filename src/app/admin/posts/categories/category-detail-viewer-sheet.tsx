@@ -9,7 +9,6 @@ import {
     SaveIcon,
     TagIcon,
     TrashIcon,
-    UserCircleIcon,
     XIcon,
 } from "lucide-react";
 
@@ -19,49 +18,50 @@ import { Label } from "@/components/ui/label";
 import { Sheet } from "@/components/ui/sheet";
 import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
-import { Category } from "./types";
 import { SheetClose, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
-import {PostCategory, PostCategorySchema} from "@/schemas/category-schema";
-interface TagDetailViewerSheetProps {
-    tagInitialData: Category;
-    onUpdateAction: (updatedTag: Partial<Category>) => void;
-    onDeleteAction?: (tagId: string) => void;
+import { PostCategory, PostCategorySchema } from "@/schemas/category-schema";
+import { PostCategoryWithCountDto } from "@/api/client";
+
+interface CategoryDetailViewerSheetProps {
+    categoryInitial: PostCategoryWithCountDto;
+    onUpdateAction: (updatedCategory: Partial<PostCategoryWithCountDto>) => void;
+    onDeleteAction?: (categoryId: string) => void;
     children?: React.ReactNode;
 }
 
-type TagFormData = Pick<PostCategory, "name" | "slug" | "description">;
+type CategoryFormData = Pick<PostCategory, "name" | "slug" | "description">;
 
-export const CategoryDetailViewerSheet: React.FC<TagDetailViewerSheetProps> = ({
-    tagInitialData,
+export const CategoryDetailViewerSheet: React.FC<CategoryDetailViewerSheetProps> = ({
+    categoryInitial,
     onUpdateAction,
     onDeleteAction,
     children,
 }) => {
     const [isEditing, setIsEditing] = React.useState(false);
-    const [formData, setFormData] = React.useState<TagFormData>({
-        name: tagInitialData.name,
-        slug: tagInitialData.slug,
-        description: tagInitialData.description || "",
+    const [formData, setFormData] = React.useState<CategoryFormData>({
+        name: categoryInitial.name ?? '',
+        slug: categoryInitial.slug ?? '',
+        description: categoryInitial.description ?? '',
     });
-    const [errors, setErrors] = React.useState<Partial<Record<keyof TagFormData, string>>>({});
+    const [errors, setErrors] = React.useState<Partial<Record<keyof CategoryFormData, string>>>({});
     const [isSubmitting, setIsSubmitting] = React.useState(false);
 
     React.useEffect(() => {
         setFormData({
-            name: tagInitialData.name,
-            slug: tagInitialData.slug,
-            description: tagInitialData.description || "",
+            name: categoryInitial.name ?? '',
+            slug: categoryInitial.slug ?? '',
+            description: categoryInitial.description ?? '',
         });
         setIsEditing(false);
         setErrors({});
-    }, [tagInitialData]);
+    }, [categoryInitial]);
 
     const handleChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
     ) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name]: value }));
-        if (errors[name as keyof TagFormData]) {
+        if (errors[name as keyof CategoryFormData]) {
             setErrors(prev => ({ ...prev, [name]: undefined }));
         }
     };
@@ -71,20 +71,20 @@ export const CategoryDetailViewerSheet: React.FC<TagDetailViewerSheetProps> = ({
         setErrors({});
         setIsSubmitting(true);
 
-        const tagToSubmit: Partial<TagFormData> = {
+        const categoryToSubmit: Partial<CategoryFormData> = {
             name: formData.name,
             slug: formData.slug,
             description: formData.description,
         };
-        
+
         const validationSchema = PostCategorySchema.pick({ name: true, slug: true, description: true });
-        const validationResult = validationSchema.safeParse(tagToSubmit);
+        const validationResult = validationSchema.safeParse(categoryToSubmit);
 
         if (!validationResult.success) {
-            const fieldErrors: Partial<Record<keyof TagFormData, string>> = {};
+            const fieldErrors: Partial<Record<keyof CategoryFormData, string>> = {};
             validationResult.error.errors.forEach(err => {
                 if (err.path.length > 0) {
-                    const fieldName = err.path[0] as keyof TagFormData;
+                    const fieldName = err.path[0] as keyof CategoryFormData;
                     fieldErrors[fieldName] = err.message;
                 }
             });
@@ -96,7 +96,7 @@ export const CategoryDetailViewerSheet: React.FC<TagDetailViewerSheetProps> = ({
 
         const updatePromise = new Promise((resolve) => setTimeout(resolve, 700))
             .then(() => {
-                onUpdateAction({ id: tagInitialData.id, ...validationResult.data });
+                onUpdateAction({ id: categoryInitial.id, ...validationResult.data });
             });
 
         toast.promise(updatePromise, {
@@ -112,14 +112,12 @@ export const CategoryDetailViewerSheet: React.FC<TagDetailViewerSheetProps> = ({
 
     const handleDelete = () => {
         if (onDeleteAction) {
-            // Placeholder for delete confirmation
-            toast.warning(`Are you sure you want to delete "${tagInitialData.name}"?`, {
+            toast.warning(`Are you sure you want to delete "${categoryInitial.name}"?`, {
                 action: {
                     label: "Delete",
                     onClick: () => {
-                        onDeleteAction(tagInitialData.id);
-                        toast.success(`category "${tagInitialData.name}" delete process initiated.`);
-                         // Note: Sheet might need to be closed manually after deletion if not handled by parent
+                        onDeleteAction(categoryInitial.id!);
+                        toast.success(`category "${categoryInitial.name}" delete process initiated.`);
                     }
                 },
                 cancel: {
@@ -144,11 +142,11 @@ export const CategoryDetailViewerSheet: React.FC<TagDetailViewerSheetProps> = ({
     return (
         <Sheet onOpenChange={(open) => {
             if (!open) {
-                setIsEditing(false); // Reset edit mode when sheet closes
-                setFormData({ // Reset form data to initial
-                    name: tagInitialData.name,
-                    slug: tagInitialData.slug,
-                    description: tagInitialData.description || "",
+                setIsEditing(false);
+                setFormData({
+                    name: categoryInitial.name || "",
+                    slug: categoryInitial.slug || "",
+                    description: categoryInitial.description || "",
                 });
                 setErrors({});
             }
@@ -156,7 +154,7 @@ export const CategoryDetailViewerSheet: React.FC<TagDetailViewerSheetProps> = ({
             <SheetTrigger asChild>
                 {children || (
                     <Button variant="link" className="p-0 h-auto text-left">
-                        {tagInitialData.name}
+                        {categoryInitial.name}
                     </Button>
                 )}
             </SheetTrigger>
@@ -164,9 +162,9 @@ export const CategoryDetailViewerSheet: React.FC<TagDetailViewerSheetProps> = ({
                 <SheetHeader className="pb-4">
                     <div className="flex justify-between items-start">
                         <div>
-                            <SheetTitle className="text-2xl">{isEditing ? "Edit category" : tagInitialData.name}</SheetTitle>
+                            <SheetTitle className="text-2xl">{isEditing ? "Edit category" : categoryInitial.name}</SheetTitle>
                             <SheetDescription>
-                                {isEditing ? "Modify the details of the category." : tagInitialData.description || "No description."}
+                                {isEditing ? "Modify the details of the category." : categoryInitial.description || "No description."}
                             </SheetDescription>
                         </div>
                         {!isEditing && (
@@ -214,15 +212,12 @@ export const CategoryDetailViewerSheet: React.FC<TagDetailViewerSheetProps> = ({
                     </form>
                 ) : (
                     <div className="flex-1 overflow-y-auto py-4 space-y-3 text-sm pr-2">
-                        {renderInfoField("Slug", tagInitialData.slug, <TagIcon className="h-4 w-4 text-muted-foreground"/>)}
-                        {renderInfoField("Posts", tagInitialData.postsCount, <TagIcon className="h-4 w-4 text-muted-foreground"/>)}
-                        {renderInfoField("Description", tagInitialData.description || "No description", <TagIcon className="h-4 w-4 text-muted-foreground"/>)}
+                        {renderInfoField("Slug", categoryInitial.slug, <TagIcon className="h-4 w-4 text-muted-foreground"/>)}
+                        {renderInfoField("Posts", Number(categoryInitial.postCount), <TagIcon className="h-4 w-4 text-muted-foreground"/>)}
+                        {renderInfoField("Description", categoryInitial.description || "No description", <TagIcon className="h-4 w-4 text-muted-foreground"/>)}
                         <Separator />
-                        {renderInfoField("Created By", tagInitialData.createdBy, <UserCircleIcon className="h-4 w-4 text-muted-foreground"/>)}
-                        {renderInfoField("Created At", tagInitialData.createdAt ? new Date(tagInitialData.createdAt).toLocaleString() : "N/A", <CalendarDaysIcon className="h-4 w-4 text-muted-foreground"/>)}
-                        {renderInfoField("Last Updated", tagInitialData.updatedAt ? new Date(tagInitialData.updatedAt).toLocaleString() : "N/A", <CalendarDaysIcon className="h-4 w-4 text-muted-foreground"/>)}
-                         {renderInfoField("Updated By", tagInitialData.updatedBy, <UserCircleIcon className="h-4 w-4 text-muted-foreground"/>)}
-
+                        {renderInfoField("Created At", categoryInitial.createdAt ? new Date(categoryInitial.createdAt).toLocaleString() : "N/A", <CalendarDaysIcon className="h-4 w-4 text-muted-foreground"/>)}
+                        {renderInfoField("Last Updated", categoryInitial.updatedAt ? new Date(categoryInitial.updatedAt).toLocaleString() : "N/A", <CalendarDaysIcon className="h-4 w-4 text-muted-foreground"/>)}
 
                         <SheetFooter className="mt-auto pt-6 flex flex-col sm:flex-row justify-between items-center gap-2">
                              <Button variant="destructive" onClick={handleDelete} className="w-full sm:w-auto" disabled={!onDeleteAction}>
