@@ -98,6 +98,7 @@ const data = {
             items: [
                 { title: "Status & Uptime", url: "/admin/system/status" },
                 { title: "Maintenance Mode", url: "/admin/system/maintenance" },
+                { title: "Database Schema", url: "/admin/system/database-schema" },
             ],
         },
         {
