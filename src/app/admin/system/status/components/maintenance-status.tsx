@@ -2,6 +2,7 @@ import {Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle} f
 import {ExternalLink, Settings} from "lucide-react";
 import {Badge} from "@/components/ui/badge";
 import {Button} from "@/components/ui/button";
+import Link from "next/link";
 
 interface MaintenanceStatusProps {
     status: boolean;
@@ -29,9 +30,11 @@ export const MaintenanceStatus = ({status} : MaintenanceStatusProps) => {
                 </CardDescription>
             </CardContent>
             <CardFooter>
-                <Button variant="outline" className="w-full" onClick={() => window.open("#", "_blank")}>
-                    <ExternalLink className="mr-2 h-4 w-4" />
-                    Maintenance Schedule
+                <Button variant="outline" className="w-full">
+                    <Link href={'/admin/system/maintenance'} className={'flex items-center justify-between'}>
+                        <ExternalLink className="mr-2 h-4 w-4" />
+                        Maintenance Schedule
+                    </Link>
                 </Button>
             </CardFooter>
         </Card>
