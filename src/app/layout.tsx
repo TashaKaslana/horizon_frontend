@@ -8,7 +8,7 @@ import {Auth0Provider} from "@auth0/nextjs-auth0";
 import QueryProvider from "@/components/query-provider";
 import {UserProvider} from "@/components/user-provider";
 import ClientSetupProvider from "@/components/client-setup-provider";
-import { MaintenanceWrapper } from "./components/maintenance-wrapper";
+import { MaintenanceWrapper } from "@/components/maintenance-wrapper";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMaintenanceStore } from "@/stores/useMaintenanceStore";
-import { MaintenanceStatusDisplay } from "./maintenance-status-display";
+import { MaintenanceStatusDisplay } from "@/app/components/maintenance-status-display";
 import { ReactNode, useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
@@ -23,7 +23,7 @@ export const MaintenanceWrapper = ({ children, bypassMaintenance = false }: Main
     return <>{children}</>;
   }
 
-  const isAdminRoute = pathname?.includes('/admin/');
+  const isAdminRoute = pathname?.includes('/admin');
 
   if (isMaintenanceMode && !isAdminRoute && !bypassMaintenance) {
     return <MaintenanceStatusDisplay />;
