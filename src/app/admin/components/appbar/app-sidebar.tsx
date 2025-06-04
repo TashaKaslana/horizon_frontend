@@ -98,7 +98,6 @@ const data = {
             items: [
                 { title: "Status & Uptime", url: "/admin/system/status" },
                 { title: "Maintenance Mode", url: "/admin/system/maintenance" },
-                { title: "External Services", url: "/admin/system/services" },
             ],
         },
         {
