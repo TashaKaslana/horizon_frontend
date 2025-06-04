@@ -1,4 +1,4 @@
-import useLoggingStore from "@/app/admin/(system)/logs/useLoggingStore";
+import useLoggingStore from "@/app/admin/system/logs/useLoggingStore";
 import {useInfiniteQuery, useQuery} from "@tanstack/react-query";
 import {
     getAllLogEntriesInfiniteOptions,

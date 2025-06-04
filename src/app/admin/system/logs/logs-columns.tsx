@@ -14,7 +14,7 @@ import {
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import {toast} from "sonner";
-import {LogDetailSheet} from "@/app/admin/(system)/logs/log-details-sheet";
+import {LogDetailSheet} from "@/app/admin/system/logs/log-details-sheet";
 import {useState} from "react";
 import {LogEntryDto} from "@/api/client";
 

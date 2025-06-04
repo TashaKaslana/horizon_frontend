@@ -4,8 +4,8 @@ import { Badge } from "@/components/ui/badge"
 import { AlertTriangle, CheckCircle, Settings } from "lucide-react"
 import { DatabaseStatus } from "./database-status"
 import { MaintenanceStatus } from "./maintenance-status"
-import {CloudinaryStatus} from "@/app/admin/(system)/status/components/cloudinary-status";
-import {Auth0Status} from "@/app/admin/(system)/status/components/auth0-status";
+import {CloudinaryStatus} from "@/app/admin/system/status/components/cloudinary-status";
+import {Auth0Status} from "@/app/admin/system/status/components/auth0-status";
 
 // Define the data structure
 export interface StatusData {

@@ -1,9 +1,9 @@
 import {DataTable} from "@/components/ui/data-table";
 import {useEffect, useState} from "react";
-import {columns} from "@/app/admin/(system)/logs/logs-columns";
+import {columns} from "@/app/admin/system/logs/logs-columns";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import useAdminLogEntriesStore from "@/app/admin/(system)/logs/useLoggingStore";
-import {useLoggingManagement} from "@/app/admin/(system)/logs/useLoggingManagement";
+import useAdminLogEntriesStore from "@/app/admin/system/logs/useLoggingStore";
+import {useLoggingManagement} from "@/app/admin/system/logs/useLoggingManagement";
 import {LogEntryDto} from "@/api/client";
 
 export const LogsTable = () => {
