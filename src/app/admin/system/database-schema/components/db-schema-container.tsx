@@ -12,12 +12,17 @@ function getTypeColor(type?: string) {
     if (!type) return "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300"
 
     const typeColors: { [key: string]: string } = {
-        UUID: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300",
-        VARCHAR: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
-        INTEGER: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
-        BOOLEAN: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300",
-        TIMESTAMP: "bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300",
-        TEXT: "bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300",
+        uuid: "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300",
+        varchar: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
+        integer: "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300",
+        bool: "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300",
+        timestamp: "bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-300",
+        timestamptz: "bg-pink-200 text-pink-900 dark:bg-pink-800 dark:text-pink-200",
+        date: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300",
+        float8: "bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-300",
+        jsonb: "bg-gray-200 text-gray-800 dark:bg-gray-700 dark:text-gray-200",
+        text: "bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-300",
+        int4: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900 dark:text-cyan-300",
     }
     return typeColors[type] || "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300"
 }
@@ -27,7 +32,7 @@ export default function DatabaseSchema() {
 
     if (!schema?.tables || isLoading) {
         return (
-            <div className="flex items-center justify-center h-full">
+            <div className="flex items-center justify-center h-full bg-pink">
                 <Spinner/>
                 <p className="text-muted-foreground">Loading database schema...</p>
             </div>
