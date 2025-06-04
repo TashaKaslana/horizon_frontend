@@ -103,7 +103,7 @@ const data = {
         {
             title: "Logs",
             icon: ListIcon,
-            url: "/admin/logs",
+            url: "/admin/system/logs",
         },
     ],
 
