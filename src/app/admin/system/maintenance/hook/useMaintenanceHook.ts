@@ -30,6 +30,8 @@ const useMaintenanceHook = () => {
 
         if (maintenanceInfo.activatedAt && currentState.activatedAt !== maintenanceInfo.activatedAt) {
             setActivatedAt(maintenanceInfo.activatedAt);
+        } else {
+            setActivatedAt(null);
         }
 
         if (maintenanceInfo.completionDateTime && currentState.completionDateTime !== maintenanceInfo.completionDateTime) {
@@ -74,7 +76,7 @@ const useMaintenanceHook = () => {
             toast.error(error.message);
         }
     });
-    
+
     const toggleMaintenance = (data?: MaintenanceRequestDto) => {
         if (isMaintenanceMode) {
             disableMutate({});
