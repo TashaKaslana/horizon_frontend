@@ -72,6 +72,85 @@
         "title": "Tài liệu",
         "href": "#"
       }
+    },
+    "main": {
+      "title": "Chào mừng đến với Horizon",
+      "description": "Horizon là một framework phát triển mạnh mẽ và linh hoạt.",
+      "button": "Vào",
+      "imageAlt": "Hình ảnh trang chủ",
+      "aboutTitle": "Câu Hỏi Và Trả Lời",
+      "aboutSections": [
+        {
+          "title": "Dự án này là gì?",
+          "content": "Đây là nền tảng chia sẻ video ngắn lấy cảm hứng từ TikTok, nơi người dùng có thể tạo, duyệt, thích và bình luận về video."
+        },
+        {
+          "title": "Công nghệ nào được sử dụng?",
+          "content": "Được xây dựng với Spring Boot, Next.js, PostgreSQL, Abby. Nó tuân theo kiến trúc sạch với thiết kế module."
+        },
+        {
+          "title": "Các tính năng chính là gì?",
+          "content": "Tính năng bao gồm tải lên video ngắn, feed For You, thông báo thời gian thực, bình luận, theo dõi người dùng và báo cáo bài đăng."
+        },
+        {
+          "title": "Nó khác gì so với TikTok?",
+          "content": "Nó nhẹ, mang tính giáo dục, mã nguồn mở và được thiết kế để học kiến trúc đầy đủ và module hơn là triển khai thương mại."
+        },
+        {
+          "title": "Ai đã xây dựng dự án này?",
+          "content": "Đội ngũ của chúng tôi bao gồm các sinh viên đại học tận tâm đã hợp tác để mô phỏng quy trình phát triển thực tế và áp dụng các khái niệm phân tích và thiết kế hệ thống."
+        },
+        {
+          "title": "Ai là thành viên trong đội của chúng tôi?",
+          "content": "Nguyễn Tấn Phong - Đặng Bình Đại - Huỳnh Nguyễn Hoàng Vinh"
+        }
+      ]
+    },
+    "footer": {
+      "menuItems": [
+        {
+          "title": "Nền tảng",
+          "links": [
+            {"text": "Khám phá", "href": "/explore"},
+            {"text": "Tải lên", "href": "/upload"},
+            {"text": "Tính năng", "href": "/features"},
+            {"text": "Xu hướng", "href": "/trending"},
+            {"text": "Trung tâm trợ giúp", "href": "/help"}
+          ]
+        },
+        {
+          "title": "Nhà phát triển",
+          "links": [
+            {"text": "Tài liệu", "href": "/docs"},
+            {"text": "Tham khảo API", "href": "/api"},
+            {"text": "GitHub", "href": "https://github.com/your-org"},
+            {"text": "Mã nguồn mở", "href": "/open-source"}
+          ]
+        },
+        {
+          "title": "Cộng đồng",
+          "links": [
+            {"text": "Discord", "href": "https://discord.gg/your-invite"},
+            {"text": "Đóng góp", "href": "/contribute"},
+            {"text": "Báo cáo vấn đề", "href": "/support"}
+          ]
+        },
+        {
+          "title": "Công ty",
+          "links": [
+            {"text": "Giới thiệu", "href": "/about"},
+            {"text": "Đội ngũ", "href": "/team"},
+            {"text": "Liên hệ", "href": "/contact"},
+            {"text": "Blog", "href": "/blog"}
+          ]
+        }
+      ],
+      "tagline": "Nền tảng chia sẻ video hiện đại, mã nguồn mở — được tạo ra để học tập và xây dựng công khai.",
+      "copyright": "© 2025 Dự án Clone TikTok. Được tạo ra bởi sinh viên đại học cho mục đích học tập.",
+      "bottomLinks": [
+        {"text": "Điều khoản", "href": "/terms"},
+        {"text": "Bảo mật", "href": "/privacy"}
+      ]
     }
   }
 }

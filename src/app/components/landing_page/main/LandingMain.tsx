@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {Accordion, AccordionContent, AccordionItem, AccordionTrigger} from "@/components/ui/accordion";
 import {Separator} from "@/components/ui/separator";
+import { useTranslations } from "next-intl";
 
 const LandingMain = () => {
     return (
@@ -18,25 +19,33 @@ const LandingMain = () => {
 }
 
 const LandingMainTitle = () => {
+    const t = useTranslations('LandingPage.main');
+
     return (
-        <h1 className={'font-extrabold text-6xl bg-linear-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent'}>Welcome
-            to Horizon</h1>
+        <h1 className={'font-extrabold text-6xl bg-linear-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent'}>
+            {t('title')}
+        </h1>
     )
 }
 
 const LandingMainDescription = () => {
+    const t = useTranslations('LandingPage.main');
+
     return (
-        <p className={'font-light text-gray-600'}>Horizon is a powerful and flexible development by
-            framework.</p>
+        <p className={'font-light text-gray-600'}>
+            {t('description')}
+        </p>
     )
 }
 
 const LandingMainButton = () => {
+    const t = useTranslations('LandingPage.main');
+
     return (
         <div className={'flex justify-center'}>
             <Button className={'w-40'}>
                 <Link href={'/foryou'}>
-                    Enter
+                    {t('button')}
                 </Link>
             </Button>
         </div>
@@ -44,9 +53,11 @@ const LandingMainButton = () => {
 }
 
 const LandingMainImage = () => {
+    const t = useTranslations('LandingPage.main');
+
     return (
         <Image src={'/images/landing_page/landing-main.png'}
-               alt={'Landing main image'}
+               alt={t('imageAlt')}
                height={400}
                width={800}
                className={'rounded-lg'}
@@ -54,44 +65,20 @@ const LandingMainImage = () => {
     )
 }
 
+type AboutSectionItem = {
+    title: string;
+    content: string;
+}
+
 const LandingAbout = () => {
-    const ABOUT_SECTIONS = [
-        {
-            title: "What is this project?",
-            content:
-                "It's a TikTok-inspired short video sharing platform where users can create, browse, like, and comment on videos.",
-        },
-        {
-            title: "What technologies are used?",
-            content:
-                "Built with Spring Boot, Next.js, PostgreSQL, Abby. It follows clean architecture with a modular design.",
-        },
-        {
-            title: "What are the main features?",
-            content:
-                "Features include short video uploads, a For You feed, real-time notifications, commenting, following users, and reporting posts.",
-        },
-        {
-            title: "How is it different from TikTok?",
-            content:
-                "It’s lightweight, educational, open-source, and designed for learning fullstack and modular architecture rather than commercial deployment.",
-        },
-        {
-            title: "Who built this project?",
-            content:
-                "Our team consists of dedicated university students who collaborated to simulate real-world development workflows and apply system analysis and design concepts.",
-        },
-        {
-            title: "Who are members of our team?",
-            content: "Nguyen Tan Phong - Dang Binh Dai - Huynh Nguyen Hoang Vinh"
-        }
-    ];
+    const t = useTranslations('LandingPage.main');
+    const aboutSections = t.raw('aboutSections');
 
     return (
         <div className={'w-full flex flex-col items-center'}>
-            <h2 className={'text-center text-2xl font-semibold'}>Questions And Answers</h2>
+            <h2 className={'text-center text-2xl font-semibold'}>{t('aboutTitle')}</h2>
             <Accordion type="single" collapsible className={'w-1/2'}>
-                {ABOUT_SECTIONS.map((section, index) => (
+                {aboutSections.map((section: AboutSectionItem, index: number) => (
                     <AccordionItem key={index} value={`item-${index}`}>
                         <AccordionTrigger className={'text-sky-700'}>{section.title}</AccordionTrigger>
                         <AccordionContent className={'text-orange-400'}>{section.content}</AccordionContent>
