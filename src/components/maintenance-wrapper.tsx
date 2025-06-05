@@ -25,9 +25,6 @@ export const MaintenanceWrapper = ({ children, bypassMaintenance = false }: Main
 
   const isAdminRoute = pathname?.includes('/admin');
 
-  console.log(isAdminRoute);
-  console.log("Maintenance Mode:", isMaintenanceMode);
-
   if (isMaintenanceMode && !isAdminRoute && !bypassMaintenance) {
     return <MaintenanceStatusDisplay />;
   }

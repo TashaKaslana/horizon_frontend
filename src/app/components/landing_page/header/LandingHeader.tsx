@@ -2,6 +2,7 @@ import React from "react";
 import NavigationContainer from "@/app/components/landing_page/header/NavigationContainer";
 import LoginButton from "@/app/components/LoginButton";
 import Logo from "../../../../../public/images/share/Logo";
+import {LanguageSwitcher} from "@/components/common/language-switcher";
 
 const LandingHeader = () => {
     return (
@@ -21,7 +22,10 @@ const LogoContainer = () => {
 
 const AuthenticatedSection = () => {
     return (
-        <LoginButton/>
+        <div className={'flex gap-2 items-center'}>
+            <LanguageSwitcher/>
+            <LoginButton/>
+        </div>
     )
 }
 export default LandingHeader

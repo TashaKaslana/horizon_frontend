@@ -1,0 +1,77 @@
+{
+  "LandingPage": {
+    "navigation": {
+      "Getting started": {
+        "title": "Getting started",
+        "items": [
+          {
+            "title": "How to use",
+            "description": "Guide you to use our project Horizon",
+            "href": "#"
+          },
+          {
+            "title": "Quick Start",
+            "description": "Get up and running in under 5 minutes",
+            "href": "#"
+          }
+        ],
+        "account": {
+          "title": "Account",
+          "links": [
+            { "title": "Login", "href": "#" },
+            { "title": "Sign up", "href": "#" }
+          ]
+        }
+      },
+      "Discover": {
+        "title": "Discover",
+        "items": [
+          {
+            "title": "Features",
+            "description": "Explore the powerful features of Horizon",
+            "href": "#"
+          },
+          {
+            "title": "Showcase",
+            "description": "See what others have built with Horizon",
+            "href": "#"
+          },
+          {
+            "title": "Community",
+            "description": "Join our growing community of developers",
+            "href": "#"
+          }
+        ]
+      },
+      "About Project": {
+        "title": "About Project",
+        "items": [
+          {
+            "title": "Our Mission",
+            "description": "Learn about the goals and vision behind Horizon",
+            "href": "#"
+          },
+          {
+            "title": "Team",
+            "description": "Meet the people behind the project",
+            "href": "#"
+          },
+          {
+            "title": "Roadmap",
+            "description": "See what we have planned for the future",
+            "href": "#"
+          },
+          {
+            "title": "Contact Us",
+            "description": "Get in touch with our support team",
+            "href": "#"
+          }
+        ]
+      },
+      "Documentation": {
+        "title": "Documentation",
+        "href": "#"
+      }
+    }
+  }
+}

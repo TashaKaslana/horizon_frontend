@@ -1,0 +1,77 @@
+{
+  "LandingPage": {
+    "navigation": {
+      "Getting started": {
+        "title": "Cách bắt đầu",
+        "items": [
+          {
+            "title": "Cách sử dụng",
+            "description": "Hướng dẫn bạn sử dụng dự án Horizon",
+            "href": "#"
+          },
+          {
+            "title": "Bắt đầu nhanh",
+            "description": "Khởi động và vận hành trong chưa đến 5 phút",
+            "href": "#"
+          }
+        ],
+        "account": {
+          "title": "Tài khoản",
+          "links": [
+            { "title": "Đăng nhập", "href": "#" },
+            { "title": "Đăng ký", "href": "#" }
+          ]
+        }
+      },
+      "Discover": {
+        "title": "Khám phá",
+        "items": [
+          {
+            "title": "Tính năng",
+            "description": "Khám phá các tính năng mạnh mẽ của Horizon",
+            "href": "#"
+          },
+          {
+            "title": "Trưng bày",
+            "description": "Xem những gì người khác đã xây dựng với Horizon",
+            "href": "#"
+          },
+          {
+            "title": "Cộng đồng",
+            "description": "Tham gia cộng đồng nhà phát triển đang phát triển của chúng tôi",
+            "href": "#"
+          }
+        ]
+      },
+      "About Project": {
+        "title": "Về Dự án",
+        "items": [
+          {
+            "title": "Sứ mệnh của chúng tôi",
+            "description": "Tìm hiểu về mục tiêu và tầm nhìn đằng sau Horizon",
+            "href": "#"
+          },
+          {
+            "title": "Đội ngũ",
+            "description": "Gặp gỡ những người đứng sau dự án",
+            "href": "#"
+          },
+          {
+            "title": "Lộ trình",
+            "description": "Xem những gì chúng tôi đã lên kế hoạch cho tương lai",
+            "href": "#"
+          },
+          {
+            "title": "Liên hệ",
+            "description": "Liên hệ với đội hỗ trợ của chúng tôi",
+            "href": "#"
+          }
+        ]
+      },
+      "Documentation": {
+        "title": "Tài liệu",
+        "href": "#"
+      }
+    }
+  }
+}

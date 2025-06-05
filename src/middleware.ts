@@ -1,7 +1,7 @@
 import {NextResponse, type NextRequest } from "next/server";
 import { auth0 } from "./lib/auth0";
 
-const supportedLocales = ['en', 'vi'];
+const supportedLocales = ['en', 'vn'];
 const defaultLocale = 'en';
 
 export async function middleware(request: NextRequest) {
