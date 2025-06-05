@@ -1,8 +1,23 @@
 import {NextResponse, type NextRequest } from "next/server";
 import { auth0 } from "./lib/auth0";
 
+const supportedLocales = ['en', 'vi'];
+const defaultLocale = 'en';
+
 export async function middleware(request: NextRequest) {
     const authRes = await auth0.middleware(request)
+
+    const localeCookie = request.cookies.get('locale')?.value;
+
+    if (!localeCookie || !supportedLocales.includes(localeCookie)) {
+        const acceptLang = request.headers.get('accept-language');
+        const detectedLocale = acceptLang?.split(',')[0]?.split('-')[0] || defaultLocale;
+
+        const locale = supportedLocales.includes(detectedLocale) ? detectedLocale : defaultLocale;
+
+        // Set cookie in response
+        authRes.cookies.set('locale', locale);
+    }
 
     if (request.nextUrl.pathname.startsWith("/auth")) {
         return authRes
