@@ -18,8 +18,14 @@
         "account": {
           "title": "Account",
           "links": [
-            { "title": "Login", "href": "#" },
-            { "title": "Sign up", "href": "#" }
+            {
+              "title": "Login",
+              "href": "#"
+            },
+            {
+              "title": "Sign up",
+              "href": "#"
+            }
           ]
         }
       },
@@ -111,56 +117,203 @@
         {
           "title": "Platform",
           "links": [
-            {"text": "Explore", "href": "/explore"},
-            {"text": "Upload", "href": "/upload"},
-            {"text": "Features", "href": "/features"},
-            {"text": "Trending", "href": "/trending"},
-            {"text": "Help Center", "href": "/help"}
+            {
+              "text": "Explore",
+              "href": "/explore"
+            },
+            {
+              "text": "Upload",
+              "href": "/upload"
+            },
+            {
+              "text": "Features",
+              "href": "/features"
+            },
+            {
+              "text": "Trending",
+              "href": "/trending"
+            },
+            {
+              "text": "Help Center",
+              "href": "/help"
+            }
           ]
         },
         {
           "title": "Developers",
           "links": [
-            {"text": "Docs", "href": "/docs"},
-            {"text": "API Reference", "href": "/api"},
-            {"text": "GitHub", "href": "https://github.com/your-org"},
-            {"text": "Open Source", "href": "/open-source"}
+            {
+              "text": "Docs",
+              "href": "/docs"
+            },
+            {
+              "text": "API Reference",
+              "href": "/api"
+            },
+            {
+              "text": "GitHub",
+              "href": "https://github.com/your-org"
+            },
+            {
+              "text": "Open Source",
+              "href": "/open-source"
+            }
           ]
         },
         {
           "title": "Community",
           "links": [
-            {"text": "Discord", "href": "https://discord.gg/your-invite"},
-            {"text": "Contribute", "href": "/contribute"},
-            {"text": "Report an Issue", "href": "/support"}
+            {
+              "text": "Discord",
+              "href": "https://discord.gg/your-invite"
+            },
+            {
+              "text": "Contribute",
+              "href": "/contribute"
+            },
+            {
+              "text": "Report an Issue",
+              "href": "/support"
+            }
           ]
         },
         {
           "title": "Company",
           "links": [
-            {"text": "About", "href": "/about"},
-            {"text": "Team", "href": "/team"},
-            {"text": "Contact", "href": "/contact"},
-            {"text": "Blog", "href": "/blog"}
+            {
+              "text": "About",
+              "href": "/about"
+            },
+            {
+              "text": "Team",
+              "href": "/team"
+            },
+            {
+              "text": "Contact",
+              "href": "/contact"
+            },
+            {
+              "text": "Blog",
+              "href": "/blog"
+            }
           ]
         }
       ],
       "tagline": "A modern, open-source video sharing platform — created for learning and building in public.",
       "copyright": "© 2025 TikTok Clone Project. Created by university students for learning purposes.",
       "bottomLinks": [
-        {"text": "Terms", "href": "/terms"},
-        {"text": "Privacy", "href": "/privacy"}
+        {
+          "text": "Terms",
+          "href": "/terms"
+        },
+        {
+          "text": "Privacy",
+          "href": "/privacy"
+        }
       ]
     }
   },
   "Home": {
     "navigation": [
-      {"title": "For you", "href": "/foryou"},
-      {"title": "Discover", "href": "/discover"},
-      {"title": "Management", "href": "/management"},
-      {"title": "Uploads", "href": "/uploads"},
-      {"title": "Following", "href": "/following"},
-      {"title": "Notifications", "href": "/notifications"}
-    ]
+      {
+        "title": "For you",
+        "href": "/foryou"
+      },
+      {
+        "title": "Discover",
+        "href": "/discover"
+      },
+      {
+        "title": "Management",
+        "href": "/management"
+      },
+      {
+        "title": "Uploads",
+        "href": "/uploads"
+      },
+      {
+        "title": "Following",
+        "href": "/following"
+      },
+      {
+        "title": "Notifications",
+        "href": "/notifications"
+      }
+    ],
+    "notifications": {
+      "title": "Notifications",
+      "subtitle": "View and manage your notification activity",
+      "empty": "No notifications yet",
+      "types": {
+        "like": "liked your video",
+        "comment": "commented on your video",
+        "follow": "started following you",
+        "mention": "mentioned you in a comment",
+        "reply": "replied to your comment",
+        "system": "System notification"
+      },
+      "timeLabels": {
+        "now": "Just now",
+        "minutes": "{count} minutes ago",
+        "hours": "{count} hours ago",
+        "days": "{count} days ago",
+        "weeks": "{count} weeks ago"
+      },
+      "filters": {
+        "all": "All notifications",
+        "posts": "Posts",
+        "unread": "Unread",
+        "mentions": "Mentions",
+        "likes": "Likes",
+        "comments": "Comments",
+        "follows": "Follows",
+        "system": "System"
+      },
+      "tabDescriptions": {
+        "all": "All your notifications in one place",
+        "posts": "Notifications related to your posts",
+        "unread": "Notifications you haven't read yet",
+        "mentions": "Notifications where you were mentioned",
+        "likes": "Notifications about likes on your content",
+        "comments": "Notifications about comments on your content",
+        "follows": "Notifications about new followers",
+        "system": "System-related notifications"
+      },
+      "header": {
+        "unread": "Unread",
+        "searchPlaceholder": "Search notifications...",
+        "tooltips": {
+          "search": "Search notifications",
+          "filter": "Filter notifications"
+        },
+        "filterOptions": {
+          "all": "All",
+          "read": "Read",
+          "unread": "Unread"
+        },
+        "actions": {
+          "markAllRead": "Mark all as read",
+          "markTabRead": "Mark {tab} as read",
+          "clearAll": "Clear all",
+          "markAllUnread": "Mark all as unread",
+          "moreOptions": "More options"
+        }
+      },
+      "cardActions": {
+        "dismiss": "Dismiss",
+        "moreOptions": "More options",
+        "markAsRead": "Mark as read",
+        "markAsUnread": "Mark as unread",
+        "disableNotifications": "Disable {type} notifications"
+      },
+      "emptyState": {
+        "title": "No {type} notifications",
+        "description": "You don't have any {type} notifications at the moment."
+      },
+      "status": {
+        "read": "Read",
+        "new": "New"
+      }
+    }
   }
 }

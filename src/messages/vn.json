@@ -18,8 +18,14 @@
         "account": {
           "title": "Tài khoản",
           "links": [
-            { "title": "Đăng nhập", "href": "#" },
-            { "title": "Đăng ký", "href": "#" }
+            {
+              "title": "Đăng nhập",
+              "href": "#"
+            },
+            {
+              "title": "Đăng ký",
+              "href": "#"
+            }
           ]
         }
       },
@@ -111,56 +117,203 @@
         {
           "title": "Nền tảng",
           "links": [
-            {"text": "Khám phá", "href": "/explore"},
-            {"text": "Tải lên", "href": "/upload"},
-            {"text": "Tính năng", "href": "/features"},
-            {"text": "Xu hướng", "href": "/trending"},
-            {"text": "Trung tâm trợ giúp", "href": "/help"}
+            {
+              "text": "Khám phá",
+              "href": "/explore"
+            },
+            {
+              "text": "Tải lên",
+              "href": "/upload"
+            },
+            {
+              "text": "Tính năng",
+              "href": "/features"
+            },
+            {
+              "text": "Xu hướng",
+              "href": "/trending"
+            },
+            {
+              "text": "Trung tâm trợ giúp",
+              "href": "/help"
+            }
           ]
         },
         {
           "title": "Nhà phát triển",
           "links": [
-            {"text": "Tài liệu", "href": "/docs"},
-            {"text": "Tham khảo API", "href": "/api"},
-            {"text": "GitHub", "href": "https://github.com/your-org"},
-            {"text": "Mã nguồn mở", "href": "/open-source"}
+            {
+              "text": "Tài liệu",
+              "href": "/docs"
+            },
+            {
+              "text": "Tham khảo API",
+              "href": "/api"
+            },
+            {
+              "text": "GitHub",
+              "href": "https://github.com/your-org"
+            },
+            {
+              "text": "Mã nguồn mở",
+              "href": "/open-source"
+            }
           ]
         },
         {
           "title": "Cộng đồng",
           "links": [
-            {"text": "Discord", "href": "https://discord.gg/your-invite"},
-            {"text": "Đóng góp", "href": "/contribute"},
-            {"text": "Báo cáo vấn đề", "href": "/support"}
+            {
+              "text": "Discord",
+              "href": "https://discord.gg/your-invite"
+            },
+            {
+              "text": "Đóng góp",
+              "href": "/contribute"
+            },
+            {
+              "text": "Báo cáo vấn đề",
+              "href": "/support"
+            }
           ]
         },
         {
           "title": "Công ty",
           "links": [
-            {"text": "Giới thiệu", "href": "/about"},
-            {"text": "Đội ngũ", "href": "/team"},
-            {"text": "Liên hệ", "href": "/contact"},
-            {"text": "Blog", "href": "/blog"}
+            {
+              "text": "Giới thiệu",
+              "href": "/about"
+            },
+            {
+              "text": "Đội ngũ",
+              "href": "/team"
+            },
+            {
+              "text": "Liên hệ",
+              "href": "/contact"
+            },
+            {
+              "text": "Blog",
+              "href": "/blog"
+            }
           ]
         }
       ],
       "tagline": "Nền tảng chia sẻ video hiện đại, mã nguồn mở — được tạo ra để học tập và xây dựng công khai.",
       "copyright": "© 2025 Dự án Clone TikTok. Được tạo ra bởi sinh viên đại học cho mục đích học tập.",
       "bottomLinks": [
-        {"text": "Điều khoản", "href": "/terms"},
-        {"text": "Bảo mật", "href": "/privacy"}
+        {
+          "text": "Điều khoản",
+          "href": "/terms"
+        },
+        {
+          "text": "Bảo mật",
+          "href": "/privacy"
+        }
       ]
     }
   },
   "Home": {
     "navigation": [
-      {"title": "Dành cho bạn", "href": "/foryou"},
-      {"title": "Khám phá", "href": "/discover"},
-      {"title": "Quản lý", "href": "/management"},
-      {"title": "Tải lên", "href": "/uploads"},
-      {"title": "Đang theo dõi", "href": "/following"},
-      {"title": "Thông báo", "href": "/notifications"}
-    ]
+      {
+        "title": "Dành cho bạn",
+        "href": "/foryou"
+      },
+      {
+        "title": "Khám phá",
+        "href": "/discover"
+      },
+      {
+        "title": "Quản lý",
+        "href": "/management"
+      },
+      {
+        "title": "Tải lên",
+        "href": "/uploads"
+      },
+      {
+        "title": "Đang theo dõi",
+        "href": "/following"
+      },
+      {
+        "title": "Thông báo",
+        "href": "/notifications"
+      }
+    ],
+    "notifications": {
+      "title": "Thông báo",
+      "subtitle": "Xem và quản lý các hoạt động thông báo của bạn",
+      "empty": "Chưa có thông báo nào",
+      "types": {
+        "like": "đã thích video của bạn",
+        "comment": "đã bình luận về video của bạn",
+        "follow": "đã bắt đầu theo dõi bạn",
+        "mention": "đã nhắc đến bạn trong một bình luận",
+        "reply": "đã trả lời bình luận của bạn",
+        "system": "Thông báo hệ thống"
+      },
+      "timeLabels": {
+        "now": "Vừa xong",
+        "minutes": "{count} phút trước",
+        "hours": "{count} giờ trước",
+        "days": "{count} ngày trước",
+        "weeks": "{count} tuần trước"
+      },
+      "filters": {
+        "all": "Tất cả thông báo",
+        "posts": "Bài đăng",
+        "unread": "Chưa đọc",
+        "mentions": "Được nhắc đến",
+        "likes": "Lượt thích",
+        "comments": "Bình luận",
+        "follows": "Người theo dõi",
+        "system": "Hệ thống"
+      },
+      "tabDescriptions": {
+        "all": "Xem tất cả thông báo của bạn",
+        "posts": "Thông báo liên quan đến bài đăng của bạn",
+        "unread": "Thông báo chưa đọc",
+        "mentions": "Thông báo khi bạn được nhắc đến",
+        "likes": "Thông báo khi video của bạn được thích",
+        "comments": "Thông báo khi có bình luận trên video của bạn",
+        "follows": "Thông báo khi có người theo dõi bạn",
+        "system": "Thông báo hệ thống và cập nhật"
+      },
+      "header": {
+        "unread": "Chưa đọc",
+        "searchPlaceholder": "Tìm kiếm thông báo...",
+        "tooltips": {
+          "search": "Tìm kiếm thông báo",
+          "filter": "Lọc thông báo"
+        },
+        "filterOptions": {
+          "all": "Tất cả",
+          "read": "Đã đọc",
+          "unread": "Chưa đọc"
+        },
+        "actions": {
+          "markAllRead": "Đánh dấu tất cả là đã đọc",
+          "markTabRead": "Đánh dấu {tab} là đã đọc",
+          "clearAll": "Xóa tất cả",
+          "markAllUnread": "Đánh dấu tất cả là chưa đọc",
+          "moreOptions": "Tùy chọn thêm"
+        }
+      },
+      "cardActions": {
+        "dismiss": "Bỏ qua",
+        "moreOptions": "Tùy chọn thêm",
+        "markAsRead": "Đánh dấu là đã đọc",
+        "markAsUnread": "Đánh dấu là chưa đọc",
+        "disableNotifications": "Tắt thông báo {type}"
+      },
+      "emptyState": {
+        "title": "Không có thông báo {type}",
+        "description": "Bạn không có thông báo {type} nào vào lúc này."
+      },
+      "status": {
+        "read": "Đã đọc",
+        "new": "Mới"
+      }
+    }
   }
 }

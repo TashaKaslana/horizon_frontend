@@ -5,14 +5,16 @@ import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs"
 import NotificationCard from "./notification-card"
 import NotificationHeader from "@/app/(home)/notifications/components/notification-header"
 import {useNotificationStore} from "../store/useNotificationStore"
-import {notificationTabs} from "../constraints/notification-tab"
+import {useNotificationTabs} from "../constraints/notification-tab";
 import {useNotification} from "@/app/(home)/notifications/hooks/useNotification";
 import InfiniteScroll from "@/components/ui/infinite-scroll";
 import {getGroupType} from "@/app/(home)/notifications/libs/notification-data";
 import {Spinner} from "@/components/ui/spinner";
 import {GroupType} from "@/types/Notification";
+import { useTranslations } from "next-intl";
 
 export default function NotificationsView() {
+    const t = useTranslations('Home.notifications');
     const {
         notifications,
         searchQuery,
@@ -23,6 +25,8 @@ export default function NotificationsView() {
     } = useNotificationStore()
 
     const {hasNextPage, fetchNextPage, isFetchingNextPage, statistics} = useNotification()
+
+    const notificationTabs = useNotificationTabs();
 
     const filteredNotifications = notifications.filter((notification) => {
         if (activeTab !== "all" && getGroupType(notification.type) !== activeTab) return false
@@ -75,9 +79,12 @@ export default function NotificationsView() {
                                     {React.cloneElement(tab.icon as React.ReactElement<React.SVGProps<SVGSVGElement>>, {
                                         className: "mx-auto h-12 w-12 text-muted-foreground",
                                     })}
-                                    <h3 className="mt-4 text-lg font-medium">No {tab.label.toLowerCase()} notifications</h3>
-                                    <p className="text-muted-foreground mt-2">You don&#39;t have
-                                        any {tab.label.toLowerCase()} notifications at the moment.</p>
+                                    <h3 className="mt-4 text-lg font-medium">
+                                        {t('emptyState.title', { type: tab.label.toLowerCase() })}
+                                    </h3>
+                                    <p className="text-muted-foreground mt-2">
+                                        {t('emptyState.description', { type: tab.label.toLowerCase() })}
+                                    </p>
                                 </div>
                             )}
                             <Spinner show={isFetchingNextPage}/>

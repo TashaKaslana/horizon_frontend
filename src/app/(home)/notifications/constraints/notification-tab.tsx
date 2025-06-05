@@ -1,22 +1,17 @@
 import {AtSign, Bell, FileText, Heart, MessageCircle, UserPlus} from "lucide-react";
 import React from "react";
+import {useTranslations} from "next-intl";
 
-export const notificationTabs = [
-    {id: "all", label: "All", icon: <Bell className="h-4 w-4"/>, description: "Shows everything"},
-    {
-        id: "post",
-        label: "Posts",
-        icon: <FileText className="h-4 w-4"/>,
-        description: "Notifications related to your posts"
-    },
-    {id: "like", label: "Likes", icon: <Heart className="h-4 w-4"/>, description: "Likes on posts/comments"},
-    {
-        id: "comment",
-        label: "Comments",
-        icon: <MessageCircle className="h-4 w-4"/>,
-        description: "Comments and replies"
-    },
-    {id: "mention", label: "Mentions", icon: <AtSign className="h-4 w-4"/>, description: "When you are tagged"},
-    {id: "follow", label: "Follows", icon: <UserPlus className="h-4 w-4"/>, description: "New followers"},
-    {id: "system", label: "System", icon: <Bell className="h-4 w-4"/>, description: "App updates and warnings"},
-]
+export const useNotificationTabs = () => {
+    const t = useTranslations('Home.notifications.filters');
+    const d = useTranslations('Home.notifications.tabDescriptions');
+    return [
+        {id: "all", label: t('all'), icon: <Bell className="h-4 w-4"/>, description: d('all')},
+        {id: "post", label: t('posts'), icon: <FileText className="h-4 w-4"/>, description: d('posts')},
+        {id: "like", label: t('likes'), icon: <Heart className="h-4 w-4"/>, description: d('likes')},
+        {id: "comment", label: t('comments'), icon: <MessageCircle className="h-4 w-4"/>, description: d('comments')},
+        {id: "mention", label: t('mentions'), icon: <AtSign className="h-4 w-4"/>, description: d('mentions')},
+        {id: "follow", label: t('follows'), icon: <UserPlus className="h-4 w-4"/>, description: d('follows')},
+        {id: "system", label: t('system'), icon: <Bell className="h-4 w-4"/>, description: d('system')},
+    ];
+};

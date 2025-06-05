@@ -32,6 +32,7 @@ export function LanguageSwitcher() {
         document.cookie = `locale=${locale}; path=/; max-age=31536000`;
         setCurrentLocale(locale)// 1 year
         router.refresh();
+        location.reload();
     };
 
     return (
