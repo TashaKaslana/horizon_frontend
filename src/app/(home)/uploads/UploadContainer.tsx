@@ -9,8 +9,10 @@ import { UploadForm } from "@/app/components/post-details/uploadForm"
 import { FileUploader, FileInput } from "@/components/ui/file-upload"
 import { DropzoneOptions } from "react-dropzone"
 import { cn } from "@/lib/utils"
+import { useTranslations } from "next-intl"
 
 export default function UploadContainer() {
+    const t = useTranslations('Home.upload');
     const [file, setFile] = useState<File | null>(null)
     const [preview, setPreview] = useState<string | null>(null)
     const [error, setError] = useState<string | null>(null)
@@ -25,7 +27,7 @@ export default function UploadContainer() {
 
     const handleFileSelected = (selectedFile: File) => {
         if (!selectedFile.type.startsWith("video/")) {
-            setError("Please select a video file.")
+            setError(t('dropzone.errors.invalidType'))
             setFile(null)
             setPreview(null)
             return
@@ -66,9 +68,9 @@ export default function UploadContainer() {
                     <div className="inline-flex items-center justify-center p-2 bg-primary/10 rounded-full mb-4">
                         <Video className="h-6 w-6 text-primary" />
                     </div>
-                    <h1 className="text-4xl font-bold tracking-tight">Upload your video</h1>
+                    <h1 className="text-4xl font-bold tracking-tight">{t('title')}</h1>
                     <p className="text-muted-foreground mt-3 max-w-md mx-auto">
-                        Share your story with the world. Upload a video to get started.
+                        {t('subtitle')}
                     </p>
                 </header>
 

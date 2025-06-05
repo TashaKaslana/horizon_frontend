@@ -353,6 +353,83 @@
         "remove": "Xóa",
         "viewProfile": "Xem hồ sơ"
       }
+    },
+    "upload": {
+      "title": "Tải lên video",
+      "subtitle": "Chia sẻ câu chuyện của bạn với thế giới. Tải một video lên để bắt đầu.",
+      "dropzone": {
+        "title": "Kéo và thả video của bạn vào đây",
+        "description": "Hoặc nhấp để duyệt",
+        "supportedFormats": "Định dạng hỗ trợ: MP4, WebM, AVI",
+        "maxSize": "Kích thước tối đa: 500MB",
+        "errors": {
+          "invalidType": "Vui lòng chọn một tệp video.",
+          "tooLarge": "Tệp quá lớn. Kích thước tối đa là 500MB.",
+          "generic": "Đã xảy ra lỗi khi tải video của bạn."
+        }
+      },
+      "form": {
+        "title": {
+          "label": "Tiêu đề",
+          "placeholder": "Thêm tiêu đề cho video của bạn",
+          "error": "Tiêu đề không được để trống"
+        },
+        "description": {
+          "label": "Mô tả",
+          "placeholder": "Kể cho người xem về video của bạn",
+          "error": "Mô tả phải có ít nhất 10 ký tự"
+        },
+        "privacy": {
+          "label": "Ai có thể xem video này?",
+          "public": "Mọi người",
+          "private": "Chỉ mình tôi",
+          "unlisted": "Bất kỳ ai có đường dẫn"
+        },
+        "category": {
+          "label": "Danh mục",
+          "placeholder": "Chọn danh mục",
+          "description": "Chọn danh mục cho video của bạn",
+          "error": "Vui lòng chọn một danh mục"
+        },
+        "tags": {
+          "label": "Thẻ",
+          "placeholder": "Thêm thẻ",
+          "description": "Thêm tối đa 8 thẻ để mô tả video của bạn"
+        },
+        "thumbnail": {
+          "label": "Hình thu nhỏ",
+          "generate": "Tạo từ video",
+          "upload": "Tải lên hình thu nhỏ tùy chỉnh"
+        },
+        "status": {
+          "label": "Trạng thái",
+          "uploading": "Đang tải lên...",
+          "processing": "Đang xử lý...",
+          "complete": "Tải lên hoàn tất!"
+        },
+        "uploadDate": {
+          "label": "Ngày tải lên"
+        },
+        "comments": {
+          "label": "Cho phép bình luận",
+          "description": "Cho phép người khác bình luận về video của bạn"
+        },
+        "ageRestriction": {
+          "label": "Giới hạn độ tuổi",
+          "description": "Giới hạn video cho người xem trên 18 tuổi"
+        },
+        "actions": {
+          "upload": "Tải lên",
+          "saving": "Đang tải lên...",
+          "cancel": "Hủy bỏ",
+          "back": "Thay đổi video",
+          "delete": "Xóa",
+          "save": "Lưu nháp",
+          "publish": "Xuất bản",
+          "uploadComplete": "Tải lên hoàn tất!",
+          "uploadProcessing": "Video của bạn đang được xử lý và sẽ sớm được hiển thị."
+        }
+      }
     }
   }
 }

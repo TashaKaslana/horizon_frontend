@@ -1,16 +1,16 @@
 "use client"
 
 import type React from "react"
-
-import { FileVideo } from "lucide-react"
+import { FileVideo, AlertCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { AlertCircle } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 interface FileUploadAreaProps {
   error: string | null
 }
 
 export function FileUploadArea({ error }: FileUploadAreaProps) {
+  const t = useTranslations('Home.upload.dropzone');
 
   return (
     <div>
@@ -21,13 +21,17 @@ export function FileUploadArea({ error }: FileUploadAreaProps) {
         </div>
       </div>
 
-      <h3 className="text-xl font-medium mb-2">Drag and drop video files</h3>
+      <h3 className="text-xl font-medium mb-2">{t('title')}</h3>
       <p className="text-sm text-muted-foreground mb-6 max-w-md mx-auto">
-        Your videos will be private until you publish them. Supported formats: MP4, MOV, AVI, etc.
+        {t('description')}
+        <br />
+        {t('supportedFormats')}
+        <br />
+        {t('maxSize')}
       </p>
 
       <Button type="button" size="lg" className="rounded-full px-8 font-medium pointer-events-none">
-        SELECT FILES
+        {t('description')}
       </Button>
 
       {error && (

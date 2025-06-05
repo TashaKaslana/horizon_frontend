@@ -1,10 +1,12 @@
+'use client'
+
 import React, {SetStateAction, useEffect, useState} from "react";
 import {useForm} from "react-hook-form";
-import {z} from "zod";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useMutation} from "@tanstack/react-query";
+import {useTranslations} from "next-intl";
 
-import {uploadSchema} from "@/app/(home)/uploads/schemas/schema";
+import {createUploadSchema, UploadFormInputs} from "@/app/(home)/uploads/schemas/schema";
 import uploadVideo from "@/app/(home)/uploads/libs/uploadVideo";
 
 import {Form} from "@/components/ui/form";
@@ -19,149 +21,146 @@ import {VideoPreview} from "./video-preview";
 import {UploadProgress} from "./upload-progress";
 
 export const UploadForm = ({
-                               file,
-                               previewUrl,
-                               setFile,
-                               setPreview,
-                               setError,
-                               mode,
-                               existingData
-                           }: {
-        file?: File;
-        previewUrl?: string | null;
-        setFile?: React.Dispatch<SetStateAction<File | null>>;
-        setPreview?: React.Dispatch<SetStateAction<string | null>>;
-        setError?: React.Dispatch<SetStateAction<string | null>>;
-        existingData?: Post;
-        mode: "create" | "edit",
-    }) => {
-        const [uploadProgress, setUploadProgress] = useState(0);
-        const [uploadComplete, setUploadComplete] = useState(false);
+    file,
+    previewUrl,
+    setFile,
+    setPreview,
+    setError,
+    mode,
+    existingData
+}: {
+    file?: File;
+    previewUrl?: string | null;
+    setFile?: React.Dispatch<SetStateAction<File | null>>;
+    setPreview?: React.Dispatch<SetStateAction<string | null>>;
+    setError?: React.Dispatch<SetStateAction<string | null>>;
+    existingData?: Post;
+    mode: "create" | "edit",
+}) => {
+    const t = useTranslations('Home.upload');
+    const [uploadProgress, setUploadProgress] = useState(0);
+    const [uploadComplete, setUploadComplete] = useState(false);
 
-        const form = useForm({
-            resolver: zodResolver(uploadSchema),
-            defaultValues: resolveData({existingData, file}),
-        });
+    const uploadSchema = createUploadSchema(t);
 
-        const resetUpload = () => {
-            setFile?.(null);
-            setPreview?.(null);
-            setUploadProgress(0);
-            setUploadComplete(false);
-            setError?.(null);
-            if (previewUrl) URL.revokeObjectURL(previewUrl);
-        };
+    const form = useForm({
+        resolver: zodResolver(uploadSchema),
+        defaultValues: resolveData({existingData, file}),
+    });
 
-        const mutation = useMutation({
-                    mutationFn: async (postData: PostUpload) => {
-                        if (mode === 'create') {
-                            return await uploadVideo({
-                                    postData,
-                                    setUploadProgress
-                                }
-                            )
-                        } else {
-                            if (existingData === undefined) return;
+    const resetUpload = () => {
+        setFile?.(null);
+        setPreview?.(null);
+        setUploadProgress(0);
+        setUploadComplete(false);
+        setError?.(null);
+        if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
 
-                            return await updatePost(
-                                existingData.id!,
-                                {
-                                    caption: postData.title,
-                                    description: postData.description ?? "",
-                                    visibility: postData.visibility as PostVisibility ?? "PUBLIC",
-                                    categoryName: postData.category,
-                                    //TODO: add tags
-                                    tags: [],
-                                    // allowComments: postData.allowComments,
-                                    // ageRestricted: postData.ageRestricted,
-                                })
-                        }
-                    },
-                    onSuccess:
-                        (data) => {
-                            console.log("Upload successful", data);
-                            setUploadProgress(100);
-                            setUploadComplete(true);
-                        },
-                    onError:
-                        (error) => {
-                            console.error("Upload failed", error);
-                            setError?.("Upload failed. Please try again.");
-                            toast.error("Upload failed. Please try again.", {
-                                duration: 10000,
-                            });
-                            setUploadProgress(0);
-                        },
-                }
-            )
-        ;
-
-        useEffect(() => {
-            if (existingData) {
-                form.reset(resolveData({existingData}));
-            }
-        }, [existingData, form]);
-
-        const handleUpload = async (data: z.infer<typeof uploadSchema>) => {
-            if (mode === "create") {
-                if (data.file === undefined) return;
-                const duration = await getMediaDuration(data.file);
-
-                mutation.mutate({...data, duration, file: data.file!});
+    const mutation = useMutation({
+        mutationFn: async (postData: PostUpload) => {
+            if (mode === 'create') {
+                return await uploadVideo({
+                    postData,
+                    setUploadProgress
+                })
             } else {
-                mutation.mutate({...data, duration: existingData?.duration ?? 0, file: data.file!});
+                if (existingData === undefined) return;
+
+                return await updatePost(
+                    existingData.id!,
+                    {
+                        caption: postData.title,
+                        description: postData.description ?? "",
+                        visibility: postData.visibility as PostVisibility ?? "PUBLIC",
+                        categoryName: postData.category,
+                        tags: [],
+                    })
             }
-        };
+        },
+        onSuccess: (data) => {
+            console.log("Upload successful", data);
+            setUploadProgress(100);
+            setUploadComplete(true);
+            toast.success(t('form.actions.uploadComplete'));
+        },
+        onError: (error) => {
+            console.error("Upload failed", error);
+            setError?.(t('dropzone.errors.generic'));
+            toast.error(t('dropzone.errors.generic'), {
+                duration: 10000,
+            });
+            setUploadProgress(0);
+        },
+    });
 
-        const isUploading = mutation.isPending;
+    useEffect(() => {
+        if (existingData) {
+            form.reset(resolveData({existingData}));
+        }
+    }, [existingData, form]);
 
-        return (
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(handleUpload)} className="p-6 space-y-8">
-                    <div className="flex flex-col lg:flex-row gap-8">
-                        <div className="w-full lg:w-2/5 space-y-4">
-                            <VideoPreview
-                                file={file}
-                                previewUrl={previewUrl}
-                                onResetAction={resetUpload}
-                                existingData={existingData}
-                                mode={mode}/>
-                        </div>
+    const handleUpload = async (data: UploadFormInputs) => {
+        if (mode === "create") {
+            if (data.file === undefined) {
+                setError?.(t('dropzone.errors.generic'));
+                return;
+            }
+            const duration = await getMediaDuration(data.file);
+            mutation.mutate({...data, duration, file: data.file!});
+        } else {
+            mutation.mutate({...data, duration: existingData?.duration ?? 0, file: data.file!});
+        }
+    };
 
-                        <div className="w-full lg:w-3/5">
-                            <VideoDetailsForm form={form}/>
-                        </div>
+    const isUploading = mutation.isPending;
+
+    return (
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(handleUpload)} className="p-6 space-y-8">
+                <div className="flex flex-col lg:flex-row gap-8">
+                    <div className="w-full lg:w-2/5 space-y-4">
+                        <VideoPreview
+                            file={file}
+                            previewUrl={previewUrl}
+                            onResetAction={resetUpload}
+                            existingData={existingData}
+                            mode={mode}/>
                     </div>
 
-                    <UploadProgress
-                        isUploading={isUploading}
-                        uploadComplete={uploadComplete}
-                        progress={uploadProgress}
-                    />
-
-                    <div className="flex justify-end gap-4 pt-2">
-                        <Button
-                            type="button"
-                            onClick={resetUpload}
-                            className={cn("border bg-background text-muted-foreground hover:bg-accent h-10 px-6",
-                                uploadComplete && "text-black dark:text-white"
-                            )}
-                        >
-                            {uploadComplete ? "Go Back" : "Cancel"}
-                        </Button>
-                        <Button
-                            type="submit"
-                            disabled={isUploading || uploadComplete}
-                            className="bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-8"
-                        >
-                            {isUploading ? "Uploading..." : uploadComplete ? "Uploaded" : "Upload Video"}
-                        </Button>
+                    <div className="w-full lg:w-3/5">
+                        <VideoDetailsForm form={form}/>
                     </div>
-                </form>
-            </Form>
-        );
-    }
-;
+                </div>
+
+                <UploadProgress
+                    isUploading={isUploading}
+                    uploadComplete={uploadComplete}
+                    progress={uploadProgress}
+                />
+
+                <div className="flex justify-end gap-4 pt-2">
+                    <Button
+                        type="button"
+                        onClick={resetUpload}
+                        className={cn("border bg-background text-muted-foreground hover:bg-accent h-10 px-6",
+                            uploadComplete && "text-black dark:text-white"
+                        )}
+                    >
+                        {uploadComplete ? t('form.actions.back') : t('form.actions.cancel')}
+                    </Button>
+                    <Button
+                        type="submit"
+                        disabled={isUploading || uploadComplete}
+                        className="bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-8"
+                    >
+                        {isUploading ? t('form.actions.saving') : uploadComplete ? t('form.actions.uploadComplete') : t('form.actions.upload')}
+                    </Button>
+                </div>
+            </form>
+        </Form>
+    );
+};
 
 const getMediaDuration = (file: File): Promise<number> => {
     return new Promise((resolve, reject) => {
@@ -184,7 +183,6 @@ const getMediaDuration = (file: File): Promise<number> => {
 
 const resolveData = ({existingData, file}: { existingData?: Post, file?: File }) => {
     if (file) {
-        console.log("run this create")
         return {
             title: "",
             description: "",
@@ -195,7 +193,6 @@ const resolveData = ({existingData, file}: { existingData?: Post, file?: File })
             file: file,
         }
     } else if (existingData) {
-        console.log("run this edit")
         return {
             title: existingData.caption,
             description: existingData.description,

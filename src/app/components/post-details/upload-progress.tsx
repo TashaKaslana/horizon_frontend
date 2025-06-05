@@ -2,6 +2,7 @@
 
 import { Progress } from "@/components/ui/progress"
 import { CheckCircle } from "lucide-react"
+import { useTranslations } from "next-intl"
 
 interface UploadProgressProps {
   isUploading: boolean
@@ -10,6 +11,8 @@ interface UploadProgressProps {
 }
 
 export function UploadProgress({ isUploading, uploadComplete, progress }: UploadProgressProps) {
+  const t = useTranslations('Home.upload.form');
+
   if (!isUploading && !uploadComplete) return null
 
   return (
@@ -17,7 +20,7 @@ export function UploadProgress({ isUploading, uploadComplete, progress }: Upload
       {isUploading && (
         <div className="space-y-2 bg-muted/30 p-4 rounded-lg">
           <div className="flex justify-between text-sm">
-            <span className="font-medium">Uploading your video...</span>
+            <span className="font-medium">{t('status.uploading')}</span>
             <span className="text-primary font-medium">{progress}%</span>
           </div>
           <Progress value={progress} className="h-2" />
@@ -30,12 +33,11 @@ export function UploadProgress({ isUploading, uploadComplete, progress }: Upload
             <CheckCircle className="h-5 w-5" />
           </div>
           <div>
-            <p className="font-medium">Upload complete!</p>
-            <p className="text-sm text-green-600">Your video is now processing and will be available soon.</p>
+            <p className="font-medium">{t('status.complete')}</p>
+            <p className="text-sm text-green-600">{t('actions.uploadProcessing')}</p>
           </div>
         </div>
       )}
     </>
   )
 }
-

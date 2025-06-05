@@ -353,6 +353,83 @@
         "remove": "Remove",
         "viewProfile": "View Profile"
       }
+    },
+    "upload": {
+      "title": "Upload your video",
+      "subtitle": "Share your story with the world. Upload a video to get started.",
+      "dropzone": {
+        "title": "Drag and drop your video here",
+        "description": "Or click to browse",
+        "supportedFormats": "Supported formats: MP4, WebM, AVI",
+        "maxSize": "Maximum file size: 500MB",
+        "errors": {
+          "invalidType": "Please select a video file.",
+          "tooLarge": "File is too large. Maximum size is 500MB.",
+          "generic": "An error occurred while uploading your video."
+        }
+      },
+      "form": {
+        "title": {
+          "label": "Title",
+          "placeholder": "Add a title to your video",
+          "error": "Title is required"
+        },
+        "description": {
+          "label": "Description",
+          "placeholder": "Tell viewers about your video",
+          "error": "Description must be at least 10 characters"
+        },
+        "privacy": {
+          "label": "Who can see this video?",
+          "public": "Everyone",
+          "private": "Only me",
+          "unlisted": "Anyone with the link"
+        },
+        "category": {
+          "label": "Category",
+          "placeholder": "Select a category",
+          "description": "Choose a category that best fits your video",
+          "error": "Category is required"
+        },
+        "tags": {
+          "label": "Tags",
+          "placeholder": "Add tags",
+          "description": "Add up to 8 tags to describe your video"
+        },
+        "thumbnail": {
+          "label": "Thumbnail",
+          "generate": "Generate from video",
+          "upload": "Upload custom thumbnail"
+        },
+        "status": {
+          "label": "Status",
+          "uploading": "Uploading...",
+          "processing": "Processing...",
+          "complete": "Upload complete!"
+        },
+        "uploadDate": {
+          "label": "Upload date"
+        },
+        "comments": {
+          "label": "Allow comments",
+          "description": "Let others comment on your video"
+        },
+        "ageRestriction": {
+          "label": "Age restriction",
+          "description": "Restrict video to viewers over 18"
+        },
+        "actions": {
+          "upload": "Upload video",
+          "saving": "Uploading...",
+          "cancel": "Cancel",
+          "back": "Change video",
+          "delete": "Delete video",
+          "save": "Save draft",
+          "publish": "Publish video",
+          "uploadComplete": "Upload complete!",
+          "uploadProcessing": "Your video is now processing and will be available soon."
+        }
+      }
     }
   }
 }
