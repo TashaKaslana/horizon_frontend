@@ -314,6 +314,45 @@
         "read": "Đã đọc",
         "new": "Mới"
       }
+    },
+    "following": {
+      "title": "Đang theo dõi",
+      "tabs": {
+        "following": "Đang theo dõi",
+        "followers": "Người theo dõi"
+      },
+      "search": {
+        "placeholder": "Tìm kiếm người dùng...",
+        "noResults": "Không tìm thấy người dùng",
+        "tooltip": "Tìm kiếm người dùng"
+      },
+      "filter": {
+        "tooltip": "Lọc người dùng",
+        "all": "Tất cả người dùng",
+        "mutuals": "Theo dõi lẫn nhau",
+        "recent": "Gần đây"
+      },
+      "stats": {
+        "followersCount": "{count} người theo dõi",
+        "followingCount": "Đang theo dõi {count} người"
+      },
+      "empty": {
+        "following": {
+          "title": "Chưa theo dõi ai",
+          "description": "Khi bạn theo dõi ai đó, họ sẽ xuất hiện ở đây"
+        },
+        "followers": {
+          "title": "Chưa có người theo dõi",
+          "description": "Khi ai đó theo dõi bạn, họ sẽ xuất hiện ở đây"
+        }
+      },
+      "actions": {
+        "follow": "Theo dõi",
+        "following": "Đang theo dõi",
+        "unfollow": "Bỏ theo dõi",
+        "remove": "Xóa",
+        "viewProfile": "Xem hồ sơ"
+      }
     }
   }
 }

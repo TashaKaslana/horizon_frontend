@@ -2,15 +2,18 @@ import UserCard from "@/app/(home)/following/components/UserCard";
 import useFollowingStore from "@/app/(home)/following/store/useFollowingStore";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {UserX} from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export const FollowingTab = () => {
-    const {following} = useFollowingStore()
+    const t = useTranslations('Home.following.empty.following');
+    const {following} = useFollowingStore();
 
     if (following.length < 1) {
         return (
             <div className="flex flex-col size-full justify-center items-center gap-2">
                 <UserX className={'size-32'}/>
-                <p className={'text-xl text-zinc-700 font-bold dark:text-zinc-300'}>No following</p>
+                <p className={'text-xl text-zinc-700 font-bold dark:text-zinc-300'}>{t('title')}</p>
+                <p className={'text-sm text-muted-foreground'}>{t('description')}</p>
             </div>
         );
     }
@@ -18,9 +21,7 @@ export const FollowingTab = () => {
     return <ScrollArea className={'overflow-y-auto h-full'}>
         <section className={'grid grid-cols-2 gap-5 px-3'}>
             {following.map((item, index) => (
-                // <Link href={`users/${item.user.id}/overview`}>
-                    <UserCard follow={item} key={index}/>
-                // </Link>
+                <UserCard follow={item} key={index}/>
             ))}
         </section>
     </ScrollArea>;

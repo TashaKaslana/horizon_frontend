@@ -10,8 +10,10 @@ import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/compon
 import {useMutation} from "@tanstack/react-query";
 import {followUser, unfollowUser} from "@/api/followApi";
 import {toast} from "sonner";
+import { useTranslations } from "next-intl";
 
 const UserCard = ({follow, initialFollowing = true}: { follow: FollowCardProps, initialFollowing?: boolean }) => {
+    const t = useTranslations('Home.following');
     const [isFollowing, setIsFollowing] = useState(initialFollowing)
 
     const mutation = useMutation({
@@ -26,7 +28,7 @@ const UserCard = ({follow, initialFollowing = true}: { follow: FollowCardProps, 
             setIsFollowing(!isFollowing)
         },
         onError: (error) => {
-            toast.error(`Failed to ${isFollowing ? 'unfollow' : 'follow'} user`)
+            toast.error(`${t('actions.follow')} ${isFollowing ? t('actions.unfollow').toLowerCase() : t('actions.follow').toLowerCase()}`)
             console.error(error)
         },
     })
@@ -46,38 +48,46 @@ const UserCard = ({follow, initialFollowing = true}: { follow: FollowCardProps, 
             </header>
 
             <main className={'flex h-24'}>
-                <section className={'w-24 relative'}>
-
-                </section>
+                <section className={'w-24 relative'}></section>
                 <section className={'flex-1'}>
-                    <h2 className={'text-zinc-800 font-semibold'}>{follow.user?.displayName ? follow.user?.displayName  : null}</h2>
+                    <h2 className={'text-zinc-800 font-semibold'}>{follow.user?.displayName ? follow.user?.displayName : null}</h2>
                     <p className={'text-sm text-gray-700 italic'}>@{follow.user.username}</p>
                     <p className={'text-sm pl-1 text-gray-800'}>{follow.user.bio}</p>
                 </section>
                 <section className={'p-1'}>
-                    <Button className={cn('w-32', !isFollowing && 'bg-zinc-800 hover:bg-zinc-700')}
-                            onClick={() => {
-                                mutation.mutate()
-                            }}
-                    >
-                        {isFollowing ? 'Following' : 'Follow'}
-                    </Button>
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button
+                                    className={cn('w-32', !isFollowing && 'bg-zinc-800 hover:bg-zinc-700')}
+                                    onClick={() => mutation.mutate()}
+                                >
+                                    {isFollowing ? t('actions.following') : t('actions.follow')}
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                {isFollowing ? t('actions.unfollow') : t('actions.follow')}
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
                 </section>
             </main>
         </article>
     )
 }
 
-const AchievementStatus = (props: { variant: RankType }) => <TooltipProvider>
-    <Tooltip>
-        <TooltipTrigger asChild>
-            <AchievementIcon className={"size-7"} variant={props.variant}/>
-        </TooltipTrigger>
-        <TooltipContent>
-            {props.variant}
-        </TooltipContent>
-    </Tooltip>
-</TooltipProvider>;
+const AchievementStatus = (props: { variant: RankType }) => (
+    <TooltipProvider>
+        <Tooltip>
+            <TooltipTrigger asChild>
+                <AchievementIcon className={"size-7"} variant={props.variant}/>
+            </TooltipTrigger>
+            <TooltipContent>
+                {props.variant}
+            </TooltipContent>
+        </Tooltip>
+    </TooltipProvider>
+);
 
 const calcRank = (date: string) => {
     const date1 = new Date(date)

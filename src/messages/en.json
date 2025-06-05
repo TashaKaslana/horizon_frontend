@@ -314,6 +314,45 @@
         "read": "Read",
         "new": "New"
       }
+    },
+    "following": {
+      "title": "Following",
+      "tabs": {
+        "following": "Following",
+        "followers": "Followers"
+      },
+      "search": {
+        "placeholder": "Search users...",
+        "noResults": "No users found",
+        "tooltip": "Search for users"
+      },
+      "filter": {
+        "tooltip": "Filter users",
+        "all": "All users",
+        "mutuals": "Mutuals",
+        "recent": "Recent"
+      },
+      "stats": {
+        "followersCount": "{count} followers",
+        "followingCount": "{count} following"
+      },
+      "empty": {
+        "following": {
+          "title": "Not following anyone yet",
+          "description": "When you follow someone, they'll appear here"
+        },
+        "followers": {
+          "title": "No followers yet",
+          "description": "When someone follows you, they'll appear here"
+        }
+      },
+      "actions": {
+        "follow": "Follow",
+        "following": "Following",
+        "unfollow": "Unfollow",
+        "remove": "Remove",
+        "viewProfile": "View Profile"
+      }
     }
   }
 }
