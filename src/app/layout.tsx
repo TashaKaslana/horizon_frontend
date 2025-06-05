@@ -9,6 +9,7 @@ import QueryProvider from "@/components/query-provider";
 import {UserProvider} from "@/components/user-provider";
 import ClientSetupProvider from "@/components/client-setup-provider";
 import { MaintenanceWrapper } from "@/components/maintenance-wrapper";
+import {ClientInitProvider} from "@/components/client-init-provider";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -38,19 +39,21 @@ export default function RootLayout({
         <Auth0Provider>
             <ClientSetupProvider>
                 <QueryProvider>
-                    <UserProvider>
-                        <ThemeProvider
-                            attribute="class"
-                            defaultTheme="system"
-                            enableSystem
-                            disableTransitionOnChange
-                        >
-                            <MaintenanceWrapper>
-                                {children}
-                            </MaintenanceWrapper>
-                            <Toaster richColors/>
-                        </ThemeProvider>
-                    </UserProvider>
+                    <ClientInitProvider>
+                        <UserProvider>
+                            <ThemeProvider
+                                attribute="class"
+                                defaultTheme="system"
+                                enableSystem
+                                disableTransitionOnChange
+                            >
+                                <MaintenanceWrapper>
+                                    {children}
+                                </MaintenanceWrapper>
+                                <Toaster richColors/>
+                            </ThemeProvider>
+                        </UserProvider>
+                    </ClientInitProvider>
                 </QueryProvider>
             </ClientSetupProvider>
         </Auth0Provider>

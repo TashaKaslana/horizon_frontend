@@ -16,20 +16,29 @@ import { format, parseISO } from "date-fns";
 import { CalendarIcon, Loader2, Eye } from "lucide-react";
 import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import useMaintenanceHook from "../hook/useMaintenanceHook";
+import { MaintenanceRequestDto } from "@/api/client";
 
 interface MaintenanceSettingsProps {
   className?: string;
 }
 
 export const MaintenanceSettings = ({ className }: MaintenanceSettingsProps) => {
-  const { isMaintenanceMode, message, toggleMaintenanceMode, setMaintenanceMessage, activatedAt, completionDateTime, setCompletionDateTime } = useMaintenanceStore();
+  const { isMaintenanceMode, message, activatedAt, completionDateTime } = useMaintenanceStore();
 
-  const [isLoading, setIsLoading] = useState(false);
+  const {
+    toggleMaintenance,
+    isLoading: apiLoading,
+    isEnablePending,
+    isDisablePending
+  } = useMaintenanceHook();
+
   const [isEnabled, setIsEnabled] = useState(isMaintenanceMode);
   const [customMessage, setCustomMessage] = useState(message);
   const [date, setDate] = useState<Date | undefined>(completionDateTime ? parseISO(completionDateTime) : undefined);
   const [time, setTime] = useState<string>(completionDateTime ? format(parseISO(completionDateTime), "HH:mm") : "");
   const [activeTab, setActiveTab] = useState<string>("settings");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const formattedCompletionTime = completionDateTime
     ? format(parseISO(completionDateTime), "PPP 'at' p")
@@ -46,34 +55,32 @@ export const MaintenanceSettings = ({ className }: MaintenanceSettingsProps) => 
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setIsLoading(true);
+    setIsSubmitting(true);
 
     try {
-      if (isEnabled !== isMaintenanceMode) {
-        toggleMaintenanceMode();
-      }
-
-      if (customMessage !== message) {
-        setMaintenanceMessage(customMessage);
-      }
+      // Create maintenance request data
+      const requestData: MaintenanceRequestDto = {
+        message: customMessage
+      };
 
       if (date && time) {
         const [hours, minutes] = time.split(":").map(Number);
         const completionDate = new Date(date);
         completionDate.setHours(hours, minutes);
-        setCompletionDateTime(completionDate.toISOString());
-      } else {
-        setCompletionDateTime(null);
+        requestData.completionDateTime = completionDate.toISOString();
       }
 
-      toast.success("Maintenance settings updated successfully");
+      toggleMaintenance(requestData);
     } catch (error) {
       toast.error("Failed to update maintenance settings");
       console.error("Error updating maintenance settings:", error);
     } finally {
-      setIsLoading(false);
+      setIsSubmitting(false);
     }
   };
+
+  // Determine if any action is loading
+  const isLoading = isSubmitting || apiLoading || isEnablePending || isDisablePending;
 
   const PreviewContext = () => {
     const PreviewMaintenancePage = () => {

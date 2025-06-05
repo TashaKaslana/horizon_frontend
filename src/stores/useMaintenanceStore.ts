@@ -1,5 +1,4 @@
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
 
 interface MaintenanceState {
   isMaintenanceMode: boolean;
@@ -13,22 +12,17 @@ interface MaintenanceState {
 }
 
 export const useMaintenanceStore = create<MaintenanceState>()(
-  persist(
-    (set) => ({
-      isMaintenanceMode: false,
-      message: 'Our Enterprise administrators are performing scheduled maintenance.',
-      activatedAt: null,
-      completionDateTime: null,
-      toggleMaintenanceMode: () => set((state) => ({
-        isMaintenanceMode: !state.isMaintenanceMode,
-        activatedAt: !state.isMaintenanceMode ? new Date().toISOString() : null
-      })),
-      setMaintenanceMessage: (message: string) => set({ message }),
-      setCompletionDateTime: (datetime: string | null) => set({ completionDateTime: datetime }),
-      setActivatedAt: (datetime: string | null) => set({ activatedAt: datetime }),
-    }),
-    {
-      name: 'maintenance-storage',
-    }
-  )
+  (set) => ({
+    isMaintenanceMode: false,
+    message: 'Our Enterprise administrators are performing scheduled maintenance.',
+    activatedAt: null,
+    completionDateTime: null,
+    toggleMaintenanceMode: () => set((state) => ({
+      isMaintenanceMode: !state.isMaintenanceMode,
+      activatedAt: !state.isMaintenanceMode ? new Date().toISOString() : null
+    })),
+    setMaintenanceMessage: (message: string) => set({ message }),
+    setCompletionDateTime: (datetime: string | null) => set({ completionDateTime: datetime }),
+    setActivatedAt: (datetime: string | null) => set({ activatedAt: datetime }),
+  })
 );
