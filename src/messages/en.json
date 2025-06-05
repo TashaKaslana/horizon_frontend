@@ -152,5 +152,15 @@
         {"text": "Privacy", "href": "/privacy"}
       ]
     }
+  },
+  "Home": {
+    "navigation": [
+      {"title": "For you", "href": "/foryou"},
+      {"title": "Discover", "href": "/discover"},
+      {"title": "Management", "href": "/management"},
+      {"title": "Uploads", "href": "/uploads"},
+      {"title": "Following", "href": "/following"},
+      {"title": "Notifications", "href": "/notifications"}
+    ]
   }
 }

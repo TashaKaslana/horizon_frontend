@@ -11,7 +11,7 @@ import {
 import React from "react";
 import {Input} from "@/components/ui/input";
 import Link from "next/link";
-import {navigationData} from "@/app/(home)/constraints/navigation_data";
+import {useNavigationData} from "@/app/(home)/hooks/use-navigation-data";
 
 type SearchBarProps = {
     open?: boolean;
@@ -38,6 +38,8 @@ const SearchBarTrigger = ({setOpenChange}: SearchBarProps) => {
 }
 
 const SearchBarContent = ({open, setOpenChange}: SearchBarProps) => {
+    const navigationData = useNavigationData()
+
     return (
         <CommandDialog open={open} onOpenChange={setOpenChange}>
             <CommandInput placeholder="Type a command or search..."/>

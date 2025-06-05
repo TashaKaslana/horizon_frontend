@@ -152,5 +152,15 @@
         {"text": "Bảo mật", "href": "/privacy"}
       ]
     }
+  },
+  "Home": {
+    "navigation": [
+      {"title": "Dành cho bạn", "href": "/foryou"},
+      {"title": "Khám phá", "href": "/discover"},
+      {"title": "Quản lý", "href": "/management"},
+      {"title": "Tải lên", "href": "/uploads"},
+      {"title": "Đang theo dõi", "href": "/following"},
+      {"title": "Thông báo", "href": "/notifications"}
+    ]
   }
 }

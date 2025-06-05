@@ -8,10 +8,11 @@ import {
 } from "@/components/ui/sidebar";
 import Link from "next/link";
 import {SearchBar} from "@/app/(home)/components/searchbar/SearchBar";
-import {navigationData} from "@/app/(home)/constraints/navigation_data";
+import {useNavigationData} from "@/app/(home)/hooks/use-navigation-data";
 
 export const HomeSidebarContent = () => {
-    const {state} = useSidebar()
+    const {state} = useSidebar();
+    const navigationItems = useNavigationData();
 
     return (
         <SidebarContent className={'p-1'}>
@@ -24,7 +25,7 @@ export const HomeSidebarContent = () => {
 
                 <SidebarSeparator className={'mx-0'}/>
 
-                {navigationData.map((item, index) =>
+                {navigationItems.map((item, index) =>
                     <SidebarMenuItem key={index}>
                         <Link href={item.href}>
                             <SidebarMenuButton>
