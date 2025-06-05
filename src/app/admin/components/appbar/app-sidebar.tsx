@@ -129,17 +129,17 @@ const data = {
     documents: [
         {
             name: "User Guide",
-            url: "/docs/user-guide",
+            url: "docs/user-guide",
             icon: FileIcon,
         },
         {
             name: "API Reference",
-            url: "/docs/api",
+            url: "docs/api",
             icon: ClipboardListIcon,
         },
         {
             name: "Database Schema",
-            url: "/docs/database",
+            url: "docs/database",
             icon: DatabaseIcon,
         },
     ],
