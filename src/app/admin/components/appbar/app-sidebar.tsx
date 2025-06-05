@@ -134,7 +134,7 @@ const data = {
         },
         {
             name: "API Reference",
-            url: "docs/api",
+            url: "/admin/docs/api",
             icon: ClipboardListIcon,
         },
         {
