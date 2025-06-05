@@ -1,6 +1,9 @@
 import { z } from "zod";
 
-const createUploadSchema = (t: any) => z.object({
+const createUploadSchema = (
+    //eslint-disable-next-line
+    t: any
+) => z.object({
     title: z.string().min(1, t('form.title.error')),
     description: z.string()
         .min(10, t('form.description.error'))

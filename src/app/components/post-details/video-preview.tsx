@@ -31,6 +31,7 @@ const fileVersion = ({file, previewUrl, onResetAction, t}: {
     file: File
     previewUrl?: string | null
     onResetAction: () => void
+    //eslint-disable-next-line
     t: any
 }) => {
     return (
@@ -78,6 +79,7 @@ const fileVersion = ({file, previewUrl, onResetAction, t}: {
 const existingDataVersion = ({existingData, onResetAction, t}: {
     existingData: Post
     onResetAction: () => void
+    //eslint-disable-next-line
     t: any
 }) => {
     return (
