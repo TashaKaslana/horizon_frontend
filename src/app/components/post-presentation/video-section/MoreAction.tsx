@@ -14,13 +14,21 @@ import {
 import {Button} from "@/components/ui/button";
 import {MoreVertical} from "lucide-react";
 import React from "react";
-import reportReason from '../../../../../public/locales/en/reportReason.json';
 import {useTranslations} from "next-intl";
 
 export const MoreAction = ({postId}: { postId: string }) => {
-    const t = useTranslations("Home.post.actions");
+    const actionsT = useTranslations("Home.posts.actions");
+    const reportT = useTranslations("Home.posts.report");
     const {handleShareLink, handleReportPost} = useFeedActions();
-    const reason = Object.values(reportReason.post)
+
+    const reportReasons = [
+        { key: "sexual_content", value: reportT("sexual_content") },
+        { key: "graphic_content", value: reportT("graphic_content") },
+        { key: "hate_speech", value: reportT("hate_speech") },
+        { key: "harassment", value: reportT("harassment") },
+        { key: "false_information", value: reportT("false_information") },
+        { key: "spam_or_misleading", value: reportT("spam_or_misleading") }
+    ];
 
     return <Tooltip delayDuration={500}>
         <TooltipTrigger asChild>
@@ -32,21 +40,21 @@ export const MoreAction = ({postId}: { postId: string }) => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                     <DropdownMenuItem onClick={() => handleShareLink()}>
-                        {t("shareLink")}
+                        {actionsT("shareLink")}
                     </DropdownMenuItem>
                     <DropdownMenuGroup>
                         <DropdownMenuSub>
                             <DropdownMenuSubTrigger>
-                                {t("reportPost")}
+                                {actionsT("reportPost")}
                             </DropdownMenuSubTrigger>
                             <DropdownMenuPortal>
                                 <DropdownMenuSubContent>
-                                    {reason.map((reason: string) => (
+                                    {reportReasons.map(({key, value}) => (
                                         <DropdownMenuItem
-                                            key={reason}
-                                            onClick={() => handleReportPost(postId, reason)}
+                                            key={key}
+                                            onClick={() => handleReportPost(postId, value)}
                                         >
-                                            {reason}
+                                            {value}
                                         </DropdownMenuItem>
                                     ))}
                                 </DropdownMenuSubContent>
@@ -56,6 +64,6 @@ export const MoreAction = ({postId}: { postId: string }) => {
                 </DropdownMenuContent>
             </DropdownMenu>
         </TooltipTrigger>
-        <TooltipContent>{t("more")}</TooltipContent>
+        <TooltipContent>{actionsT("more")}</TooltipContent>
     </Tooltip>
 }

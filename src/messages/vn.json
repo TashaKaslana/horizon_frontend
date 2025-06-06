@@ -482,9 +482,18 @@
         "edit": "Chỉnh sửa",
         "delete": "Xóa",
         "report": "Báo cáo"
+      },
+      "report": {
+        "violent": "Bạo lực hoặc đe dọa",
+        "hate_speech": "Ngôn từ thù ghét hoặc biểu tượng thù ghét",
+        "harassment": "Quấy rối hoặc bắt nạt",
+        "abusive_language": "Ngôn ngữ lăng mạ",
+        "misinformation": "Thông tin sai lệch",
+        "spam": "Spam hoặc quảng cáo",
+        "personal_attacks": "Tấn công cá nhân"
       }
     },
-    "post": {
+    "posts": {
       "actions": {
         "like": "Thích",
         "comment": "Bình luận",
@@ -492,6 +501,14 @@
         "more": "Thêm",
         "shareLink": "Chia sẻ liên kết",
         "reportPost": "Báo cáo bài viết"
+      },
+      "report": {
+        "sexual_content": "Nội dung tình dục hoặc ảnh khỏa thân",
+        "graphic_content": "Nội dung bạo lực hoặc hình ảnh gây sốc",
+        "hate_speech": "Ngôn từ thù ghét hoặc biểu tượng thù ghét",
+        "harassment": "Quấy rối hoặc bắt nạt",
+        "false_information": "Thông tin sai lệch",
+        "spam_or_misleading": "Spam hoặc gây hiểu lầm"
       }
     }
   },

@@ -14,7 +14,7 @@ interface ActionButtonGroupProps {
 }
 
 const ActionButtonGroup = ({setIsCommentOpened, postId, statistic}: ActionButtonGroupProps) => {
-    const t = useTranslations("Home.post.actions");
+    const t = useTranslations("Home.posts.actions");
     const {handleLike, handleBookmark} = useFeedActions();
 
     const handleCommentToggle = () => {

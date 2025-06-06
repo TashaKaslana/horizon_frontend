@@ -16,13 +16,21 @@ import {
 import {useCommentAction} from "@/hooks/useCommentAction";
 import {useTranslations} from "next-intl";
 
-import reports from '../../../../../public/locales/en/reportReason.json'
-
 export const CommentActionBar = ({comment}: {
     comment: CommentResponse,
 }) => {
     const t = useTranslations("Home.comments.actions");
-    const reportReasons = Object.values(reports.comment)
+    const reportT = useTranslations("Home.comments.report");
+
+    const reportReasons = [
+        { key: "violent", value: reportT("violent") },
+        { key: "hate_speech", value: reportT("hate_speech") },
+        { key: "harassment", value: reportT("harassment") },
+        { key: "abusive_language", value: reportT("abusive_language") },
+        { key: "misinformation", value: reportT("misinformation") },
+        { key: "spam", value: reportT("spam") },
+        { key: "personal_attacks", value: reportT("personal_attacks") }
+    ];
 
     const {
         handleLike,
@@ -116,12 +124,12 @@ export const CommentActionBar = ({comment}: {
                                             </DropdownMenuSubTrigger>
                                             <DropdownMenuPortal>
                                                 <DropdownMenuSubContent>
-                                                    {reportReasons.map((reason: string) => (
+                                                    {reportReasons.map(({key, value}) => (
                                                         <DropdownMenuItem
-                                                            key={reason}
-                                                            onClick={() => handleReportComment(reason)}
+                                                            key={key}
+                                                            onClick={() => handleReportComment(value)}
                                                             className={'cursor-pointer text-red-600'}>
-                                                            {reason}
+                                                            {value}
                                                         </DropdownMenuItem>
                                                     ))}
                                                 </DropdownMenuSubContent>

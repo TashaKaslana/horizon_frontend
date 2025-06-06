@@ -482,9 +482,18 @@
         "edit": "Edit",
         "delete": "Delete",
         "report": "Report"
+      },
+      "report": {
+        "violent": "Violent or Threatening",
+        "hate_speech": "Hate Speech or Symbols",
+        "harassment": "Harassment or Bullying",
+        "abusive_language": "Abusive Language",
+        "misinformation": "Misinformation",
+        "spam": "Spam or Advertising",
+        "personal_attacks": "Personal Attacks"
       }
     },
-    "post": {
+    "posts": {
       "actions": {
         "like": "Like",
         "comment": "Comment",
@@ -492,6 +501,14 @@
         "more": "More",
         "shareLink": "Share Link",
         "reportPost": "Report Post"
+      },
+      "report": {
+        "sexual_content": "Sexual Content or Nudity",
+        "graphic_content": "Violent or Graphic Content",
+        "hate_speech": "Hate Speech or Symbols",
+        "harassment": "Harassment or Bullying",
+        "false_information": "False Information",
+        "spam_or_misleading": "Spam or Misleading"
       }
     }
   },

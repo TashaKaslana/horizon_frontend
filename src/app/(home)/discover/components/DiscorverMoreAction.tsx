@@ -8,14 +8,24 @@ import {
 import {MoreVertical} from "lucide-react";
 import {useFeedActions} from "@/app/(home)/foryou/hooks/useFeedAction";
 import React from "react";
-import reportReason from "../../../../../public/locales/en/reportReason.json";
 import {toast} from "sonner";
 import Link from "next/link";
+import {useTranslations} from "next-intl";
 
 export const DiscoverMoreAction = ({postId} : {postId: string}) => {
-    //TODO: use redirect to post of user personal not the foryou
+    const actionsT = useTranslations("Home.posts.actions");
+    const reportT = useTranslations("Home.posts.report");
     const {handleBookmark, handleReportPost} = useFeedActions();
-    const reason = Object.values(reportReason.post)
+
+    // Get report reasons from translations
+    const reportReasons = [
+        { key: "sexual_content", value: reportT("sexual_content") },
+        { key: "graphic_content", value: reportT("graphic_content") },
+        { key: "hate_speech", value: reportT("hate_speech") },
+        { key: "harassment", value: reportT("harassment") },
+        { key: "false_information", value: reportT("false_information") },
+        { key: "spam_or_misleading", value: reportT("spam_or_misleading") }
+    ];
 
     return (
         <DropdownMenu>
@@ -27,21 +37,21 @@ export const DiscoverMoreAction = ({postId} : {postId: string}) => {
                     <Link href={`/foryou/${postId}`}>Redirect to Post</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => handleBookmark(postId)}>
-                    <span>Bookmark</span>
+                    <span>{actionsT("bookmark")}</span>
                 </DropdownMenuItem>
                 <DropdownMenuGroup>
                     <DropdownMenuSub>
                         <DropdownMenuSubTrigger>
-                            Report Post
+                            {actionsT("reportPost")}
                         </DropdownMenuSubTrigger>
                         <DropdownMenuPortal>
                             <DropdownMenuSubContent>
-                                {reason.map((reason: string) => (
+                                {reportReasons.map(({key, value}) => (
                                     <DropdownMenuItem
-                                        key={reason}
-                                        onClick={() => handleReportPost(postId, reason)}
+                                        key={key}
+                                        onClick={() => handleReportPost(postId, value)}
                                     >
-                                        {reason}
+                                        {value}
                                     </DropdownMenuItem>
                                 ))}
                             </DropdownMenuSubContent>
@@ -49,7 +59,7 @@ export const DiscoverMoreAction = ({postId} : {postId: string}) => {
                     </DropdownMenuSub>
                 </DropdownMenuGroup>
                 <DropdownMenuItem onClick={() => handleShareLink(postId)}>
-                    <span>Share Link</span>
+                    <span>{actionsT("shareLink")}</span>
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>
