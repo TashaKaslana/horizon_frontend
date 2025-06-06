@@ -461,5 +461,13 @@
         "category": "Danh mục"
       }
     }
+  },
+  "UI": {
+    "theme": {
+      "toggle": "Chuyển đổi chủ đề",
+      "light": "Chế độ sáng",
+      "dark": "Chế độ tối",
+      "system": "Theo hệ thống"
+    }
   }
 }
