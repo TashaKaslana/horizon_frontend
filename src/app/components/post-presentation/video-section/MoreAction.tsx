@@ -15,8 +15,10 @@ import {Button} from "@/components/ui/button";
 import {MoreVertical} from "lucide-react";
 import React from "react";
 import reportReason from '../../../../../public/locales/en/reportReason.json';
+import {useTranslations} from "next-intl";
 
 export const MoreAction = ({postId}: { postId: string }) => {
+    const t = useTranslations("Home.post.actions");
     const {handleShareLink, handleReportPost} = useFeedActions();
     const reason = Object.values(reportReason.post)
 
@@ -30,12 +32,12 @@ export const MoreAction = ({postId}: { postId: string }) => {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                     <DropdownMenuItem onClick={() => handleShareLink()}>
-                        Share Link
+                        {t("shareLink")}
                     </DropdownMenuItem>
                     <DropdownMenuGroup>
                         <DropdownMenuSub>
                             <DropdownMenuSubTrigger>
-                                Report Post
+                                {t("reportPost")}
                             </DropdownMenuSubTrigger>
                             <DropdownMenuPortal>
                                 <DropdownMenuSubContent>
@@ -54,6 +56,6 @@ export const MoreAction = ({postId}: { postId: string }) => {
                 </DropdownMenuContent>
             </DropdownMenu>
         </TooltipTrigger>
-        <TooltipContent>More</TooltipContent>
+        <TooltipContent>{t("more")}</TooltipContent>
     </Tooltip>
 }

@@ -5,6 +5,7 @@ import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/compon
 import {Statistic} from "@/types/Feed";
 import {useFeedActions} from "@/app/(home)/foryou/hooks/useFeedAction";
 import {MoreAction} from "@/app/components/post-presentation/video-section/MoreAction";
+import {useTranslations} from "next-intl";
 
 interface ActionButtonGroupProps {
     setIsCommentOpened?: React.Dispatch<React.SetStateAction<boolean>>;
@@ -13,6 +14,7 @@ interface ActionButtonGroupProps {
 }
 
 const ActionButtonGroup = ({setIsCommentOpened, postId, statistic}: ActionButtonGroupProps) => {
+    const t = useTranslations("Home.post.actions");
     const {handleLike, handleBookmark} = useFeedActions();
 
     const handleCommentToggle = () => {
@@ -22,19 +24,19 @@ const ActionButtonGroup = ({setIsCommentOpened, postId, statistic}: ActionButton
     const items = [
         {
             icon: <Heart className={statistic?.isLiked ? 'fill-red-500 text-red-500' : ''}/>,
-            label: 'Like',
+            label: t('like'),
             amount: statistic?.totalLikes ?? 0,
             action: () => handleLike(postId),
         },
         {
             icon: <MessageSquareMore/>,
-            label: 'Comment',
+            label: t('comment'),
             amount: statistic?.totalComments ?? 0,
             action: handleCommentToggle,
         },
         {
             icon: <BookMarked className={statistic?.isBookmarked ? 'fill-yellow-500 text-yellow-500' : ''}/>,
-            label: 'Bookmark',
+            label: t('bookmark'),
             action: () => handleBookmark(postId),
         },
     ];

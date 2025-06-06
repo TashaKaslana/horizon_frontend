@@ -483,6 +483,16 @@
         "delete": "Xóa",
         "report": "Báo cáo"
       }
+    },
+    "post": {
+      "actions": {
+        "like": "Thích",
+        "comment": "Bình luận",
+        "bookmark": "Lưu lại",
+        "more": "Thêm",
+        "shareLink": "Chia sẻ liên kết",
+        "reportPost": "Báo cáo bài viết"
+      }
     }
   },
   "UI": {

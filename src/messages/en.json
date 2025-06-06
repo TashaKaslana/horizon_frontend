@@ -483,6 +483,16 @@
         "delete": "Delete",
         "report": "Report"
       }
+    },
+    "post": {
+      "actions": {
+        "like": "Like",
+        "comment": "Comment",
+        "bookmark": "Bookmark",
+        "more": "More",
+        "shareLink": "Share Link",
+        "reportPost": "Report Post"
+      }
     }
   },
   "UI": {
