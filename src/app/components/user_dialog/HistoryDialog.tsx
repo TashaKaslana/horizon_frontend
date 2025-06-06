@@ -16,24 +16,23 @@ import {useInfiniteQuery} from "@tanstack/react-query";
 import {getHistoryForMe} from "@/api/historyApi";
 import {useCurrentUser} from "@/stores/useCurrentUser";
 import {RestApiResponse} from "@/types/api";
-import {useState} from "react";
+import {useTranslations} from "next-intl";
 
 export const HistoryDialog = () => {
-    const [totalPage, setTotalPage] = useState(0)
+    const t = useTranslations("Home.user_dialog");
+    const historyT = useTranslations("Home.user_dialog.history_dialog");
 
     const trigger = {
         icon: <Clock/>,
-        title: "History",
+        title: t("history"),
     }
 
     const {user} = useCurrentUser();
 
-    const {data, fetchNextPage, hasNextPage} = useInfiniteQuery({
+    const {data, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading} = useInfiniteQuery({
         queryKey: ['histories', user?.id],
         queryFn: async ({pageParam = 0}) => {
-            const result = await getHistoryForMe({page: pageParam, size: 10})
-            setTotalPage(result.metadata?.pagination?.totalPages ?? 0)
-            return result
+            return await getHistoryForMe({page: pageParam, size: 10})
         },
         getNextPageParam: (lastPage: Omit<RestApiResponse<History[]>, 'error' | 'success'>) => {
             const pagination = lastPage.metadata?.pagination;
@@ -51,15 +50,17 @@ export const HistoryDialog = () => {
             </DialogTrigger>
             <DialogContent className={'!max-w-fit '}>
                 <DialogHeader>
-                    <DialogTitle>{trigger.title}</DialogTitle>
-                    <DialogDescription>Display your history activity</DialogDescription>
+                    <DialogTitle>{historyT("title")}</DialogTitle>
+                    <DialogDescription>{t("history_dialog.description") || "Display your history activity"}</DialogDescription>
                 </DialogHeader>
 
                 <DataTable columns={historyColumns}
                            data={histories ?? []}
                            fetchNextPage={fetchNextPage}
                            hasNextPage={hasNextPage}
-                           // totalPageCount={totalPage} //TODO: disable temp
+                           pageCount={data?.pages[0]?.metadata?.pagination?.totalPages ?? 0}
+                           isFetchingNextPage={isFetchingNextPage}
+                           isLoading={isLoading}
                 />
             </DialogContent>
         </Dialog>

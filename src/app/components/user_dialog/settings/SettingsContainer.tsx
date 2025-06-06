@@ -13,9 +13,11 @@ import {cn} from "@/lib/utils";
 import {Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbSeparator} from "@/components/ui/breadcrumb";
 import {UserInformation} from "@/components/common/UserInformation";
 import {setting_data} from "@/app/(home)/constraints/setting_data";
+import {useTranslations} from "next-intl";
 
 export const SettingsContainer = () => {
     const [sidebarOpenIndex, setSidebarOpenIndex] = useState(0);
+    const settingsT = useTranslations("Home.user_dialog.settings_dialog");
 
     const switchSidebarContent = (index: number) => {
         setSidebarOpenIndex(index);
@@ -55,7 +57,7 @@ export const SettingsContainer = () => {
                     <Breadcrumb>
                         <BreadcrumbList>
                             <BreadcrumbItem>
-                                <p>Settings</p>
+                                <p>{settingsT("title")}</p>
                             </BreadcrumbItem>
                             <BreadcrumbSeparator/>
                             <BreadcrumbItem >

@@ -510,6 +510,30 @@
         "false_information": "Thông tin sai lệch",
         "spam_or_misleading": "Spam hoặc gây hiểu lầm"
       }
+    },
+    "user_dialog": {
+      "profile": "Hồ sơ",
+      "history": "Lịch sử",
+      "settings": "Cài đặt",
+      "logout": "Đăng xuất",
+      "confirm_logout": "Bạn có chắc chắn muốn đăng xuất không?",
+      "yes": "Có",
+      "no": "Không",
+      "history_dialog": {
+        "title": "Lịch sử",
+        "view_all": "Xem tất cả",
+        "clear_all": "Xóa tất cả",
+        "empty": "Không có lịch sử nào",
+        "description": "Hiển thị hoạt động lịch sử của bạn"
+      },
+      "settings_dialog": {
+        "title": "Cài đặt",
+        "language": "Ngôn ngữ",
+        "theme": "Giao diện",
+        "notification": "Thông báo",
+        "description": "Tùy chỉnh cài đặt của bạn tại đây."
+      },
+      "logout_description": "Thao tác này sẽ đăng xuất bạn khỏi phiên làm việc hiện tại."
     }
   },
   "UI": {

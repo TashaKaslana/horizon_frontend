@@ -13,10 +13,11 @@ import {UserDialogTrigger} from "@/app/components/user_dialog/UserDialogTrigger"
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {useEffect, useState} from "react";
 import {Skeleton} from "@/components/ui/skeleton";
+import {useTranslations} from "next-intl";
 
 export const UserAssistance = ({isCollapsible}: { isCollapsible?: boolean }) => {
-    const {user} = useCurrentUser()
-
+    const {user} = useCurrentUser();
+    const t = useTranslations("Home.user_dialog");
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
@@ -55,7 +56,7 @@ export const UserAssistance = ({isCollapsible}: { isCollapsible?: boolean }) => 
                     <HistoryDialog/>
                     {/*<ProfileDialog/>*/}
                     <Link href={`/users/${user?.id}/overview`}>
-                        <UserDialogTrigger item={{icon: <SquareUserRound/>, title: 'Profile'}}/>
+                        <UserDialogTrigger item={{icon: <SquareUserRound/>, title: t("profile")}}/>
                     </Link>
                     <SettingDialog/>
                     <LogoutDialog/>

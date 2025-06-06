@@ -11,11 +11,14 @@ import {
     AlertDialogTrigger
 } from "@/components/ui/alert-dialog";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 export const LogoutDialog = () => {
+    const t = useTranslations("Home.user_dialog");
+
     const item = {
         icon: <DoorOpen/>,
-        title: 'Logout',
+        title: t('logout'),
     }
     const router = useRouter();
 
@@ -35,27 +38,21 @@ export const LogoutDialog = () => {
             <AlertDialogContent>
                 <AlertDialogHeader>
                     <AlertDialogTitle>
-                        Are you sure you want to logout
+                        {t("confirm_logout")}
                     </AlertDialogTitle>
                     <AlertDialogDescription>
-                        This action will log you out of your current session.
+                        {t("logout_description") || "This action will log you out of your current session."}
                     </AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
                     <AlertDialogCancel onClick={onCancel}>
-                        Cancel
+                        {t("no")}
                     </AlertDialogCancel>
                     <AlertDialogAction onClick={onContinue}>
-                        Logout
+                        {t("yes")}
                     </AlertDialogAction>
                 </AlertDialogFooter>
             </AlertDialogContent>
         </AlertDialog>
-
     )
 }
-
-
-
-
-

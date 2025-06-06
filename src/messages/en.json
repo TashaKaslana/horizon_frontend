@@ -510,6 +510,30 @@
         "false_information": "False Information",
         "spam_or_misleading": "Spam or Misleading"
       }
+    },
+    "user_dialog": {
+      "profile": "Profile",
+      "history": "History",
+      "settings": "Settings",
+      "logout": "Logout",
+      "confirm_logout": "Are you sure you want to logout?",
+      "yes": "Yes",
+      "no": "No",
+      "history_dialog": {
+        "title": "History",
+        "view_all": "View All",
+        "clear_all": "Clear All",
+        "empty": "No history found",
+        "description": "Display your history activity"
+      },
+      "settings_dialog": {
+        "title": "Settings",
+        "language": "Language",
+        "theme": "Theme",
+        "notification": "Notification",
+        "description": "Customize your settings here."
+      },
+      "logout_description": "This action will log you out of your current session."
     }
   },
   "UI": {

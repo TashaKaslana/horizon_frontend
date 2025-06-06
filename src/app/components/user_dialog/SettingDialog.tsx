@@ -8,11 +8,15 @@ import {
 import {UserDialogTrigger} from "@/app/components/user_dialog/UserDialogTrigger";
 import {Settings} from "lucide-react";
 import SettingsContainer from "@/app/components/user_dialog/settings/SettingsContainer";
+import { useTranslations } from "next-intl";
 
 export const SettingDialog = () => {
+    const t = useTranslations("Home.user_dialog");
+    const settingsT = useTranslations("Home.user_dialog.settings_dialog");
+
     const trigger = {
         icon: <Settings/>,
-        title: 'Settings',
+        title: t('settings'),
     };
 
     return (
@@ -21,9 +25,9 @@ export const SettingDialog = () => {
                 <UserDialogTrigger item={trigger}/>
             </DialogTrigger>
             <DialogContent className={'!max-w-fit h-[500px]'}>
-                <DialogTitle className="sr-only">Settings</DialogTitle>
+                <DialogTitle className="sr-only">{settingsT("title")}</DialogTitle>
                 <DialogDescription className="sr-only">
-                    Customize your settings here.
+                    {settingsT("description") || "Customize your settings here."}
                 </DialogDescription>
 
                 <SettingsContainer/>
