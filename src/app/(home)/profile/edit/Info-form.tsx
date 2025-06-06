@@ -57,25 +57,26 @@ import {getAccessToken} from "@auth0/nextjs-auth0";
 import {useCurrentUser} from "@/stores/useCurrentUser";
 import {Spinner} from "@/components/ui/spinner";
 import {Textarea} from "@/components/ui/textarea";
-
-const formSchema = z.object({
-    displayName: z.string(),
-    firstName: z.string().min(3, {message: 'First name is least at 3 characters'}).max(30),
-    lastName: z.string().min(3).max(30),
-    dateOfBirth: z.coerce.date().refine((value) => value < new Date(), {
-        message: 'Date of birth must be in the past',
-    }),
-    gender: z.enum(['MALE', 'FEMALE', 'OTHER']),
-    location: z.tuple([z.string(), z.string().optional()]),
-    phoneNumber: z.string(),
-    bio: z.string().max(500, {message: "Can't go over 500 characters"})
-});
-
+import {useTranslations} from "next-intl";
 
 export default function InfoForm() {
+    const t = useTranslations("Home.profile.edit");
     const [, setCountryName] = useState<string>('')
     const [stateName, setStateName] = useState<string>('')
     const {user} = useCurrentUser()
+
+    const formSchema = z.object({
+        displayName: z.string(),
+        firstName: z.string().min(3, {message: t('validation.firstName')}).max(30),
+        lastName: z.string().min(3).max(30),
+        dateOfBirth: z.coerce.date().refine((value) => value < new Date(), {
+            message: 'Date of birth must be in the past',
+        }),
+        gender: z.enum(['MALE', 'FEMALE', 'OTHER']),
+        location: z.tuple([z.string(), z.string().optional()]),
+        phoneNumber: z.string(),
+        bio: z.string().max(500, {message: t('validation.bio')})
+    });
 
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
@@ -124,10 +125,10 @@ export default function InfoForm() {
                 dateOfBirth: values.dateOfBirth.toISOString()
             })
 
-            toast.success("Update successfully");
+            toast.success(t("success"));
         } catch (error) {
             console.error("Form submission error", error);
-            toast.error("Failed to submit the form. Please try again.");
+            toast.error(t("error"));
         }
     }
 
@@ -141,17 +142,17 @@ export default function InfoForm() {
                     render={({field}) => (
                         <FormItem>
                             <FormLabel>
-                                Display Name
+                                {t("fields.displayName.label")}
                             </FormLabel>
                             <FormControl>
                                 <Input
-                                    placeholder="Display Name"
+                                    placeholder={t("fields.displayName.placeholder")}
                                     type=""
                                     {...field}
                                     className={'border-black dark:border-white'}
                                 />
                             </FormControl>
-                            <FormDescription>This is your display name, anyone can see it</FormDescription>
+                            <FormDescription>{t("fields.displayName.description")}</FormDescription>
                             <FormMessage/>
                         </FormItem>
                     )}/>
@@ -165,16 +166,16 @@ export default function InfoForm() {
                             name="firstName"
                             render={({field}) => (
                                 <FormItem>
-                                    <FormLabel>First Name</FormLabel>
+                                    <FormLabel>{t("fields.firstName.label")}</FormLabel>
                                     <FormControl>
                                         <Input
-                                            placeholder="Enter your first name"
+                                            placeholder={t("fields.firstName.placeholder")}
                                             type=""
                                             {...field}
                                             className={'border-black dark:border-white'}
                                         />
                                     </FormControl>
-                                    <FormDescription>This is your first name</FormDescription>
+                                    <FormDescription>{t("fields.firstName.description")}</FormDescription>
                                     <FormMessage/>
                                 </FormItem>
                             )}
@@ -188,15 +189,15 @@ export default function InfoForm() {
                             name="lastName"
                             render={({field}) => (
                                 <FormItem>
-                                    <FormLabel>Last Name</FormLabel>
+                                    <FormLabel>{t("fields.lastName.label")}</FormLabel>
                                     <FormControl>
                                         <Input
-                                            placeholder="Enter your last name"
+                                            placeholder={t("fields.lastName.placeholder")}
                                             className={'border-black dark:border-white'}
                                             type="text"
                                             {...field} />
                                     </FormControl>
-                                    <FormDescription>This is your last name</FormDescription>
+                                    <FormDescription>{t("fields.lastName.description")}</FormDescription>
                                     <FormMessage/>
                                 </FormItem>
                             )}
@@ -214,7 +215,7 @@ export default function InfoForm() {
                             name="dateOfBirth"
                             render={({field}) => (
                                 <FormItem className="flex flex-col">
-                                    <FormLabel>Date of birth</FormLabel>
+                                    <FormLabel>{t("fields.dateOfBirth.label")}</FormLabel>
                                     <Popover>
                                         <PopoverTrigger asChild>
                                             <FormControl>
@@ -228,7 +229,7 @@ export default function InfoForm() {
                                                     {field.value ? (
                                                         format(field.value, "PPP")
                                                     ) : (
-                                                        <span>Pick a date</span>
+                                                        <span>{t("fields.dateOfBirth.placeholder")}</span>
                                                     )}
                                                     <CalendarIcon className="ml-auto h-4 w-4 opacity-50"/>
                                                 </Button>
@@ -242,7 +243,7 @@ export default function InfoForm() {
                                             />
                                         </PopoverContent>
                                     </Popover>
-                                    <FormDescription>Your date of birth is used to calculate your age.</FormDescription>
+                                    <FormDescription>{t("fields.dateOfBirth.description")}</FormDescription>
                                     <FormMessage/>
                                 </FormItem>
                             )}
@@ -256,7 +257,7 @@ export default function InfoForm() {
                             name="gender"
                             render={({field}) => (
                                 <FormItem className="space-y-3">
-                                    <FormLabel>Gender</FormLabel>
+                                    <FormLabel>{t("fields.gender.label")}</FormLabel>
                                     <FormControl>
                                         <RadioGroup
                                             onValueChange={field.onChange}
@@ -264,9 +265,9 @@ export default function InfoForm() {
                                             defaultValue={user?.gender}
                                         >
                                             {[
-                                                ["Male", "MALE"],
-                                                ["Female", "FEMALE"],
-                                                ["Other", "OTHER"]
+                                                [t("fields.gender.options.male"), "MALE"],
+                                                [t("fields.gender.options.female"), "FEMALE"],
+                                                [t("fields.gender.options.other"), "OTHER"]
                                             ].map((option, index) => (
                                                 <FormItem className="flex items-center space-x-3 space-y-0" key={index}>
                                                     <FormControl>
@@ -280,7 +281,7 @@ export default function InfoForm() {
                                             ))}
                                         </RadioGroup>
                                     </FormControl>
-                                    <FormDescription>Select your gender</FormDescription>
+                                    <FormDescription>{t("fields.gender.description")}</FormDescription>
                                     <FormMessage/>
                                 </FormItem>
                             )}
@@ -295,7 +296,7 @@ export default function InfoForm() {
                     name="location"
                     render={({field}) => (
                         <FormItem>
-                            <FormLabel>Select Country</FormLabel>
+                            <FormLabel>{t("fields.location.label")}</FormLabel>
                             <FormControl>
                                 <LocationSelector
                                     onCountryChange={(country) => {
@@ -310,8 +311,7 @@ export default function InfoForm() {
                                     defaultState={field.value?.[1]}
                                 />
                             </FormControl>
-                            <FormDescription>If your country has states, it will be appear after selecting
-                                country</FormDescription>
+                            <FormDescription>{t("fields.location.description")}</FormDescription>
                             <FormMessage/>
                         </FormItem>
                     )}
@@ -322,16 +322,16 @@ export default function InfoForm() {
                     name="phoneNumber"
                     render={({field}) => (
                         <FormItem className="flex flex-col items-start">
-                            <FormLabel>Phone number</FormLabel>
+                            <FormLabel>{t("fields.phoneNumber.label")}</FormLabel>
                             <FormControl className="w-full">
                                 <PhoneInput
-                                    placeholder="Placeholder"
+                                    placeholder={t("fields.phoneNumber.placeholder")}
                                     {...field}
                                     defaultCountry="TR"
                                     className={'border-black dark:border-white'}
                                 />
                             </FormControl>
-                            <FormDescription>Enter your phone number.</FormDescription>
+                            <FormDescription>{t("fields.phoneNumber.description")}</FormDescription>
                             <FormMessage/>
                         </FormItem>
                     )}
@@ -342,20 +342,20 @@ export default function InfoForm() {
                     name="bio"
                     render={({field}) => (
                         <FormItem className="flex flex-col items-start">
-                            <FormLabel>Bio</FormLabel>
+                            <FormLabel>{t("fields.bio.label")}</FormLabel>
                             <FormControl className="w-full max-h-64">
                                 <Textarea {...field}
-                                          placeholder={'Enter your bio'}
+                                          placeholder={t("fields.bio.placeholder")}
                                 />
                             </FormControl>
-                            <FormDescription>Enter your bio.</FormDescription>
+                            <FormDescription>{t("fields.bio.description")}</FormDescription>
                             <FormMessage/>
                         </FormItem>
                     )}
                 />
 
                 <div className={'flex justify-center'}>
-                    <Button type="submit" className={'lg:w-36'}>Submit</Button>
+                    <Button type="submit" className={'lg:w-36'}>{t("submit")}</Button>
                 </div>
             </form>
         </Form>

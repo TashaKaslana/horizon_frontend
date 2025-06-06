@@ -590,6 +590,65 @@
           "browser_unsupported": "Trình duyệt của bạn không hỗ trợ thẻ video."
         }
       }
+    },
+    "profile": {
+      "edit": {
+        "title": "Chỉnh sửa hồ sơ",
+        "description": "Cập nhật thông tin hồ sơ của bạn để giữ tài khoản an toàn và luôn được cập nhật.",
+        "submit": "Gửi",
+        "fields": {
+          "displayName": {
+            "label": "Tên hiển thị",
+            "placeholder": "Tên hiển thị",
+            "description": "Đây là tên hiển thị của bạn, ai cũng có thể thấy"
+          },
+          "firstName": {
+            "label": "Tên",
+            "placeholder": "Nhập tên của bạn",
+            "description": "Đây là tên của bạn"
+          },
+          "lastName": {
+            "label": "Họ",
+            "placeholder": "Nhập họ của bạn",
+            "description": "Đây là họ của bạn"
+          },
+          "dateOfBirth": {
+            "label": "Ngày sinh",
+            "placeholder": "Chọn ngày",
+            "description": "Ngày sinh của bạn được dùng để tính tuổi."
+          },
+          "gender": {
+            "label": "Giới tính",
+            "options": {
+              "male": "Nam",
+              "female": "Nữ",
+              "other": "Khác"
+            },
+            "description": "Chọn giới tính của bạn"
+          },
+          "location": {
+            "label": "Chọn quốc gia",
+            "description": "Nếu quốc gia của bạn có các bang/tỉnh, chúng sẽ hiển thị sau khi chọn quốc gia"
+          },
+          "phoneNumber": {
+            "label": "Số điện thoại",
+            "placeholder": "Nhập số điện thoại",
+            "description": "Nhập số điện thoại của bạn."
+          },
+          "bio": {
+            "label": "Tiểu sử",
+            "placeholder": "Nhập tiểu sử",
+            "description": "Nhập tiểu sử của bạn."
+          }
+        },
+        "validation": {
+          "firstName": "Tên phải có ít nhất 3 ký tự",
+          "bio": "Không được vượt quá 500 ký tự",
+          "dateOfBirth": "Ngày sinh phải là ngày trong quá khứ"
+        },
+        "success": "Cập nhật thành công",
+        "error": "Gửi biểu mẫu thất bại. Vui lòng thử lại."
+      }
     }
   },
   "UI": {

@@ -511,6 +511,65 @@
         "spam_or_misleading": "Spam or Misleading"
       }
     },
+    "profile": {
+      "edit": {
+        "title": "Edit Profile",
+        "description": "Update your profile information to keep your account secure and up to date.",
+        "submit": "Submit",
+        "fields": {
+          "displayName": {
+            "label": "Display Name",
+            "placeholder": "Display Name",
+            "description": "This is your display name, anyone can see it"
+          },
+          "firstName": {
+            "label": "First Name",
+            "placeholder": "Enter your first name",
+            "description": "This is your first name"
+          },
+          "lastName": {
+            "label": "Last Name",
+            "placeholder": "Enter your last name",
+            "description": "This is your last name"
+          },
+          "dateOfBirth": {
+            "label": "Date of birth",
+            "placeholder": "Pick a date",
+            "description": "Your date of birth is used to calculate your age."
+          },
+          "gender": {
+            "label": "Gender",
+            "options": {
+              "male": "Male",
+              "female": "Female",
+              "other": "Other"
+            },
+            "description": "Select your gender"
+          },
+          "location": {
+            "label": "Select Country",
+            "description": "If your country has states, it will be appear after selecting country"
+          },
+          "phoneNumber": {
+            "label": "Phone number",
+            "placeholder": "Placeholder",
+            "description": "Enter your phone number."
+          },
+          "bio": {
+            "label": "Bio",
+            "placeholder": "Enter your bio",
+            "description": "Enter your bio."
+          }
+        },
+        "validation": {
+          "firstName": "First name is least at 3 characters",
+          "bio": "Can't go over 500 characters",
+          "dateOfBirth": "Date of birth must be in the past"
+        },
+        "success": "Update successfully",
+        "error": "Failed to submit the form. Please try again."
+      }
+    },
     "user_dialog": {
       "profile": "Profile",
       "history": "History",
