@@ -9,6 +9,7 @@ import InfiniteScroll from "@/components/ui/infinite-scroll";
 import {CommentInput} from "@/app/components/post-presentation/comment-section/CommentInput";
 import {Spinner} from "@/components/ui/spinner";
 import {useCommentStore} from "@/app/(home)/foryou/store/useCommentStore";
+import {useTranslations} from "next-intl";
 
 interface CommentProps {
     postId: string,
@@ -17,6 +18,7 @@ interface CommentProps {
 }
 
 const CommentContainer = ({postId, isCommentOpened, isVisible}: CommentProps) => {
+    const t = useTranslations("Home.comments");
     const scrollRef = useRef<HTMLDivElement>(null);
     const {
         getComments,
@@ -77,7 +79,7 @@ const CommentContainer = ({postId, isCommentOpened, isVisible}: CommentProps) =>
                             <div className={'flex justify-center items-center h-full'}>
                                 <div className={'flex flex-col items-center gap-2'}>
                                     <MessageSquareMore className={'size-1/3'}/>
-                                    <p>Become first person comment in this post</p>
+                                    <p>{t("empty")}</p>
                                 </div>
                             </div>
                         ) :
@@ -104,10 +106,12 @@ interface CommentHeaderProps {
 }
 
 const CommentHeader = ({amount}: CommentHeaderProps) => {
+    const t = useTranslations("Home.comments");
+
     return (
         <header className={'flex justify-between bg-gray-100 rounded px-1 mr-3'}>
             <h1 className={'font-bold'}>
-                Comments <span className={'font-light text-zinc-800'}> - {amount}</span>
+                {t("header")} <span className={'font-light text-zinc-800'}>{t("count", {count: amount || 0})}</span>
             </h1>
             <AlignLeft/>
         </header>

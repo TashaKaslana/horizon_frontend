@@ -14,12 +14,14 @@ import {
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import {useCommentAction} from "@/hooks/useCommentAction";
+import {useTranslations} from "next-intl";
 
 import reports from '../../../../../public/locales/en/reportReason.json'
 
 export const CommentActionBar = ({comment}: {
     comment: CommentResponse,
 }) => {
+    const t = useTranslations("Home.comments.actions");
     const reportReasons = Object.values(reports.comment)
 
     const {
@@ -44,7 +46,7 @@ export const CommentActionBar = ({comment}: {
                         />
                     </TooltipTrigger>
                     <TooltipContent>
-                        <p className={'text-sm font-light'}>Like</p>
+                        <p className={'text-sm font-light'}>{t("like")}</p>
                     </TooltipContent>
                 </Tooltip>
 
@@ -56,7 +58,7 @@ export const CommentActionBar = ({comment}: {
                         />
                     </TooltipTrigger>
                     <TooltipContent>
-                        <p className={'text-sm font-light'}>Reply</p>
+                        <p className={'text-sm font-light'}>{t("reply")}</p>
                     </TooltipContent>
                 </Tooltip>
 
@@ -71,19 +73,19 @@ export const CommentActionBar = ({comment}: {
                                         <DropdownMenuItem
                                             onClick={handleCopy}
                                             className={'cursor-pointer text-emerald-400'}>
-                                            <Copy className={'mr-2'}/> Copy
+                                            <Copy className={'mr-2'}/> {t("copy")}
                                         </DropdownMenuItem>
                                         {comment.isPinned ? (
                                             <DropdownMenuItem
                                                 onClick={handleUnPinComment}
                                                 className={'cursor-pointer text-emerald-400'}>
-                                                <PinOff className={'mr-2'}/> Unpin
+                                                <PinOff className={'mr-2'}/> {t("unpin")}
                                             </DropdownMenuItem>
                                         ) : (
                                             <DropdownMenuItem
                                                 onClick={handlePinComment}
                                                 className={'cursor-pointer text-emerald-400'}>
-                                                <Pin className={'mr-2'}/> Pin
+                                                <Pin className={'mr-2'}/> {t("pin")}
                                             </DropdownMenuItem>
                                         )}
                                     </DropdownMenuGroup>
@@ -94,12 +96,12 @@ export const CommentActionBar = ({comment}: {
                                             onClick={handleEdit}
                                             className={'cursor-pointer text-sky-400'}
                                         >
-                                            <Edit className={'mr-2'}/> Edit
+                                            <Edit className={'mr-2'}/> {t("edit")}
                                         </DropdownMenuItem>
                                         <DropdownMenuItem
                                             onClick={handleDelete}
                                             className={'cursor-pointer text-sky-400'}>
-                                            <Delete className={'mr-2'}/> Delete
+                                            <Delete className={'mr-2'}/> {t("delete")}
                                         </DropdownMenuItem>
                                     </DropdownMenuGroup>
 
@@ -110,7 +112,7 @@ export const CommentActionBar = ({comment}: {
                                             <DropdownMenuSubTrigger
                                                 className={'cursor-pointer text-red-600'}
                                             >
-                                                <AlertTriangle className={'mr-2'}/> Report
+                                                <AlertTriangle className={'mr-2'}/> {t("report")}
                                             </DropdownMenuSubTrigger>
                                             <DropdownMenuPortal>
                                                 <DropdownMenuSubContent>
@@ -130,7 +132,7 @@ export const CommentActionBar = ({comment}: {
                         </DropdownMenu>
                     </TooltipTrigger>
                     <TooltipContent>
-                        <p className={'text-sm font-light'}>More</p>
+                        <p className={'text-sm font-light'}>{t("more")}</p>
                     </TooltipContent>
                 </Tooltip>
             </TooltipProvider>

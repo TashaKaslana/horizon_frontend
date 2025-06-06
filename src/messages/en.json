@@ -460,6 +460,29 @@
         "views": "Views",
         "category": "Category"
       }
+    },
+    "comments": {
+      "title": "Comments",
+      "header": "Comments",
+      "count": "- {count}",
+      "empty": "Become first person comment in this post",
+      "input": {
+        "placeholder": "Enter your comment and press Ctrl + ↵ to comment",
+        "cancel": "Cancel",
+        "submit": "Submit",
+        "submitting": "Submitting"
+      },
+      "actions": {
+        "like": "Like",
+        "reply": "Reply",
+        "more": "More",
+        "copy": "Copy",
+        "pin": "Pin",
+        "unpin": "Unpin",
+        "edit": "Edit",
+        "delete": "Delete",
+        "report": "Report"
+      }
     }
   },
   "UI": {

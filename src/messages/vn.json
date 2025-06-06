@@ -460,6 +460,29 @@
         "views": "Lượt xem",
         "category": "Danh mục"
       }
+    },
+    "comments": {
+      "title": "Bình luận",
+      "header": "Bình luận",
+      "count": "- {count}",
+      "empty": "Hãy là người đầu tiên bình luận về bài viết này",
+      "input": {
+        "placeholder": "Nhập bình luận của bạn và nhấn Ctrl + ↵ để gửi",
+        "cancel": "Hủy",
+        "submit": "Gửi",
+        "submitting": "Đang gửi"
+      },
+      "actions": {
+        "like": "Thích",
+        "reply": "Trả lời",
+        "more": "Thêm",
+        "copy": "Sao chép",
+        "pin": "Ghim",
+        "unpin": "Bỏ ghim",
+        "edit": "Chỉnh sửa",
+        "delete": "Xóa",
+        "report": "Báo cáo"
+      }
     }
   },
   "UI": {
