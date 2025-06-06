@@ -453,6 +453,13 @@
         "recent": "Recent",
         "rating": "Rating"
       }
+    },
+    "foryou": {
+      "loading": "Loading...",
+      "postInfo": {
+        "views": "Views",
+        "category": "Category"
+      }
     }
   }
 }

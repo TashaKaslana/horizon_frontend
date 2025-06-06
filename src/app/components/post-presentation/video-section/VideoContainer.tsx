@@ -9,6 +9,7 @@ import {formatDateTS} from "@/lib/utils";
 import {UserSummaryCard} from "@/components/common/UserInformation";
 import {Clock, Eye, Grid} from "lucide-react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 
 interface VideoContainerProps {
     setIsCommentOpened?: React.Dispatch<React.SetStateAction<boolean>>,
@@ -17,9 +18,11 @@ interface VideoContainerProps {
 }
 
 const VideoContainer = ({setIsCommentOpened, feed, ref}: VideoContainerProps) => {
+    const t = useTranslations('Home.foryou');
+
     return (
         <div className={'flex gap-4 items-center relative'}>
-            <Suspense fallback={<div>Loading...</div>}>
+            <Suspense fallback={<div>{t('loading')}</div>}>
                 <VideoSection post={feed.post} ref={ref} views={feed.statistic.totalViews}/>
                 <ActionButtonGroup setIsCommentOpened={setIsCommentOpened}
                                    postId={feed.post.id}
@@ -32,6 +35,7 @@ const VideoContainer = ({setIsCommentOpened, feed, ref}: VideoContainerProps) =>
 
 const VideoSection = ({post, ref, views = 0}: { post: PostSummary, ref?: Ref<HTMLVideoElement>, views: number }) => {
     const {videoSettings} = useConfigStore()
+    const t = useTranslations('Home.foryou');
 
     const getValueByKey = (key: string) => {
         const value = videoSettings.find((v) => v.key === key)?.value;
@@ -69,11 +73,11 @@ const VideoSection = ({post, ref, views = 0}: { post: PostSummary, ref?: Ref<HTM
                 <div className={'w-full'}>
                     <div className={'flex justify-between items-center'}>
                         <div className={'flex gap-2'}>
-                            <Badge><Eye/> {views}</Badge>
+                            <Badge><Eye/> {views} {t('postInfo.views')}</Badge>
                             <Badge><Clock/> {formatDateTS(new Date(post.createdAt))}</Badge>
                         </div>
                         <div className={'flex items-center'}>
-                            <Badge><Grid/> {post.categoryName}</Badge>
+                            <Badge><Grid/> {t('postInfo.category')}: {post.categoryName}</Badge>
                         </div>
                     </div>
 

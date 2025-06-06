@@ -453,6 +453,13 @@
         "recent": "Gần đây",
         "rating": "Đánh giá"
       }
+    },
+    "foryou": {
+      "loading": "Đang tải...",
+      "postInfo": {
+        "views": "Lượt xem",
+        "category": "Danh mục"
+      }
     }
   }
 }
