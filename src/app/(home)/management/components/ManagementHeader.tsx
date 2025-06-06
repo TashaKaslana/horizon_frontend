@@ -6,8 +6,10 @@ import {useDebouncedCallback} from "use-debounce";
 import React from "react";
 import {PostCategory, SortType} from "@/app/(home)/management/types/types";
 import Link from "next/link";
+import {useTranslations} from "next-intl";
 
 export function ManagementHeader() {
+    const t = useTranslations('Home.management');
     const {sortPosts, searchPosts, filterPosts} = usePostManagementStore()
 
     const filterOptions = [
@@ -45,13 +47,13 @@ export function ManagementHeader() {
         <header className={"border p-1 rounded"}>
             <section className={'lg:flex justify-between items-center sm:mb-2'}>
                 <div>
-                    <h1 className={"font-bold text-2xl"}>Post management</h1>
-                    <p className={"font-light text-sm text-gray-500"}>Manage your posts content application.</p>
+                    <h1 className={"font-bold text-2xl"}>{t('title')}</h1>
+                    <p className={"font-light text-sm text-gray-500"}>{t('description')}</p>
                 </div>
                 <div className={"flex gap-2"}>
                     <Select onValueChange={handleFilterChange}>
                         <SelectTrigger className={'w-32'}>
-                            <SelectValue placeholder={'Filter'}/>
+                            <SelectValue placeholder={t('filter')}/>
                         </SelectTrigger>
                         <SelectContent>
                             {filterOptions.map((item) => (
@@ -64,17 +66,17 @@ export function ManagementHeader() {
 
                     <Button>
                         <Link href={'/uploads'}>
-                            Upload new post
+                            {t('uploadButton')}
                         </Link>
                     </Button>
                 </div>
             </section>
 
-            <section className={'lg:flex lg:gap-4 sm:space-y-2'}>
-                <Input placeholder={'Search post'} className={'flex-1'} onChange={handleSearchChange}/>
+            <section className={'lg:flex lg:gap-2 sm:space-y-2'}>
+                <Input placeholder={t('searchPlaceholder')} className={'flex-1'} onChange={handleSearchChange}/>
                 <Select onValueChange={handleSortChange}>
-                    <SelectTrigger className={'w-32'}>
-                        <SelectValue placeholder={'Sort by'}/>
+                    <SelectTrigger className={'w-38'}>
+                        <SelectValue placeholder={t('sortBy')}/>
                     </SelectTrigger>
 
                     <SelectContent>

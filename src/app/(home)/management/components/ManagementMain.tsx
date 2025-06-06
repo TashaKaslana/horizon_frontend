@@ -9,8 +9,10 @@ import InfiniteScroll from "@/components/ui/infinite-scroll";
 import {Spinner} from "@/components/ui/spinner";
 import React from "react";
 import {MoreActionDropdown} from "@/app/(home)/management/components/MoreActionDropdown";
+import {useTranslations} from "next-intl";
 
 export const ManagementMain = () => {
+    const t = useTranslations('Home.management');
     const {feeds, isFetchingNextPage, fetchNextPage, hasNextPage} = usePostManagement()
 
     return (
@@ -18,7 +20,7 @@ export const ManagementMain = () => {
             <main className={'grid grid-cols-2 gap-5 place-items-center'}>
                 {feeds?.length === 0 && !isFetchingNextPage && (
                     <div className="col-span-2 text-center text-muted-foreground py-10">
-                        You haven’t posted anything yet.
+                        {t('noContent')}
                     </div>
                 )}
 
@@ -35,8 +37,8 @@ export const ManagementMain = () => {
 };
 
 const PostCard = ({feed}: { feed: Feed }) => {
+    const t = useTranslations('Home.management');
     const date = formatDateTS(new Date(feed.post.createdAt))
-    //TODO: add views
     const formatViews = feed.statistic.totalViews
     const formatLikes = getFixedNumberFormat(feed.statistic.totalLikes ?? 0)
     const formatComments = getFixedNumberFormat(feed.statistic.totalComments ?? 0)
@@ -56,7 +58,7 @@ const PostCard = ({feed}: { feed: Feed }) => {
                     <h1 className={'text-xl font-bold'}>{feed.post.caption}</h1>
                     <div className={'flex justify-between text-sm text-gray-500'}>
                         <span>{date}</span>
-                        <span>{formatViews} Views</span>
+                        <span>{formatViews} {t('views')}</span>
                     </div>
                     <div className={'flex justify-between items-center'}>
                         <div className={'flex gap-2 mt-2'}>
@@ -77,4 +79,3 @@ const PostCard = ({feed}: { feed: Feed }) => {
         </Card>
     )
 }
-

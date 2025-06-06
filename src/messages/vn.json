@@ -430,6 +430,20 @@
           "uploadProcessing": "Video của bạn đang được xử lý và sẽ sớm được hiển thị."
         }
       }
+    },
+    "management": {
+      "title": "Quản lý Nội dung",
+      "description": "Xem và quản lý video, bình luận và cài đặt tài khoản của bạn.",
+      "noContent": "Bạn chưa đăng bài nào.",
+      "filter": "Lọc",
+      "uploadButton": "Tải lên bài viết mới",
+      "searchPlaceholder": "Tìm kiếm bài viết",
+      "sortBy": "Sắp xếp theo",
+      "views": "Lượt xem",
+      "actions": {
+        "edit": "Chỉnh sửa bài viết",
+        "delete": "Xóa bài viết"
+      }
     }
   }
 }

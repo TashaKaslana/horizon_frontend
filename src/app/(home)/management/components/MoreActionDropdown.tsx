@@ -3,8 +3,10 @@ import React from "react";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 import {usePostManagement} from "@/app/(home)/management/hooks/usePostManagement";
 import Link from "next/link";
+import {useTranslations} from "next-intl";
 
 export const MoreActionDropdown = ({postId} : {postId: string}) => {
+    const t = useTranslations('Home.management.actions');
     const {deletePostAction} = usePostManagement()
 
     return (
@@ -15,11 +17,11 @@ export const MoreActionDropdown = ({postId} : {postId: string}) => {
             <DropdownMenuContent>
                 <DropdownMenuItem>
                     <Link href={`/management/${postId}/edit`}>
-                        Edit Post
+                        {t('edit')}
                     </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => deletePostAction(postId)}>
-                    Delete Post
+                    {t('delete')}
                 </DropdownMenuItem>
             </DropdownMenuContent>
         </DropdownMenu>

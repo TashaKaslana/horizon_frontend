@@ -430,6 +430,20 @@
           "uploadProcessing": "Your video is now processing and will be available soon."
         }
       }
+    },
+    "management": {
+      "title": "Manage Your Content",
+      "description": "View and manage your videos, comments, and account settings.",
+      "noContent": "You haven't posted anything yet.",
+      "filter": "Filter",
+      "uploadButton": "Upload new post",
+      "searchPlaceholder": "Search post",
+      "sortBy": "Sort by",
+      "views": "Views",
+      "actions": {
+        "edit": "Edit Post",
+        "delete": "Delete Post"
+      }
     }
   }
 }
