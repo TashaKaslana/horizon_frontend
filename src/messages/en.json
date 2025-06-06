@@ -562,7 +562,17 @@
         "website": "Website",
         "joined": "Joined",
         "born": "Born",
-        "not_specified": "Not specified"
+        "not_specified": "Not specified",
+        "personal_info": "Personal Info",
+        "statistics": "Statistics",
+        "meta": "Meta",
+        "actions": "Actions",
+        "total_views": "Total Views",
+        "last_updated": "Last Updated",
+        "gender": "Gender",
+        "share_profile": "Share Profile",
+        "report_user": "Report User",
+        "copy_profile_link": "Copy Profile Link"
       },
       "posts": {
         "no_posts": "No posts yet",

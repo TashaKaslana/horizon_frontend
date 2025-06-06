@@ -562,7 +562,17 @@
         "website": "Trang web",
         "joined": "Tham gia",
         "born": "Ngày sinh",
-        "not_specified": "Chưa xác định"
+        "not_specified": "Chưa xác định",
+        "personal_info": "Thông tin cá nhân",
+        "statistics": "Thống kê",
+        "meta": "Thông tin phụ",
+        "actions": "Hành động",
+        "total_views": "Tổng lượt xem",
+        "last_updated": "Cập nhật lần cuối",
+        "gender": "Giới tính",
+        "share_profile": "Chia sẻ hồ sơ",
+        "report_user": "Báo cáo người dùng",
+        "copy_profile_link": "Sao chép liên kết hồ sơ"
       },
       "posts": {
         "no_posts": "Chưa có bài viết nào",
