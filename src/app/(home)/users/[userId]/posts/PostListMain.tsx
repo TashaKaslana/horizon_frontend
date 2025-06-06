@@ -6,12 +6,14 @@ import Link from "next/link";
 import {useUserPost} from "@/app/(home)/users/[userId]/posts/hooks/useUserPost";
 import {Button} from "@/components/ui/button";
 import {useEffect} from "react";
+import {useTranslations} from "next-intl";
 
 interface PostListMainProps {
     userId: string
 }
 
 export const PostListMain = ({userId}: PostListMainProps) => {
+    const t = useTranslations('Home.user_profile.posts');
     const {feeds, setFeeds, handleSort} = useUserPost()
 
     const {data} = useQuery({
@@ -29,7 +31,7 @@ export const PostListMain = ({userId}: PostListMainProps) => {
         return <div className="flex size-full justify-center items-center">
             <div className="flex flex-col items-center">
                 <Box className="size-12"/>
-                <p className="text-zinc-500">User isn&#39;t display any posts</p>
+                <p className="text-zinc-500">{t('user_no_posts')}</p>
             </div>
         </div>
     }
@@ -37,9 +39,9 @@ export const PostListMain = ({userId}: PostListMainProps) => {
     return (
         <section className={'space-y-2'}>
             <header className="flex gap-2 px-4">
-                <Button variant={'outline'} onClick={() => handleSort('newest')}>Newest</Button>
-                <Button variant={'outline'} onClick={() => handleSort('oldest')}>Oldest</Button>
-                <Button variant={'outline'} onClick={() => handleSort('popular')}>Popular</Button>
+                <Button variant={'outline'} onClick={() => handleSort('newest')}>{t('sort.newest')}</Button>
+                <Button variant={'outline'} onClick={() => handleSort('oldest')}>{t('sort.oldest')}</Button>
+                <Button variant={'outline'} onClick={() => handleSort('popular')}>{t('sort.popular')}</Button>
             </header>
 
             <main className="grid grid-cols-5 w-full gap-2 px-2">

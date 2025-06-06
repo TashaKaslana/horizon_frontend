@@ -5,6 +5,7 @@ import {Badge} from "@/components/ui/badge";
 import {cn, formatDateDifference} from "@/lib/utils";
 import {Clock, Dot, Eye, Grid} from "lucide-react";
 import {useState} from "react";
+import {useTranslations} from "next-intl";
 
 export const PostCard = ({
                              post,
@@ -17,6 +18,7 @@ export const PostCard = ({
     isEnableCategory?: boolean;
     direction?: "vertical" | "horizon";
 }) => {
+    const t = useTranslations('Home.user_profile.posts.card');
     const [isHover, setIsHover] = useState(false);
     const isHorizontal = direction === "horizon";
 
@@ -54,7 +56,7 @@ export const PostCard = ({
                         className="object-cover w-full h-full rounded-xl"
                     >
                         <source src={post.videoPlaybackUrl} type="video/mp4"/>
-                        Your browser does not support the video tag.
+                        {t('browser_unsupported')}
                     </video>
                 </AspectRatio>
             </CardContent>
@@ -68,7 +70,7 @@ export const PostCard = ({
                         <div className="flex items-center">
                             <span className={'flex items-center gap-x-1'}>
                                 <Eye className="w-4 h-4"/>
-                                {views} views
+                                {views} {t('views')}
                             </span>
                             <Dot/>
                             <span className={'flex items-center gap-x-1'}>

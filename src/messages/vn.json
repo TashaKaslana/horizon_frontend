@@ -578,7 +578,17 @@
         "no_posts": "Chưa có bài viết nào",
         "no_posts_description": "Khi người dùng này đăng bài, bài viết sẽ xuất hiện ở đây.",
         "most_popular": "Bài viết nổi bật nhất",
-        "recent": "Bài viết gần đây"
+        "recent": "Bài viết gần đây",
+        "user_no_posts": "Người dùng này không hiển thị bất kỳ bài viết nào",
+        "sort": {
+          "newest": "Mới nhất",
+          "oldest": "Cũ nhất",
+          "popular": "Phổ biến"
+        },
+        "card": {
+          "views": "lượt xem",
+          "browser_unsupported": "Trình duyệt của bạn không hỗ trợ thẻ video."
+        }
       }
     }
   },

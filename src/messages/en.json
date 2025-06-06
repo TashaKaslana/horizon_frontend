@@ -578,7 +578,17 @@
         "no_posts": "No posts yet",
         "no_posts_description": "When this user posts something, it will appear here.",
         "most_popular": "The most popular post",
-        "recent": "Recent Posts"
+        "recent": "Recent Posts",
+        "user_no_posts": "User isn't displaying any posts",
+        "sort": {
+          "newest": "Newest",
+          "oldest": "Oldest",
+          "popular": "Popular"
+        },
+        "card": {
+          "views": "views",
+          "browser_unsupported": "Your browser does not support the video tag."
+        }
       }
     }
   },
