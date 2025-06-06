@@ -534,6 +534,42 @@
         "description": "Customize your settings here."
       },
       "logout_description": "This action will log you out of your current session."
+    },
+    "user_profile": {
+      "navigation": {
+        "overview": "Overview",
+        "posts": "Posts",
+        "info": "Info"
+      },
+      "profile": {
+        "followers": "Followers",
+        "following": "Following",
+        "follow": "Follow",
+        "unfollow": "Unfollow",
+        "edit_profile": "Edit Profile",
+        "follow_error": "Error when follow user",
+        "no_bio": "This user has not added a bio yet."
+      },
+      "stats": {
+        "posts": "Posts",
+        "followers": "Followers",
+        "following": "Following",
+        "likes": "Likes"
+      },
+      "info": {
+        "about": "About",
+        "location": "Location",
+        "website": "Website",
+        "joined": "Joined",
+        "born": "Born",
+        "not_specified": "Not specified"
+      },
+      "posts": {
+        "no_posts": "No posts yet",
+        "no_posts_description": "When this user posts something, it will appear here.",
+        "most_popular": "The most popular post",
+        "recent": "Recent Posts"
+      }
     }
   },
   "UI": {

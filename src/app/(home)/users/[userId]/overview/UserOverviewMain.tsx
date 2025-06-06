@@ -5,8 +5,10 @@ import {getFeedByUserId} from "@/api/postApi";
 import {useQuery} from "@tanstack/react-query";
 import {cn} from "@/lib/utils";
 import Link from "next/link";
+import {useTranslations} from "next-intl";
 
 const UserOverviewMain = ({userId}: { userId: string }) => {
+    const t = useTranslations('Home.user_profile.posts');
     const {data} = useQuery({
         queryKey: ['posts'],
         queryFn: async () => {
@@ -23,7 +25,7 @@ const UserOverviewMain = ({userId}: { userId: string }) => {
             <div className={'px-10 pb-3'}>
                 {feeds.length > 0 ? (<div className={'flex flex-col gap-5'}>
                     <div>
-                        <h2 className={'text-2xl font-bold'}>The most popular post</h2>
+                        <h2 className={'text-2xl font-bold'}>{t('most_popular')}</h2>
                         <div className={cn('flex justify-center flex-1 px-12')}>
                             {feed !== undefined && (
                                 <div key={feed.post.id} className={'w-full'}>
@@ -37,7 +39,7 @@ const UserOverviewMain = ({userId}: { userId: string }) => {
                         </div>
                     </div>
                     <div>
-                        <h3 className={'text-xl font-semibold'}>Recent Posts</h3>
+                        <h3 className={'text-xl font-semibold'}>{t('recent')}</h3>
                         <div className={cn('grid grid-cols-5 gap-2 w-full')}>
                             {feeds.map(feed => (
                                 <div key={feed.post.id} className={'w-full'}>
@@ -50,9 +52,9 @@ const UserOverviewMain = ({userId}: { userId: string }) => {
                     </div>
                 </div>) : (
                     <div className={'flex flex-col justify-center items-center size-full'}>
-                        <h2 className={'text-2xl font-bold'}>No posts yet</h2>
+                        <h2 className={'text-2xl font-bold'}>{t('no_posts')}</h2>
                         <p className={'text-muted-foreground'}>
-                            This user has not posted anything yet. Check back later!
+                            {t('no_posts_description')}
                         </p>
                     </div>
                 )}

@@ -1,14 +1,16 @@
 import {usePathname} from 'next/navigation';
 import clsx from 'clsx';
 import Link from "next/link";
+import {useTranslations} from 'next-intl';
 
 export function UserOverviewNav({userId}: { userId: string }) {
     const pathname = usePathname();
+    const t = useTranslations('Home.user_profile.navigation');
 
     const links = [
-        {label: 'Overview', href: `/users/${userId}/overview`},
-        {label: 'Posts', href: `/users/${userId}/posts`},
-        {label: 'Info', href: `/users/${userId}/info`},
+        {label: t('overview'), href: `/users/${userId}/overview`},
+        {label: t('posts'), href: `/users/${userId}/posts`},
+        {label: t('info'), href: `/users/${userId}/info`},
     ];
 
     return (

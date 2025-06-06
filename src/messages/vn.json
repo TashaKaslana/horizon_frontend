@@ -534,6 +534,42 @@
         "description": "Tùy chỉnh cài đặt của bạn tại đây."
       },
       "logout_description": "Thao tác này sẽ đăng xuất bạn khỏi phiên làm việc hiện tại."
+    },
+    "user_profile": {
+      "navigation": {
+        "overview": "Tổng quan",
+        "posts": "Bài viết",
+        "info": "Thông tin"
+      },
+      "profile": {
+        "followers": "Người theo dõi",
+        "following": "Đang theo dõi",
+        "follow": "Theo dõi",
+        "unfollow": "Bỏ theo dõi",
+        "edit_profile": "Chỉnh sửa hồ sơ",
+        "follow_error": "Lỗi khi theo dõi người dùng",
+        "no_bio": "Người dùng này chưa thêm tiểu sử."
+      },
+      "stats": {
+        "posts": "Bài viết",
+        "followers": "Người theo dõi",
+        "following": "Đang theo dõi",
+        "likes": "Lượt thích"
+      },
+      "info": {
+        "about": "Giới thiệu",
+        "location": "Địa điểm",
+        "website": "Trang web",
+        "joined": "Tham gia",
+        "born": "Ngày sinh",
+        "not_specified": "Chưa xác định"
+      },
+      "posts": {
+        "no_posts": "Chưa có bài viết nào",
+        "no_posts_description": "Khi người dùng này đăng bài, bài viết sẽ xuất hiện ở đây.",
+        "most_popular": "Bài viết nổi bật nhất",
+        "recent": "Bài viết gần đây"
+      }
     }
   },
   "UI": {

@@ -9,10 +9,11 @@ import {useCurrentUser} from "@/stores/useCurrentUser";
 import TruncatedText from "@/components/common/truncated-text";
 import {ImageUpload} from "@/app/components/avatar_upload/avatar-upload";
 import {UnVerifiedBadge} from "@/components/common/verified-badge";
+import {useTranslations} from "next-intl";
 
 export function UserOverviewAppearance({userId}: { userId: string }) {
     const {user, followOverview} = useUserHook(userId)
-
+    const t = useTranslations('Home.user_profile.profile');
     const {user: me} = useCurrentUser()
 
     const mutation = useMutation({
@@ -25,7 +26,7 @@ export function UserOverviewAppearance({userId}: { userId: string }) {
         },
         onError: error => {
             console.log(error)
-            toast.error("Error when follow user")
+            toast.error(t('follow_error'))
         }
     })
 
@@ -58,16 +59,17 @@ export function UserOverviewAppearance({userId}: { userId: string }) {
                     <div className={'flex gap-1 text-sm text-muted-foreground items-center'}>
                         <p className={"italic text-sm text-muted-foreground"}>@{user?.username}</p>
                         <Dot/>
-                        <p>Followers {getFixedNumberFormat(followOverview?.totalFollowers ?? 0)}</p>
+                        <p>{t('followers')} {getFixedNumberFormat(followOverview?.totalFollowers ?? 0)}</p>
                         <Dot/>
-                        <p>Followers {getFixedNumberFormat(followOverview?.totalFollowing ?? 0)}</p>
+                        <p>{t('following')} {getFixedNumberFormat(followOverview?.totalFollowing ?? 0)}</p>
                     </div>
-                    <TruncatedText text={user?.bio ?? ''}
+                    <TruncatedText text={user?.bio ?? t('no_bio')}
                                    textClassName={'text-zinc-700'}
                     />
                     {me?.id !== user?.id && (
-                        <Button onClick={handleFollow}
-                                className={'w-1/2'}>{followOverview?.isMeFollowing ? 'UnFollowing' : 'Follow'}</Button>
+                        <Button onClick={handleFollow} className={'w-1/2'}>
+                            {followOverview?.isMeFollowing ? t('unfollow') : t('follow')}
+                        </Button>
                     )}
                 </div>
             </div>
