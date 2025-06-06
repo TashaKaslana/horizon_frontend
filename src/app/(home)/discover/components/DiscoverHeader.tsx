@@ -5,9 +5,10 @@ import {usePostCategoryStore} from "@/app/(home)/discover/store/usePostCategoryS
 import InfiniteScroll from "@/components/ui/infinite-scroll";
 import {useDiscovery} from "@/app/(home)/discover/hooks/useDiscovery";
 import {ScrollArea, ScrollBar} from "@/components/ui/scroll-area";
+import { useTranslations } from "next-intl";
 
 export const DiscoverHeader = ({triggers}: { triggers: string[] }) => {
-    const viewOptions = ['Popular', 'Recent', 'Rating']
+    const t = useTranslations('Home.discover');
     const {sortFeeds} = useDiscoverStore()
     const {setSelectedCategory} = usePostCategoryStore()
     const {categoryHasNextPage, categoryFetchNext, categoryIsFetching} = useDiscovery()
@@ -19,20 +20,24 @@ export const DiscoverHeader = ({triggers}: { triggers: string[] }) => {
     return <header className={'space-y-3 border p-1 rounded sticky'}>
         <div className={'flex justify-between'}>
             <div>
-                <h1 className={'p-0 m-0 text-3xl font-semibold text-gray-900 dark:text-white/70'}>Discover</h1>
-                <p className={'text-sm font-light text-zinc-600'}>Display all video by category</p>
+                <h1 className={'p-0 m-0 text-3xl font-semibold text-gray-900 dark:text-white/70'}>{t('title')}</h1>
+                <p className={'text-sm font-light text-zinc-600'}>{t('description')}</p>
             </div>
 
-            <Select defaultValue={viewOptions[0].toLowerCase()} onValueChange={handleValueChange}>
+            <Select defaultValue={'popular'} onValueChange={handleValueChange}>
                 <SelectTrigger className={'w-32'}>
-                    <SelectValue placeholder={viewOptions[0]}/>
+                    <SelectValue placeholder={t('sortOptions.popular')}/>
                 </SelectTrigger>
                 <SelectContent>
-                    {viewOptions.map((viewOption, index) =>
-                        <SelectItem value={viewOption.toLowerCase()} key={index}>
-                            {viewOption}
-                        </SelectItem>
-                    )}
+                    <SelectItem value={'popular'}>
+                        {t('sortOptions.popular')}
+                    </SelectItem>
+                    <SelectItem value={'recent'}>
+                        {t('sortOptions.recent')}
+                    </SelectItem>
+                    <SelectItem value={'rating'}>
+                        {t('sortOptions.rating')}
+                    </SelectItem>
                 </SelectContent>
             </Select>
         </div>

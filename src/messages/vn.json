@@ -444,6 +444,15 @@
         "edit": "Chỉnh sửa bài viết",
         "delete": "Xóa bài viết"
       }
+    },
+    "discover": {
+      "title": "Khám phá",
+      "description": "Hiển thị tất cả video theo danh mục",
+      "sortOptions": {
+        "popular": "Phổ biến",
+        "recent": "Gần đây",
+        "rating": "Đánh giá"
+      }
     }
   }
 }

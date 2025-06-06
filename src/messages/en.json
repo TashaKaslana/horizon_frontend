@@ -444,6 +444,15 @@
         "edit": "Edit Post",
         "delete": "Delete Post"
       }
+    },
+    "discover": {
+      "title": "Discover",
+      "description": "Display all video by category",
+      "sortOptions": {
+        "popular": "Popular",
+        "recent": "Recent",
+        "rating": "Rating"
+      }
     }
   }
 }
