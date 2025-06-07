@@ -890,6 +890,67 @@
           "private": "Riêng tư",
           "friends": "Chỉ bạn bè"
         }
+      },
+      "categories": {
+        "title": "Danh mục",
+        "table": {
+          "id": "ID",
+          "name": "Tên",
+          "slug": "Slug",
+          "postCount": "Số bài viết thuộc danh mục",
+          "createdBy": "Người tạo",
+          "createdAt": "Ngày tạo",
+          "actions": "Hành động",
+          "selectAll": "Chọn tất cả",
+          "selectRow": "Chọn hàng",
+          "system": "Hệ thống",
+          "notAvailable": "Không có",
+          "openMenu": "Mở menu",
+          "edit": "Chỉnh sửa",
+          "delete": "Xóa",
+          "searchPlaceholder": "Tìm kiếm danh mục theo slug, tên hoặc mô tả...",
+          "viewDetails": "Xem chi tiết"
+        },
+        "detail": {
+          "title": "Chi tiết Danh mục",
+          "description": "Xem và quản lý thông tin danh mục",
+          "generalInfo": "Thông tin chung",
+          "basicInfo": "Thông tin cơ bản",
+          "categoryName": "Tên danh mục",
+          "categorySlug": "Slug danh mục",
+          "categoryDescription": "Mô tả danh mục",
+          "categoryStat": "Thống kê danh mục",
+          "totalPosts": "Tổng số bài viết",
+          "save": "Lưu thay đổi",
+          "cancel": "Hủy",
+          "editCategory": "Chỉnh sửa danh mục",
+          "deleteCategory": "Xóa danh mục",
+          "confirmDelete": "Bạn có chắc chắn muốn xóa danh mục này không?",
+          "namePlaceholder": "Nhập tên danh mục",
+          "slugPlaceholder": "Nhập slug danh mục",
+          "descriptionPlaceholder": "Nhập mô tả danh mục",
+          "creationInfo": "Thông tin tạo",
+          "createdOn": "Ngày tạo",
+          "createdBy": "Người tạo"
+        },
+        "notifications": {
+          "updateSuccess": "Cập nhật danh mục thành công",
+          "updateError": "Cập nhật danh mục thất bại",
+          "deleteSuccess": "Xóa danh mục thành công",
+          "deleteError": "Xóa danh mục thất bại",
+          "editingCategory": "Đang chỉnh sửa danh mục: {name} (ID: {id})",
+          "deletingCategory": "Đang cố gắng xóa danh mục: {name} (ID: {id})",
+          "updateNotImplemented": "Chức năng cập nhật chưa được triển khai"
+        },
+        "charts": {
+          "title": "Thống kê Danh mục",
+          "description": "Hiển thị số danh mục mới mỗi ngày trong {days} ngày qua",
+          "timeRanges": {
+            "quarterly": "3 tháng gần đây",
+            "monthly": "30 ngày gần đây",
+            "weekly": "7 ngày gần đây"
+          }
+        }
       }
     },
     "comments": {

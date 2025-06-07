@@ -898,6 +898,128 @@
           "private": "Private",
           "friends": "Friends Only"
         }
+      },
+      "categories": {
+        "title": "Categories",
+        "table": {
+          "id": "ID",
+          "name": "Name",
+          "slug": "Slug",
+          "postCount": "Category of Posts",
+          "createdBy": "Created By",
+          "createdAt": "Created At",
+          "actions": "Actions",
+          "selectAll": "Select all",
+          "selectRow": "Select row",
+          "system": "System",
+          "notAvailable": "N/A",
+          "openMenu": "Open menu",
+          "edit": "Edit",
+          "delete": "Delete",
+          "searchPlaceholder": "Search categories by slug, name, or description...",
+          "viewDetails": "View Details"
+        },
+        "detail": {
+          "title": "Category Details",
+          "description": "View and manage category information",
+          "generalInfo": "General Information",
+          "basicInfo": "Basic Information",
+          "categoryName": "Category Name",
+          "categorySlug": "Category Slug",
+          "categoryDescription": "Category Description",
+          "categoryStat": "Category Statistics",
+          "totalPosts": "Total Posts",
+          "save": "Save Changes",
+          "cancel": "Cancel",
+          "editCategory": "Edit Category",
+          "deleteCategory": "Delete Category",
+          "confirmDelete": "Are you sure you want to delete this category?",
+          "namePlaceholder": "Enter category name",
+          "slugPlaceholder": "Enter category slug",
+          "descriptionPlaceholder": "Enter category description",
+          "creationInfo": "Creation Information",
+          "createdOn": "Created On",
+          "createdBy": "Created By"
+        },
+        "notifications": {
+          "updateSuccess": "Category updated successfully",
+          "updateError": "Failed to update category",
+          "deleteSuccess": "Category deleted successfully",
+          "deleteError": "Failed to delete category",
+          "editingCategory": "Editing category: {name} (ID: {id})",
+          "deletingCategory": "Attempting to delete category: {name} (ID: {id})",
+          "updateNotImplemented": "Update not implemented"
+        },
+        "charts": {
+          "title": "Category Statistics",
+          "description": "Showing new category per day for the last {days} days",
+          "timeRanges": {
+            "quarterly": "Last 3 months",
+            "monthly": "Last 30 days",
+            "weekly": "Last 7 days"
+          }
+        }
+      },
+      "tags": {
+        "title": "Tags",
+        "table": {
+          "id": "ID",
+          "name": "Name",
+          "slug": "Slug",
+          "postCount": "Number of Posts",
+          "createdBy": "Created By",
+          "createdAt": "Created At",
+          "actions": "Actions",
+          "selectAll": "Select all",
+          "selectRow": "Select row",
+          "system": "System",
+          "notAvailable": "N/A",
+          "openMenu": "Open menu",
+          "edit": "Edit",
+          "delete": "Delete",
+          "searchPlaceholder": "Search tags by slug, name, or description...",
+          "viewDetails": "View Details"
+        },
+        "detail": {
+          "title": "Tag Details",
+          "description": "View and manage tag information",
+          "generalInfo": "General Information",
+          "basicInfo": "Basic Information",
+          "tagName": "Tag Name",
+          "tagSlug": "Tag Slug",
+          "tagDescription": "Tag Description",
+          "tagStat": "Tag Statistics",
+          "totalPosts": "Total Posts",
+          "save": "Save Changes",
+          "cancel": "Cancel",
+          "editTag": "Edit Tag",
+          "deleteTag": "Delete Tag",
+          "confirmDelete": "Are you sure you want to delete this tag?",
+          "namePlaceholder": "Enter tag name",
+          "slugPlaceholder": "Enter tag slug",
+          "descriptionPlaceholder": "Enter tag description",
+          "creationInfo": "Creation Information",
+          "createdOn": "Created On",
+          "createdBy": "Created By"
+        },
+        "notifications": {
+          "updateSuccess": "Tag updated successfully",
+          "updateError": "Failed to update tag",
+          "deleteSuccess": "Tag deleted successfully",
+          "deleteError": "Failed to delete tag",
+          "editingTag": "Editing tag: {name} (ID: {id})",
+          "deletingTag": "Attempting to delete tag: {name} (ID: {id})",
+          "updateNotImplemented": "Update not implemented"
+        },
+        "charts": {
+          "title": "Tag Statistics",
+          "description": "Showing new tags per day for the last {days} days",
+          "timeRanges": {
+            "quarterly": "Last 3 months",
+            "monthly": "Last 30 days",
+            "weekly": "Last 7 days"
+          }
+        }
       }
     },
     "comments": {
@@ -934,7 +1056,7 @@
           "viewEditComment": "View/Edit",
           "delete": "Delete",
           "editingComment": "Editing comment {id}",
-          "statusUpdated":  "Status updated successfully",
+          "statusUpdated": "Status updated successfully",
           "commentDeleted": "Comment deleted successfully"
         },
         "metrics": {

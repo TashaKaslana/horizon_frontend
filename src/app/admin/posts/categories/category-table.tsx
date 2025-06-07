@@ -1,18 +1,19 @@
 'use client'
 
 import {DataTable} from "@/components/ui/data-table";
-import {columns} from "@/app/admin/posts/categories/category-columns";
+import {useCategoriesColumns} from "@/app/admin/posts/categories/category-columns";
 import {useCategoryManagement} from "@/app/admin/posts/categories/hooks/useCategoryManagement";
 import useCategoryStore from "@/app/admin/posts/categories/store/useCategoryStore";
 import {useState} from "react";
 import {RowSelectionState} from "@tanstack/react-table";
-
-
+import {useTranslations} from "next-intl";
 
 export const CategoryTable = () => {
     const {categories} = useCategoryStore();
     const {fetchNextPage, isFetchingNextPage, hasNextPage, totalPages, isLoading} = useCategoryManagement();
     const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+    const t = useTranslations("Admin.posts.categories.table");
+    const columns = useCategoriesColumns();
 
     return (
         <div className={'p-4'}>
@@ -23,7 +24,7 @@ export const CategoryTable = () => {
                 enableRowSelection={true}
                 rowSelection={rowSelection}
                 setRowSelectionFn={setRowSelection}
-                filterPlaceholder={"Search categories by slug, name, or description..."}
+                filterPlaceholder={t("searchPlaceholder")}
                 fetchNextPage={fetchNextPage}
                 isLoading={isLoading}
                 isFetchingNextPage={isFetchingNextPage}

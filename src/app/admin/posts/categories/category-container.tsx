@@ -6,14 +6,16 @@ import {useCategoryManagement} from "@/app/admin/posts/categories/hooks/useCateg
 import {OverviewList} from "@/app/admin/components/overview-list";
 import useCategoryStore from "@/app/admin/posts/categories/store/useCategoryStore";
 import {CategoryChart} from "@/app/admin/posts/categories/catageory-chart";
+import {useTranslations} from "next-intl";
 
 export const CategoryContainer = () => {
     const {overviewData} = useCategoryStore()
     const {isOverviewLoading} = useCategoryManagement()
+    const t = useTranslations("Admin.posts.categories");
 
     return (
         <div className={'space-y-4 size-full'}>
-            <SiteHeader text={'Category'}/>
+            <SiteHeader text={t('title')}/>
             <OverviewList overviewData={overviewData} isLoading={isOverviewLoading}/>
             <CategoryChart/>
             <CategoryTable/>
