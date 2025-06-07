@@ -670,6 +670,26 @@
       },
       "description": "Showing data for the last {days} days"
     },
+    "dashboard": {
+      "title": "Dashboard",
+      "tabs": {
+        "user": "Users",
+        "post": "Posts",
+        "comment": "Comments"
+      },
+      "charts": {
+        "userGrowth": "User Growth",
+        "contentCreation": "Content Creation",
+        "communityEngagement": "Community Engagement",
+        "statistics": "Statistics",
+        "descriptions": {
+          "user": "New user registrations for the last {days} days",
+          "post": "Content created for the last {days} days",
+          "comment": "Community interactions for the last {days} days",
+          "default": "Daily activity for the last {days} days"
+        }
+      }
+    },
     "users": {
       "title": "Users",
       "all": {

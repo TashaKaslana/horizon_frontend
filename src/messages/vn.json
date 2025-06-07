@@ -662,6 +662,26 @@
       },
       "description": "Hiển thị dữ liệu trong {days} ngày qua"
     },
+    "dashboard": {
+      "title": "Bảng điều khiển",
+      "tabs": {
+        "user": "Người dùng",
+        "post": "Bài viết",
+        "comment": "Bình luận"
+      },
+      "charts": {
+        "userGrowth": "Tăng trưởng người dùng",
+        "contentCreation": "Tạo nội dung",
+        "communityEngagement": "Tương tác cộng đồng",
+        "statistics": "Thống kê",
+        "descriptions": {
+          "user": "Số lượng người dùng đăng ký trong {days} ngày qua",
+          "post": "Nội dung được tạo trong {days} ngày qua",
+          "comment": "Tương tác cộng đồng trong {days} ngày qua",
+          "default": "Hoạt động hằng ngày trong {days} ngày qua"
+        }
+      }
+    },
     "users": {
       "title": "Người Dùng",
       "all": {
