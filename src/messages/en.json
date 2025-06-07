@@ -790,6 +790,65 @@
           "friends": "Friends Only"
         }
       }
+    },
+    "comments": {
+      "title": "Comments",
+      "all": {
+        "title": "All Comments",
+        "table": {
+          "comment": "Comment",
+          "content": "Content",
+          "author": "Author",
+          "post": "Post",
+          "status": "Status",
+          "createdAt": "Created At",
+          "submitted": "Submitted",
+          "actions": "Actions",
+          "viewComment": "View Comment",
+          "editComment": "Edit Comment",
+          "deleteComment": "Delete Comment",
+          "approve": "Approve",
+          "approveComment": "Approve Comment",
+          "reject": "Reject",
+          "rejectComment": "Reject Comment",
+          "markAsPending": "Mark as Pending",
+          "markAsSpam": "Mark as Spam",
+          "searchPlaceholder": "Search comments, authors, posts...",
+          "searchComments": "Search comments...",
+          "openMenu": "Open menu",
+          "selectAll": "Select all",
+          "selectRow": "Select row",
+          "viewDetails": "View Details",
+          "noContent": "No content provided",
+          "authorManagement": "Author details are managed in the Users section.",
+          "authorDetailsManaged": "Author details are managed in the Users section.",
+          "viewEditComment": "View/Edit",
+          "delete": "Delete",
+          "editingComment": "Editing comment {id}",
+          "statusUpdated":  "Status updated successfully",
+          "commentDeleted": "Comment deleted successfully"
+        },
+        "metrics": {
+          "totalComments": "Total Comments",
+          "pendingComments": "Pending Comments",
+          "approvedComments": "Approved Comments",
+          "rejectedComments": "Rejected Comments"
+        },
+        "charts": {
+          "commentGrowth": "Comment Growth",
+          "commentDistribution": "Comment Distribution",
+          "commentActivity": "Comment Activity",
+          "commentStatistic": "Comment Statistics",
+          "newCommentsDescription": "Showing new comments per day for the last {days} days"
+        },
+        "status": {
+          "pending": "Pending",
+          "approved": "Approved",
+          "rejected": "Rejected",
+          "spam": "Spam",
+          "deleted": "Deleted"
+        }
+      }
     }
   }
 }

@@ -782,6 +782,65 @@
           "friends": "Chỉ bạn bè"
         }
       }
+    },
+    "comments": {
+      "title": "Bình luận",
+      "all": {
+        "title": "Tất cả bình luận",
+        "table": {
+          "comment": "Bình luận",
+          "content": "Nội dung",
+          "author": "Tác giả",
+          "post": "Bài viết",
+          "status": "Trạng thái",
+          "createdAt": "Ngày tạo",
+          "submitted": "Đã gửi",
+          "actions": "Hành động",
+          "viewComment": "Xem bình luận",
+          "editComment": "Chỉnh sửa bình luận",
+          "deleteComment": "Xóa bình luận",
+          "approve": "Duyệt",
+          "approveComment": "Duyệt bình luận",
+          "reject": "Từ chối",
+          "rejectComment": "Từ chối bình luận",
+          "markAsPending": "Đánh dấu là đang chờ",
+          "markAsSpam": "Đánh dấu là spam",
+          "searchPlaceholder": "Tìm kiếm bình luận, tác giả, bài viết...",
+          "searchComments": "Tìm kiếm bình luận...",
+          "openMenu": "Mở menu",
+          "selectAll": "Chọn tất cả",
+          "selectRow": "Chọn hàng",
+          "viewDetails": "Xem chi tiết",
+          "noContent": "Không có nội dung",
+          "authorManagement": "Thông tin tác giả được quản lý trong mục Người dùng.",
+          "authorDetailsManaged": "Thông tin tác giả được quản lý trong mục Người dùng.",
+          "viewEditComment": "Xem/Chỉnh sửa",
+          "delete": "Xóa",
+          "editingComment": "Đang chỉnh sửa bình luận {id}",
+          "statusUpdated": "Cập nhật trạng thái thành công",
+          "commentDeleted": "Xóa bình luận thành công"
+        },
+        "metrics": {
+          "totalComments": "Tổng số bình luận",
+          "pendingComments": "Bình luận đang chờ",
+          "approvedComments": "Bình luận đã duyệt",
+          "rejectedComments": "Bình luận bị từ chối"
+        },
+        "charts": {
+          "commentGrowth": "Tăng trưởng bình luận",
+          "commentDistribution": "Phân phối bình luận",
+          "commentActivity": "Hoạt động bình luận",
+          "commentStatistic": "Thống kê bình luận",
+          "newCommentsDescription": "Hiển thị bình luận mới mỗi ngày trong {days} ngày qua"
+        },
+        "status": {
+          "pending": "Đang chờ",
+          "approved": "Đã duyệt",
+          "rejected": "Bị từ chối",
+          "spam": "Spam",
+          "deleted": "Đã xóa"
+        }
+      }
     }
   },
   "UI": {

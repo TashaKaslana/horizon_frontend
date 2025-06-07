@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import {toast} from "sonner";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 
 import {Badge} from "@/components/ui/badge";
 import {Button} from "@/components/ui/button";
@@ -45,6 +46,8 @@ export function CommentAdminTable() {
     const [data, setData] = React.useState<CommentAdminData[]>([]);
     const [selectedPostId, setSelectedPostId] = React.useState<string | null>(null);
     const [isPostSheetOpen, setIsPostSheetOpen] = React.useState(false);
+    const tTable = useTranslations('Admin.comments.all.table');
+    const tStatus = useTranslations('Admin.comments.all.status');
 
     useEffect(() => {
         setData(comments.map(comment => ({
@@ -59,13 +62,13 @@ export function CommentAdminTable() {
                 item.id === commentId ? {...item, status: newStatus, updatedAt: new Date()} : item
             )
         );
-        toast.success(`Comment ${commentId} status updated to ${newStatus}`);
-    }, []);
+        toast.success(tStatus('statusUpdated'));
+    }, [tStatus]);
 
     const handleDeleteComment = React.useCallback((commentId: string) => {
         setData(prev => prev.filter(item => item.id !== commentId));
-        toast.error(`Comment ${commentId} deleted`);
-    }, []);
+        toast.error(tStatus('commentDeleted'));
+    }, [tStatus]);
 
     const columns = React.useMemo<ColumnDef<CommentAdminData>[]>(() => [
         {
@@ -98,7 +101,7 @@ export function CommentAdminTable() {
         },
         {
             accessorKey: "content",
-            header: ({column}) => <DataTableColumnHeader column={column} title="Comment"/>,
+            header: ({column}) => <DataTableColumnHeader column={column} title={tTable('comment')}/>,
             cell: ({row}) => {
                 const comment = row.original;
                 return (
@@ -118,7 +121,7 @@ export function CommentAdminTable() {
         },
         {
             accessorKey: "authorName",
-            header: ({column}) => <DataTableColumnHeader column={column} title="Author"/>,
+            header: ({column}) => <DataTableColumnHeader column={column} title={tTable('author')}/>,
             cell: ({row}) => {
                 const comment = row.original;
                 return (
@@ -132,7 +135,7 @@ export function CommentAdminTable() {
                                 userId={comment?.user?.id}
                                 initialDisplayName={comment?.user?.displayName}
                                 onUpdate={() => {
-                                    toast.info("Author details are managed in the Users section.");
+                                    toast.info(tTable('authorDetailsManaged'));
                                 }}
                             />
                         </div>
@@ -142,7 +145,7 @@ export function CommentAdminTable() {
         },
         {
             id: "postDetails",
-            header: ({column}) => <DataTableColumnHeader column={column} title="Post"/>,
+            header: ({column}) => <DataTableColumnHeader column={column} title={tTable('post')}/>,
             cell: ({row}) => {
                 const comment = row.original;
                 return (
@@ -178,9 +181,9 @@ export function CommentAdminTable() {
         },
         {
             accessorKey: "status",
-            header: ({column}) => <DataTableColumnHeader column={column} title="Status"/>,
+            header: ({column}) => <DataTableColumnHeader column={column} title={tTable('status')}/>,
             cell: ({row}) => {
-                const status = row.original.status;
+                const status = row.original.status ?? "PENDING";
                 let icon = <ShieldQuestionIcon className="size-3.5 text-slate-400"/>;
                 let badgeVariant: "default" | "secondary" | "outline" | "destructive" = "secondary";
 
@@ -201,7 +204,7 @@ export function CommentAdminTable() {
                 return (
                     <Badge variant={badgeVariant}
                            className="flex w-fit items-center gap-1.5 px-2 py-1 text-xs min-w-[90px] justify-center">
-                        {icon} {status}
+                        {icon} {tStatus(status.toLowerCase())}
                     </Badge>
                 );
             },
@@ -211,7 +214,7 @@ export function CommentAdminTable() {
         },
         {
             accessorKey: "createdAt",
-            header: ({column}) => <DataTableColumnHeader column={column} title="Submitted"/>,
+            header: ({column}) => <DataTableColumnHeader column={column} title={tTable('submitted')}/>,
             cell: ({row}) => (
                 <div className="text-xs text-muted-foreground min-w-[90px]">
                     {row.original.createdAt && (
@@ -237,25 +240,25 @@ export function CommentAdminTable() {
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end" className="w-40">
                             <DropdownMenuItem onSelect={() => handleUpdateCommentStatus(row.original.id, "APPROVED")}>
-                                <CheckCircle2Icon className="mr-2 h-4 w-4 text-green-500"/> Approve
+                                <CheckCircle2Icon className="mr-2 h-4 w-4 text-green-500"/> {tTable('approve')}
                             </DropdownMenuItem>
                             <DropdownMenuItem onSelect={() => handleUpdateCommentStatus(row.original.id, "PENDING")}>
-                                <LoaderIcon className="mr-2 h-4 w-4 text-amber-500"/> Mark as Pending
+                                <LoaderIcon className="mr-2 h-4 w-4 text-amber-500"/> {tTable('markAsPending')}
                             </DropdownMenuItem>
                             <DropdownMenuItem onSelect={() => handleUpdateCommentStatus(row.original.id, "SPAM")}>
-                                <XCircleIcon className="mr-2 h-4 w-4 text-red-500"/> Mark as Spam
+                                <XCircleIcon className="mr-2 h-4 w-4 text-red-500"/> {tTable('markAsSpam')}
                             </DropdownMenuItem>
                             <DropdownMenuItem onSelect={() => handleUpdateCommentStatus(row.original.id, "REJECTED")}>
-                                <XCircleIcon className="mr-2 h-4 w-4 text-orange-500"/> Reject
+                                <XCircleIcon className="mr-2 h-4 w-4 text-orange-500"/> {tTable('reject')}
                             </DropdownMenuItem>
                             <DropdownMenuSeparator/>
-                            <DropdownMenuItem onSelect={() => toast.info(`Editing comment: ${row.original.id}`)}>
-                                Edit Comment
+                            <DropdownMenuItem onSelect={() => toast.info(tTable('editingComment', { id: row.original.id }))}>
+                                {tTable('editComment')}
                             </DropdownMenuItem>
                             <DropdownMenuItem
                                 className="text-red-600 hover:!text-red-600 hover:!bg-red-100 dark:hover:!bg-red-700/50"
                                 onSelect={() => handleDeleteComment(row.original.id)}>
-                                <Trash2Icon className="mr-2 h-4 w-4"/> Delete
+                                <Trash2Icon className="mr-2 h-4 w-4"/> {tTable('delete')}
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -263,7 +266,7 @@ export function CommentAdminTable() {
             ),
             size: 50, enableSorting: false, enableHiding: false,
         },
-    ], [handleUpdateCommentStatus, handleDeleteComment]);
+    ], [handleUpdateCommentStatus, handleDeleteComment, tTable, tStatus]);
     return (
         <div className="flex w-full flex-col justify-start gap-6 p-4 md:p-6">
             <DataTable
@@ -272,7 +275,7 @@ export function CommentAdminTable() {
                 setData={setData}
                 enableDnd={true}
                 enableRowSelection={true}
-                filterPlaceholder="Search comments, authors, posts..."
+                filterPlaceholder={tTable('searchComments')}
                 isLoading={isLoading}
                 isFetchingNextPage={isFetchingNextPage}
                 hasNextPage={hasNextPage}
