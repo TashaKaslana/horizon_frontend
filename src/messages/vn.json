@@ -718,6 +718,70 @@
           "newUsers": "Người dùng mới"
         }
       }
+    },
+    "posts": {
+      "title": "Bài viết",
+      "all": {
+        "title": "Tất cả bài viết",
+        "table": {
+          "post": "Bài viết",
+          "title": "Tiêu đề",
+          "author": "Tác giả",
+          "category": "Danh mục",
+          "status": "Trạng thái",
+          "publishedAt": "Ngày đăng",
+          "updatedAt": "Ngày cập nhật",
+          "views": "Lượt xem",
+          "likes": "Lượt thích",
+          "comments": "Bình luận",
+          "actions": "Hành động",
+          "viewPost": "Xem bài viết",
+          "editPost": "Chỉnh sửa bài viết",
+          "deletePost": "Xóa bài viết",
+          "unpublishPost": "Gỡ bài viết",
+          "publishPost": "Đăng bài viết",
+          "featurePost": "Ghim bài viết",
+          "unfeaturePost": "Bỏ ghim bài viết",
+          "addPost": "Thêm bài viết",
+          "add": "Thêm",
+          "searchPlaceholder": "Tìm kiếm bài viết, tác giả, danh mục...",
+          "openMenu": "Mở menu",
+          "selectAll": "Chọn tất cả",
+          "selectRow": "Chọn hàng",
+          "viewDetails": "Xem chi tiết",
+          "noDescription": "Không có mô tả.",
+          "authorManagement": "Thông tin tác giả được quản lý trong mục Người dùng.",
+          "viewEditPost": "Xem/Chỉnh sửa"
+        },
+        "metrics": {
+          "totalPosts": "Tổng số bài viết",
+          "activePosts": "Bài viết đang hoạt động",
+          "newPosts": "Bài viết mới",
+          "draftPosts": "Bài viết nháp"
+        },
+        "charts": {
+          "postGrowth": "Tăng trưởng bài viết",
+          "postDistribution": "Phân phối bài viết",
+          "engagementMetrics": "Chỉ số tương tác",
+          "viewsOverTime": "Lượt xem theo thời gian",
+          "likesPerPost": "Lượt thích mỗi bài viết",
+          "postAttendance": "Hoạt động bài viết",
+          "description": "Hiển thị bài viết mới mỗi ngày trong {days} ngày qua",
+          "postStatistic": "Thống kê bài viết",
+          "newPostsDescription": "Hiển thị bài viết mới mỗi ngày trong {days} ngày qua"
+        },
+        "status": {
+          "draft": "Bản nháp",
+          "published": "Đã đăng",
+          "scheduled": "Đã lên lịch",
+          "archived": "Đã lưu trữ",
+          "featured": "Nổi bật",
+          "notPublished": "Chưa đăng",
+          "public": "Công khai",
+          "private": "Riêng tư",
+          "friends": "Chỉ bạn bè"
+        }
+      }
     }
   },
   "UI": {

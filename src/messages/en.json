@@ -726,6 +726,70 @@
           "newUsers": "New Users"
         }
       }
+    },
+    "posts": {
+      "title": "Posts",
+      "all": {
+        "title": "All Posts",
+        "table": {
+          "post": "Post",
+          "title": "Title",
+          "author": "Author",
+          "category": "Category",
+          "status": "Status",
+          "publishedAt": "Published At",
+          "updatedAt": "Updated At",
+          "views": "Views",
+          "likes": "Likes",
+          "comments": "Comments",
+          "actions": "Actions",
+          "viewPost": "View Post",
+          "editPost": "Edit Post",
+          "deletePost": "Delete Post",
+          "unpublishPost": "Unpublish Post",
+          "publishPost": "Publish Post",
+          "featurePost": "Feature Post",
+          "unfeaturePost": "Unfeature Post",
+          "addPost": "Add Post",
+          "add": "Add",
+          "searchPlaceholder": "Search posts, authors, categories...",
+          "openMenu": "Open menu",
+          "selectAll": "Select all",
+          "selectRow": "Select row",
+          "viewDetails": "View Details",
+          "noDescription": "No description provided.",
+          "authorManagement": "Author details are managed in the Users section.",
+          "viewEditPost": "View/Edit"
+        },
+        "metrics": {
+          "totalPosts": "Total Posts",
+          "activePosts": "Active Posts",
+          "newPosts": "New Posts",
+          "draftPosts": "Draft Posts"
+        },
+        "charts": {
+          "postGrowth": "Post Growth",
+          "postDistribution": "Post Distribution",
+          "engagementMetrics": "Engagement Metrics",
+          "viewsOverTime": "Views Over Time",
+          "likesPerPost": "Likes Per Post",
+          "postAttendance": "Post Activity",
+          "description": "Showing new posts per day for the last {days} days",
+          "postStatistic": "Post Statistics",
+          "newPostsDescription": "Showing new posts per day for the last {days} days"
+        },
+        "status": {
+          "draft": "Draft",
+          "published": "Published",
+          "scheduled": "Scheduled",
+          "archived": "Archived",
+          "featured": "Featured",
+          "notPublished": "Not published",
+          "public": "Public",
+          "private": "Private",
+          "friends": "Friends Only"
+        }
+      }
     }
   }
 }

@@ -11,6 +11,7 @@ import {
     EyeIcon,
 } from "lucide-react";
 import {toast} from "sonner";
+import { useTranslations } from "next-intl";
 
 import {Avatar, AvatarFallback} from "@/components/ui/avatar";
 import Image from "next/image";
@@ -36,6 +37,10 @@ import {usePostsManagement} from "@/app/admin/posts/all/hooks/usePostsManagement
 
 
 export function PostTable() {
+    const t = useTranslations('Admin.posts.all');
+    const tTable = useTranslations('Admin.posts.all.table');
+    const tStatus = useTranslations('Admin.posts.all.status');
+
     const [data, setData] = React.useState<PostAdminViewDto[]>([]);
     const [selectedPostId, setSelectedPostId] = React.useState<string | null>(null);
     const [isSheetOpen, setIsSheetOpen] = React.useState(false);
@@ -78,21 +83,21 @@ export function PostTable() {
                 <Checkbox
                     checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
                     onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-                    aria-label="Select all" onClick={(e) => e.stopPropagation()}
+                    aria-label={tTable('selectAll')} onClick={(e) => e.stopPropagation()}
                 />
             ),
             cell: ({row}) => (
                 <Checkbox
                     checked={row.getIsSelected()}
                     onCheckedChange={(value) => row.toggleSelected(!!value)}
-                    aria-label="Select row" onClick={(e) => e.stopPropagation()}
+                    aria-label={tTable('selectRow')} onClick={(e) => e.stopPropagation()}
                 />
             ),
             enableSorting: false, enableHiding: false, size: 40,
         },
         {
             accessorKey: "title",
-            header: ({column}) => <DataTableColumnHeader column={column} title="Title"/>,
+            header: ({column}) => <DataTableColumnHeader column={column} title={tTable('title')}/>,
             cell: ({row}) => {
                 const post = row.original;
                 return (
@@ -111,10 +116,10 @@ export function PostTable() {
                                 className="w-fit px-0 py-0 h-fit text-left font-medium text-foreground hover:text-primary hover:no-underline whitespace-normal truncate"
                                 onClick={() => handleOpenSheet(post.id!)}
                             >
-                                {post.caption || "View Details"}
+                                {post.caption || tTable('viewDetails')}
                             </Button>
                             <p className={'text-muted-foreground truncate'}>
-                                {post.description ? post.description : "No description provided."}
+                                {post.description ? post.description : tTable('noDescription')}
                             </p>
                         </div>
                     </div>
@@ -124,7 +129,7 @@ export function PostTable() {
         },
         {
             accessorKey: "viewCount",
-            header: ({column}) => <DataTableColumnHeader column={column} title="Views"/>,
+            header: ({column}) => <DataTableColumnHeader column={column} title={tTable('views')}/>,
             cell: ({row}) => {
                 const views = row.original.totalViews
                 return <div
@@ -134,7 +139,7 @@ export function PostTable() {
         },
         {
             accessorKey: "authorName",
-            header: ({column}) => <DataTableColumnHeader column={column} title="Author"/>,
+            header: ({column}) => <DataTableColumnHeader column={column} title={tTable('author')}/>,
             cell: ({row}) => {
                 const user = row.original.user;
                 return (
@@ -145,7 +150,7 @@ export function PostTable() {
                         <div className="flex flex-col gap-0.5">
                             <UserTableCellViewer
                                 onUpdate={() => {
-                                    toast.info("Author details are managed in the Users section.");
+                                    toast.info(tTable('authorManagement'));
                                 }}
                                 userId={user?.id}
                                 initialDisplayName={user?.displayName}
@@ -158,50 +163,59 @@ export function PostTable() {
         },
         {
             accessorKey: "category",
-            header: ({column}) => <DataTableColumnHeader column={column} title="Category"/>,
+            header: ({column}) => <DataTableColumnHeader column={column} title={tTable('category')}/>,
             cell: ({row}) => <Badge variant="outline" className="text-xs">{row.original.category?.name}</Badge>,
         },
         {
             accessorKey: "visibility",
-            header: ({column}) => <DataTableColumnHeader column={column} title="Visibilty"/>,
+            header: ({column}) => <DataTableColumnHeader column={column} title={tTable('status')}/>,
             cell: ({row}) => {
                 const status = row.original.visibility;
                 let icon: React.ReactNode;
                 let variant: "default" | "secondary" | "outline" | "destructive" = "secondary";
+                let displayStatus: string;
 
                 switch (status) {
                     case "PUBLIC":
                         icon = <CheckCircle2Icon className="size-3.5 text-green-500"/>;
                         variant = "default";
+                        displayStatus = tStatus('public');
                         break;
                     case "PRIVATE":
                         icon = <EditIcon className="size-3.5 text-blue-500"/>;
                         variant = "secondary";
+                        displayStatus = tStatus('private');
+                        break;
+                    case "FRIENDS":
+                        icon = <CheckCircle2Icon className="size-3.5 text-yellow-500"/>;
+                        variant = "outline";
+                        displayStatus = tStatus('friends');
                         break;
                     default:
                         icon = <LoaderIcon className="size-3.5 text-muted-foreground"/>;
+                        displayStatus = tStatus('archived');
                 }
                 return (
                     <Badge variant={variant} className="flex w-fit items-center gap-1.5 px-2 py-1 text-xs">
-                        {icon} {status}
+                        {icon} {displayStatus}
                     </Badge>
                 );
             },
         },
         {
             accessorKey: "createdAt",
-            header: ({column}) => <DataTableColumnHeader column={column} title="Created At"/>,
+            header: ({column}) => <DataTableColumnHeader column={column} title={tTable('publishedAt')}/>,
             cell: ({row}) => <div className="text-xs text-muted-foreground min-w-[64px]">
                 {row.original.createdAt ? formatDateTS(row.original.createdAt) : ''}
             </div>,
         },
         {
             accessorKey: "lastUpdate",
-            header: ({column}) => <DataTableColumnHeader column={column} title="Update At"/>,
+            header: ({column}) => <DataTableColumnHeader column={column} title={tTable('updatedAt')}/>,
             cell: ({row}) => row.original.updatedAt ?
                 <div
                     className="text-xs text-muted-foreground min-w-[64px]">{new Date(row.original.updatedAt).toLocaleDateString()}</div> :
-                <span className="text-xs text-muted-foreground/70">Not published</span>,
+                <span className="text-xs text-muted-foreground/70">{tStatus('notPublished')}</span>,
         },
         {
             id: "actions",
@@ -215,25 +229,25 @@ export function PostTable() {
                                     <Button variant="ghost" className="flex size-8 p-0 data-[state=open]:bg-muted"
                                             onClick={(e) => e.stopPropagation()}>
                                         <MoreVerticalIcon className="size-4"/> <span
-                                        className="sr-only">Open menu</span>
+                                        className="sr-only">{tTable('openMenu')}</span>
                                     </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end" className="w-40">
                                     <DropdownMenuItem onSelect={() => {
-                                        toast.info(`View/Edit \"${post.caption}\" (use title link or add programmatic open)`);
+                                        toast.info(`${tTable('viewEditPost')} "${post.caption}"`);
                                     }}>
                                         <EditIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70"/>
-                                        View / Edit
+                                        {tTable('editPost')}
                                     </DropdownMenuItem>
                                     <DropdownMenuItem onSelect={() => window.open(`/foryou/${post.id}`, '_blank')}>
                                         <EyeIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70"/>
-                                        Preview Post
+                                        {tTable('viewPost')}
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator/>
                                     <DropdownMenuItem
                                         className="text-red-600 hover:!text-red-600 focus:text-red-600 focus:bg-red-50 dark:hover:!bg-red-700/50"
                                         onSelect={() => handleDeletePost(post.id!, post.caption!)}>
-                                        Delete Post
+                                        {tTable('deletePost')}
                                     </DropdownMenuItem>
                                 </DropdownMenuContent>
                             </DropdownMenu>
@@ -243,12 +257,12 @@ export function PostTable() {
             },
             size: 50, enableSorting: false, enableHiding: false,
         },
-    ], [handleDeletePost, handleOpenSheet]);
+    ], [handleDeletePost, handleOpenSheet, tTable, tStatus]);
 
     return (
         <div className="flex w-full flex-col justify-start gap-6 p-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
-                <h1 className="text-2xl font-semibold">Manage Posts</h1>
+                <h1 className="text-2xl font-semibold">{t('title')}</h1>
                 <CreatePostSheet onCreateAction={createPost}/>
             </div>
 
@@ -257,7 +271,7 @@ export function PostTable() {
                 data={data}
                 setData={setData}
                 enableRowSelection={true}
-                filterPlaceholder="Search posts by title, author, tags..."
+                filterPlaceholder={t('searchPlaceholder')}
                 fetchNextPage={fetchNextPage}
                 hasNextPage={hasNextPage}
                 isFetchingNextPage={isFetchingNextPage}
@@ -269,4 +283,3 @@ export function PostTable() {
         </div>
     );
 }
-
