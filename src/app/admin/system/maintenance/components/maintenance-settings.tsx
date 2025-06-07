@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useMaintenanceHook from "../hook/useMaintenanceHook";
 import { MaintenanceRequestDto } from "@/api/client";
+import { useTranslations } from "next-intl";
 
 interface MaintenanceSettingsProps {
   className?: string;
@@ -25,6 +26,7 @@ interface MaintenanceSettingsProps {
 
 export const MaintenanceSettings = ({ className }: MaintenanceSettingsProps) => {
   const { isMaintenanceMode, message, activatedAt, completionDateTime } = useMaintenanceStore();
+  const t = useTranslations('Admin.system.maintenance');
 
   const {
     toggleMaintenance,
@@ -42,7 +44,7 @@ export const MaintenanceSettings = ({ className }: MaintenanceSettingsProps) => 
 
   const formattedCompletionTime = completionDateTime
     ? format(parseISO(completionDateTime), "PPP 'at' p")
-    : "Not set";
+    : t('status.notSet');
 
   useEffect(() => {
     setIsEnabled(isMaintenanceMode);
@@ -71,8 +73,9 @@ export const MaintenanceSettings = ({ className }: MaintenanceSettingsProps) => 
       }
 
       toggleMaintenance(requestData);
+      toast.success(t('messages.saved'));
     } catch (error) {
-      toast.error("Failed to update maintenance settings");
+      toast.error(t('messages.error'));
       console.error("Error updating maintenance settings:", error);
     } finally {
       setIsSubmitting(false);
@@ -89,10 +92,10 @@ export const MaintenanceSettings = ({ className }: MaintenanceSettingsProps) => 
           <div className="bg-slate-100 dark:bg-slate-800 py-1 px-3 text-xs flex items-center">
             <span className="flex items-center gap-1 text-muted-foreground">
               <Eye size={14} />
-              Preview
+              {t('preview.preview')}
             </span>
             <span className="ml-auto text-xs text-muted-foreground">
-              {isEnabled ? "Currently active" : "Not currently active"}
+              {isEnabled ? t('preview.currentlyActive') : t('preview.notCurrentlyActive')}
             </span>
           </div>
           <div className="max-h-[500px] overflow-y-auto">
@@ -107,23 +110,23 @@ export const MaintenanceSettings = ({ className }: MaintenanceSettingsProps) => 
         <PreviewMaintenancePage />
 
         <div className="bg-slate-100 dark:bg-slate-800 p-4 rounded-md text-sm">
-          <p className="font-medium">Maintenance Status</p>
+          <p className="font-medium">{t('title')}</p>
           <div className="mt-2 space-y-1">
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Current Status:</span>
+              <span className="text-muted-foreground">{t('status.currentStatus')}:</span>
               <Badge variant={isMaintenanceMode ? "destructive" : "outline"}>
-                {isMaintenanceMode ? "Enabled" : "Disabled"}
+                {isMaintenanceMode ? t('status.enabled') : t('status.disabled')}
               </Badge>
             </div>
             {completionDateTime && (
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Expected Completion:</span>
+                <span className="text-muted-foreground">{t('settings.endTime')}:</span>
                 <span>{formattedCompletionTime}</span>
               </div>
             )}
             {activatedAt && (
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Activated:</span>
+                <span className="text-muted-foreground">{t('status.activated')}:</span>
                 <span>{format(new Date(activatedAt), "PPP 'at' p")}</span>
               </div>
             )}
@@ -137,8 +140,8 @@ export const MaintenanceSettings = ({ className }: MaintenanceSettingsProps) => 
     <div className={`container max-w-3xl py-4 ${className}`}>
       <Tabs defaultValue="settings" value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="mb-2">
-          <TabsTrigger value="settings">Settings</TabsTrigger>
-          <TabsTrigger value="preview">Preview</TabsTrigger>
+          <TabsTrigger value="settings">{t('tabs.settings')}</TabsTrigger>
+          <TabsTrigger value="preview">{t('tabs.preview')}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="settings">
@@ -146,17 +149,19 @@ export const MaintenanceSettings = ({ className }: MaintenanceSettingsProps) => 
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle>Maintenance Mode</CardTitle>
-                  <CardDescription>When enabled, users will see a maintenance page instead of your site</CardDescription>
+                  <CardTitle>{t('title')}</CardTitle>
+                  <CardDescription>{t('description')}</CardDescription>
                 </div>
-                <Badge variant={isEnabled ? "destructive" : "outline"}>{isEnabled ? "Enabled" : "Disabled"}</Badge>
+                <Badge variant={isEnabled ? "destructive" : "outline"}>
+                  {isEnabled ? t('status.enabled') : t('status.disabled')}
+                </Badge>
               </div>
             </CardHeader>
             <form onSubmit={handleSubmit}>
               <CardContent className="space-y-6">
                 <div className="flex items-center justify-between">
                   <Label htmlFor="maintenance-toggle" className="font-medium">
-                    Enable Maintenance Mode
+                    {t('settings.enableMaintenance')}
                   </Label>
                   <Switch
                     id="maintenance-toggle"
@@ -166,10 +171,10 @@ export const MaintenanceSettings = ({ className }: MaintenanceSettingsProps) => 
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="message">Custom Message</Label>
+                  <Label htmlFor="message">{t('settings.maintenanceMessage')}</Label>
                   <Textarea
                     id="message"
-                    placeholder="We're currently performing scheduled maintenance. We'll be back shortly."
+                    placeholder={t('messages.defaultMessage')}
                     value={customMessage}
                     onChange={(e) => setCustomMessage(e.target.value)}
                     className="min-h-[100px]"
@@ -178,12 +183,12 @@ export const MaintenanceSettings = ({ className }: MaintenanceSettingsProps) => 
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label>Expected Completion Date</Label>
+                    <Label>{t('settings.scheduledMaintenance')}</Label>
                     <Popover>
                       <PopoverTrigger asChild>
                         <Button variant="outline" className="w-full justify-start text-left font-normal">
                           <CalendarIcon className="mr-2 h-4 w-4" />
-                          {date ? format(date, "PPP") : "Select date"}
+                          {date ? format(date, "PPP") : t('status.selectDate')}
                         </Button>
                       </PopoverTrigger>
                       <PopoverContent className="w-auto p-0">
@@ -193,7 +198,7 @@ export const MaintenanceSettings = ({ className }: MaintenanceSettingsProps) => 
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="time">Expected Completion Time</Label>
+                    <Label htmlFor="time">{t('settings.endTime')}</Label>
                     <Input id="time" type="time" value={time} onChange={(e) => setTime(e.target.value)} />
                   </div>
                 </div>
@@ -201,7 +206,7 @@ export const MaintenanceSettings = ({ className }: MaintenanceSettingsProps) => 
                 {activatedAt && (
                   <div className="pt-2 border-t">
                     <p className="text-sm text-muted-foreground">
-                      Maintenance mode was activated on{" "}
+                      {t('status.activated')}{" "}
                       <span className="font-medium text-foreground">{format(new Date(activatedAt), "PPP 'at' p")}</span>
                     </p>
                   </div>
@@ -215,11 +220,11 @@ export const MaintenanceSettings = ({ className }: MaintenanceSettingsProps) => 
                   onClick={() => setActiveTab("preview")}
                 >
                   <Eye className="mr-2 h-4 w-4" />
-                  Preview
+                  {t('preview.preview')}
                 </Button>
                 <Button type="submit" disabled={isLoading}>
                   {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  Save Settings
+                  {t('actions.save')}
                 </Button>
               </CardFooter>
             </form>
@@ -229,8 +234,8 @@ export const MaintenanceSettings = ({ className }: MaintenanceSettingsProps) => 
         <TabsContent value="preview">
           <Card>
             <CardHeader>
-              <CardTitle>Maintenance Page Preview</CardTitle>
-              <CardDescription>This is how your maintenance page will appear to visitors</CardDescription>
+              <CardTitle>{t('preview.title')}</CardTitle>
+              <CardDescription>{t('preview.description')}</CardDescription>
             </CardHeader>
             <CardContent>
               <PreviewContext />
@@ -241,7 +246,7 @@ export const MaintenanceSettings = ({ className }: MaintenanceSettingsProps) => 
                 className="ml-auto"
                 onClick={() => setActiveTab("settings")}
               >
-                Back to Settings
+                {t('actions.cancel')}
               </Button>
             </CardFooter>
           </Card>

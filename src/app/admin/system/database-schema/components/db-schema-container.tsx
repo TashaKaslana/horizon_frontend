@@ -7,6 +7,7 @@ import {Key, KeyRound, Database, Type, ArrowRight, ExternalLink} from "lucide-re
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip"
 import useDBSchema from "@/app/admin/system/database-schema/hook/useDBSchema";
 import {Spinner} from "@/components/ui/spinner";
+import {useTranslations} from "next-intl";
 
 function getTypeColor(type?: string) {
     if (!type) return "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-300"
@@ -29,12 +30,13 @@ function getTypeColor(type?: string) {
 
 export default function DatabaseSchema() {
     const {data: schema, isLoading}  = useDBSchema()
+    const t = useTranslations('Admin.system.database');
 
     if (!schema?.tables || isLoading) {
         return (
             <div className="flex items-center justify-center h-full bg-pink">
                 <Spinner/>
-                <p className="text-muted-foreground">Loading database schema...</p>
+                <p className="text-muted-foreground">{t('loading')}</p>
             </div>
         )
     }
@@ -45,8 +47,8 @@ export default function DatabaseSchema() {
                 <div className="flex items-center gap-3 mb-8">
                     <Database className="h-8 w-8 text-primary"/>
                     <div>
-                        <h1 className="text-3xl font-bold">Database Schema</h1>
-                        <p className="text-muted-foreground">Overview of database tables and their relationships</p>
+                        <h1 className="text-3xl font-bold">{t('title')}</h1>
+                        <p className="text-muted-foreground">{t('description')}</p>
                     </div>
                 </div>
 
@@ -58,7 +60,10 @@ export default function DatabaseSchema() {
                                     <Database className="h-5 w-5"/>
                                     {tableName}
                                     <Badge variant="outline" className="ml-auto">
-                                        {columns.length} {columns.length === 1 ? "column" : "columns"}
+                                        {columns.length} {columns.length === 1
+                                            ? t('tables.count.one', {count: columns.length})
+                                            : t('tables.count.other', {count: columns.length})
+                                        }
                                     </Badge>
                                 </CardTitle>
                             </CardHeader>
@@ -66,12 +71,12 @@ export default function DatabaseSchema() {
                                 <Table>
                                     <TableHeader>
                                         <TableRow>
-                                            <TableHead className="w-[20%]">Column Name</TableHead>
-                                            <TableHead className="w-[15%]">Type</TableHead>
-                                            <TableHead className="w-[10%]">Size</TableHead>
-                                            <TableHead className="w-[10%]">Nullable</TableHead>
-                                            <TableHead className="w-[15%]">Keys</TableHead>
-                                            <TableHead className="w-[30%]">Relationship</TableHead>
+                                            <TableHead className="w-[20%]">{t('columns.name')}</TableHead>
+                                            <TableHead className="w-[15%]">{t('columns.type')}</TableHead>
+                                            <TableHead className="w-[10%]">{t('columns.size')}</TableHead>
+                                            <TableHead className="w-[10%]">{t('columns.nullable')}</TableHead>
+                                            <TableHead className="w-[15%]">{t('columns.keys')}</TableHead>
+                                            <TableHead className="w-[30%]">{t('columns.relationship')}</TableHead>
                                         </TableRow>
                                     </TableHeader>
                                     <TableBody>
@@ -91,12 +96,12 @@ export default function DatabaseSchema() {
                                                         <span
                                                             className="text-sm text-muted-foreground">{column.size}</span>
                                                     ) : (
-                                                        <span className="text-sm text-muted-foreground">—</span>
+                                                        <span className="text-sm text-muted-foreground">{t('values.notAvailable')}</span>
                                                     )}
                                                 </TableCell>
                                                 <TableCell className="w-[10%]">
                                                     <Badge variant={column.nullable ? "secondary" : "destructive"}>
-                                                        {column.nullable ? "Yes" : "No"}
+                                                        {column.nullable ? t('values.yes') : t('values.no')}
                                                     </Badge>
                                                 </TableCell>
                                                 <TableCell className="w-[15%]">
@@ -107,11 +112,11 @@ export default function DatabaseSchema() {
                                                                     <Badge variant="default"
                                                                            className="flex items-center gap-1">
                                                                         <Key className="h-3 w-3"/>
-                                                                        PK
+                                                                        {t('keys.pk')}
                                                                     </Badge>
                                                                 </TooltipTrigger>
                                                                 <TooltipContent>
-                                                                    <p>Primary Key</p>
+                                                                    <p>{t('keys.primaryKey')}</p>
                                                                 </TooltipContent>
                                                             </Tooltip>
                                                         )}
@@ -121,16 +126,16 @@ export default function DatabaseSchema() {
                                                                     <Badge variant="outline"
                                                                            className="flex items-center gap-1">
                                                                         <KeyRound className="h-3 w-3"/>
-                                                                        FK
+                                                                        {t('keys.fk')}
                                                                     </Badge>
                                                                 </TooltipTrigger>
                                                                 <TooltipContent>
-                                                                    <p>Foreign Key</p>
+                                                                    <p>{t('keys.foreignKey')}</p>
                                                                 </TooltipContent>
                                                             </Tooltip>
                                                         )}
                                                         {!column.isPrimaryKey && !column.isForeignKey && (
-                                                            <span className="text-sm text-muted-foreground">—</span>
+                                                            <span className="text-sm text-muted-foreground">{t('values.notAvailable')}</span>
                                                         )}
                                                     </div>
                                                 </TableCell>
@@ -149,7 +154,7 @@ export default function DatabaseSchema() {
                                                             </div>
                                                         </div>
                                                     ) : (
-                                                        <span className="text-sm text-muted-foreground">—</span>
+                                                        <span className="text-sm text-muted-foreground">{t('values.notAvailable')}</span>
                                                     )}
                                                 </TableCell>
                                             </TableRow>
@@ -162,27 +167,27 @@ export default function DatabaseSchema() {
                 </div>
 
                 <div className="mt-8 p-4 bg-muted rounded-lg">
-                    <h3 className="font-semibold mb-3">Legend</h3>
+                    <h3 className="font-semibold mb-3">{t('legend.title')}</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                         <div className="space-y-2">
                             <div className="flex items-center gap-2">
                                 <Key className="h-4 w-4"/>
-                                <span>PK = Primary Key</span>
+                                <span>{t('legend.pk')}</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <KeyRound className="h-4 w-4"/>
-                                <span>FK = Foreign Key</span>
+                                <span>{t('legend.fk')}</span>
                             </div>
                         </div>
                         <div className="space-y-2">
                             <div className="flex items-center gap-2">
                                 <ExternalLink className="h-4 w-4"/>
                                 <ArrowRight className="h-4 w-4"/>
-                                <span>References another table</span>
+                                <span>{t('legend.references')}</span>
                             </div>
                             <div className="flex items-center gap-2">
                                 <Type className="h-4 w-4"/>
-                                <span>Column Name</span>
+                                <span>{t('legend.columnName')}</span>
                             </div>
                         </div>
                     </div>
@@ -193,7 +198,7 @@ export default function DatabaseSchema() {
                     <CardHeader>
                         <CardTitle className="flex items-center gap-2">
                             <KeyRound className="h-5 w-5"/>
-                            Relationship Summary
+                            {t('relationship.summary')}
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
@@ -205,7 +210,7 @@ export default function DatabaseSchema() {
                                 return (
                                     <div key={tableName} className="text-sm">
                                         <span className="font-medium text-primary">{tableName}</span>
-                                        <span className="text-muted-foreground"> references: </span>
+                                        <span className="text-muted-foreground"> {t('relationship.references')}: </span>
                                         {relationships.map((rel, idx) => (
                                             <span key={idx}>
                                                 <span className="font-medium">{rel.relationship!.referencedTable}</span>
