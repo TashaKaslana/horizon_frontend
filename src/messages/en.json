@@ -1211,6 +1211,8 @@
           "maintenance": "Maintenance Mode"
         },
         "status": {
+          "online": "Online",
+          "offline": "Offline",
           "operational": "Operational",
           "degraded": "Degraded Performance",
           "outage": "Service Outage",
@@ -1255,6 +1257,25 @@
           "disable": "Are you sure you want to disable maintenance mode? This will make the application available to users again.",
           "yes": "Yes, proceed",
           "no": "No, cancel"
+        },
+        "preview": {
+          "title": "Maintenance Page Preview",
+          "description": "This is how your maintenance page will appear to visitors",
+          "preview": "Preview",
+          "currentlyActive": "Currently active",
+          "notCurrentlyActive": "Not currently active"
+        },
+        "status": {
+          "currentStatus": "Current Status",
+          "enabled": "Enabled",
+          "disabled": "Disabled",
+          "activated": "Activated",
+          "notSet": "Not set",
+          "selectDate": "Select date"
+        },
+        "tabs": {
+          "settings": "Settings",
+          "preview": "Preview"
         }
       },
       "logs": {
@@ -1320,7 +1341,45 @@
       },
       "database": {
         "title": "Database Schema",
-        "description": "View database structure and relationships"
+        "description": "View database structure and relationships",
+        "loading": "Loading database schema...",
+        "tables": {
+          "header": "Database Tables",
+          "count": {
+            "one": "{count} column",
+            "other": "{count} columns"
+          }
+        },
+        "columns": {
+          "name": "Column Name",
+          "type": "Type",
+          "size": "Size",
+          "nullable": "Nullable",
+          "keys": "Keys",
+          "relationship": "Relationship"
+        },
+        "keys": {
+          "pk": "PK",
+          "fk": "FK",
+          "primaryKey": "Primary Key",
+          "foreignKey": "Foreign Key"
+        },
+        "values": {
+          "yes": "Yes",
+          "no": "No",
+          "notAvailable": "—"
+        },
+        "relationship": {
+          "summary": "Relationship Summary",
+          "references": "references"
+        },
+        "legend": {
+          "title": "Legend",
+          "pk": "PK = Primary Key",
+          "fk": "FK = Foreign Key",
+          "references": "References another table",
+          "columnName": "Column Name"
+        }
       }
     }
   }

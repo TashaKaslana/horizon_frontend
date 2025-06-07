@@ -9,7 +9,6 @@ import {Auth0Status} from "@/app/admin/system/status/components/auth0-status";
 import {useSystemStatus} from "@/app/admin/system/status/hook/useSystemStatus";
 import {Spinner} from "@/components/ui/spinner";
 
-// Define the data structure
 export interface StatusData {
     database: {
         status: "online" | "offline"

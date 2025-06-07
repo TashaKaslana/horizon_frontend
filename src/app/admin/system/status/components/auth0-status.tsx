@@ -3,6 +3,7 @@ import {AlertTriangle, ExternalLink, XCircle} from "lucide-react";
 import {Badge} from "@/components/ui/badge";
 import {Button} from "@/components/ui/button";
 import Link from "next/link";
+import {useTranslations} from "next-intl";
 
 interface Auth0StatusProps {
     status: "online" | "offline";
@@ -12,6 +13,8 @@ interface Auth0StatusProps {
 }
 
 export const Auth0Status = ({status, latency_ms, last_checked}: Auth0StatusProps) => {
+    const t = useTranslations("Admin.system.status");
+
     return (
         <Card>
             <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -30,18 +33,18 @@ export const Auth0Status = ({status, latency_ms, last_checked}: Auth0StatusProps
                     >
                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10" />
                     </svg>
-                    <CardTitle>Auth0</CardTitle>
+                    <CardTitle>{t("components.auth0")}</CardTitle>
                 </div>
                 {status === "online" ? (
-                    <Badge className="bg-green-500 hover:bg-green-600">Online</Badge>
+                    <Badge className="bg-green-500 hover:bg-green-600">{t("status.operational")}</Badge>
                 ) : (
-                    <Badge className="bg-red-500 hover:bg-red-600">Offline</Badge>
+                    <Badge className="bg-red-500 hover:bg-red-600">{t("status.outage")}</Badge>
                 )}
             </CardHeader>
             <CardContent>
                 <div className="space-y-2">
                     <div className="flex justify-between">
-                        <span className="text-muted-foreground">Status:</span>
+                        <span className="text-muted-foreground">{t("status.label")}:</span>
                         <span className={`font-medium flex items-center ${status === 'online' ? 'text-green-500' : 'text-red-500'}`}>
                             {status === 'online' ? (
                                 <>Online</>
@@ -54,13 +57,13 @@ export const Auth0Status = ({status, latency_ms, last_checked}: Auth0StatusProps
                         </span>
                     </div>
                     <div className="flex justify-between">
-                        <span className="text-muted-foreground">Latency:</span>
+                        <span className="text-muted-foreground">{t("metrics.responseTime")}:</span>
                         <span>{latency_ms}</span>
                     </div>
                     {status === 'offline' && (
                         <div className="mt-2 p-2 bg-red-50 border border-red-200 rounded-md text-red-700 text-sm">
                             <AlertTriangle className="inline-block h-4 w-4 mr-1" />
-                            Authentication service is currently down. Users may experience login issues.
+                            {t("status.serviceDown")}
                         </div>
                     )}
                 </div>
@@ -69,7 +72,7 @@ export const Auth0Status = ({status, latency_ms, last_checked}: Auth0StatusProps
                 <Button variant="outline" className="w-full">
                     <Link href="https://manage.auth0.com/" target="_blank" className="flex items-center justify-center">
                         <ExternalLink className="mr-2 h-4 w-4" />
-                        Auth0 Dashboard
+                        {t("viewDetails")}
                     </Link>
                 </Button>
             </CardFooter>

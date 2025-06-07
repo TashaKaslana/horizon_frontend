@@ -1193,6 +1193,83 @@
     },
     "system": {
       "title": "System",
+      "status": {
+        "title": "Trạng thái hệ thống",
+        "description": "Theo dõi tình trạng và trạng thái của tất cả các thành phần trong hệ thống",
+        "components": {
+          "database": "Cơ sở dữ liệu",
+          "auth0": "Auth0",
+          "cloudinary": "Cloudinary",
+          "maintenance": "Chế độ bảo trì"
+        },
+        "status": {
+          "online": "Trực tuyến",
+          "offline": "Ngoại tuyến",
+          "operational": "Đang hoạt động",
+          "degraded": "Hiệu suất suy giảm",
+          "outage": "Gián đoạn dịch vụ",
+          "maintenance": "Đang bảo trì",
+          "unknown": "Không xác định"
+        },
+        "metrics": {
+          "uptime": "Thời gian hoạt động",
+          "responseTime": "Thời gian phản hồi",
+          "errorRate": "Tỷ lệ lỗi",
+          "requestCount": "Số lượng yêu cầu"
+        },
+        "lastChecked": "Kiểm tra lần cuối {time}",
+        "checkNow": "Kiểm tra ngay",
+        "viewDetails": "Xem chi tiết"
+      },
+      "maintenance": {
+        "title": "Cài đặt bảo trì",
+        "description": "Cấu hình chế độ bảo trì hệ thống và bảo trì theo lịch trình",
+        "settings": {
+          "enableMaintenance": "Bật chế độ bảo trì",
+          "maintenanceMessage": "Thông báo bảo trì",
+          "scheduledMaintenance": "Bảo trì theo lịch",
+          "startTime": "Thời gian bắt đầu",
+          "endTime": "Thời gian kết thúc",
+          "affectedServices": "Dịch vụ bị ảnh hưởng",
+          "notifyUsers": "Thông báo cho người dùng"
+        },
+        "messages": {
+          "defaultMessage": "Chúng tôi hiện đang thực hiện bảo trì theo lịch trình. Vui lòng quay lại sau.",
+          "saved": "Đã lưu cài đặt bảo trì thành công",
+          "error": "Không thể lưu cài đặt bảo trì"
+        },
+        "actions": {
+          "save": "Lưu cài đặt",
+          "cancel": "Hủy",
+          "enableNow": "Bật ngay",
+          "disableNow": "Tắt ngay"
+        },
+        "confirmations": {
+          "enable": "Bạn có chắc chắn muốn bật chế độ bảo trì không? Điều này sẽ khiến ứng dụng không thể truy cập với người dùng.",
+          "disable": "Bạn có chắc chắn muốn tắt chế độ bảo trì không? Điều này sẽ cho phép người dùng truy cập lại ứng dụng.",
+          "yes": "Có, tiếp tục",
+          "no": "Không, hủy"
+        },
+        "preview": {
+          "title": "Xem trước trang bảo trì",
+          "description": "Đây là cách trang bảo trì sẽ hiển thị với khách truy cập",
+          "preview": "Xem trước",
+          "currentlyActive": "Đang hoạt động",
+          "notCurrentlyActive": "Không hoạt động"
+        },
+        "status": {
+          "currentStatus": "Trạng thái hiện tại",
+          "enabled": "Đã bật",
+          "disabled": "Đã tắt",
+          "activated": "Đã kích hoạt",
+          "notSet": "Chưa thiết lập",
+          "selectDate": "Chọn ngày"
+        },
+        "tabs": {
+          "settings": "Cài đặt",
+          "preview": "Xem trước"
+        }
+      },
       "logs": {
         "title": "Nhật ký hệ thống",
         "description": "Xem và phân tích nhật ký hệ thống và theo dõi lỗi",
@@ -1252,6 +1329,48 @@
           "deleted": "Đã xóa mục nhật ký thành công",
           "exported": "Đã xuất nhật ký thành công",
           "error": "Đã xảy ra lỗi"
+        }
+      },
+      "database": {
+        "title": "Lược đồ cơ sở dữ liệu",
+        "description": "Xem cấu trúc và các mối quan hệ trong cơ sở dữ liệu",
+        "loading": "Đang tải lược đồ cơ sở dữ liệu...",
+        "tables": {
+          "header": "Các bảng trong cơ sở dữ liệu",
+          "count": {
+            "one": "{count} cột",
+            "other": "{count} cột"
+          }
+        },
+        "columns": {
+          "name": "Tên cột",
+          "type": "Kiểu dữ liệu",
+          "size": "Kích thước",
+          "nullable": "Có thể rỗng",
+          "keys": "Khóa",
+          "relationship": "Mối quan hệ"
+        },
+        "keys": {
+          "pk": "PK",
+          "fk": "FK",
+          "primaryKey": "Khóa chính",
+          "foreignKey": "Khóa ngoại"
+        },
+        "values": {
+          "yes": "Có",
+          "no": "Không",
+          "notAvailable": "—"
+        },
+        "relationship": {
+          "summary": "Tóm tắt mối quan hệ",
+          "references": "tham chiếu"
+        },
+        "legend": {
+          "title": "Chú thích",
+          "pk": "PK = Khóa chính",
+          "fk": "FK = Khóa ngoại",
+          "references": "Tham chiếu đến bảng khác",
+          "columnName": "Tên cột"
         }
       }
     }
