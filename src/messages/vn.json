@@ -841,6 +841,81 @@
           "deleted": "Đã xóa"
         }
       }
+    },
+    "moderation": {
+      "title": "Kiểm duyệt",
+      "description": "Quản lý báo cáo và kiểm duyệt nội dung trên toàn nền tảng",
+      "all": {
+        "title": "Tất cả báo cáo",
+        "types": {
+          "all": "Tất cả báo cáo",
+          "post": "Báo cáo bài viết",
+          "user": "Báo cáo người dùng",
+          "comment": "Báo cáo bình luận"
+        },
+        "table": {
+          "report": "Báo cáo",
+          "content": "Nội dung",
+          "reporter": "Người báo cáo",
+          "reportType": "Loại báo cáo",
+          "reportedItem": "Mục bị báo cáo",
+          "reportedUser": "Người bị báo cáo",
+          "reportedOn": "Thời gian báo cáo",
+          "reason": "Lý do",
+          "status": "Trạng thái",
+          "createdAt": "Ngày tạo",
+          "actions": "Hành động",
+          "viewReport": "Xem báo cáo",
+          "resolveReport": "Giải quyết",
+          "banUser": "Cấm người dùng",
+          "deleteContent": "Xóa nội dung",
+          "warnUser": "Cảnh cáo người dùng",
+          "searchPlaceholder": "Tìm kiếm báo cáo, người dùng, nội dung...",
+          "openMenu": "Mở menu",
+          "selectAll": "Chọn tất cả",
+          "selectRow": "Chọn hàng",
+          "viewDetails": "Xem chi tiết",
+          "noDescription": "Không có mô tả",
+          "statusUpdated": "Cập nhật trạng thái báo cáo thành công",
+          "contentDeleted": "Xóa nội dung thành công",
+          "userBanned": "Cấm người dùng thành công",
+          "userWarned": "Cảnh cáo người dùng thành công",
+          "itemSelected": "mục đã chọn",
+          "itemsSelected": "mục đã chọn",
+          "deleteSelectedReports": "Xóa báo cáo đã chọn",
+          "changeStatus": "Thay đổi trạng thái",
+          "deleteReport": "Xóa báo cáo",
+          "editModerationNotes": "Chỉnh sửa ghi chú",
+          "approveContent": "Duyệt nội dung",
+          "rejectContent": "Từ chối nội dung",
+          "removeContent": "Gỡ bỏ nội dung",
+          "markAsResolved": "Đánh dấu là đã giải quyết",
+          "deleteSingleEntry": "báo cáo đã bị xóa.",
+          "deleteMultipleEntries": "báo cáo đã bị xóa."
+        },
+        "metrics": {
+          "totalReports": "Tổng số báo cáo",
+          "pendingReports": "Báo cáo đang chờ",
+          "resolvedReports": "Báo cáo đã giải quyết",
+          "escalatedReports": "Báo cáo bị leo thang"
+        },
+        "charts": {
+          "reportGrowth": "Tăng trưởng báo cáo",
+          "reportDistribution": "Phân phối báo cáo",
+          "reportActivity": "Hoạt động báo cáo",
+          "reportStatistic": "Thống kê báo cáo",
+          "newReportsDescription": "Hiển thị báo cáo mới mỗi ngày trong {days} ngày qua"
+        },
+        "status": {
+          "pending": "Đang chờ",
+          "resolved": "Đã giải quyết",
+          "reviewed_approved": "Đã duyệt",
+          "reviewed_rejected": "Đã từ chối",
+          "actiontaken_contentremoved": "Đã gỡ nội dung",
+          "actiontaken_userwarned": "Đã cảnh cáo người dùng",
+          "actiontaken_userbanned": "Đã cấm người dùng"
+        }
+      }
     }
   },
   "UI": {

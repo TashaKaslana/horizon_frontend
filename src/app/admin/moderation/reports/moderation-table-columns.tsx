@@ -36,6 +36,7 @@ import {UserTableCellViewer} from '../../users/all/components/user-table-cell-vi
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {ModerationStatus, ModerationStatusSchema} from "@/schemas/report-schema";
 import {ReportDto} from "@/api/client";
+import {useTranslations} from "next-intl";
 
 interface ModerationTableColumnsProps {
     onUpdateStatusAction: (itemIds: string[], newStatus: ModerationStatus) => void;
@@ -45,34 +46,41 @@ interface ModerationTableColumnsProps {
 
 type ModerationItemData = ReportDto & DraggableItem
 
-export const statusFilterOptions = ModerationStatusSchema.options.map(status => ({
-    value: status,
-    label: status.replace(/_/g, ' '),
-    icon: (() => {
-        switch (status.toUpperCase()) {
-            case "PENDING":
-                return LoaderIcon;
-            case "REVIEWED_APPROVED":
-                return ShieldCheckIcon;
-            case "REVIEWED_REJECTED":
-                return ShieldXIcon;
-            case "ACTIONTAKEN_CONTENTREMOVED":
-            case "ACTIONTAKEN_USERWARNED":
-            case "ACTIONTAKEN_USERBANNED":
-                return AlertTriangleIcon;
-            case "RESOLVED":
-                return CheckCircle2Icon;
-            default:
-                return ShieldQuestionIcon;
-        }
-    })()
-}));
+export const useStatusFilterOptions = () => {
+    const moderationT = useTranslations("Admin.moderation.all.status");
+
+    return ModerationStatusSchema.options.map(status => ({
+        value: status,
+        label: moderationT(status.toLowerCase()),
+        icon: (() => {
+            switch (status.toUpperCase()) {
+                case "PENDING":
+                    return LoaderIcon;
+                case "REVIEWED_APPROVED":
+                    return ShieldCheckIcon;
+                case "REVIEWED_REJECTED":
+                    return ShieldXIcon;
+                case "ACTIONTAKEN_CONTENTREMOVED":
+                case "ACTIONTAKEN_USERWARNED":
+                case "ACTIONTAKEN_USERBANNED":
+                    return AlertTriangleIcon;
+                case "RESOLVED":
+                    return CheckCircle2Icon;
+                default:
+                    return ShieldQuestionIcon;
+            }
+        })()
+    }));
+};
 
 export const useModerationTableColumns = ({
                                               onUpdateStatusAction,
                                               onDeleteEntriesAction,
                                               onPostSelection
                                           }: ModerationTableColumnsProps): ColumnDef<ModerationItemData>[] => {
+    const t = useTranslations("Admin.moderation.all.table");
+    const statusOptions = useStatusFilterOptions()
+
     return [
         {
             id: "drag",
@@ -86,21 +94,21 @@ export const useModerationTableColumns = ({
                 <Checkbox
                     checked={table.getIsAllPageRowsSelected() || (table.getIsSomePageRowsSelected() && "indeterminate")}
                     onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-                    aria-label="Select all" onClick={(e) => e.stopPropagation()}
+                    aria-label={t("selectAll")} onClick={(e) => e.stopPropagation()}
                 />
             ),
             cell: ({row}) => (
                 <Checkbox
                     checked={row.getIsSelected()}
                     onCheckedChange={(value) => row.toggleSelected(!!value)}
-                    aria-label="Select row" onClick={(e) => e.stopPropagation()}
+                    aria-label={t("selectRow")} onClick={(e) => e.stopPropagation()}
                 />
             ),
             enableSorting: false, enableHiding: false, size: 40,
         },
         {
             accessorKey: "id",
-            header: ({column}) => <DataTableColumnHeader column={column} title="Report ID"/>,
+            header: ({column}) => <DataTableColumnHeader column={column} title={t("report")} />,
             cell: ({row}) => (
                 <div className="text-sm text-muted-foreground max-w-32 truncate" title={row.original.id}>
                     {row.original.id}
@@ -111,7 +119,7 @@ export const useModerationTableColumns = ({
         },
         {
             accessorKey: "itemPreview",
-            header: ({column}) => <DataTableColumnHeader column={column} title="Reported Item"/>,
+            header: ({column}) => <DataTableColumnHeader column={column} title={t("reportedItem")} />,
             cell: ({row}) => {
                 const item = row.original;
                 let icon = <ShieldQuestionIcon className="h-5 w-5 text-muted-foreground mt-0.5 flex-shrink-0"/>;
@@ -177,7 +185,7 @@ export const useModerationTableColumns = ({
         },
         {
             accessorKey: "reporterInfo",
-            header: ({column}) => <DataTableColumnHeader column={column} title="Reporter"/>,
+            header: ({column}) => <DataTableColumnHeader column={column} title={t("reporter")} />,
             cell: ({row}) => {
                 const item = row.original;
                 return (
@@ -204,16 +212,17 @@ export const useModerationTableColumns = ({
         },
         {
             accessorKey: "reason",
-            header: ({column}) => <DataTableColumnHeader column={column} title="Reason"/>,
+            header: ({column}) => <DataTableColumnHeader column={column} title={t("reason")} />,
             cell: ({row}) => <div className="text-sm text-muted-foreground max-w-64 truncate"
                                   title={row.original.reason}>{row.original.reason}</div>,
         },
         {
             accessorKey: "status",
-            header: ({column}) => <DataTableColumnHeader column={column} title="Status"/>,
+            header: ({column}) => <DataTableColumnHeader column={column} title={t("status")} />,
             cell: ({row}) => {
                 const status = row.original.status;
-                const option = statusFilterOptions.find(opt => opt.value === status); // Ensure statusFilterOptions is imported/available
+                const option = statusOptions.find(opt => opt.value === status); // Ensure statusFilterOptions is imported/available
+
                 return (
                     <Badge variant={
                         !status ? "secondary" :
@@ -227,15 +236,13 @@ export const useModerationTableColumns = ({
                     </Badge>
                 );
             },
-            filterFn: (row, columnId, filterValue: string[] | undefined) => {
-                if (!filterValue || filterValue.length === 0) return true;
-                const cellValue = row.getValue(columnId) as string;
-                return filterValue.includes(cellValue);
+            filterFn: (row, id, value) => {
+                return value.includes(row.getValue(id));
             },
         },
         {
             accessorKey: "createdAt",
-            header: ({column}) => <DataTableColumnHeader column={column} title="Reported On"/>,
+            header: ({column}) => <DataTableColumnHeader column={column} title={t("reportedOn")} />,
             cell: ({row}) => (
                 <div className="text-xs text-muted-foreground min-w-[90px]">
                     {row.original.createdAt ? new Date(row.original.createdAt).toLocaleDateString() : ""}
@@ -259,48 +266,48 @@ export const useModerationTableColumns = ({
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end" className="w-[220px]">
                                 <DropdownMenuItem onSelect={() => toast.info(`Editing notes for ${item.id}`)}>
-                                    <Edit3Icon className="mr-2 h-4 w-4"/> Edit Moderation Notes
+                                    <Edit3Icon className="mr-2 h-4 w-4"/> {t("editModerationNotes")}
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator/>
                                 {item.status !== "REVIEWED_APPROVED" && item.status !== "RESOLVED" && (
                                     <DropdownMenuItem onSelect={() => onUpdateStatusAction([item.id], "REVIEWED_APPROVED")}>
-                                        <ShieldCheckIcon className="mr-2 h-4 w-4 text-green-500"/> Approve Content
+                                        <ShieldCheckIcon className="mr-2 h-4 w-4 text-green-500"/> {t("approveContent")}
                                     </DropdownMenuItem>
                                 )}
                                 {item.status !== "REVIEWED_REJECTED" && item.status !== "RESOLVED" && (
                                     <DropdownMenuItem onSelect={() => onUpdateStatusAction([item.id], "REVIEWED_REJECTED")}>
-                                        <ShieldXIcon className="mr-2 h-4 w-4 text-orange-500"/> Reject Content
+                                        <ShieldXIcon className="mr-2 h-4 w-4 text-orange-500"/> {t("rejectContent")}
                                     </DropdownMenuItem>
                                 )}
                                 <DropdownMenuSeparator/>
                                 {item.itemType === "USER" && item.status !== "ACTIONTAKEN_USERWARNED" && (
                                     <DropdownMenuItem
                                         onSelect={() => onUpdateStatusAction([item.id], "ACTIONTAKEN_USERWARNED")}>
-                                        <AlertTriangleIcon className="mr-2 h-4 w-4 text-amber-600"/> Warn User
+                                        <AlertTriangleIcon className="mr-2 h-4 w-4 text-amber-600"/> {t("warnUser")}
                                     </DropdownMenuItem>
                                 )}
                                 {item.itemType === "USER" && item.status !== "ACTIONTAKEN_USERBANNED" && (
                                     <DropdownMenuItem className="text-red-600 focus:text-red-600"
                                                       onSelect={() => onUpdateStatusAction([item.id], "ACTIONTAKEN_USERBANNED")}>
-                                        <BanIcon className="mr-2 h-4 w-4"/> Ban User
+                                        <BanIcon className="mr-2 h-4 w-4"/> {t("banUser")}
                                     </DropdownMenuItem>
                                 )}
                                 {(item.itemType === "POST" || item.itemType === "COMMENT") && item.status !== "ACTIONTAKEN_CONTENTREMOVED" && (
                                     <DropdownMenuItem className="text-red-600 focus:text-red-600"
                                                       onSelect={() => onUpdateStatusAction([item.id], "ACTIONTAKEN_CONTENTREMOVED")}>
-                                        <Trash2Icon className="mr-2 h-4 w-4"/> Remove Content
+                                        <Trash2Icon className="mr-2 h-4 w-4"/> {t("removeContent")}
                                     </DropdownMenuItem>
                                 )}
                                 {item.status !== "RESOLVED" && <DropdownMenuSeparator/>}
                                 {item.status !== "RESOLVED" && (
                                     <DropdownMenuItem onSelect={() => onUpdateStatusAction([item.id], "RESOLVED")}>
-                                        <CheckCircle2Icon className="mr-2 h-4 w-4 text-blue-500"/> Mark as Resolved
+                                        <CheckCircle2Icon className="mr-2 h-4 w-4 text-blue-500"/> {t("markAsResolved")}
                                     </DropdownMenuItem>
                                 )}
                                 <DropdownMenuSeparator/>
                                 <DropdownMenuItem className="text-red-600 hover:!text-red-600 focus:text-red-600"
                                                   onSelect={() => onDeleteEntriesAction([item.id])}>
-                                    <Trash2Icon className="mr-2 h-4 w-4"/> Delete Report
+                                    <Trash2Icon className="mr-2 h-4 w-4"/> {t("deleteReport")}
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>

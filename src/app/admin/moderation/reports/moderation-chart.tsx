@@ -1,20 +1,14 @@
 "use client"
 
 import * as React from "react"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "@/components/ui/select"
 import {useReportStore} from "./useReportStore"
 import {useModeration} from "./useModeration"
-import {ChartCard} from "@/app/admin/components/chart-card"
 import {ChartConfig} from "@/components/ui/chart"
 import {normalizeChartData} from "@/lib/utils"
 import {Tabs, TabsList, TabsTrigger} from "@/components/ui/tabs"
 import {Users, FileText, MessageSquare} from "lucide-react"
+import {useTranslations} from "next-intl"
+import {TimeRangeChart} from "@/components/common/time-range-chart"
 
 const moderationChartConfig = {
     pendingCount: {
@@ -33,18 +27,17 @@ export function ModerationChart({type = "ALL", isSpecific = false}: {
     type?: ModerationChartType,
     isSpecific?: boolean
 }) {
-    const [timeRange, setTimeRange] = React.useState("30d")
+    const t = useTranslations("Admin.moderation.all.charts")
+    const tType = useTranslations('Admin.moderation.all.type')
+
     const [activeTab, setActiveTab] = React.useState<ModerationChartType>(type)
+    const [timeRangeDays, setTimeRangeDays] = React.useState(30)
 
     const {chartData, userChartData, postChartData, commentChartData} = useReportStore()
     const {isDailyDataLoading} = useModeration({
         type: activeTab === "ALL" ? undefined : activeTab,
-        timeRange: getDaysFromTimeRange(timeRange)
+        timeRange: timeRangeDays
     })
-
-    const handleTimeRangeChange = (value: string) => {
-        setTimeRange(value)
-    }
 
     const currentChartData = React.useMemo(() => {
         switch (activeTab) {
@@ -74,56 +67,34 @@ export function ModerationChart({type = "ALL", isSpecific = false}: {
     const chartTitle = React.useMemo(() => {
         switch (activeTab) {
             case "ALL":
-                return "All Moderation Reports";
+                return t("reportActivity");
             case "USER":
-                return "User Report Trends";
+                return t("reportDistribution");
             case "POST":
-                return "Post Report Trends";
+                return t("reportGrowth");
             case "COMMENT":
-                return "Comment Report Trends";
+                return t("reportStatistic");
             default:
-                return "Moderation Reports";
+                return t("reportActivity");
         }
-    }, [activeTab]);
+    }, [activeTab, t]);
 
-    // Get chart description based on active tab
     const chartDescription = React.useMemo(() => {
-        switch (activeTab) {
-            case "ALL":
-                return `Showing all report activity for the last ${getDaysFromTimeRange(timeRange)} days`;
-            case "USER":
-                return `Showing user report activity for the last ${getDaysFromTimeRange(timeRange)} days`;
-            case "POST":
-                return `Showing post report activity for the last ${getDaysFromTimeRange(timeRange)} days`;
-            case "COMMENT":
-                return `Showing comment report activity for the last ${getDaysFromTimeRange(timeRange)} days`;
-            default:
-                return `Showing moderation activity for the last ${getDaysFromTimeRange(timeRange)} days`;
-        }
-    }, [activeTab, timeRange]);
+        return t("newReportsDescription", { days: timeRangeDays });
+    }, [timeRangeDays, t]);
 
     // If isSpecific is true, only render the chart for the specific type without tabs
     if (isSpecific) {
         return (
             <div className="space-y-4">
-                <div className="flex justify-end px-6 pb-2">
-                    <Select value={timeRange} onValueChange={handleTimeRangeChange}>
-                        <SelectTrigger className="w-[160px] rounded-lg">
-                            <SelectValue placeholder="Last 30 days"/>
-                        </SelectTrigger>
-                        <SelectContent className="rounded-xl">
-                            <SelectItem value="90d">Last 3 months</SelectItem>
-                            <SelectItem value="30d">Last 30 days</SelectItem>
-                            <SelectItem value="7d">Last 7 days</SelectItem>
-                        </SelectContent>
-                    </Select>
-                </div>
-                <ChartCard
-                    data={formattedChartData}
+                <TimeRangeChart
+                    defaultTimeRange="30"
                     isLoading={isDailyDataLoading}
                     title={chartTitle}
                     description={chartDescription}
                     chartConfig={moderationChartConfig}
+                    onTimeRangeChange={setTimeRangeDays}
+                    data={formattedChartData}
                 />
             </div>
         )
@@ -141,7 +112,7 @@ export function ModerationChart({type = "ALL", isSpecific = false}: {
                             data-active={activeTab === "ALL"}
                             className="flex items-center gap-2"
                         >
-                            <span className="hidden sm:inline">All</span>
+                            <span className="hidden sm:inline">{tType('all')}</span>
                         </TabsTrigger>
                         <TabsTrigger
                             value="USER"
@@ -149,8 +120,8 @@ export function ModerationChart({type = "ALL", isSpecific = false}: {
                             data-active={activeTab === "USER"}
                             className="flex items-center gap-2"
                         >
-                            <Users className="h-4 w-4"/>
-                            <span className="hidden sm:inline">Users</span>
+                            <Users size={16}/>
+                            <span className="hidden sm:inline">{tType('user')}</span>
                         </TabsTrigger>
                         <TabsTrigger
                             value="POST"
@@ -158,8 +129,8 @@ export function ModerationChart({type = "ALL", isSpecific = false}: {
                             data-active={activeTab === "POST"}
                             className="flex items-center gap-2"
                         >
-                            <FileText className="h-4 w-4"/>
-                            <span className="hidden sm:inline">Posts</span>
+                            <FileText size={16}/>
+                            <span className="hidden sm:inline">{tType('post')}</span>
                         </TabsTrigger>
                         <TabsTrigger
                             value="COMMENT"
@@ -167,47 +138,22 @@ export function ModerationChart({type = "ALL", isSpecific = false}: {
                             data-active={activeTab === "COMMENT"}
                             className="flex items-center gap-2"
                         >
-                            <MessageSquare className="h-4 w-4"/>
-                            <span className="hidden sm:inline">Comments</span>
+                            <MessageSquare size={16}/>
+                            <span className="hidden sm:inline">{tType('comment')}</span>
                         </TabsTrigger>
                     </TabsList>
-
-                    <div className="flex justify-end">
-                        <Select value={timeRange} onValueChange={handleTimeRangeChange}>
-                            <SelectTrigger className="w-[160px] rounded-lg">
-                                <SelectValue placeholder="Last 30 days"/>
-                            </SelectTrigger>
-                            <SelectContent className="rounded-xl">
-                                <SelectItem value="90d">Last 3 months</SelectItem>
-                                <SelectItem value="30d">Last 30 days</SelectItem>
-                                <SelectItem value="7d">Last 7 days</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </div>
-                </div>
-                <div className={'w-full'}>
-                    <ChartCard
-                        data={formattedChartData}
-                        isLoading={isDailyDataLoading}
-                        title={chartTitle}
-                        description={chartDescription}
-                        chartConfig={moderationChartConfig}
-                    />
                 </div>
             </Tabs>
+
+            <TimeRangeChart
+                defaultTimeRange="30"
+                isLoading={isDailyDataLoading}
+                title={chartTitle}
+                description={chartDescription}
+                chartConfig={moderationChartConfig}
+                onTimeRangeChange={setTimeRangeDays}
+                data={formattedChartData}
+            />
         </div>
     )
-}
-
-function getDaysFromTimeRange(timeRange: string): number {
-    switch (timeRange) {
-        case "90d":
-            return 90
-        case "30d":
-            return 30
-        case "7d":
-            return 7
-        default:
-            return 30
-    }
 }

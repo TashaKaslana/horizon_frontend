@@ -849,6 +849,81 @@
           "deleted": "Deleted"
         }
       }
+    },
+    "moderation": {
+      "title": "Moderation",
+      "description": "Manage reports and moderate content across the platform",
+      "all": {
+        "title": "All Reports",
+        "types": {
+          "all": "All Reports",
+          "post": "Post Reports",
+          "user": "User Reports",
+          "comment": "Comment Reports"
+        },
+        "table": {
+          "report": "Report",
+          "content": "Content",
+          "reporter": "Reporter",
+          "reportType": "Report Type",
+          "reportedItem": "Reported Item",
+          "reportedUser": "Reported User",
+          "reportedOn": "Reported On",
+          "reason": "Reason",
+          "status": "Status",
+          "createdAt": "Created At",
+          "actions": "Actions",
+          "viewReport": "View Report",
+          "resolveReport": "Resolve",
+          "banUser": "Ban User",
+          "deleteContent": "Delete Content",
+          "warnUser": "Warn User",
+          "searchPlaceholder": "Search reports, users, content...",
+          "openMenu": "Open menu",
+          "selectAll": "Select all",
+          "selectRow": "Select row",
+          "viewDetails": "View Details",
+          "noDescription": "No description provided",
+          "statusUpdated": "Report status updated successfully",
+          "contentDeleted": "Content deleted successfully",
+          "userBanned": "User banned successfully",
+          "userWarned": "User warned successfully",
+          "itemSelected": "item selected",
+          "itemsSelected": "items selected",
+          "deleteSelectedReports": "Delete Selected Reports",
+          "changeStatus": "Change Status",
+          "deleteReport": "Delete Report",
+          "editModerationNotes": "Edit Notes",
+          "approveContent": "Approve Content",
+          "rejectContent": "Reject Content",
+          "removeContent": "Remove Content",
+          "markAsResolved": "Mark as Resolved",
+          "deleteSingleEntry": "report removed.",
+          "deleteMultipleEntries": "reports removed."
+        },
+        "metrics": {
+          "totalReports": "Total Reports",
+          "pendingReports": "Pending Reports",
+          "resolvedReports": "Resolved Reports",
+          "escalatedReports": "Escalated Reports"
+        },
+        "charts": {
+          "reportGrowth": "Report Growth",
+          "reportDistribution": "Report Distribution",
+          "reportActivity": "Report Activity",
+          "reportStatistic": "Report Statistics",
+          "newReportsDescription": "Showing new reports per day for the last {days} days"
+        },
+        "status": {
+          "pending": "Pending",
+          "resolved": "Resolved",
+          "reviewed_approved": "Approved",
+          "reviewed_rejected": "Rejected",
+          "actiontaken_contentremoved": "Content Removed",
+          "actiontaken_userwarned": "User Warned",
+          "actiontaken_userbanned": "User Banned"
+        }
+      }
     }
   }
 }
