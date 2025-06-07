@@ -853,6 +853,49 @@
     "moderation": {
       "title": "Moderation",
       "description": "Manage reports and moderate content across the platform",
+      "notifications": {
+        "title": "Notifications",
+        "description": "Manage system notifications and user alerts",
+        "table": {
+          "id": "ID",
+          "type": "Type",
+          "content": "Content",
+          "createdAt": "Created At",
+          "actions": "Actions",
+          "read": "Mark as Read",
+          "delete": "Delete",
+          "searchPlaceholder": "Search notifications...",
+          "selectAll": "Select all",
+          "selectRow": "Select row",
+          "viewDetails": "View Details",
+          "itemSelected": "item selected",
+          "itemsSelected": "items selected",
+          "deleteSelectedNotifications": "Delete Selected",
+          "markAsRead": "Mark as Read",
+          "markAsUnread": "Mark as Unread"
+        },
+        "charts": {
+          "title": "Admin Notifications Statistic",
+          "description": "Showing new admin notifications per day for the last {days} days"
+        },
+        "metrics": {
+          "total": "Total Notifications",
+          "unread": "Unread Notifications",
+          "today": "Today's Notifications",
+          "system": "System Notifications"
+        },
+        "types": {
+          "all": "All",
+          "system": "System",
+          "user": "User",
+          "content": "Content",
+          "report": "Report"
+        },
+        "status": {
+          "read": "Read",
+          "unread": "Unread"
+        }
+      },
       "all": {
         "title": "All Reports",
         "types": {

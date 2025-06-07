@@ -5,13 +5,15 @@ import {NotificationAdminCards} from "@/app/admin/moderation/notifications/notif
 import {NotificationChart} from "@/app/admin/moderation/notifications/notification-chart";
 import {NotificationAdminTable} from "@/app/admin/moderation/notifications/notification-admin-table";
 import {useAdminNotification} from "@/app/admin/moderation/notifications/hooks/useAdminNotification";
+import {useTranslations} from "next-intl";
 
 export const NotificationAdminContainer = () => {
     useAdminNotification()
+    const t = useTranslations("Admin.moderation.notifications");
 
     return (
         <div className={'space-y-4 size-full'}>
-            <SiteHeader text={'Notifications'}/>
+            <SiteHeader text={t('title')}/>
             <NotificationAdminCards/>
             <NotificationChart/>
             <NotificationAdminTable/>

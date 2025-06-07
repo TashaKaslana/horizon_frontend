@@ -845,6 +845,49 @@
     "moderation": {
       "title": "Kiểm duyệt",
       "description": "Quản lý báo cáo và kiểm duyệt nội dung trên toàn nền tảng",
+      "notifications": {
+        "title": "Thông báo",
+        "description": "Quản lý thông báo hệ thống và cảnh báo người dùng",
+        "table": {
+          "id": "ID",
+          "type": "Loại",
+          "content": "Nội dung",
+          "createdAt": "Ngày tạo",
+          "actions": "Hành động",
+          "read": "Đánh dấu đã đọc",
+          "delete": "Xóa",
+          "searchPlaceholder": "Tìm kiếm thông báo...",
+          "selectAll": "Chọn tất cả",
+          "selectRow": "Chọn hàng",
+          "viewDetails": "Xem chi tiết",
+          "itemSelected": "mục đã chọn",
+          "itemsSelected": "mục đã chọn",
+          "deleteSelectedNotifications": "Xóa đã chọn",
+          "markAsRead": "Đánh dấu đã đọc",
+          "markAsUnread": "Đánh dấu chưa đọc"
+        },
+        "charts": {
+          "title": "Thống kê thông báo quản trị viên",
+          "description": "Hiển thị thông báo quản trị viên mới mỗi ngày trong {days} ngày qua"
+        },
+        "metrics": {
+          "total": "Tổng số thông báo",
+          "unread": "Thông báo chưa đọc",
+          "today": "Thông báo hôm nay",
+          "system": "Thông báo hệ thống"
+        },
+        "types": {
+          "all": "Tất cả",
+          "system": "Hệ thống",
+          "user": "Người dùng",
+          "content": "Nội dung",
+          "report": "Báo cáo"
+        },
+        "status": {
+          "read": "Đã đọc",
+          "unread": "Chưa đọc"
+        }
+      },
       "all": {
         "title": "Tất cả báo cáo",
         "types": {
