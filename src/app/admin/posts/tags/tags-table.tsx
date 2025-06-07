@@ -1,16 +1,19 @@
 'use client'
 
 import {DataTable} from "@/components/ui/data-table";
-import {columns} from "@/app/admin/posts/tags/tags-columns";
+import {useTagsColumns} from "@/app/admin/posts/tags/tags-columns";
 import {useTagManagement} from "@/app/admin/posts/tags/hooks/useTagManagement";
 import useTagStore from "@/app/admin/posts/tags/store/useTagStore";
 import {useState} from "react";
 import {RowSelectionState} from "@tanstack/react-table";
+import {useTranslations} from "next-intl";
 
 export const TagsTable = () => {
     const {tags} = useTagStore();
     const {fetchNextPage, isFetchingNextPage, hasNextPage, totalPages, isLoading} = useTagManagement();
     const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+    const t = useTranslations("Admin.posts.tags.table");
+    const columns = useTagsColumns();
 
     return (
         <div className={'p-4'}>
@@ -20,7 +23,7 @@ export const TagsTable = () => {
                 enableRowSelection={true}
                 rowSelection={rowSelection}
                 setRowSelectionFn={setRowSelection}
-                filterPlaceholder={"Search tags by slug, name, or description..."}
+                filterPlaceholder={t("searchPlaceholder")}
                 fetchNextPage={fetchNextPage}
                 isFetchingNextPage={isFetchingNextPage}
                 isLoading={isLoading}

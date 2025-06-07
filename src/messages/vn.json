@@ -951,6 +951,67 @@
             "weekly": "7 ngày gần đây"
           }
         }
+      },
+      "tags": {
+        "title": "Thẻ",
+        "table": {
+          "id": "ID",
+          "name": "Tên",
+          "slug": "Slug",
+          "postCount": "Số bài viết",
+          "createdBy": "Người tạo",
+          "createdAt": "Ngày tạo",
+          "actions": "Hành động",
+          "selectAll": "Chọn tất cả",
+          "selectRow": "Chọn hàng",
+          "system": "Hệ thống",
+          "notAvailable": "Không có",
+          "openMenu": "Mở menu",
+          "edit": "Chỉnh sửa",
+          "delete": "Xóa",
+          "searchPlaceholder": "Tìm kiếm thẻ theo slug, tên hoặc mô tả...",
+          "viewDetails": "Xem chi tiết"
+        },
+        "detail": {
+          "title": "Chi tiết Thẻ",
+          "description": "Xem và quản lý thông tin thẻ",
+          "generalInfo": "Thông tin chung",
+          "basicInfo": "Thông tin cơ bản",
+          "tagName": "Tên thẻ",
+          "tagSlug": "Slug thẻ",
+          "tagDescription": "Mô tả thẻ",
+          "tagStat": "Thống kê thẻ",
+          "totalPosts": "Tổng số bài viết",
+          "save": "Lưu thay đổi",
+          "cancel": "Hủy",
+          "editTag": "Chỉnh sửa thẻ",
+          "deleteTag": "Xóa thẻ",
+          "confirmDelete": "Bạn có chắc chắn muốn xóa thẻ này không?",
+          "namePlaceholder": "Nhập tên thẻ",
+          "slugPlaceholder": "Nhập slug thẻ",
+          "descriptionPlaceholder": "Nhập mô tả thẻ",
+          "creationInfo": "Thông tin tạo",
+          "createdOn": "Ngày tạo",
+          "createdBy": "Người tạo"
+        },
+        "notifications": {
+          "updateSuccess": "Cập nhật thẻ thành công",
+          "updateError": "Cập nhật thẻ thất bại",
+          "deleteSuccess": "Xóa thẻ thành công",
+          "deleteError": "Xóa thẻ thất bại",
+          "editingTag": "Đang chỉnh sửa thẻ: {name} (ID: {id})",
+          "deletingTag": "Đang cố gắng xóa thẻ: {name} (ID: {id})",
+          "updateNotImplemented": "Chức năng cập nhật chưa được triển khai"
+        },
+        "charts": {
+          "title": "Thống kê Thẻ",
+          "description": "Hiển thị số thẻ mới mỗi ngày trong {days} ngày qua",
+          "timeRanges": {
+            "quarterly": "3 tháng gần đây",
+            "monthly": "30 ngày gần đây",
+            "weekly": "7 ngày gần đây"
+          }
+        }
       }
     },
     "comments": {

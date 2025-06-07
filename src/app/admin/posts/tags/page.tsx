@@ -1,8 +1,8 @@
-import {TagContainer} from "@/app/admin/posts/tags/tag-container";
+import {TagsContainer} from "@/app/admin/posts/tags/tags-container";
 
 const Page = () => {
   return (
-      <TagContainer/>
+      <TagsContainer/>
   )
 }
 

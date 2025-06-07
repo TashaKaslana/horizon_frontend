@@ -15,163 +15,170 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {Button} from "@/components/ui/button";
 import {toast} from "sonner";
-import {TagDetailViewerSheet} from "@/app/admin/posts/tags/tag-detail-viewer-sheet";
+import {TagDetailViewerSheet} from "@/app/admin/posts/tags/tags-detail-viewer-sheet";
 import {TagWithCountDto} from "@/api/client";
+import {useTranslations} from "next-intl";
 
-export const columns: ColumnDef<TagWithCountDto>[] = [
-    {
-        id: "select",
-        header: ({table}) => (
-            <Checkbox
-                checked={
-                    table.getIsAllPageRowsSelected() ||
-                    (table.getIsSomePageRowsSelected() && "indeterminate")
-                }
-                onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-                aria-label="Select all"
-                className="translate-y-[2px]"
-            />
-        ),
-        cell: ({row}) => (
-            <Checkbox
-                checked={row.getIsSelected()}
-                onCheckedChange={(value) => row.toggleSelected(!!value)}
-                aria-label="Select row"
-                className="translate-y-[2px]"
-            />
-        ),
-        enableSorting: false,
-        enableHiding: false,
-        size: 40,
-    },
-    {
-        accessorKey: "id",
-        header: ({column}) => (
-            <DataTableColumnHeader column={column} title="ID"/>
-        ),
-        cell: ({row}) => {
-            return (
-                <div className="min-w-[100px] truncate">
-                    {row.getValue("id")}
-                </div>
-            );
+export const useTagsColumns = () => {
+    const t = useTranslations("Admin.posts.tags");
+
+    const columns: ColumnDef<TagWithCountDto>[] = [
+        {
+            id: "select",
+            header: ({table}) => (
+                <Checkbox
+                    checked={
+                        table.getIsAllPageRowsSelected() ||
+                        (table.getIsSomePageRowsSelected() && "indeterminate")
+                    }
+                    onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+                    aria-label={t("table.selectAll")}
+                    className="translate-y-[2px]"
+                />
+            ),
+            cell: ({row}) => (
+                <Checkbox
+                    checked={row.getIsSelected()}
+                    onCheckedChange={(value) => row.toggleSelected(!!value)}
+                    aria-label={t("table.selectRow")}
+                    className="translate-y-[2px]"
+                />
+            ),
+            enableSorting: false,
+            enableHiding: false,
+            size: 40,
         },
-        enableSorting: false,
-        enableHiding: false,
-    },
-    {
-        accessorKey: "name",
-        header: ({column}) => (
-            <DataTableColumnHeader column={column} title="Name"/>
-        ),
-        cell: ({row}) => {
-            return (
-                <TagDetailViewerSheet tagInitialData={row.original}
-                                      onUpdateAction={() => toast.info("Update not implemented")}
-                >
-                    <div className="flex space-x-2">
-                      <span className="max-w-[300px] truncate font-medium hover:underline">
-                        {row.getValue("name")}
-                      </span>
+        {
+            accessorKey: "id",
+            header: ({column}) => (
+                <DataTableColumnHeader column={column} title={t("table.id")}/>
+            ),
+            cell: ({row}) => {
+                return (
+                    <div className="min-w-[100px] truncate">
+                        {row.getValue("id")}
                     </div>
-                </TagDetailViewerSheet>
-            );
+                );
+            },
+            enableSorting: false,
+            enableHiding: false,
         },
-        enableSorting: true,
-    },
-    {
-        accessorKey: "slug",
-        header: ({column}) => (
-            <DataTableColumnHeader column={column} title="Slug"/>
-        ),
-        cell: ({row}) => {
-            return (
-                <div className="max-w-[300px] truncate">
-                    {row.getValue("slug")}
-                </div>
-            );
+        {
+            accessorKey: "name",
+            header: ({column}) => (
+                <DataTableColumnHeader column={column} title={t("table.name")}/>
+            ),
+            cell: ({row}) => {
+                return (
+                    <TagDetailViewerSheet tagInitialData={row.original}
+                                         onUpdateAction={() => toast.info(t("notifications.updateNotImplemented"))}
+                    >
+                        <div className="flex space-x-2">
+                        <span className="max-w-[300px] truncate font-medium hover:underline">
+                            {row.getValue("name")}
+                        </span>
+                        </div>
+                    </TagDetailViewerSheet>
+                );
+            },
+            enableSorting: true,
         },
-        enableSorting: true,
-    },
-    {
-        accessorKey: "postCount",
-        header: ({column}) => (
-            <DataTableColumnHeader column={column} title="Posts"/>
-        ),
-        cell: ({row}) => {
-            return (
-                <div className="text-center">
-                    {row.getValue("postCount")}
-                </div>
-            );
+        {
+            accessorKey: "slug",
+            header: ({column}) => (
+                <DataTableColumnHeader column={column} title={t("table.slug")}/>
+            ),
+            cell: ({row}) => {
+                return (
+                    <div className="max-w-[300px] truncate">
+                        {row.getValue("slug")}
+                    </div>
+                );
+            },
+            enableSorting: true,
         },
-        enableSorting: true,
-    },
-    {
-        accessorKey: "createdBy",
-        header: ({column}) => (
-            <DataTableColumnHeader column={column} title="Created By"/>
-        ),
-        cell: ({row}) => {
-            const createdById = row.getValue("createdBy") as string | undefined;
-            if (createdById === '00000000-0000-0000-0000-000000000000') {
-                return <div className="min-w-[100px] truncate">System</div>;
-            }
+        {
+            accessorKey: "postCount",
+            header: ({column}) => (
+                <DataTableColumnHeader column={column} title={t("table.postCount")}/>
+            ),
+            cell: ({row}) => {
+                return (
+                    <div className="text-center">
+                        {row.getValue("postCount")}
+                    </div>
+                );
+            },
+            enableSorting: true,
+        },
+        {
+            accessorKey: "createdBy",
+            header: ({column}) => (
+                <DataTableColumnHeader column={column} title={t("table.createdBy")}/>
+            ),
+            cell: ({row}) => {
+                const createdById = row.getValue("createdBy") as string | undefined;
+                if (createdById === '00000000-0000-0000-0000-000000000000') {
+                    return <div className="min-w-[100px] truncate">{t("table.system")}</div>;
+                }
 
-            return <div className="min-w-[100px] truncate">{createdById || "N/A"}</div>;
+                return <div className="min-w-[100px] truncate">{createdById || t("table.notAvailable")}</div>;
+            },
+            enableSorting: true,
         },
-        enableSorting: true,
-    },
-    {
-        accessorKey: "createdAt",
-        header: ({column}) => (
-            <DataTableColumnHeader column={column} title="Created At"/>
-        ),
-        cell: ({row}) => {
-            const dateValue = row.getValue("createdAt") as string | undefined;
-            const formattedDate = dateValue ? formatDateTS(new Date(dateValue)) : "N/A";
-            return <div className="min-w-[100px]">{formattedDate}</div>;
+        {
+            accessorKey: "createdAt",
+            header: ({column}) => (
+                <DataTableColumnHeader column={column} title={t("table.createdAt")}/>
+            ),
+            cell: ({row}) => {
+                const dateValue = row.getValue("createdAt") as string | undefined;
+                const formattedDate = dateValue ? formatDateTS(new Date(dateValue)) : t("table.notAvailable");
+                return <div className="min-w-[100px]">{formattedDate}</div>;
+            },
+            enableSorting: true,
         },
-        enableSorting: true,
-    },
-    {
-        id: "actions",
-        header: () => <div className="text-right">Actions</div>,
-        cell: ({row}) => {
-            const tag = row.original;
+        {
+            id: "actions",
+            header: () => <div className="text-right">{t("table.actions")}</div>,
+            cell: ({row}) => {
+                const tag = row.original;
 
-            const handleEdit = () => {
-                toast.info(`Editing tag: ${tag.name} (ID: ${tag.id})`);
-            };
+                const handleEdit = () => {
+                    toast.info(t("notifications.editingTag", {name: tag.name ?? '', id: tag.id!}));
+                };
 
-            const handleDelete = () => {
-                toast.warning(`Attempting to delete tag: ${tag.name} (ID: ${tag.id})`);
-            };
-            return (
-                <div className="flex justify-end">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="flex size-8 p-0 data-[state=open]:bg-muted">
-                                <MoreVerticalIcon className="size-4"/>
-                                <span className="sr-only">Open menu</span>
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-[160px]">
-                            <DropdownMenuItem onSelect={handleEdit}>
-                                <EditIcon className="mr-2 h-4 w-4"/>
-                                Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator/>
-                            <DropdownMenuItem onSelect={handleDelete} className="text-red-600 focus:text-red-600">
-                                <TrashIcon className="mr-2 h-4 w-4"/>
-                                Delete
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                </div>
-            );
+                const handleDelete = () => {
+                    toast.warning(t("notifications.deletingTag", {name: tag.name ?? '', id: tag.id!}));
+                };
+                return (
+                    <div className="flex justify-end">
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" className="flex size-8 p-0 data-[state=open]:bg-muted">
+                                    <MoreVerticalIcon className="size-4"/>
+                                    <span className="sr-only">{t("table.openMenu")}</span>
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-[160px]">
+                                <DropdownMenuItem onSelect={handleEdit}>
+                                    <EditIcon className="mr-2 h-4 w-4"/>
+                                    {t("table.edit")}
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator/>
+                                <DropdownMenuItem onSelect={handleDelete} className="text-red-600 focus:text-red-600">
+                                    <TrashIcon className="mr-2 h-4 w-4"/>
+                                    {t("table.delete")}
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
+                );
+            },
+            enableSorting: false,
+            enableHiding: false,
         },
-        enableSorting: false,
-        enableHiding: false,
-    },
-];
+    ];
+
+    return columns;
+};
