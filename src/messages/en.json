@@ -658,5 +658,54 @@
       "dark": "Dark",
       "system": "System"
     }
+  },
+  "Admin": {
+    "charts": {
+      "timeRanges": {
+        "quarterly": "Last 3 months",
+        "monthly": "Last 30 days",
+        "weekly": "Last 7 days",
+        "daily": "Last 24 hours",
+        "yearly": "Last year"
+      },
+      "description": "Showing data for the last {days} days"
+    },
+    "users": {
+      "title": "Users",
+      "all": {
+        "title": "All Users",
+        "table": {
+          "user": "User",
+          "actions": "Actions",
+          "viewProfile": "View Profile",
+          "editUser": "Edit User",
+          "deleteUser": "Delete User",
+          "banUser": "Ban User",
+          "unbanUser": "Unban User",
+          "verifyUser": "Verify User",
+          "addUser": "Add User",
+          "add": "Add",
+          "searchPlaceholder": "Search users, emails, reports...",
+          "email": "Email",
+          "role": "Role",
+          "status": "Status",
+          "lastLogin": "Last Login",
+          "activityLog": "Activity Log"
+        },
+        "metrics": {
+          "totalUsers": "Total Users",
+          "activeUsers": "Active Users",
+          "newUsers": "New Users",
+          "bannedUsers": "Banned Users"
+        },
+        "charts": {
+          "activeUsers": "Active Users",
+          "totalUsers": "Total Users",
+          "userAttendance": "User Attendance",
+          "userAttendanceDescription": "Showing new users per day for the last {days} days",
+          "newUsers": "New Users"
+        }
+      }
+    }
   }
 }

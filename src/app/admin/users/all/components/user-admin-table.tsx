@@ -4,6 +4,7 @@ import React, {useEffect} from "react";
 import {ColumnDef} from "@tanstack/react-table";
 import {CheckCircle2Icon, LoaderIcon, MailIcon, MoreVerticalIcon, PlusIcon,} from "lucide-react";
 import {toast} from "sonner";
+import {useTranslations} from "next-intl";
 
 import {Badge} from "@/components/ui/badge";
 import {Button} from "@/components/ui/button";
@@ -31,6 +32,7 @@ export function UserAdminTable() {
     const {users} = useUsersStore()
     const {fetchNextPage, isFetchingNextPage, hasNextPage, isLoading} = useUsersManagement()
     const [data, setData] = React.useState<UserAdminData[]>([]);
+    const t = useTranslations('Admin.users.all');
 
     useEffect(() => {
         if (users) {
@@ -81,7 +83,7 @@ export function UserAdminTable() {
         },
         {
             accessorKey: "name",
-            header: ({column}) => <DataTableColumnHeader column={column} title="User"/>,
+            header: ({column}) => <DataTableColumnHeader column={column} title={t('table.user')}/>,
             cell: ({row}) => {
                 const user = row.original;
                 return (
@@ -102,7 +104,7 @@ export function UserAdminTable() {
         },
         {
             accessorKey: "email",
-            header: ({column}) => <DataTableColumnHeader column={column} title="Email"/>,
+            header: ({column}) => <DataTableColumnHeader column={column} title={t('table.email')}/>,
             cell: ({row}) => (
                 <div className="flex items-center gap-2 text-sm">
                     <MailIcon className="h-3.5 w-3.5 text-muted-foreground"/>
@@ -115,12 +117,12 @@ export function UserAdminTable() {
         },
         {
             accessorKey: "type",
-            header: ({column}) => <DataTableColumnHeader column={column} title="Role"/>,
+            header: ({column}) => <DataTableColumnHeader column={column} title={t('table.role')}/>,
             cell: ({row}) => <Badge variant="outline" className="px-2 py-0.5 text-xs">{row.original.role?.name}</Badge>,
         },
         {
             accessorKey: "status",
-            header: ({column}) => <DataTableColumnHeader column={column} title="Status"/>,
+            header: ({column}) => <DataTableColumnHeader column={column} title={t('table.status')}/>,
             cell: ({row}) => {
                 const status = row.original.status;
                 let icon = <div className="size-2.5 rounded-full bg-slate-400"/>;
@@ -138,7 +140,7 @@ export function UserAdminTable() {
         },
         {
             accessorKey: "lastLogin",
-            header: ({column}) => <DataTableColumnHeader column={column} title="Last Login"/>,
+            header: ({column}) => <DataTableColumnHeader column={column} title={t('table.lastLogin')}/>,
             cell: ({row}) => row.original.lastLogin ?
                 <div
                     className="text-xs text-muted-foreground min-w-[90px]">{new Date(row.original.lastLogin).toLocaleDateString()}</div> :
@@ -146,45 +148,42 @@ export function UserAdminTable() {
         },
         {
             id: "actions",
-            cell: ({row}) => (
-                <div className="flex justify-end">
+            header: ({column}) => <DataTableColumnHeader column={column} title={t('table.actions')}/>,
+            cell: ({row}) => {
+                const user = row.original;
+                return (
                     <DropdownMenu>
                         <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="flex size-8 p-0 data-[state=open]:bg-muted"
-                                    onClick={(e) => e.stopPropagation()}>
-                                <MoreVerticalIcon className="size-4"/> <span className="sr-only">Open menu</span>
+                            <Button variant="ghost" className="h-8 w-8 p-0">
+                                <span className="sr-only">{t('table.actions')}</span>
+                                <MoreVerticalIcon className="h-4 w-4"/>
                             </Button>
                         </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-32">
-                            <DropdownMenuItem
-                                onSelect={() => toast.info(`Editing ${row.original.displayName}`)}>Edit</DropdownMenuItem>
-                            <DropdownMenuItem
-                                onSelect={() => toast.info(`Viewing details for ${row.original.displayName}`)}>View
-                                Details</DropdownMenuItem>
+                        <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => window.open(`/users/${user.id}`, '_blank')}>
+                                {t('table.viewProfile')}
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                                {t('table.editUser')}
+                            </DropdownMenuItem>
                             <DropdownMenuSeparator/>
-                            <DropdownMenuItem
-                                className="text-red-600 hover:!text-red-600 hover:!bg-red-100 dark:hover:!bg-red-700/50"
-                                onSelect={() => {
-                                    toast.error(`Deleting ${row.original.displayName}`);
-                                    setData(prev => prev.filter(item => item.id !== row.original.id));
-                                }}>
-                                Delete
+                            <DropdownMenuItem className="text-red-600">
+                                {t('table.banUser')}
                             </DropdownMenuItem>
                         </DropdownMenuContent>
                     </DropdownMenu>
-                </div>
-            ),
-            size: 50, enableSorting: false, enableHiding: false,
+                );
+            },
         },
-    ], [handleUpdateItem]);
+    ], [t, handleUpdateItem]);
 
     return (
         <Tabs defaultValue="userList" className="flex w-full flex-col justify-start gap-6 p-4 md:p-6">
             <div className="flex flex-wrap items-center justify-between gap-2">
                 <TabsList className="hidden md:flex">
-                    <TabsTrigger value="userList">User List</TabsTrigger>
+                    <TabsTrigger value="userList">{t('title')}</TabsTrigger>
                     <TabsTrigger value="activityLog" className="gap-1">
-                        Activity Log{" "}
+                        Activity Log {" "}
                         <Badge variant="secondary"
                                className="flex h-5 w-5 items-center justify-center rounded-full bg-muted-foreground/20">
                             {data?.length}
@@ -195,8 +194,8 @@ export function UserAdminTable() {
                     <Button variant="default" size="sm" className="gap-1.5"
                             onClick={() => toast.success("Add User Clicked!")}>
                         <PlusIcon className="size-4"/>
-                        <span className="hidden lg:inline">Add User</span>
-                        <span className="lg:hidden">Add</span>
+                        <span className="hidden lg:inline">{t('table.addUser')}</span>
+                        <span className="lg:hidden">{t('table.add')}</span>
                     </Button>
                 </div>
             </div>
@@ -208,7 +207,7 @@ export function UserAdminTable() {
                     setData={setData}
                     enableDnd={true}
                     enableRowSelection={true}
-                    filterPlaceholder="Search users, emails, reports..."
+                    filterPlaceholder={t('table.searchPlaceholder')}
                     fetchNextPage={fetchNextPage}
                     isFetchingNextPage={isFetchingNextPage}
                     hasNextPage={hasNextPage}
@@ -225,5 +224,3 @@ export function UserAdminTable() {
         </Tabs>
     );
 }
-
-

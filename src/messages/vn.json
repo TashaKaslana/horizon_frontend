@@ -651,6 +651,55 @@
       }
     }
   },
+  "Admin": {
+    "charts": {
+      "timeRanges": {
+        "quarterly": "3 tháng gần đây",
+        "monthly": "30 ngày gần đây",
+        "weekly": "7 ngày gần đây",
+        "daily": "24 giờ gần đây",
+        "yearly": "1 năm gần đây"
+      },
+      "description": "Hiển thị dữ liệu trong {days} ngày qua"
+    },
+    "users": {
+      "title": "Người Dùng",
+      "all": {
+        "title": "Tất Cả Người Dùng",
+        "table": {
+          "user": "Người Dùng",
+          "actions": "Hành Động",
+          "viewProfile": "Xem Hồ Sơ",
+          "editUser": "Chỉnh Sửa",
+          "deleteUser": "Xóa Người Dùng",
+          "banUser": "Cấm Người Dùng",
+          "unbanUser": "Bỏ Cấm",
+          "verifyUser": "Xác Thực Người Dùng",
+          "addUser": "Thêm người dùng",
+          "add": "Thêm",
+          "searchPlaceholder": "Tìm kiếm người dùng, email, báo cáo...",
+          "email": "Email",
+          "role": "Vai trò",
+          "status": "Trạng thái",
+          "lastLogin": "Đăng nhập gần nhất",
+          "activityLog": "Nhật ký hoạt động"
+        },
+        "metrics": {
+          "totalUsers": "Tổng Người Dùng",
+          "activeUsers": "Người Dùng Hoạt Động",
+          "newUsers": "Người Dùng Mới",
+          "bannedUsers": "Người Dùng Bị Cấm"
+        },
+        "charts": {
+          "activeUsers": "Người dùng hoạt động",
+          "totalUsers": "Tổng số người dùng",
+          "userAttendance": "Người dùng tham gia",
+          "userAttendanceDescription": "Hiển thị số người dùng mới mỗi ngày trong {days} ngày qua",
+          "newUsers": "Người dùng mới"
+        }
+      }
+    }
+  },
   "UI": {
     "theme": {
       "toggle": "Chuyển đổi chủ đề",
