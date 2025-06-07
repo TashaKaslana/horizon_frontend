@@ -1,21 +1,23 @@
 import {DataTable} from "@/components/ui/data-table";
 import {useEffect, useState} from "react";
-import {columns} from "@/app/admin/system/logs/logs-columns";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import useAdminLogEntriesStore from "@/app/admin/system/logs/useLoggingStore";
 import {useLoggingManagement} from "@/app/admin/system/logs/useLoggingManagement";
 import {LogEntryDto} from "@/api/client";
+import {useTranslations} from "next-intl";
+import {useLogsColumns} from "@/app/admin/system/logs/logs-columns";
 
 export const LogsTable = () => {
     const [tab, setTab] = useState("all");
+    const t = useTranslations("Admin.system.logs");
 
     return (
         <div className="p-4">
             <Tabs defaultValue="all" value={tab} onValueChange={setTab}>
                 <TabsList className="mb-4">
-                    <TabsTrigger value="all">All Logs</TabsTrigger>
-                    <TabsTrigger value="system">System Logs</TabsTrigger>
-                    <TabsTrigger value="error">Error Logs</TabsTrigger>
+                    <TabsTrigger value="all">{t("filters.all")}</TabsTrigger>
+                    <TabsTrigger value="system">{t("level.info")}</TabsTrigger>
+                    <TabsTrigger value="error">{t("level.error")}</TabsTrigger>
                 </TabsList>
 
                 {tab === "all" && <LogTab severities={["INFO", "WARNING", "ERROR", "CRITICAL"]}/>}
@@ -36,6 +38,8 @@ const LogTab = ({ severities }: { severities: ("INFO" | "WARNING" | "ERROR" | "C
         hasNextPage,
         totalPages
     } = useLoggingManagement(severities);
+    const t = useTranslations("Admin.system.logs.table");
+    const columns = useLogsColumns();
 
     useEffect(() => {
         if (logEntries) {
@@ -55,6 +59,7 @@ const LogTab = ({ severities }: { severities: ("INFO" | "WARNING" | "ERROR" | "C
                 fetchNextPage={fetchNextPage}
                 hasNextPage={hasNextPage}
                 pageCount={totalPages}
+                filterPlaceholder={t("searchPlaceholder")}
             />
         </TabsContent>
     );

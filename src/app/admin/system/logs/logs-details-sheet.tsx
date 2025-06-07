@@ -9,6 +9,7 @@ import {
     SheetClose,
 } from "@/components/ui/sheet";
 import {Button} from "@/components/ui/button";
+import {useTranslations} from "next-intl";
 
 interface LogDetailSheetProps {
     log: unknown;
@@ -62,19 +63,22 @@ export function LogDetailSheet({
                                    open,
                                    onOpenChangeAction,
                                }: LogDetailSheetProps) {
+    const t = useTranslations("Admin.system.logs.details");
+
     return (
         <Sheet open={open} onOpenChange={onOpenChangeAction}>
             <SheetContent className="overflow-auto min-w-1/3">
                 <SheetHeader>
-                    <SheetTitle>Log Details</SheetTitle>
+                    <SheetTitle>{t('title')}</SheetTitle>
                 </SheetHeader>
                 <pre className="whitespace-pre-wrap break-words bg-muted p-4 rounded-md max-h-[70vh] overflow-auto font-mono text-sm">
                     {syntaxHighlightJson(log)}
                 </pre>
                 <SheetClose asChild>
-                    <Button className="mx-10">Close</Button>
+                    <Button className="mx-10">{t('closeButton')}</Button>
                 </SheetClose>
             </SheetContent>
         </Sheet>
     );
 }
+

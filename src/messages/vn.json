@@ -1190,6 +1190,70 @@
           "actiontaken_userbanned": "Đã cấm người dùng"
         }
       }
+    },
+    "system": {
+      "title": "System",
+      "logs": {
+        "title": "Nhật ký hệ thống",
+        "description": "Xem và phân tích nhật ký hệ thống và theo dõi lỗi",
+        "table": {
+          "id": "ID",
+          "userId": "ID người dùng",
+          "timestamp": "Thời gian",
+          "severity": "Mức độ",
+          "source": "Nguồn",
+          "message": "Thông điệp",
+          "details": "Chi tiết",
+          "context": "Ngữ cảnh",
+          "actions": "Hành động",
+          "selectAll": "Chọn tất cả",
+          "selectRow": "Chọn hàng",
+          "viewDetails": "Xem chi tiết",
+          "searchPlaceholder": "Tìm kiếm nhật ký theo thông điệp, nguồn, mức độ...",
+          "notAvailable": "Không có",
+          "openMenu": "Mở menu",
+          "delete": "Xóa",
+          "export": "Xuất",
+          "filter": "Lọc"
+        },
+        "severity": {
+          "info": "Thông tin",
+          "warning": "Cảnh báo",
+          "error": "Lỗi",
+          "debug": "Gỡ lỗi",
+          "critical": "Nghiêm trọng"
+        },
+        "filters": {
+          "all": "Tất cả mức độ",
+          "timeframe": "Khoảng thời gian",
+          "source": "Nguồn",
+          "apply": "Áp dụng bộ lọc",
+          "reset": "Đặt lại",
+          "date": "Khoảng ngày"
+        },
+        "details": {
+          "title": "Chi tiết Nhật ký",
+          "closeButton": "Đóng",
+          "deleteButton": "Xóa nhật ký",
+          "exportButton": "Xuất",
+          "metadata": "Dữ liệu bổ sung",
+          "stackTrace": "Dấu vết ngăn xếp",
+          "userInfo": "Thông tin người dùng",
+          "requestInfo": "Thông tin yêu cầu",
+          "systemInfo": "Thông tin hệ thống"
+        },
+        "charts": {
+          "title": "Hoạt động Nhật ký",
+          "description": "Hiển thị các mục nhật ký mỗi ngày trong {days} ngày qua",
+          "errorDistribution": "Phân bố lỗi",
+          "errorFrequency": "Tần suất lỗi"
+        },
+        "notifications": {
+          "deleted": "Đã xóa mục nhật ký thành công",
+          "exported": "Đã xuất nhật ký thành công",
+          "error": "Đã xảy ra lỗi"
+        }
+      }
     }
   },
   "UI": {

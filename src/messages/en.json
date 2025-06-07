@@ -1198,6 +1198,130 @@
           "actiontaken_userbanned": "User Banned"
         }
       }
+    },
+    "system": {
+      "title": "System",
+      "status": {
+        "title": "System Status",
+        "description": "Monitor the health and status of all system components",
+        "components": {
+          "database": "Database",
+          "auth0": "Auth0",
+          "cloudinary": "Cloudinary",
+          "maintenance": "Maintenance Mode"
+        },
+        "status": {
+          "operational": "Operational",
+          "degraded": "Degraded Performance",
+          "outage": "Service Outage",
+          "maintenance": "Under Maintenance",
+          "unknown": "Status Unknown"
+        },
+        "metrics": {
+          "uptime": "Uptime",
+          "responseTime": "Response Time",
+          "errorRate": "Error Rate",
+          "requestCount": "Request Count"
+        },
+        "lastChecked": "Last checked {time}",
+        "checkNow": "Check Now",
+        "viewDetails": "View Details"
+      },
+      "maintenance": {
+        "title": "Maintenance Settings",
+        "description": "Configure system maintenance mode and scheduled maintenance",
+        "settings": {
+          "enableMaintenance": "Enable Maintenance Mode",
+          "maintenanceMessage": "Maintenance Message",
+          "scheduledMaintenance": "Scheduled Maintenance",
+          "startTime": "Start Time",
+          "endTime": "End Time",
+          "affectedServices": "Affected Services",
+          "notifyUsers": "Notify Users"
+        },
+        "messages": {
+          "defaultMessage": "We're currently performing scheduled maintenance. Please check back later.",
+          "saved": "Maintenance settings saved successfully",
+          "error": "Failed to save maintenance settings"
+        },
+        "actions": {
+          "save": "Save Settings",
+          "cancel": "Cancel",
+          "enableNow": "Enable Now",
+          "disableNow": "Disable Now"
+        },
+        "confirmations": {
+          "enable": "Are you sure you want to enable maintenance mode? This will make the application unavailable to users.",
+          "disable": "Are you sure you want to disable maintenance mode? This will make the application available to users again.",
+          "yes": "Yes, proceed",
+          "no": "No, cancel"
+        }
+      },
+      "logs": {
+        "title": "System Logs",
+        "description": "View and analyze system logs and error tracking",
+        "table": {
+          "id": "ID",
+          "userId": "User ID",
+          "timestamp": "Timestamp",
+          "severity": "Severity",
+          "source": "Source",
+          "message": "Message",
+          "details": "Details",
+          "context": "Context",
+          "actions": "Actions",
+          "selectAll": "Select all",
+          "selectRow": "Select row",
+          "viewDetails": "View Details",
+          "searchPlaceholder": "Search logs by message, source, level...",
+          "notAvailable": "N/A",
+          "openMenu": "Open menu",
+          "delete": "Delete",
+          "export": "Export",
+          "filter": "Filter"
+        },
+        "severity": {
+          "info": "Info",
+          "warning": "Warning",
+          "error": "Error",
+          "debug": "Debug",
+          "critical": "Critical"
+        },
+        "filters": {
+          "all": "All Levels",
+          "timeframe": "Timeframe",
+          "source": "Source",
+          "apply": "Apply Filters",
+          "reset": "Reset",
+          "date": "Date Range"
+        },
+        "details": {
+          "title": "Log Details",
+          "closeButton": "Close",
+          "deleteButton": "Delete Log",
+          "exportButton": "Export",
+          "metadata": "Metadata",
+          "stackTrace": "Stack Trace",
+          "userInfo": "User Information",
+          "requestInfo": "Request Information",
+          "systemInfo": "System Information"
+        },
+        "charts": {
+          "title": "Log Activity",
+          "description": "Showing log entries per day for the last {days} days",
+          "errorDistribution": "Error Distribution",
+          "errorFrequency": "Error Frequency"
+        },
+        "notifications": {
+          "deleted": "Log entry deleted successfully",
+          "exported": "Log exported successfully",
+          "error": "An error occurred"
+        }
+      },
+      "database": {
+        "title": "Database Schema",
+        "description": "View database structure and relationships"
+      }
     }
   }
 }
