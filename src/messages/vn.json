@@ -1268,6 +1268,13 @@
         "tabs": {
           "settings": "Cài đặt",
           "preview": "Xem trước"
+        },
+        "display": {
+          "title": "Đang bảo trì",
+          "expectedCompletion": "Dự kiến hoàn thành",
+          "maintenanceStarted": "Bắt đầu bảo trì",
+          "timeRemaining": "Đã quá thời gian hoàn thành",
+          "at": "vào lúc"
         }
       },
       "logs": {

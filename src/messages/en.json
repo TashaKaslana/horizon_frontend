@@ -1276,6 +1276,13 @@
         "tabs": {
           "settings": "Settings",
           "preview": "Preview"
+        },
+        "display": {
+          "title": "Under Maintenance",
+          "expectedCompletion": "Expected completion",
+          "maintenanceStarted": "Maintenance started",
+          "timeRemaining": "Completion time has passed",
+          "at": "at"
         }
       },
       "logs": {
