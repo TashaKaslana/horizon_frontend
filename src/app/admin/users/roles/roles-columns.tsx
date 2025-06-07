@@ -17,148 +17,145 @@ import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import {RoleDto} from "@/api/client";
 import {DraggableItem} from "@/components/common/dnd-table-components";
+import {useTranslations} from "next-intl";
 
 type RoleDraggable = RoleDto & DraggableItem
 
-export const rolesColumns: ColumnDef<RoleDraggable>[] = [
-    {
-        id: "select",
-        header: ({ table }) => (
-            <Checkbox
-                checked={
-                    table.getIsAllPageRowsSelected() ||
-                    (table.getIsSomePageRowsSelected() && "indeterminate")
-                }
-                onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-                aria-label="Select all"
-                className="translate-y-[2px]"
-            />
-        ),
-        cell: ({ row }) => (
-            <Checkbox
-                checked={row.getIsSelected()}
-                onCheckedChange={(value) => row.toggleSelected(!!value)}
-                aria-label="Select row"
-                className="translate-y-[2px]"
-            />
-        ),
-        enableSorting: false,
-        enableHiding: false,
-        size: 40,
-    },
-    {
-        accessorKey: "name",
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Name" />
-        ),
-        cell: ({ row }) => {
-            return (
-                // Replace with a Detail Viewer Sheet if needed
-                <div className="flex space-x-2">
-                  <span className="max-w-[250px] truncate font-medium">
-                    {row.getValue("name")}
-                  </span>
-                </div>
-            );
-        },
-        enableSorting: true,
-    },
-    {
-        accessorKey: "slug",
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Slug" />
-        ),
-        cell: ({ row }) => {
-            return (
-                <div className="max-w-[250px] truncate">
-                    {row.getValue("slug")}
-                </div>
-            );
-        },
-        enableSorting: true,
-    },
-    {
-        accessorKey: "description",
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Description" />
-        ),
-        cell: ({ row }) => {
-            const description = row.getValue("description") as string | undefined;
-            return (
-                <div className="max-w-[350px] truncate" title={description}>
-                    {description || "N/A"}
-                </div>
-            );
-        },
-        enableSorting: true,
-    },
-    {
-        accessorKey: "createdAt",
-        header: ({ column }) => (
-            <DataTableColumnHeader column={column} title="Created At" />
-        ),
-        cell: ({ row }) => {
-            const dateValue = row.getValue("createdAt") as Date
-            const formattedDate = dateValue ? formatDateTS(dateValue) : "N/A";
-            return <div className="min-w-[150px]">{formattedDate}</div>;
-        },
-        enableSorting: true,
-    },
-    {
-        id: "actions",
-        header: () => <div className="text-right">Actions</div>,
-        cell: ({ row }) => {
-            const role = row.original;
+export const useRolesColumns = () => {
+    const t = useTranslations("Admin.users.roles.table");
+    const notificationsT = useTranslations("Admin.users.roles.notifications");
 
-            const handleViewDetails = () => {
-                // Placeholder for viewing details, perhaps in a modal or sheet
-                toast.info(`Viewing role: ${role.name}`, {
-                    description: <pre className="max-h-60 overflow-y-auto bg-muted p-2 rounded-md">{JSON.stringify(role, null, 2)}</pre>
-                });
-            };
-
-            const handleEdit = () => {
-                // Placeholder for edit action
-                // This would typically open an edit form/sheet
-                toast.info(`Editing role: ${role.name} (ID: ${role.id})`);
-            };
-
-            const handleDelete = () => {
-                // Placeholder for delete action
-                // This would typically show a confirmation dialog
-                toast.warning(`Attempting to delete role: ${role.name} (ID: ${role.id})`);
-            };
-
-            return (
-                <div className="flex justify-end">
-                    <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="flex size-8 p-0 data-[state=open]:bg-muted">
-                                <MoreVerticalIcon className="size-4" />
-                                <span className="sr-only">Open menu</span>
-                            </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-[160px]">
-                            <DropdownMenuItem onSelect={handleViewDetails}>
-                                <EyeIcon className="mr-2 h-4 w-4" />
-                                View Details
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem onSelect={handleEdit}>
-                                <EditIcon className="mr-2 h-4 w-4" />
-                                Edit
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onSelect={handleDelete} className="text-red-600 focus:text-red-600">
-                                <TrashIcon className="mr-2 h-4 w-4" />
-                                Delete
-                            </DropdownMenuItem>
-                        </DropdownMenuContent>
-                    </DropdownMenu>
-                </div>
-            );
+    return [
+        {
+            id: "select",
+            header: ({ table }) => (
+                <Checkbox
+                    checked={
+                        table.getIsAllPageRowsSelected() ||
+                        (table.getIsSomePageRowsSelected() && "indeterminate")
+                    }
+                    onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+                    aria-label={t("selectAll")}
+                    className="translate-y-[2px]"
+                />
+            ),
+            cell: ({ row }) => (
+                <Checkbox
+                    checked={row.getIsSelected()}
+                    onCheckedChange={(value) => row.toggleSelected(!!value)}
+                    aria-label={t("selectRow")}
+                    className="translate-y-[2px]"
+                />
+            ),
+            enableSorting: false,
+            enableHiding: false,
+            size: 40,
         },
-        enableSorting: false,
-        enableHiding: false,
-    },
-];
+        {
+            accessorKey: "name",
+            header: ({ column }) => (
+                <DataTableColumnHeader column={column} title={t("name")} />
+            ),
+            cell: ({ row }) => {
+                return (
+                    <div className="flex space-x-2">
+                      <span className="max-w-[250px] truncate font-medium">
+                        {row.getValue("name")}
+                      </span>
+                    </div>
+                );
+            },
+            enableSorting: true,
+        },
+        {
+            accessorKey: "slug",
+            header: ({ column }) => (
+                <DataTableColumnHeader column={column} title={t("slug")} />
+            ),
+            cell: ({ row }) => {
+                return (
+                    <div className="max-w-[250px] truncate">
+                        {row.getValue("slug")}
+                    </div>
+                );
+            },
+            enableSorting: true,
+        },
+        {
+            accessorKey: "description",
+            header: ({ column }) => (
+                <DataTableColumnHeader column={column} title={t("description")} />
+            ),
+            cell: ({ row }) => {
+                const description = row.getValue("description") as string | undefined;
+                return (
+                    <div className="max-w-[350px] truncate" title={description}>
+                        {description || t("noDescription")}
+                    </div>
+                );
+            },
+            enableSorting: true,
+        },
+        {
+            accessorKey: "createdAt",
+            header: ({ column }) => (
+                <DataTableColumnHeader column={column} title={t("createdAt")} />
+            ),
+            cell: ({ row }) => {
+                const dateValue = row.getValue("createdAt") as Date
+                const formattedDate = dateValue ? formatDateTS(dateValue) : "N/A";
+                return <div className="min-w-[150px]">{formattedDate}</div>;
+            },
+            enableSorting: true,
+        },
+        {
+            id: "actions",
+            header: () => <div className="text-right">{t("actions")}</div>,
+            cell: ({ row }) => {
+                const role = row.original;
 
+                const handleViewDetails = () => {
+                    toast.info(notificationsT("viewingRole", { name: role.name ?? '' }), {
+                        description: <pre className="max-h-60 overflow-y-auto bg-muted p-2 rounded-md">{JSON.stringify(role, null, 2)}</pre>
+                    });
+                };
+
+                const handleEdit = () => {
+                    toast.info(notificationsT("editingRole", { name: role.name ?? '', id: role.id }));
+                };
+
+                const handleDelete = () => {
+                    toast.warning(notificationsT("deleteAttempt", { name: role.name ?? '', id: role.id }));
+                };
+
+                return (
+                    <div className="flex justify-end">
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" className="flex size-8 p-0 data-[state=open]:bg-muted">
+                                    <MoreVerticalIcon className="size-4" />
+                                    <span className="sr-only">{t("openMenu")}</span>
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-[160px]">
+                                <DropdownMenuItem onClick={handleViewDetails}>
+                                    <EyeIcon className="mr-2 h-4 w-4" />
+                                    {t("viewRole")}
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={handleEdit}>
+                                    <EditIcon className="mr-2 h-4 w-4" />
+                                    {t("editRole")}
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem className="text-destructive focus:text-destructive" onClick={handleDelete}>
+                                    <TrashIcon className="mr-2 h-4 w-4" />
+                                    {t("deleteRole")}
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
+                );
+            },
+        },
+    ] as ColumnDef<RoleDraggable>[];
+};

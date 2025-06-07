@@ -717,6 +717,115 @@
           "userAttendanceDescription": "Hiển thị số người dùng mới mỗi ngày trong {days} ngày qua",
           "newUsers": "Người dùng mới"
         }
+      },
+      "roles": {
+        "title": "Quản lý Vai trò",
+        "description": "Tạo và quản lý vai trò người dùng và quyền truy cập",
+        "table": {
+          "name": "Tên",
+          "slug": "Slug",
+          "description": "Mô tả",
+          "createdAt": "Ngày tạo",
+          "actions": "Hành động",
+          "selectAll": "Chọn tất cả",
+          "selectRow": "Chọn hàng",
+          "noDescription": "Không có",
+          "openMenu": "Mở menu",
+          "viewRole": "Xem vai trò",
+          "editRole": "Chỉnh sửa vai trò",
+          "deleteRole": "Xóa vai trò",
+          "confirmDelete": "Bạn có chắc chắn muốn xóa vai trò này không?"
+        },
+        "actions": {
+          "addRole": "Thêm vai trò mới",
+          "viewDetails": "Xem chi tiết",
+          "edit": "Chỉnh sửa",
+          "delete": "Xóa"
+        },
+        "addRoleSheet": {
+          "title": "Thêm Vai trò Mới",
+          "description": "Điền thông tin bên dưới để tạo vai trò người dùng mới.",
+          "formLabels": {
+            "name": "Tên Vai trò",
+            "slug": "Slug",
+            "description": "Mô tả (Tùy chọn)",
+            "permissions": "Quyền"
+          },
+          "placeholders": {
+            "name": "ví dụ: Quản trị nội dung",
+            "slug": "ví dụ: quan-tri-noi-dung",
+            "description": "Mô tả ngắn gọn về mục đích và quyền của vai trò này."
+          },
+          "buttons": {
+            "selectPermissions": "Chọn quyền ({count} đã chọn)",
+            "cancel": "Hủy",
+            "create": "Tạo vai trò"
+          }
+        },
+        "notifications": {
+          "viewingRole": "Đang xem vai trò: {name}",
+          "editingRole": "Đang chỉnh sửa vai trò: {name} (ID: {id})",
+          "deleteAttempt": "Đang cố gắng xóa vai trò: {name} (ID: {id})",
+          "roleCreated": "Tạo vai trò thành công",
+          "roleUpdated": "Cập nhật vai trò thành công",
+          "roleDeleted": "Xóa vai trò thành công"
+        }
+      },
+      "permissions": {
+        "title": "Quản lý Quyền",
+        "selectDialog": {
+          "title": "Chọn Quyền",
+          "description": "Chọn các quyền cho vai trò này.",
+          "searchPlaceholder": "Tìm kiếm quyền...",
+          "selected": "Đã chọn",
+          "available": "Có sẵn",
+          "save": "Lưu",
+          "cancel": "Hủy"
+        },
+        "table": {
+          "id": "ID",
+          "name": "Tên",
+          "slug": "Slug",
+          "description": "Mô tả",
+          "module": "Module",
+          "createdAt": "Ngày tạo",
+          "actions": "Hành động",
+          "viewPermission": "Xem quyền",
+          "editPermission": "Chỉnh sửa quyền",
+          "deletePermission": "Xóa quyền",
+          "selectAll": "Chọn tất cả",
+          "selectRow": "Chọn hàng",
+          "noDescription": "Không có mô tả",
+          "openMenu": "Mở menu",
+          "searchPlaceholder": "Tìm kiếm quyền..."
+        },
+        "addPermissionSheet": {
+          "title": "Thêm Quyền Mới",
+          "description": "Tạo quyền mới cho hệ thống",
+          "formLabels": {
+            "name": "Tên Quyền",
+            "slug": "Slug",
+            "description": "Mô tả (Tùy chọn)",
+            "module": "Module"
+          },
+          "placeholders": {
+            "name": "ví dụ: Tạo người dùng",
+            "slug": "ví dụ: tao-nguoi-dung",
+            "description": "Mô tả ngắn gọn về quyền này",
+            "module": "ví dụ: users"
+          },
+          "buttons": {
+            "cancel": "Hủy",
+            "create": "Tạo quyền",
+            "addNew": "Thêm quyền mới"
+          }
+        },
+        "notifications": {
+          "permissionCreated": "Tạo quyền thành công",
+          "permissionUpdated": "Cập nhật quyền thành công",
+          "permissionDeleted": "Xóa quyền thành công",
+          "error": "Đã xảy ra lỗi"
+        }
       }
     },
     "posts": {

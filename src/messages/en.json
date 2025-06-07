@@ -725,6 +725,115 @@
           "userAttendanceDescription": "Showing new users per day for the last {days} days",
           "newUsers": "New Users"
         }
+      },
+      "roles": {
+        "title": "Roles Management",
+        "description": "Create and manage user roles and permissions",
+        "table": {
+          "name": "Name",
+          "slug": "Slug",
+          "description": "Description",
+          "createdAt": "Created At",
+          "actions": "Actions",
+          "selectAll": "Select all",
+          "selectRow": "Select row",
+          "noDescription": "N/A",
+          "openMenu": "Open menu",
+          "viewRole": "View Role",
+          "editRole": "Edit Role",
+          "deleteRole": "Delete Role",
+          "confirmDelete": "Are you sure you want to delete this role?"
+        },
+        "actions": {
+          "addRole": "Add new role",
+          "viewDetails": "View Details",
+          "edit": "Edit",
+          "delete": "Delete"
+        },
+        "addRoleSheet": {
+          "title": "Add New Role",
+          "description": "Fill in the details below to create a new user role.",
+          "formLabels": {
+            "name": "Role Name",
+            "slug": "Slug",
+            "description": "Description (Optional)",
+            "permissions": "Permissions"
+          },
+          "placeholders": {
+            "name": "e.g., Content Moderator",
+            "slug": "e.g., content-moderator",
+            "description": "Briefly describe the role's purpose and permissions."
+          },
+          "buttons": {
+            "selectPermissions": "Select Permissions ({count} selected)",
+            "cancel": "Cancel",
+            "create": "Create Role"
+          }
+        },
+        "notifications": {
+          "viewingRole": "Viewing role: {name}",
+          "editingRole": "Editing role: {name} (ID: {id})",
+          "deleteAttempt": "Attempting to delete role: {name} (ID: {id})",
+          "roleCreated": "Role created successfully",
+          "roleUpdated": "Role updated successfully",
+          "roleDeleted": "Role deleted successfully"
+        }
+      },
+      "permissions": {
+        "title": "Permissions Management",
+        "selectDialog": {
+          "title": "Select Permissions",
+          "description": "Choose the permissions for this role.",
+          "searchPlaceholder": "Search permissions...",
+          "selected": "Selected",
+          "available": "Available",
+          "save": "Save",
+          "cancel": "Cancel"
+        },
+        "table": {
+          "id": "ID",
+          "name": "Name",
+          "slug": "Slug",
+          "description": "Description",
+          "module": "Module",
+          "createdAt": "Created At",
+          "actions": "Actions",
+          "viewPermission": "View Permission",
+          "editPermission": "Edit Permission",
+          "deletePermission": "Delete Permission",
+          "selectAll": "Select all",
+          "selectRow": "Select row",
+          "noDescription": "No description provided",
+          "openMenu": "Open menu",
+          "searchPlaceholder": "Search permissions..."
+        },
+        "addPermissionSheet": {
+          "title": "Add New Permission",
+          "description": "Create a new permission for the system",
+          "formLabels": {
+            "name": "Permission Name",
+            "slug": "Slug",
+            "description": "Description (Optional)",
+            "module": "Module"
+          },
+          "placeholders": {
+            "name": "e.g., Create User",
+            "slug": "e.g., create-user",
+            "description": "Briefly describe what this permission allows",
+            "module": "e.g., users"
+          },
+          "buttons": {
+            "cancel": "Cancel",
+            "create": "Create Permission",
+            "addNew": "Add New Permission"
+          }
+        },
+        "notifications": {
+          "permissionCreated": "Permission created successfully",
+          "permissionUpdated": "Permission updated successfully",
+          "permissionDeleted": "Permission deleted successfully",
+          "error": "An error occurred"
+        }
       }
     },
     "posts": {

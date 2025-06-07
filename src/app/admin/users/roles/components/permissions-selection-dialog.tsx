@@ -13,13 +13,13 @@ import {
 } from "@/components/ui/dialog";
 import {PermissionsDataTable} from "@/app/admin/users/permissions/permissions-data-table";
 import {RowSelectionState} from "@tanstack/react-table";
+import {useTranslations} from "next-intl";
 
 interface PermissionsSelectionDialogProps {
     open: boolean;
     onOpenChangeAction: (open: boolean) => void;
     onConfirmAction: (selectedIds: string[]) => void;
     currentPermissionIds?: string[];
-    // selectedPermissionsId?: string[];
 }
 
 export const PermissionsSelectionDialog: React.FC<PermissionsSelectionDialogProps> = ({
@@ -27,8 +27,8 @@ export const PermissionsSelectionDialog: React.FC<PermissionsSelectionDialogProp
     onOpenChangeAction,
     onConfirmAction,
     currentPermissionIds = [],
-    // selectedPermissionsId = []
 }) => {
+    const t = useTranslations("Admin.users.permissions.selectDialog");
     const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
 
     // Initialize row selection based on currentPermissionIds when dialog opens
@@ -61,9 +61,9 @@ export const PermissionsSelectionDialog: React.FC<PermissionsSelectionDialogProp
         <Dialog open={open} onOpenChange={handleDialogClose}>
             <DialogContent className="sm:max-w-2xl md:max-w-3xl lg:max-w-4xl"> {/* Adjusted width for table */}
                 <DialogHeader>
-                    <DialogTitle>Select Permissions</DialogTitle>
+                    <DialogTitle>{t("title")}</DialogTitle>
                     <DialogDescription>
-                        Choose the permissions to assign to this role.
+                        {t("description")}
                     </DialogDescription>
                 </DialogHeader>
 
@@ -79,15 +79,14 @@ export const PermissionsSelectionDialog: React.FC<PermissionsSelectionDialogProp
                 <DialogFooter>
                     <DialogClose asChild>
                         <Button type="button" variant="outline">
-                            Cancel
+                            {t("cancel")}
                         </Button>
                     </DialogClose>
                     <Button type="button" onClick={handleConfirm}>
-                        Confirm Selection
+                        {t("save")}
                     </Button>
                 </DialogFooter>
             </DialogContent>
         </Dialog>
     );
 };
-

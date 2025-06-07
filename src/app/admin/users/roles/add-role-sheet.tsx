@@ -20,15 +20,17 @@ import {CreateRoleRequest} from "@/api/client";
 import {zCreateRoleRequest} from "@/api/client/zod.gen";
 import {useRolesManagement} from "@/app/admin/users/roles/hooks/useRolesManagement";
 import { PermissionsSelectionDialog } from "./components/permissions-selection-dialog";
+import {useTranslations} from "next-intl";
 
 interface AddRoleSheetProps {
     children: React.ReactNode;
 }
 
 export const AddRoleSheet: React.FC<AddRoleSheetProps> = ({children}) => {
+    const t = useTranslations("Admin.users.roles.addRoleSheet");
     const [isOpen, setIsOpen] = useState(false);
-    const [isPermissionDialogOpen, setIsPermissionDialogOpen] = useState(false); // Fixed: Added semicolon
-    const {createRole} = useRolesManagement(); // Fixed: Added semicolon for consistency
+    const [isPermissionDialogOpen, setIsPermissionDialogOpen] = useState(false);
+    const {createRole} = useRolesManagement();
 
     const {
         control,
@@ -64,34 +66,34 @@ export const AddRoleSheet: React.FC<AddRoleSheetProps> = ({children}) => {
             </div>
             <SheetContent className="sm:max-w-lg">
                 <SheetHeader>
-                    <SheetTitle>Add New Role</SheetTitle>
+                    <SheetTitle>{t("title")}</SheetTitle>
                     <SheetDescription>
-                        Fill in the details below to create a new user role.
+                        {t("description")}
                     </SheetDescription>
                 </SheetHeader>
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 py-6">
                     <div className="space-y-2">
-                        <Label htmlFor="name">Role Name</Label>
+                        <Label htmlFor="name">{t("formLabels.name")}</Label>
                         <Controller
                             name="name"
                             control={control}
-                            render={({field}) => <Input id="name" {...field} placeholder="e.g., Content Moderator"/>}
+                            render={({field}) => <Input id="name" {...field} placeholder={t("placeholders.name")}/>}
                         />
                         {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="slug">Slug</Label>
+                        <Label htmlFor="slug">{t("formLabels.slug")}</Label>
                         <Controller
                             name="slug"
                             control={control}
-                            render={({field}) => <Input id="slug" {...field} placeholder="e.g., content-moderator"/>}
+                            render={({field}) => <Input id="slug" {...field} placeholder={t("placeholders.slug")}/>}
                         />
                         {errors.slug && <p className="text-sm text-red-500">{errors.slug.message}</p>}
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="description">Description (Optional)</Label>
+                        <Label htmlFor="description">{t("formLabels.description")}</Label>
                         <Controller
                             name="description"
                             control={control}
@@ -99,7 +101,7 @@ export const AddRoleSheet: React.FC<AddRoleSheetProps> = ({children}) => {
                                 <Textarea
                                     id="description"
                                     {...field}
-                                    placeholder="Briefly describe the role's purpose and permissions."
+                                    placeholder={t("placeholders.description")}
                                     rows={4}
                                 />
                             )}
@@ -108,9 +110,9 @@ export const AddRoleSheet: React.FC<AddRoleSheetProps> = ({children}) => {
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="permissionIds">Permissions</Label>
+                        <Label htmlFor="permissionIds">{t("formLabels.permissions")}</Label>
                         <Button type="button" variant="outline" onClick={() => setIsPermissionDialogOpen(true)}>
-                            Select Permissions ({currentPermissionIds?.length || 0} selected)
+                            {t("buttons.selectPermissions", { count: currentPermissionIds?.length || 0 })}
                         </Button>
                         {errors.permissionIds && <p className="text-sm text-red-500">{errors.permissionIds.message}</p>}
                     </div>
@@ -118,11 +120,11 @@ export const AddRoleSheet: React.FC<AddRoleSheetProps> = ({children}) => {
                     <SheetFooter className="mt-8">
                         <SheetClose asChild>
                             <Button type="button" variant="outline" onClick={() => reset()}>
-                                Cancel
+                                {t("buttons.cancel")}
                             </Button>
                         </SheetClose>
                         <Button type="submit" disabled={isSubmitting}>
-                            {isSubmitting ? "Creating..." : "Create Role"}
+                            {isSubmitting ? "Creating..." : t("buttons.create")}
                         </Button>
                     </SheetFooter>
                 </form>
@@ -136,4 +138,3 @@ export const AddRoleSheet: React.FC<AddRoleSheetProps> = ({children}) => {
         </Sheet>
     );
 };
-

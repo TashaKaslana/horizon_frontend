@@ -4,7 +4,7 @@ import usePermissionsStore from "@/app/admin/users/permissions/stores/usePermiss
 import usePermissionsManagement from "@/app/admin/users/permissions/hooks/usePermissionsManagement";
 import {PermissionDto} from "@/api/client";
 import {DraggableItem} from "@/components/common/dnd-table-components";
-import {permissionsColumns} from "@/app/admin/users/permissions/permissions-columns";
+import {useCreatePermissionsColumns} from "@/app/admin/users/permissions/permissions-columns";
 import {
     RowSelectionState,
     VisibilityState,
@@ -28,6 +28,7 @@ export function PermissionsDataTable({
     const [data, setData] = useState<PermissionDraggable[]>([]);
     const {permissions} = usePermissionsStore();
     const {totalPages, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage} = usePermissionsManagement();
+    const columns = useCreatePermissionsColumns()
 
     useEffect(() => {
         const draggablePermissions: PermissionDraggable[] = permissions.map(permissionFromStore => {
@@ -47,7 +48,7 @@ export function PermissionsDataTable({
             isFetchingNextPage={isFetchingNextPage}
             hasNextPage={hasNextPage}
             fetchNextPage={fetchNextPage}
-            columns={permissionsColumns}
+            columns={columns}
             data={data}
             setData={setData}
             enableRowSelection={enableRowSelection}

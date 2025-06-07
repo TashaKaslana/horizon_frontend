@@ -19,6 +19,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { toast } from "sonner";
 import { PermissionSchema } from "@/schemas/user-schema";
+import { useTranslations } from "next-intl";
 
 const CreatePermissionFormSchema = PermissionSchema.omit({ id: true, createdAt: true });
 type CreatePermissionFormValues = z.infer<typeof CreatePermissionFormSchema>;
@@ -29,6 +30,7 @@ interface AddPermissionSheetProps {
 }
 
 export const AddPermissionSheet: React.FC<AddPermissionSheetProps> = ({ onPermissionAdded, children }) => {
+    const t = useTranslations("Admin.users.permissions");
     const [isOpen, setIsOpen] = useState(false);
 
     const {
@@ -41,7 +43,7 @@ export const AddPermissionSheet: React.FC<AddPermissionSheetProps> = ({ onPermis
         defaultValues: {
             name: "",
             slug: "",
-            description: "", // Added description field
+            description: "",
             module: "",
         },
     });
@@ -51,13 +53,13 @@ export const AddPermissionSheet: React.FC<AddPermissionSheetProps> = ({ onPermis
             // Simulate API call
             await new Promise(resolve => setTimeout(resolve, 1000));
             console.log("New permission data:", data);
-            toast.success("Permission created successfully!");
+            toast.success(t("notifications.permissionCreated"));
             onPermissionAdded?.(data);
             reset();
             setIsOpen(false);
         } catch (error) {
             console.error("Failed to create permission:", error);
-            toast.error("Failed to create permission. Please try again.");
+            toast.error(t("notifications.error"));
         }
     };
 
@@ -68,44 +70,44 @@ export const AddPermissionSheet: React.FC<AddPermissionSheetProps> = ({ onPermis
             </div>
             <SheetContent className="sm:max-w-lg">
                 <SheetHeader>
-                    <SheetTitle>Add New Permission</SheetTitle>
+                    <SheetTitle>{t("addPermissionSheet.title")}</SheetTitle>
                     <SheetDescription>
-                        Fill in the details below to create a new permission.
+                        {t("addPermissionSheet.description")}
                     </SheetDescription>
                 </SheetHeader>
                 <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 py-6">
                     <div className="space-y-2">
-                        <Label htmlFor="name">Permission Name</Label>
+                        <Label htmlFor="name">{t("addPermissionSheet.formLabels.name")}</Label>
                         <Controller
                             name="name"
                             control={control}
-                            render={({ field }) => <Input id="name" {...field} placeholder="e.g., Create Posts" />}
+                            render={({ field }) => <Input id="name" {...field} placeholder={t("addPermissionSheet.placeholders.name")} />}
                         />
                         {errors.name && <p className="text-sm text-red-500">{errors.name.message}</p>}
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="slug">Slug</Label>
+                        <Label htmlFor="slug">{t("addPermissionSheet.formLabels.slug")}</Label>
                         <Controller
                             name="slug"
                             control={control}
-                            render={({ field }) => <Input id="slug" {...field} placeholder="e.g., create-posts" />}
+                            render={({ field }) => <Input id="slug" {...field} placeholder={t("addPermissionSheet.placeholders.slug")} />}
                         />
                         {errors.slug && <p className="text-sm text-red-500">{errors.slug.message}</p>}
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="module">Module</Label>
+                        <Label htmlFor="module">{t("addPermissionSheet.formLabels.module")}</Label>
                         <Controller
                             name="module"
                             control={control}
-                            render={({ field }) => <Input id="module" {...field} placeholder="e.g., Posts, Users, Comments" />}
+                            render={({ field }) => <Input id="module" {...field} placeholder={t("addPermissionSheet.placeholders.module")} />}
                         />
                         {errors.module && <p className="text-sm text-red-500">{errors.module.message}</p>}
                     </div>
 
                     <div className="space-y-2">
-                        <Label htmlFor="description">Description (Optional)</Label>
+                        <Label htmlFor="description">{t("addPermissionSheet.formLabels.description")}</Label>
                         <Controller
                             name="description"
                             control={control}
@@ -113,7 +115,7 @@ export const AddPermissionSheet: React.FC<AddPermissionSheetProps> = ({ onPermis
                                 <Textarea
                                     id="description"
                                     {...field}
-                                    placeholder="Briefly describe the permission."
+                                    placeholder={t("addPermissionSheet.placeholders.description")}
                                     rows={3}
                                 />
                             )}
@@ -124,11 +126,11 @@ export const AddPermissionSheet: React.FC<AddPermissionSheetProps> = ({ onPermis
                     <SheetFooter className="mt-8">
                         <SheetClose asChild>
                             <Button type="button" variant="outline" onClick={() => reset()}>
-                                Cancel
+                                {t("addPermissionSheet.buttons.cancel")}
                             </Button>
                         </SheetClose>
                         <Button type="submit" disabled={isSubmitting}>
-                            {isSubmitting ? "Creating..." : "Create Permission"}
+                            {isSubmitting ? "..." : t("addPermissionSheet.buttons.create")}
                         </Button>
                     </SheetFooter>
                 </form>
@@ -136,4 +138,3 @@ export const AddPermissionSheet: React.FC<AddPermissionSheetProps> = ({ onPermis
         </Sheet>
     );
 };
-
