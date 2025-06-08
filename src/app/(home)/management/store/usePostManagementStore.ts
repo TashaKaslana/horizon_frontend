@@ -1,6 +1,5 @@
 import {create} from "zustand";
 import {PostCategory, SortType} from "../types/types";
-import {toast} from "sonner";
 import {Feed} from "@/types/Feed";
 
 type PostManagementStore = {
@@ -32,17 +31,11 @@ export const usePostManagementStore = create<PostManagementStore>()((set) => ({
                         case 'oldest':
                             return new Date(a.post.createdAt).getTime() - new Date(b.post.createdAt).getTime()
                         case 'popular':
-                            toast.error('This feature is not available yet')
-                            // return b.view - a.view
-                            return 0
+                            return b.statistic.totalViews - a.statistic.totalViews
                         case 'top_rated':
-                            toast.error('This feature is not available yet')
-                            // return b.likes - a.likes
-                            return 0
+                            return b.statistic.totalLikes - a.statistic.totalLikes
                         case 'top_commented':
-                            toast.error('This feature is not available yet')
-                            // return b.comments - a.comments
-                            return 0
+                            return b.statistic.totalComments - a.statistic.totalComments
                         default:
                             return new Date(a.post.createdAt).getTime() - new Date(b.post.createdAt).getTime()
                     }

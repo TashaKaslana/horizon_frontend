@@ -10,10 +10,12 @@ import {Spinner} from "@/components/ui/spinner";
 import React from "react";
 import {MoreActionDropdown} from "@/app/(home)/management/components/MoreActionDropdown";
 import {useTranslations} from "next-intl";
+import {usePostManagementStore} from "@/app/(home)/management/store/usePostManagementStore";
 
 export const ManagementMain = () => {
     const t = useTranslations('Home.management');
-    const {feeds, isFetchingNextPage, fetchNextPage, hasNextPage} = usePostManagement()
+    const {isFetchingNextPage, fetchNextPage, hasNextPage} = usePostManagement()
+    const {feeds} = usePostManagementStore();
 
     return (
         <div className={'space-y-5'}>

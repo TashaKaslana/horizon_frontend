@@ -29,8 +29,11 @@ export function ManagementHeader() {
         {label: "Top Commented", value: "top_commented"},
     ]
 
+    const [sortType, setSortType] = React.useState<SortType>('newest')
+    
     const handleSortChange = (value: SortType) => {
         sortPosts(value)
+        setSortType(value)
     }
 
     const handleSearchChange = useDebouncedCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,7 +77,7 @@ export function ManagementHeader() {
 
             <section className={'lg:flex lg:gap-2 sm:space-y-2'}>
                 <Input placeholder={t('searchPlaceholder')} className={'flex-1'} onChange={handleSearchChange}/>
-                <Select onValueChange={handleSortChange}>
+                <Select value={sortType} onValueChange={handleSortChange}>
                     <SelectTrigger className={'w-38'}>
                         <SelectValue placeholder={t('sortBy')}/>
                     </SelectTrigger>

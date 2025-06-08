@@ -4,8 +4,7 @@ import {useDiscoverStore} from "@/app/(home)/discover/store/useDiscoverPostStore
 import {usePostCategoryStore} from "@/app/(home)/discover/store/usePostCategoryStore";
 import InfiniteScroll from "@/components/ui/infinite-scroll";
 import {useDiscovery} from "@/app/(home)/discover/hooks/useDiscovery";
-import {ScrollArea, ScrollBar} from "@/components/ui/scroll-area";
-import { useTranslations } from "next-intl";
+import {useTranslations} from "next-intl";
 
 export const DiscoverHeader = ({triggers}: { triggers: string[] }) => {
     const t = useTranslations('Home.discover');
@@ -42,14 +41,14 @@ export const DiscoverHeader = ({triggers}: { triggers: string[] }) => {
             </Select>
         </div>
         <TabsList className={'w-full'}>
-            <ScrollArea className={'justify-between'}>
-                <InfiniteScroll
-                    isLoading={categoryIsFetching}
-                    hasMore={categoryHasNextPage}
-                    next={categoryFetchNext}
-                    direction={'horizontal'}
-                    rootMargin={'0px 100px 0px 0px'}
-                >
+            <InfiniteScroll
+                isLoading={categoryIsFetching}
+                hasMore={categoryHasNextPage}
+                next={categoryFetchNext}
+                direction={'horizontal'}
+                rootMargin={'0px 100px 0px 0px'}
+            >
+                <div className={'space-x-1'}>
                     {triggers.map((trigger, index) =>
                         <TabsTrigger
                             value={trigger}
@@ -60,9 +59,8 @@ export const DiscoverHeader = ({triggers}: { triggers: string[] }) => {
                             {trigger}
                         </TabsTrigger>
                     )}
-                </InfiniteScroll>
-                <ScrollBar orientation="horizontal"/>
-            </ScrollArea>
+                </div>
+            </InfiniteScroll>
         </TabsList>
     </header>;
 }

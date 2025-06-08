@@ -452,7 +452,8 @@
         "popular": "Phổ biến",
         "recent": "Gần đây",
         "rating": "Đánh giá"
-      }
+      },
+      "noResults": "Không tìm thấy video nào"
     },
     "foryou": {
       "loading": "Đang tải...",

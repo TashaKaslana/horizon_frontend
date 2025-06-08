@@ -1,6 +1,5 @@
 import {Feed} from "@/types/Feed";
 import {create} from 'zustand'
-import {toast} from "sonner";
 
 interface DiscoverState {
     feeds: Feed[];
@@ -27,9 +26,7 @@ export const useDiscoverStore = create<DiscoverState>()((set) => ({
                 feeds: [...state.feeds].sort((a, b) => {
                         switch (option.toLowerCase()) {
                             case 'popular':
-                                toast.error("This feature is not available yet")
-                                // return b.view - a.view
-                                return 0
+                                return b.statistic.totalViews - a.statistic.totalViews
                             case 'rating':
                                 return b.statistic.totalLikes - a.statistic.totalLikes
                             case 'recent':

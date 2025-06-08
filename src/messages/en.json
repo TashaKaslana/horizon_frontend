@@ -452,7 +452,8 @@
         "popular": "Popular",
         "recent": "Recent",
         "rating": "Rating"
-      }
+      },
+      "noResults": "No video found in this category"
     },
     "foryou": {
       "loading": "Loading...",

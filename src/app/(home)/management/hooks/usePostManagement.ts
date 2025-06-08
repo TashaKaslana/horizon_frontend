@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import {useCurrentUser} from "@/stores/useCurrentUser";
 
 export const usePostManagement = () => {
-    const {feeds, setInitialPosts, setPosts, deletePostById} = usePostManagementStore()
+    const {setInitialPosts, setPosts, deletePostById} = usePostManagementStore()
     const deletedPostIdsRef = useRef<Set<string>>(new Set());
     const {user} = useCurrentUser();
 
@@ -56,7 +56,6 @@ export const usePostManagement = () => {
     }
 
     return {
-        feeds,
         isFetchingNextPage,
         fetchNextPage,
         hasNextPage,
