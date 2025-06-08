@@ -2,8 +2,9 @@ import {useMutation} from "@tanstack/react-query";
 import {CommentResponse} from "@/types/Comment";
 import {useCommentRefStore} from "@/app/(home)/foryou/store/useCommentRefStore";
 import {toast} from "sonner";
-import {deleteComment, likeComment, pinComment, reportComment, unpinComment} from "@/api/commentApi";
+import {deleteComment, likeComment, pinComment, unpinComment} from "@/api/commentApi";
 import {useCommentStore} from "@/app/(home)/foryou/store/useCommentStore";
+import {createReportMutation} from "@/api/client/@tanstack/react-query.gen";
 
 type CommentAction = {
     comment: CommentResponse,
@@ -60,9 +61,9 @@ export function useCommentAction({comment}: CommentAction) {
     });
 
     const reportMutation = useMutation({
-        mutationFn: (reason: string) => reportComment(comment.id, reason),
-        onSuccess: () => {
-            toast.success("Reported comment");
+        ...createReportMutation(),
+        onSuccess: (_, variables) => {
+            toast.success("Reported comment: " + variables.body.reason);
         },
         onError: () => {
             toast.error("Failed to report comment.");
@@ -86,7 +87,13 @@ export function useCommentAction({comment}: CommentAction) {
     };
     const handlePinComment = () => pinMutation.mutate();
     const handleUnPinComment = () => unpinMutation.mutate();
-    const handleReportComment = (reason: string) => reportMutation.mutate(reason);
+    const handleReportComment = (reason: string) => reportMutation.mutate({
+        body: {
+            reason,
+            itemType: 'COMMENT',
+            commentId: comment.id,
+        }
+    });
 
     return {
         handleLike,

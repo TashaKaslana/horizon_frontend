@@ -80,19 +80,22 @@ export const CommentActionBar = ({comment}: {
                                     <DropdownMenuGroup>
                                         <DropdownMenuItem
                                             onClick={handleCopy}
-                                            className={'cursor-pointer text-emerald-400'}>
-                                            <Copy className={'mr-2'}/> {t("copy")}
+                                            className="cursor-pointer text-emerald-400 hover:!text-emerald-400"
+                                        >
+                                            <Copy className="mr-2" /> {t("copy")}
                                         </DropdownMenuItem>
                                         {comment.isPinned ? (
                                             <DropdownMenuItem
                                                 onClick={handleUnPinComment}
-                                                className={'cursor-pointer text-emerald-400'}>
-                                                <PinOff className={'mr-2'}/> {t("unpin")}
+                                                className="cursor-pointer text-emerald-400 hover:!text-emerald-400"
+                                            >
+                                                <PinOff className="mr-2" /> {t("unpin")}
                                             </DropdownMenuItem>
                                         ) : (
                                             <DropdownMenuItem
                                                 onClick={handlePinComment}
-                                                className={'cursor-pointer text-emerald-400'}>
+                                                className="cursor-pointer text-emerald-400 hover:!text-emerald-400"
+                                            >
                                                 <Pin className={'mr-2'}/> {t("pin")}
                                             </DropdownMenuItem>
                                         )}
@@ -102,25 +105,24 @@ export const CommentActionBar = ({comment}: {
                                     <DropdownMenuGroup>
                                         <DropdownMenuItem
                                             onClick={handleEdit}
-                                            className={'cursor-pointer text-sky-400'}
+                                            className="cursor-pointer text-sky-400 hover:!text-sky-400"
                                         >
-                                            <Edit className={'mr-2'}/> {t("edit")}
+                                            <Edit className="mr-2" /> {t("edit")}
                                         </DropdownMenuItem>
                                         <DropdownMenuItem
                                             onClick={handleDelete}
-                                            className={'cursor-pointer text-sky-400'}>
-                                            <Delete className={'mr-2'}/> {t("delete")}
+                                            className="cursor-pointer text-sky-400 hover:!text-sky-400"
+                                        >
+                                            <Delete className="mr-2" /> {t("delete")}
                                         </DropdownMenuItem>
                                     </DropdownMenuGroup>
 
                                     <DropdownMenuSeparator/>
 
-                                    <DropdownMenuGroup>
+                                    <DropdownMenuGroup className={'group'}>
                                         <DropdownMenuSub>
-                                            <DropdownMenuSubTrigger
-                                                className={'cursor-pointer text-red-600'}
-                                            >
-                                                <AlertTriangle className={'mr-2'}/> {t("report")}
+                                            <DropdownMenuSubTrigger className="cursor-pointer text-red-600 hover:!text-red-600 focus:!text-red-600">
+                                                <AlertTriangle className="mr-2" /> {t("report")}
                                             </DropdownMenuSubTrigger>
                                             <DropdownMenuPortal>
                                                 <DropdownMenuSubContent>
@@ -128,7 +130,8 @@ export const CommentActionBar = ({comment}: {
                                                         <DropdownMenuItem
                                                             key={key}
                                                             onClick={() => handleReportComment(value)}
-                                                            className={'cursor-pointer text-red-600'}>
+                                                            className="cursor-pointer text-red-600 focus:!text-red-600"
+                                                        >
                                                             {value}
                                                         </DropdownMenuItem>
                                                     ))}

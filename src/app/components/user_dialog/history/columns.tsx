@@ -6,7 +6,7 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
-    DropdownMenuLabel, DropdownMenuSeparator,
+    DropdownMenuSeparator,
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import {Button} from "@/components/ui/button";
@@ -16,12 +16,6 @@ import Link from "next/link";
 import {useRouter} from "next/navigation";
 
 export const historyColumns: ColumnDef<History>[] = [
-    {
-        header: ({column}) => (
-            <DataTableColumnHeader column={column} title={'ID'}/>
-        ),
-        accessorKey: 'id'
-    },
     {
         id: "activity",
         header: ({column}) => (
@@ -40,10 +34,15 @@ export const historyColumns: ColumnDef<History>[] = [
     },
     {
         id: "actions",
+        header: ({column}) => (
+            <DataTableColumnHeader column={column} title={'Actions'}/>
+        ),
         cell: ({row}) => {
             const history = row.original;
             return <Action history={history}/>;
         },
+        enableHiding: false,
+        enableSorting: false,
     },
 ];
 
@@ -70,7 +69,6 @@ const Action = ({history}: { history: History }) => {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Actions</DropdownMenuLabel>
                 <DropdownMenuItem
                     onClick={() => navigator.clipboard.writeText(history.id)}
                 >

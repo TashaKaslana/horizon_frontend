@@ -4,13 +4,14 @@ import {
     removeLikePost,
     bookmarkPost,
     getFeeds,
-    removeBookmarkPost, reportPost, getFeedById
+    removeBookmarkPost, getFeedById
 } from '@/api/postApi';
 import {useFeedStore} from '@/app/(home)/foryou/store/useFeedStore';
 import {PaginationInfo} from "@/types/api";
 import {useEffect} from "react";
 import {toast} from "sonner";
 import {Feed} from "@/types/Feed";
+import {createReportMutation} from "@/api/client/@tanstack/react-query.gen";
 
 export const useFeedActions = (excludePostId?: string) => {
     const {
@@ -106,9 +107,9 @@ export const useFeedActions = (excludePostId?: string) => {
     });
 
     const reportMutation = useMutation({
-        mutationFn: ({postId, reason}: { postId: string, reason: string }) => reportPost(postId, reason),
-        onSuccess: () => {
-            toast.success("Reported post");
+        ...createReportMutation(),
+        onSuccess: (_, variables) => {
+            toast.success("Reported post: " +  variables.body.reason);
         },
         onError: () => {
             toast.error("Failed to report post");
@@ -139,7 +140,13 @@ export const useFeedActions = (excludePostId?: string) => {
         const feed = feeds.find(f => f.post.id === postId);
         if (!feed) return;
 
-        reportMutation.mutate({postId, reason})
+        reportMutation.mutate({
+            body: {
+                itemType: 'POST',
+                postId: feed.post.id,
+                reason: reason,
+            }
+        })
     }
 
     return {
