@@ -6,6 +6,7 @@ import { PlusIcon, SaveIcon, Loader2Icon, FileTextIcon, XIcon } from "lucide-rea
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -61,6 +62,7 @@ export const CreatePostSheet: React.FC<CreatePostSheetProps> = ({
     onCreateAction
                                                                 }) => {
     const [isOpen, setIsOpen] = React.useState(false);
+    const t = useTranslations("Admin.posts.all");
 
     const form = useForm<CreatePostFormValues>({
         resolver: zodResolver(createPostFormSchema),
@@ -104,20 +106,20 @@ export const CreatePostSheet: React.FC<CreatePostSheetProps> = ({
 
         if (!validationResult.success) {
             console.error("Final payload validation error:", validationResult.error.flatten());
-            toast.error("There was an issue with the post data. Please check console.");
+            toast.error(t("validationError"));
             return;
         }
         
         const creationPromise = onCreateAction(validationResult.data);
 
         toast.promise(creationPromise, {
-            loading: "Creating new post...",
+            loading: t("creatingNewPost"),
             success: () => {
                 handleOpenChange(false);
-                return "Post created successfully!";
+                return t("postCreatedSuccess");
             },
             error: (err) => {
-                return err.message || "Error creating post.";
+                return err.message || t("postCreationError");
             }
         });
     };
@@ -127,8 +129,8 @@ export const CreatePostSheet: React.FC<CreatePostSheetProps> = ({
             <SheetTrigger asChild>
                 <Button variant="default" size="sm" className="gap-1.5">
                     <PlusIcon className="size-4" />
-                    <span className="hidden lg:inline">Create Post</span>
-                    <span className="lg:hidden">New</span>
+                    <span className="hidden lg:inline">{t("table.createPost")}</span>
+                    <span className="lg:hidden">{t("table.new")}</span>
                 </Button>
             </SheetTrigger>
             <SheetContent side="right" className="flex flex-col w-full sm:max-w-xl md:max-w-2xl">
@@ -136,9 +138,9 @@ export const CreatePostSheet: React.FC<CreatePostSheetProps> = ({
                     <div className="flex items-center gap-3">
                         <FileTextIcon className="size-6 text-primary" />
                         <div>
-                            <SheetTitle className="text-2xl">Create New Post</SheetTitle>
+                            <SheetTitle className="text-2xl">{t("table.createNewPost")}</SheetTitle>
                             <SheetDescription>
-                                Fill in the details to publish a new article.
+                                {t("table.fillDetailsToPublish")}
                             </SheetDescription>
                         </div>
                     </div>
@@ -152,9 +154,9 @@ export const CreatePostSheet: React.FC<CreatePostSheetProps> = ({
                                 name="caption"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Caption</FormLabel>
+                                        <FormLabel>{t("table.caption")}</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="My Awesome Post" {...field} disabled={form.formState.isSubmitting} />
+                                            <Input placeholder={t("table.captionPlaceholder")} {...field} disabled={form.formState.isSubmitting} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -165,10 +167,10 @@ export const CreatePostSheet: React.FC<CreatePostSheetProps> = ({
                                 name="categoryName"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Category</FormLabel>
+                                        <FormLabel>{t("table.category")}</FormLabel>
                                         <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value} disabled={form.formState.isSubmitting}>
                                             <FormControl>
-                                                <SelectTrigger><SelectValue placeholder="Select category" /></SelectTrigger>
+                                                <SelectTrigger><SelectValue placeholder={t("table.selectCategory")} /></SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
                                                 {PostCategoryEnum.options.map(cat => <SelectItem key={cat} value={cat}>{cat}</SelectItem>)}
@@ -185,9 +187,9 @@ export const CreatePostSheet: React.FC<CreatePostSheetProps> = ({
                             name="description"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Description (Optional)</FormLabel>
+                                    <FormLabel>{t("table.description")}</FormLabel>
                                     <FormControl>
-                                        <Textarea placeholder="A brief summary of the post" {...field} value={field.value || ""} disabled={form.formState.isSubmitting} />
+                                        <Textarea placeholder={t("table.descriptionPlaceholder")} {...field} value={field.value || ""} disabled={form.formState.isSubmitting} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
@@ -200,10 +202,10 @@ export const CreatePostSheet: React.FC<CreatePostSheetProps> = ({
                                 name="status"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Status</FormLabel>
+                                        <FormLabel>{t("table.status")}</FormLabel>
                                         <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value} disabled={form.formState.isSubmitting}>
                                             <FormControl>
-                                                <SelectTrigger><SelectValue placeholder="Select status" /></SelectTrigger>
+                                                <SelectTrigger><SelectValue placeholder={t("table.selectStatus")} /></SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
                                                 {PostStatusEnum.options.map(stat => <SelectItem key={stat} value={stat}>{stat}</SelectItem>)}
@@ -218,10 +220,10 @@ export const CreatePostSheet: React.FC<CreatePostSheetProps> = ({
                                 name="visibility"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Visibility</FormLabel>
+                                        <FormLabel>{t("table.visibility")}</FormLabel>
                                         <Select onValueChange={field.onChange} defaultValue={field.value} value={field.value} disabled={form.formState.isSubmitting}>
                                             <FormControl>
-                                                <SelectTrigger><SelectValue placeholder="Select visibility" /></SelectTrigger>
+                                                <SelectTrigger><SelectValue placeholder={t("table.selectVisibility")} /></SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
                                                 {(zCreatePostRequest.shape.visibility._def).values.map((vis: string) => (
@@ -240,11 +242,11 @@ export const CreatePostSheet: React.FC<CreatePostSheetProps> = ({
                             name="tagsInput"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Tags (comma-separated)</FormLabel>
+                                    <FormLabel>{t("table.tagsLabel")}</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="e.g., tech, news, updates" {...field} disabled={form.formState.isSubmitting} />
+                                        <Input placeholder={t("table.tagsPlaceholder")} {...field} disabled={form.formState.isSubmitting} />
                                     </FormControl>
-                                    <FormDescription>Enter tags separated by commas.</FormDescription>
+                                    <FormDescription>{t("table.tagsDescription")}</FormDescription>
                                     <FormMessage />
                                 </FormItem>
                             )}
@@ -254,11 +256,11 @@ export const CreatePostSheet: React.FC<CreatePostSheetProps> = ({
                             name="videoThumbnailUrl"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Featured Image URL (Optional)</FormLabel>
+                                    <FormLabel>{t("table.featuredImageUrl")}</FormLabel>
                                     <FormControl>
-                                        <Input placeholder="https://example.com/image.png" {...field} value={field.value || ""} disabled={form.formState.isSubmitting} />
+                                        <Input placeholder={t("table.imageUrlPlaceholder")} {...field} value={field.value || ""} disabled={form.formState.isSubmitting} />
                                     </FormControl>
-                                    <FormDescription>URL for the post&#39;s thumbnail or featured image.</FormDescription>
+                                    <FormDescription>{t("table.thumbnailDescription")}</FormDescription>
                                     <FormMessage />
                                 </FormItem>
                             )}
@@ -267,13 +269,13 @@ export const CreatePostSheet: React.FC<CreatePostSheetProps> = ({
                         <SheetFooter className="mt-auto flex flex-col-reverse sm:flex-row sm:justify-end gap-2 pt-6">
                             <SheetClose asChild>
                                 <Button type="button" variant="outline" onClick={() => handleOpenChange(false)} disabled={form.formState.isSubmitting}>
-                                    <XIcon className="mr-2 h-4 w-4" /> Cancel
+                                    <XIcon className="mr-2 h-4 w-4" /> {t("table.cancel")}
                                 </Button>
                             </SheetClose>
                             <Button type="submit" disabled={form.formState.isSubmitting}>
                                 {form.formState.isSubmitting ? <Loader2Icon className="mr-2 h-4 w-4 animate-spin" /> :
                                     <SaveIcon className="mr-2 h-4 w-4" />}
-                                Create Post
+                                {t("table.createPost")}
                             </Button>
                         </SheetFooter>
                     </form>

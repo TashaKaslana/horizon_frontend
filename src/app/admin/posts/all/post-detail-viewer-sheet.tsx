@@ -15,6 +15,7 @@ import {
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
+import { useTranslations } from "next-intl";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -83,6 +84,7 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
     const [isEditing, setIsEditing] = React.useState(false);
     const { actions: postStoreActions } = usePostsStore();
     const { selectedPostData, updatePost, isUpdatingPost, isSelectedPostLoading } = usePostsManagement(postId);
+    const t = useTranslations("Admin.posts.all");
 
     const form = useForm<EditablePostFormValues>({
         resolver: zodResolver(editablePostSchema),
@@ -142,7 +144,7 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
 
     const onSubmit = async (values: EditablePostFormValues) => {
         if (!post || !post.id) {
-            toast.error("Cannot update post without an ID.");
+            toast.error(t("actions.cannotUpdatePostNoId"));
             return;
         }
 
@@ -160,11 +162,11 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
             const validatedPayload = zUpdatePostRequest.parse(payloadForUpdate);
 
             await updatePost(post.id, validatedPayload);
-            toast.success(`"${values.caption || post.caption}" updated successfully!`);
+            toast.success(t("actions.postUpdatedSuccess", { caption: values.caption || post.caption || '' }));
             setIsEditing(false);
         } catch (error) {
             if (error instanceof z.ZodError) {
-                toast.error("Validation error. Please review your input.");
+                toast.error(t("actions.validationError"));
                 console.error("Zod validation error for UpdatePostRequest:", error.flatten());
             } else {
                 console.error("Update post error:", error);
@@ -204,7 +206,7 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
             <Sheet open={isOpen} onOpenChange={(openState) => onSetIsOpenAction?.(openState)}>
                 <SheetContent side="right" className="flex flex-col items-center justify-center w-full sm:max-w-xl md:max-w-2xl px-2">
                     <Loader2Icon className="h-8 w-8 animate-spin text-muted-foreground" />
-                    <p>Loading post details...</p>
+                    <p>{t("actions.loadingPostDetails")}</p>
                 </SheetContent>
             </Sheet>
         );
@@ -214,8 +216,8 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
         return (
             <Sheet open={isOpen} onOpenChange={(openState) => onSetIsOpenAction?.(openState)}>
                 <SheetContent side="right" className="flex flex-col items-center justify-center w-full sm:max-w-xl md:max-w-2xl px-2">
-                    <p className="text-muted-foreground">Post not found or unable to load.</p>
-                    <Button onClick={() => { onSetIsOpenAction?.(false); setIsEditing(false); }} variant="outline">Close</Button>
+                    <p className="text-muted-foreground">{t("actions.postNotFound")}</p>
+                    <Button onClick={() => { onSetIsOpenAction?.(false); setIsEditing(false); }} variant="outline">{t("table.close")}</Button>
                 </SheetContent>
             </Sheet>
         );
@@ -228,8 +230,8 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
                 onSetIsOpenAction?.(openState);
             }}>
                 <SheetContent side="right" className="flex flex-col items-center justify-center w-full sm:max-w-xl md:max-w-2xl px-2">
-                    <p className="text-muted-foreground">No post selected or available.</p>
-                    <Button onClick={() => { onSetIsOpenAction?.(false); setIsEditing(false); }} variant="outline">Close</Button>
+                    <p className="text-muted-foreground">{t("actions.noPostSelected")}</p>
+                    <Button onClick={() => { onSetIsOpenAction?.(false); setIsEditing(false); }} variant="outline">{t("table.close")}</Button>
                 </SheetContent>
             </Sheet>
         );
@@ -249,13 +251,13 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
                 <SheetHeader className="pb-4">
                     <SheetTitle className="flex justify-between items-start">
                         <div>
-                            <SheetTitle className="text-2xl">{isEditing ? "Edit Post" : post.caption || "Post Details"}</SheetTitle>
+                            <SheetTitle className="text-2xl">{isEditing ? t("actions.editPost") : post.caption || t("actions.postDetails")}</SheetTitle>
                             <SheetDescription>
-                                {isEditing ? "Modify the details of the post." : post.description || "No description provided."}
+                                {isEditing ? t("actions.modifyPostDetails") : post.description || t("actions.noDescriptionProvided")}
                             </SheetDescription>
                         </div>
                         {!isEditing && (
-                            <Button onClick={() => setIsEditing(true)} variant="outline" size="sm">Edit Post</Button>
+                            <Button onClick={() => setIsEditing(true)} variant="outline" size="sm">{t("table.editPost")}</Button>
                         )}
                     </SheetTitle>
                 </SheetHeader>
@@ -270,9 +272,9 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
                                     name="caption"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Caption</FormLabel>
+                                            <FormLabel>{t("table.caption")}</FormLabel>
                                             <FormControl>
-                                                <Input placeholder="Post caption" {...field} disabled={isUpdatingPost} />
+                                                <Input placeholder={t("table.captionPlaceholder")} {...field} disabled={isUpdatingPost} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -283,9 +285,9 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
                                     name="description"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Description (Optional)</FormLabel>
+                                            <FormLabel>{t("table.description")}</FormLabel>
                                             <FormControl>
-                                                <Textarea placeholder="Post description" {...field} value={field.value || ""} disabled={isUpdatingPost} />
+                                                <Textarea placeholder={t("table.descriptionPlaceholder")} {...field} value={field.value || ""} disabled={isUpdatingPost} />
                                             </FormControl>
                                             <FormMessage />
                                         </FormItem>
@@ -298,10 +300,10 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
                                     name="categoryName"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Category</FormLabel>
+                                            <FormLabel>{t("table.category")}</FormLabel>
                                             <Select onValueChange={field.onChange} value={field.value || ""} disabled={isUpdatingPost}>
                                                 <FormControl>
-                                                    <SelectTrigger><SelectValue placeholder="Select category" /></SelectTrigger>
+                                                    <SelectTrigger><SelectValue placeholder={t("table.selectCategory")} /></SelectTrigger>
                                                 </FormControl>
                                                 <SelectContent>
                                                     {PostCategoryEnum.options.map(cat => <SelectItem key={cat} value={cat}>{cat}</SelectItem>)}
@@ -316,10 +318,10 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
                                     name="status"
                                     render={({ field }) => (
                                         <FormItem>
-                                            <FormLabel>Status</FormLabel>
+                                            <FormLabel>{t("table.status")}</FormLabel>
                                             <Select onValueChange={field.onChange} value={field.value || ""} disabled={isUpdatingPost}>
                                                 <FormControl>
-                                                    <SelectTrigger><SelectValue placeholder="Select status" /></SelectTrigger>
+                                                    <SelectTrigger><SelectValue placeholder={t("table.selectStatus")} /></SelectTrigger>
                                                 </FormControl>
                                                 <SelectContent>
                                                     {PostStatusEnum.options.map(stat => <SelectItem key={stat} value={stat}>{stat}</SelectItem>)}
@@ -335,17 +337,17 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
                                 name="tags"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Tags</FormLabel>
+                                        <FormLabel>{t("table.tagsLabel")}</FormLabel>
                                         <FormControl>
                                             <Input
-                                                placeholder="e.g., tech, news"
+                                                placeholder={t("table.tagsPlaceholder")}
                                                 {...field}
                                                 value={Array.isArray(field.value) ? field.value.join(", ") : ""}
                                                 onChange={(e) => field.onChange(e.target.value.split(',').map(tag => tag.trim()).filter(tag => tag))}
                                                 disabled={isUpdatingPost}
                                             />
                                         </FormControl>
-                                        <FormDescription>Enter tags separated by commas.</FormDescription>
+                                        <FormDescription>{t("table.tagsDescription")}</FormDescription>
                                         <FormMessage />
                                     </FormItem>
                                 )}
@@ -355,9 +357,9 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
                                 name="videoThumbnailUrl"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Featured Image URL</FormLabel>
+                                        <FormLabel>{t("table.featuredImageUrl")}</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="https://example.com/image.png" {...field} value={field.value || ""} disabled={isUpdatingPost} />
+                                            <Input placeholder={t("table.imageUrlPlaceholder")} {...field} value={field.value || ""} disabled={isUpdatingPost} />
                                         </FormControl>
                                         <FormMessage />
                                     </FormItem>
@@ -368,15 +370,15 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
                                 name="visibility"
                                 render={({ field }) => (
                                     <FormItem>
-                                        <FormLabel>Visibility</FormLabel>
+                                        <FormLabel>{t("table.visibility")}</FormLabel>
                                         <Select onValueChange={field.onChange} value={field.value || "PUBLIC"} disabled={isUpdatingPost}>
                                             <FormControl>
-                                                <SelectTrigger><SelectValue placeholder="Select visibility" /></SelectTrigger>
+                                                <SelectTrigger><SelectValue placeholder={t("table.selectVisibility")} /></SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                <SelectItem value="PUBLIC">Public</SelectItem>
-                                                <SelectItem value="FRIENDS">Friends</SelectItem>
-                                                <SelectItem value="PRIVATE">Private</SelectItem>
+                                                <SelectItem value="PUBLIC">{t("status.public")}</SelectItem>
+                                                <SelectItem value="FRIENDS">{t("status.friends")}</SelectItem>
+                                                <SelectItem value="PRIVATE">{t("status.private")}</SelectItem>
                                             </SelectContent>
                                         </Select>
                                         <FormMessage />
@@ -386,12 +388,12 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
 
                             <SheetFooter className="mt-auto flex flex-col-reverse sm:flex-row sm:justify-end gap-2 pt-6">
                                 <Button type="button" variant="outline" onClick={handleCancelEdit} disabled={isUpdatingPost}>
-                                    <XIcon className="mr-2 h-4 w-4"/> Cancel
+                                    <XIcon className="mr-2 h-4 w-4"/> {t("table.cancel")}
                                 </Button>
                                 <Button type="submit" disabled={isUpdatingPost || !form.formState.isDirty && form.formState.isSubmitted}>
                                     {isUpdatingPost ? <Loader2Icon className="mr-2 h-4 w-4 animate-spin"/> :
                                         <SaveIcon className="mr-2 h-4 w-4"/>}
-                                    Save Changes
+                                    {t("table.saveChanges")}
                                 </Button>
                             </SheetFooter>
                         </form>
@@ -402,7 +404,7 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
                             <div className="mb-4 relative w-full aspect-video">
                                 <Image
                                     src={post.videoThumbnailUrl}
-                                    alt={post.caption || "Post image"}
+                                    alt={post.caption || t("actions.postImage")}
                                     className="rounded-md object-cover"
                                     fill
                                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
@@ -411,21 +413,21 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
                         )}
                         <Separator/>
                         <div className="space-y-3">
-                            {renderInfoField("Author", post.user?.displayName, <UserCircleIcon
+                            {renderInfoField(t("table.author"), post.user?.displayName, <UserCircleIcon
                                 className="h-4 w-4 text-muted-foreground"/>)}
-                            {renderInfoField("Category", post.category?.name, <TagIcon
+                            {renderInfoField(t("table.category"), post.category?.name, <TagIcon
                                 className="h-4 w-4 text-muted-foreground"/>)}
-                            {renderInfoField("Status", post.status, <CheckIcon
+                            {renderInfoField(t("table.status"), post.status, <CheckIcon
                                 className="h-4 w-4 text-muted-foreground"/>)}
-                            {renderInfoField("Visibility", post.visibility, <EyeIcon
+                            {renderInfoField(t("table.visibility"), post.visibility, <EyeIcon
                                 className="h-4 w-4 text-muted-foreground"/>)}
-                            {renderInfoField("Views", Number(post.totalViews) ?? 0, <EyeIcon
+                            {renderInfoField(t("table.views"), Number(post.totalViews) ?? 0, <EyeIcon
                                 className="h-4 w-4 text-muted-foreground"/>)}
                             {post.tags && post.tags.length > 0 && (
                                 <div className="flex items-start gap-2">
                                     <TagIcon className="h-4 w-4 text-muted-foreground mt-0.5"/>
                                     <div>
-                                        <span className="font-medium text-muted-foreground">Tags:</span>
+                                        <span className="font-medium text-muted-foreground">{t("table.tagsLabel")}:</span>
                                         <div className="flex flex-wrap gap-1 mt-1">
                                             {post.tags.map(tag => <Badge key={tag} variant="secondary">{tag}</Badge>)}
                                         </div>
@@ -435,14 +437,14 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
                         </div>
                         <Separator/>
                         <div className="space-y-2 text-xs text-muted-foreground">
-                            {renderInfoField("Created", post.createdAt ? new Date(post.createdAt) : undefined,
+                            {renderInfoField(t("table.created"), post.createdAt ? new Date(post.createdAt) : undefined,
                                 <CalendarDaysIcon className="h-3.5 w-3.5"/>)}
-                            {renderInfoField("Last Updated", post.updatedAt ? new Date(post.updatedAt) : undefined,
+                            {renderInfoField(t("table.lastUpdated"), post.updatedAt ? new Date(post.updatedAt) : undefined,
                                 <CalendarDaysIcon className="h-3.5 w-3.5"/>)}
                         </div>
                         <SheetFooter className="mt-auto pt-6">
                             <SheetClose asChild>
-                                <Button variant="outline" className="w-full sm:w-auto" onClick={() => setIsEditing(false)}>Close</Button>
+                                <Button variant="outline" className="w-full sm:w-auto" onClick={() => setIsEditing(false)}>{t("table.close")}</Button>
                             </SheetClose>
                         </SheetFooter>
                     </div>
@@ -451,4 +453,3 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
         </Sheet>
     );
 };
-
