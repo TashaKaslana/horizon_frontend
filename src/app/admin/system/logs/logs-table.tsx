@@ -14,10 +14,10 @@ export const LogsTable = () => {
     return (
         <div className="p-4">
             <Tabs defaultValue="all" value={tab} onValueChange={setTab}>
-                <TabsList className="mb-4">
+                <TabsList className="mb-4 *:min-w-32">
                     <TabsTrigger value="all">{t("filters.all")}</TabsTrigger>
-                    <TabsTrigger value="system">{t("level.info")}</TabsTrigger>
-                    <TabsTrigger value="error">{t("level.error")}</TabsTrigger>
+                    <TabsTrigger value="system">{t("severity.info")}</TabsTrigger>
+                    <TabsTrigger value="error">{t("severity.error")}</TabsTrigger>
                 </TabsList>
 
                 {tab === "all" && <LogTab severities={["INFO", "WARNING", "ERROR", "CRITICAL"]}/>}

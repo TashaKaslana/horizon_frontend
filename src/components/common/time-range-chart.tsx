@@ -66,10 +66,10 @@ export function TimeRangeChart({
     }
 
     return (
-        <>
+        <div className={'space-y-4 py-2'}>
             <Select value={timeRange} onValueChange={handleTimeRangeChange}>
                 <SelectTrigger
-                    className="w-[160px] rounded-lg sm:ml-auto"
+                    className="w-[160px] rounded-lg sm:ml-auto mr-4"
                     aria-label="Select a value"
                 >
                     <SelectValue placeholder={timeRanges[0].label}/>
@@ -89,6 +89,6 @@ export function TimeRangeChart({
                 description={description}
                 chartConfig={chartConfig}
             />
-        </>
+        </div>
     )
 }

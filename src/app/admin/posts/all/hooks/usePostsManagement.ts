@@ -4,6 +4,7 @@ import {
     createPostMutation,
     deletePostMutation,
     getAllPostsForAdminInfiniteOptions,
+    getAllPostWithDetailsForAdminInfiniteOptions,
     getDailyPostCountOptions,
     getPostAnalyticsOptions,
     getPostByIdForAdminOptions,
@@ -37,7 +38,7 @@ export const usePostsManagement = (postId?: string, dailyRange?: number) => {
         isError,
         error,
     } = useInfiniteQuery({
-        ...getAllPostsForAdminInfiniteOptions({
+        ...getAllPostWithDetailsForAdminInfiniteOptions({
             query: {
                 page: 0,
                 size: 10,

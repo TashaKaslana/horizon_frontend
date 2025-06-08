@@ -17,13 +17,13 @@ export function OverviewCard({data}: { data: OverviewStatistic }) {
         <Card className="@container/card">
             <CardHeader className="relative">
                 <CardDescription>{data.title}</CardDescription>
-                <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums">
+                <CardTitle className="@[250px]/card:text-3xl text-2xl font-semibold tabular-nums truncate">
                     {data.value}
                 </CardTitle>
                 <div className="absolute right-4 top-4">
                     <Badge variant="outline" className="flex gap-1 rounded-lg text-xs">
                         <TrendIcon className="size-3"/>
-                        {isTrendPositive ? '+' : ''}{data.trend}%
+                        {isTrendPositive ? '+' : ''}{data.trend?.toFixed(2)}%
                     </Badge>
                 </div>
             </CardHeader>

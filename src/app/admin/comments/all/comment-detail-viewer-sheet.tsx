@@ -52,6 +52,9 @@ export function CommentDetailViewerSheet({
             <Sheet>
                 <SheetTrigger asChild>{children}</SheetTrigger>
                 <SheetContent className="sm:max-w-lg w-[90vw] p-0 flex items-center justify-center">
+                    <SheetHeader>
+                        <SheetTitle className={'sr-only'}>Loading Comment Details</SheetTitle>
+                    </SheetHeader>
                     <Loader2Icon className="h-8 w-8 animate-spin text-muted-foreground" />
                 </SheetContent>
             </Sheet>
@@ -63,6 +66,9 @@ export function CommentDetailViewerSheet({
             <Sheet>
                 <SheetTrigger asChild>{children}</SheetTrigger>
                 <SheetContent className="sm:max-w-lg w-[90vw] p-0">
+                    <SheetHeader>
+                        <SheetTitle className={'sr-only'}>Sheet error</SheetTitle>
+                    </SheetHeader>
                     <SheetHeader className="p-6 border-b">
                         <SheetTitle className="flex items-center gap-2 text-destructive">
                             <ShieldAlertIcon className="size-5" />

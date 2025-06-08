@@ -28,7 +28,7 @@ export function ModerationChart({type = "ALL", isSpecific = false}: {
     isSpecific?: boolean
 }) {
     const t = useTranslations("Admin.moderation.all.charts")
-    const tType = useTranslations('Admin.moderation.all.type')
+    const tType = useTranslations('Admin.moderation.all.types')
 
     const [activeTab, setActiveTab] = React.useState<ModerationChartType>(type)
     const [timeRangeDays, setTimeRangeDays] = React.useState(30)
@@ -104,8 +104,8 @@ export function ModerationChart({type = "ALL", isSpecific = false}: {
     return (
         <div className="space-y-4">
             <Tabs className="flex justify-between items-center mb-2 px-4" defaultValue={"ALL"}>
-                <div className={'w-full flex items-center justify-between px-4'}>
-                    <TabsList className="grid grid-cols-4 w-[500px]">
+                <div className={'w-full flex items-center justify-between'}>
+                    <TabsList className="grid grid-cols-4 w-[600px] gap-2">
                         <TabsTrigger
                             value="ALL"
                             onClick={() => setActiveTab("ALL")}

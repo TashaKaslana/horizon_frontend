@@ -16,26 +16,16 @@ export function UserAttendanceChart() {
     const {isUserChartLoading} = useUsersManagement(undefined, days);
 
     const chartConfig = {
-        visitors: {
-            label: "Visitors",
-        },
         count: {
             label: t('charts.newUsers'),
-            color: "hsl(var(--chart-1))",
+            color: "var(--chart-1)",
         },
     } satisfies ChartConfig;
-
-    const timeRanges = [
-        {value: "90", label: "charts.quarterly", days: 90},
-        {value: "30", label: "charts.monthly", days: 30},
-        {value: "7", label: "charts.weekly", days: 7}
-    ];
 
     return (
         <TimeRangeChart
             data={normalizeChartData(chartData)}
             defaultTimeRange="90"
-            timeRanges={timeRanges}
             isLoading={isUserChartLoading}
             title={t('charts.userAttendance')}
             description={t('charts.userAttendanceDescription', {days})}

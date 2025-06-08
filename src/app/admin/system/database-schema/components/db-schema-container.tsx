@@ -60,7 +60,7 @@ export default function DatabaseSchema() {
                                     <Database className="h-5 w-5"/>
                                     {tableName}
                                     <Badge variant="outline" className="ml-auto">
-                                        {columns.length} {columns.length === 1
+                                        {columns.length === 1
                                             ? t('tables.count.one', {count: columns.length})
                                             : t('tables.count.other', {count: columns.length})
                                         }

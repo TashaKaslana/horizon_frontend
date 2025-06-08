@@ -164,7 +164,7 @@ export function PostTable() {
         {
             accessorKey: "category",
             header: ({column}) => <DataTableColumnHeader column={column} title={tTable('category')}/>,
-            cell: ({row}) => <Badge variant="outline" className="text-xs">{row.original.category?.name}</Badge>,
+            cell: ({row}) => <Badge variant="outline" className="text-xs">{row.original.category?.name ?? tTable('defaultCategory')}</Badge>,
         },
         {
             accessorKey: "visibility",
@@ -271,7 +271,7 @@ export function PostTable() {
                 data={data}
                 setData={setData}
                 enableRowSelection={true}
-                filterPlaceholder={t('searchPlaceholder')}
+                filterPlaceholder={tTable('searchPlaceholder')}
                 fetchNextPage={fetchNextPage}
                 hasNextPage={hasNextPage}
                 isFetchingNextPage={isFetchingNextPage}

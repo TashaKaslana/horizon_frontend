@@ -15,10 +15,10 @@ import {useEffect} from "react";
 export interface ModerationProps {
     timeRange?: number,
     type?: 'USER' | 'POST' | 'COMMENT',
-    isFull?: boolean,
+    isFull?: boolean
 }
 
-export const useModeration = ({type, timeRange, isFull}: ModerationProps) => {
+export const useModeration = ({type, timeRange, isFull = false}: ModerationProps) => {
     const {actions} = useReportStore()
 
     const {data, isFetchingNextPage, hasNextPage, fetchNextPage} = useInfiniteQuery({
@@ -28,7 +28,7 @@ export const useModeration = ({type, timeRange, isFull}: ModerationProps) => {
                 query: {
                     page: 0,
                     size: 10,
-                    itemType: type || undefined,
+                    itemType: type,
                 }
             })
         ),

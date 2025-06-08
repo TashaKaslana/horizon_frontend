@@ -14,7 +14,7 @@ const userChartConfig = {
   count: {
     label: "New Users",
     icon: Users,
-    color: "hsl(var(--chart-1))",
+    color: "var(--chart-1)",
   },
 } satisfies ChartConfig
 
@@ -22,7 +22,7 @@ const postChartConfig = {
   count: {
     label: "New Posts",
     icon: FileText,
-    color: "hsl(var(--chart-2))",
+    color: "var(--chart-2)",
   },
 } satisfies ChartConfig
 
@@ -30,7 +30,7 @@ const commentChartConfig = {
   count: {
     label: "New Comments",
     icon: MessageSquare,
-    color: "hsl(var(--chart-3))",
+    color: "var(--chart-3)",
   },
 } satisfies ChartConfig
 
@@ -103,7 +103,7 @@ export function DashboardAdminChart() {
         onValueChange={(value) => setActiveTab(value as "User" | "Post" | "Comment")}
         className="w-full"
       >
-        <div className="flex justify-between items-center mb-2 px-4">
+        <div className="flex justify-between items-center px-4">
           <TabsList className="grid grid-cols-3 w-[400px]">
             <TabsTrigger value="User" className="flex items-center gap-2">
               <Users className="h-4 w-4" />
@@ -120,7 +120,7 @@ export function DashboardAdminChart() {
           </TabsList>
         </div>
 
-        <TabsContent value={activeTab}>
+        <TabsContent value={activeTab} >
           <TimeRangeChart
             defaultTimeRange={days === 90 ? "90" : days === 7 ? "7" : "30"}
             isLoading={isLoading}

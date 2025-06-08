@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect } from "react";
-import { toast } from "sonner";
+import React, {useEffect} from "react";
+import {toast} from "sonner";
 import {
     CalendarDaysIcon,
     CheckIcon,
@@ -12,13 +12,13 @@ import {
     UserCircleIcon,
     XIcon,
 } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import {useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useTranslations } from "next-intl";
+import {useTranslations} from "next-intl";
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import {Button} from "@/components/ui/button";
+import {Input} from "@/components/ui/input";
 import {
     Select,
     SelectContent,
@@ -44,16 +44,16 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
-import { Separator } from "@/components/ui/separator";
-import { Badge } from "@/components/ui/badge";
-import { PostStatusEnum, PostCategoryEnum } from "./post-schema";
+import {Textarea} from "@/components/ui/textarea";
+import {Separator} from "@/components/ui/separator";
+import {Badge} from "@/components/ui/badge";
+import {PostStatusEnum, PostCategoryEnum} from "./post-schema";
 import Image from "next/image";
-import { usePostsManagement } from "@/app/admin/posts/all/hooks/usePostsManagement";
+import {usePostsManagement} from "@/app/admin/posts/all/hooks/usePostsManagement";
 import usePostsStore from "@/app/admin/posts/all/stores/usePostsStore";
-import { PostAdminViewDto } from "@/api/client";
-import { zPostAdminViewDto, zUpdatePostRequest } from "@/api/client/zod.gen";
-import { formatDateTS } from "@/lib/utils";
+import {PostAdminViewDto} from "@/api/client";
+import {zPostAdminViewDto, zUpdatePostRequest} from "@/api/client/zod.gen";
+import {formatDateTS} from "@/lib/utils";
 
 const editablePostSchema = zPostAdminViewDto.pick({
     caption: true,
@@ -76,14 +76,14 @@ interface PostDetailViewerSheetProps {
 }
 
 export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
-    postId,
-    isOpen = false,
-    onSetIsOpenAction
-}) => {
+                                                                                postId,
+                                                                                isOpen = false,
+                                                                                onSetIsOpenAction
+                                                                            }) => {
     const [post, setPostData] = React.useState<PostAdminViewDto | null>(null);
     const [isEditing, setIsEditing] = React.useState(false);
-    const { actions: postStoreActions } = usePostsStore();
-    const { selectedPostData, updatePost, isUpdatingPost, isSelectedPostLoading } = usePostsManagement(postId);
+    const {actions: postStoreActions} = usePostsStore();
+    const {selectedPostData, updatePost, isUpdatingPost, isSelectedPostLoading} = usePostsManagement(postId);
     const t = useTranslations("Admin.posts.all");
 
     const form = useForm<EditablePostFormValues>({
@@ -119,7 +119,13 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
             setPostData(null);
             setIsEditing(false);
             form.reset({
-                caption: "", description: "", categoryName: "", status: "DRAFT", tags: [], videoThumbnailUrl: "", visibility: "PUBLIC",
+                caption: "",
+                description: "",
+                categoryName: "",
+                status: "DRAFT",
+                tags: [],
+                videoThumbnailUrl: "",
+                visibility: "PUBLIC",
             });
         }
     }, [isOpen, postId, selectedPostData?.data, postStoreActions, form]);
@@ -137,7 +143,13 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
             });
         } else {
             form.reset({
-                caption: "", description: "", categoryName: "", status: "DRAFT", tags: [], videoThumbnailUrl: "", visibility: "PUBLIC",
+                caption: "",
+                description: "",
+                categoryName: "",
+                status: "DRAFT",
+                tags: [],
+                videoThumbnailUrl: "",
+                visibility: "PUBLIC",
             });
         }
     }, [post, form]);
@@ -162,7 +174,7 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
             const validatedPayload = zUpdatePostRequest.parse(payloadForUpdate);
 
             await updatePost(post.id, validatedPayload);
-            toast.success(t("actions.postUpdatedSuccess", { caption: values.caption || post.caption || '' }));
+            toast.success(t("actions.postUpdatedSuccess", {caption: values.caption || post.caption || ''}));
             setIsEditing(false);
         } catch (error) {
             if (error instanceof z.ZodError) {
@@ -193,7 +205,8 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
         value !== undefined && value !== null && String(value).trim() !== '' ? <div className="flex items-start gap-2">
             {icon || <div className="w-4 h-4"/>}
             <div>
-                <span className="font-medium text-muted-foreground">{label}:</span> {value instanceof Date ? formatDateTS(value) : String(value)}
+                <span
+                    className="font-medium text-muted-foreground">{label}:</span> {value instanceof Date ? formatDateTS(value) : String(value)}
             </div>
         </div> : null
     );
@@ -204,8 +217,12 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
     if (isOpen && postId && !post && isSelectedPostLoading) {
         return (
             <Sheet open={isOpen} onOpenChange={(openState) => onSetIsOpenAction?.(openState)}>
-                <SheetContent side="right" className="flex flex-col items-center justify-center w-full sm:max-w-xl md:max-w-2xl px-2">
-                    <Loader2Icon className="h-8 w-8 animate-spin text-muted-foreground" />
+                <SheetContent side="right"
+                              className="flex flex-col items-center justify-center w-full sm:max-w-xl md:max-w-2xl px-2">
+                    <SheetHeader>
+                        <SheetTitle className={'sr-only'}>Loading Sheet</SheetTitle>
+                    </SheetHeader>
+                    <Loader2Icon className="h-8 w-8 animate-spin text-muted-foreground"/>
                     <p>{t("actions.loadingPostDetails")}</p>
                 </SheetContent>
             </Sheet>
@@ -215,9 +232,16 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
     if (isOpen && postId && !post && !isSelectedPostLoading) {
         return (
             <Sheet open={isOpen} onOpenChange={(openState) => onSetIsOpenAction?.(openState)}>
-                <SheetContent side="right" className="flex flex-col items-center justify-center w-full sm:max-w-xl md:max-w-2xl px-2">
+                <SheetContent side="right"
+                              className="flex flex-col items-center justify-center w-full sm:max-w-xl md:max-w-2xl px-2">
+                    <SheetHeader>
+                        <SheetTitle className={'sr-only'}>Sheet Not Found</SheetTitle>
+                    </SheetHeader>
                     <p className="text-muted-foreground">{t("actions.postNotFound")}</p>
-                    <Button onClick={() => { onSetIsOpenAction?.(false); setIsEditing(false); }} variant="outline">{t("table.close")}</Button>
+                    <Button onClick={() => {
+                        onSetIsOpenAction?.(false);
+                        setIsEditing(false);
+                    }} variant="outline">{t("table.close")}</Button>
                 </SheetContent>
             </Sheet>
         );
@@ -229,9 +253,13 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
                 if (!openState) setIsEditing(false);
                 onSetIsOpenAction?.(openState);
             }}>
-                <SheetContent side="right" className="flex flex-col items-center justify-center w-full sm:max-w-xl md:max-w-2xl px-2">
+                <SheetContent side="right"
+                              className="flex flex-col items-center justify-center w-full sm:max-w-xl md:max-w-2xl px-2">
                     <p className="text-muted-foreground">{t("actions.noPostSelected")}</p>
-                    <Button onClick={() => { onSetIsOpenAction?.(false); setIsEditing(false); }} variant="outline">{t("table.close")}</Button>
+                    <Button onClick={() => {
+                        onSetIsOpenAction?.(false);
+                        setIsEditing(false);
+                    }} variant="outline">{t("table.close")}</Button>
                 </SheetContent>
             </Sheet>
         );
@@ -249,17 +277,19 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
         >
             <SheetContent side="right" className="flex flex-col w-full sm:max-w-xl md:max-w-2xl px-2">
                 <SheetHeader className="pb-4">
-                    <SheetTitle className="flex justify-between items-start">
+                    <div className={'flex justify-between items-start pr-1'}>
                         <div>
-                            <SheetTitle className="text-2xl">{isEditing ? t("actions.editPost") : post.caption || t("actions.postDetails")}</SheetTitle>
+                            <SheetTitle
+                                className="text-2xl">{isEditing ? t("actions.editPost") : post.caption || t("actions.postDetails")}</SheetTitle>
                             <SheetDescription>
                                 {isEditing ? t("actions.modifyPostDetails") : post.description || t("actions.noDescriptionProvided")}
                             </SheetDescription>
                         </div>
                         {!isEditing && (
-                            <Button onClick={() => setIsEditing(true)} variant="outline" size="sm">{t("table.editPost")}</Button>
+                            <Button onClick={() => setIsEditing(true)} variant="outline"
+                                    size="sm">{t("table.editPost")}</Button>
                         )}
-                    </SheetTitle>
+                    </div>
                 </SheetHeader>
                 <Separator/>
 
@@ -270,26 +300,28 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
                                 <FormField
                                     control={form.control}
                                     name="caption"
-                                    render={({ field }) => (
+                                    render={({field}) => (
                                         <FormItem>
                                             <FormLabel>{t("table.caption")}</FormLabel>
                                             <FormControl>
-                                                <Input placeholder={t("table.captionPlaceholder")} {...field} disabled={isUpdatingPost} />
+                                                <Input placeholder={t("table.captionPlaceholder")} {...field}
+                                                       disabled={isUpdatingPost}/>
                                             </FormControl>
-                                            <FormMessage />
+                                            <FormMessage/>
                                         </FormItem>
                                     )}
                                 />
                                 <FormField
                                     control={form.control}
                                     name="description"
-                                    render={({ field }) => (
+                                    render={({field}) => (
                                         <FormItem>
                                             <FormLabel>{t("table.description")}</FormLabel>
                                             <FormControl>
-                                                <Textarea placeholder={t("table.descriptionPlaceholder")} {...field} value={field.value || ""} disabled={isUpdatingPost} />
+                                                <Textarea placeholder={t("table.descriptionPlaceholder")} {...field}
+                                                          value={field.value || ""} disabled={isUpdatingPost}/>
                                             </FormControl>
-                                            <FormMessage />
+                                            <FormMessage/>
                                         </FormItem>
                                     )}
                                 />
@@ -298,36 +330,41 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
                                 <FormField
                                     control={form.control}
                                     name="categoryName"
-                                    render={({ field }) => (
+                                    render={({field}) => (
                                         <FormItem>
                                             <FormLabel>{t("table.category")}</FormLabel>
-                                            <Select onValueChange={field.onChange} value={field.value || ""} disabled={isUpdatingPost}>
+                                            <Select onValueChange={field.onChange} value={field.value || ""}
+                                                    disabled={isUpdatingPost}>
                                                 <FormControl>
-                                                    <SelectTrigger><SelectValue placeholder={t("table.selectCategory")} /></SelectTrigger>
+                                                    <SelectTrigger><SelectValue
+                                                        placeholder={t("table.selectCategory")}/></SelectTrigger>
                                                 </FormControl>
                                                 <SelectContent>
-                                                    {PostCategoryEnum.options.map(cat => <SelectItem key={cat} value={cat}>{cat}</SelectItem>)}
+                                                    {PostCategoryEnum.options.map(cat => <SelectItem key={cat}
+                                                                                                     value={cat}>{cat}</SelectItem>)}
                                                 </SelectContent>
                                             </Select>
-                                            <FormMessage />
+                                            <FormMessage/>
                                         </FormItem>
                                     )}
                                 />
                                 <FormField
                                     control={form.control}
                                     name="status"
-                                    render={({ field }) => (
+                                    render={({field}) => (
                                         <FormItem>
                                             <FormLabel>{t("table.status")}</FormLabel>
-                                            <Select onValueChange={field.onChange} value={field.value || ""} disabled={isUpdatingPost}>
+                                            <Select onValueChange={field.onChange} value={field.value || ""}
+                                                    disabled={isUpdatingPost}>
                                                 <FormControl>
-                                                    <SelectTrigger><SelectValue placeholder={t("table.selectStatus")} /></SelectTrigger>
+                                                    <SelectTrigger><SelectValue placeholder={t("table.selectStatus")}/></SelectTrigger>
                                                 </FormControl>
                                                 <SelectContent>
-                                                    {PostStatusEnum.options.map(stat => <SelectItem key={stat} value={stat}>{stat}</SelectItem>)}
+                                                    {PostStatusEnum.options.map(stat => <SelectItem key={stat}
+                                                                                                    value={stat}>{stat}</SelectItem>)}
                                                 </SelectContent>
                                             </Select>
-                                            <FormMessage />
+                                            <FormMessage/>
                                         </FormItem>
                                     )}
                                 />
@@ -335,7 +372,7 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
                             <FormField
                                 control={form.control}
                                 name="tags"
-                                render={({ field }) => (
+                                render={({field}) => (
                                     <FormItem>
                                         <FormLabel>{t("table.tagsLabel")}</FormLabel>
                                         <FormControl>
@@ -348,32 +385,34 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
                                             />
                                         </FormControl>
                                         <FormDescription>{t("table.tagsDescription")}</FormDescription>
-                                        <FormMessage />
+                                        <FormMessage/>
                                     </FormItem>
                                 )}
                             />
                             <FormField
                                 control={form.control}
                                 name="videoThumbnailUrl"
-                                render={({ field }) => (
+                                render={({field}) => (
                                     <FormItem>
                                         <FormLabel>{t("table.featuredImageUrl")}</FormLabel>
                                         <FormControl>
-                                            <Input placeholder={t("table.imageUrlPlaceholder")} {...field} value={field.value || ""} disabled={isUpdatingPost} />
+                                            <Input placeholder={t("table.imageUrlPlaceholder")} {...field}
+                                                   value={field.value || ""} disabled={isUpdatingPost}/>
                                         </FormControl>
-                                        <FormMessage />
+                                        <FormMessage/>
                                     </FormItem>
                                 )}
                             />
                             <FormField
                                 control={form.control}
                                 name="visibility"
-                                render={({ field }) => (
+                                render={({field}) => (
                                     <FormItem>
                                         <FormLabel>{t("table.visibility")}</FormLabel>
-                                        <Select onValueChange={field.onChange} value={field.value || "PUBLIC"} disabled={isUpdatingPost}>
+                                        <Select onValueChange={field.onChange} value={field.value || "PUBLIC"}
+                                                disabled={isUpdatingPost}>
                                             <FormControl>
-                                                <SelectTrigger><SelectValue placeholder={t("table.selectVisibility")} /></SelectTrigger>
+                                                <SelectTrigger><SelectValue placeholder={t("table.selectVisibility")}/></SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
                                                 <SelectItem value="PUBLIC">{t("status.public")}</SelectItem>
@@ -381,16 +420,19 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
                                                 <SelectItem value="PRIVATE">{t("status.private")}</SelectItem>
                                             </SelectContent>
                                         </Select>
-                                        <FormMessage />
+                                        <FormMessage/>
                                     </FormItem>
                                 )}
                             />
 
-                            <SheetFooter className="mt-auto flex flex-col-reverse sm:flex-row sm:justify-end gap-2 pt-6">
-                                <Button type="button" variant="outline" onClick={handleCancelEdit} disabled={isUpdatingPost}>
+                            <SheetFooter
+                                className="mt-auto flex flex-col-reverse sm:flex-row sm:justify-end gap-2 pt-6">
+                                <Button type="button" variant="outline" onClick={handleCancelEdit}
+                                        disabled={isUpdatingPost}>
                                     <XIcon className="mr-2 h-4 w-4"/> {t("table.cancel")}
                                 </Button>
-                                <Button type="submit" disabled={isUpdatingPost || !form.formState.isDirty && form.formState.isSubmitted}>
+                                <Button type="submit"
+                                        disabled={isUpdatingPost || !form.formState.isDirty && form.formState.isSubmitted}>
                                     {isUpdatingPost ? <Loader2Icon className="mr-2 h-4 w-4 animate-spin"/> :
                                         <SaveIcon className="mr-2 h-4 w-4"/>}
                                     {t("table.saveChanges")}
@@ -427,7 +469,8 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
                                 <div className="flex items-start gap-2">
                                     <TagIcon className="h-4 w-4 text-muted-foreground mt-0.5"/>
                                     <div>
-                                        <span className="font-medium text-muted-foreground">{t("table.tagsLabel")}:</span>
+                                        <span
+                                            className="font-medium text-muted-foreground">{t("table.tagsLabel")}:</span>
                                         <div className="flex flex-wrap gap-1 mt-1">
                                             {post.tags.map(tag => <Badge key={tag} variant="secondary">{tag}</Badge>)}
                                         </div>
@@ -444,7 +487,8 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
                         </div>
                         <SheetFooter className="mt-auto pt-6">
                             <SheetClose asChild>
-                                <Button variant="outline" className="w-full sm:w-auto" onClick={() => setIsEditing(false)}>{t("table.close")}</Button>
+                                <Button variant="outline" className="w-full sm:w-auto"
+                                        onClick={() => setIsEditing(false)}>{t("table.close")}</Button>
                             </SheetClose>
                         </SheetFooter>
                     </div>

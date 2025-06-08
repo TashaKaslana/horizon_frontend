@@ -221,7 +221,7 @@ export const useModerationTableColumns = ({
             header: ({column}) => <DataTableColumnHeader column={column} title={t("status")} />,
             cell: ({row}) => {
                 const status = row.original.status;
-                const option = statusOptions.find(opt => opt.value === status); // Ensure statusFilterOptions is imported/available
+                const option = statusOptions.find(opt => opt.value === status);
 
                 return (
                     <Badge variant={
