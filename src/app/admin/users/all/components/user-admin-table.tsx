@@ -1,7 +1,7 @@
 "use client";
 
 import React, {useEffect} from "react";
-import {ColumnDef} from "@tanstack/react-table";
+import {ColumnDef, RowSelectionState} from "@tanstack/react-table";
 import {CheckCircle2Icon, LoaderIcon, MailIcon, MoreVerticalIcon, PlusIcon,} from "lucide-react";
 import {toast} from "sonner";
 import {useTranslations} from "next-intl";
@@ -25,6 +25,7 @@ import {UserTableCellViewer} from "@/app/admin/users/all/components/user-table-c
 import {UserIntroduction} from "@/api/client";
 import useUsersStore from "@/app/admin/users/all/store/useUsersStore";
 import useUsersManagement from "../hooks/useUsersManagement";
+import {UserFloatingBarActions} from "@/app/admin/users/all/components/user-table-actions";
 
 export type UserAdminData = UserIntroduction & DraggableItem;
 
@@ -33,6 +34,8 @@ export function UserAdminTable() {
     const {fetchNextPage, isFetchingNextPage, hasNextPage, isLoading} = useUsersManagement()
     const [data, setData] = React.useState<UserAdminData[]>([]);
     const t = useTranslations('Admin.users.all');
+    const [rowSelections, setRowSelections] = React.useState<RowSelectionState>({});
+
 
     useEffect(() => {
         if (users) {
@@ -207,12 +210,16 @@ export function UserAdminTable() {
                     setData={setData}
                     enableDnd={true}
                     enableRowSelection={true}
+                    rowSelection={rowSelections}
+                    setRowSelectionFn={setRowSelections}
                     filterPlaceholder={t('table.searchPlaceholder')}
                     fetchNextPage={fetchNextPage}
                     isFetchingNextPage={isFetchingNextPage}
                     hasNextPage={hasNextPage}
                     isLoading={isLoading}
                 />
+
+                <UserFloatingBarActions items={rowSelections} data={data}/>
             </TabsContent>
 
             <TabsContent value="activityLog" className="flex flex-col">

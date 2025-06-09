@@ -42,6 +42,9 @@ import {
     DraggableRow,
     DraggableItem,
 } from "@/components/common/dnd-table-components";
+import {Button} from "./button";
+import {useTranslations} from "next-intl";
+import {exportToExcel} from "@/lib/utils";
 
 // Interface for data items when DND is enabled.
 // They must have an 'id' for dnd-kit.
@@ -100,40 +103,40 @@ const genericGlobalFilterFn = (
 };
 
 export function DataTable<TData, TValue>({
-                                                                   columns,
-                                                                   data,
-                                                                   setData,
+                                             columns,
+                                             data,
+                                             setData,
 
-                                                                   pageCount: controlledPageCount,
-                                                                   pagination: controlledPagination,
-                                                                   onPaginationChange: setControlledPagination,
+                                             pageCount: controlledPageCount,
+                                             pagination: controlledPagination,
+                                             onPaginationChange: setControlledPagination,
 
-                                                                   fetchNextPage,
-                                                                   hasNextPage,
-                                                                   isFetchingNextPage,
+                                             fetchNextPage,
+                                             hasNextPage,
+                                             isFetchingNextPage,
 
-                                                                   enableRowSelection = false,
-                                                                   setRowSelectionFn,
+                                             enableRowSelection = false,
+                                             setRowSelectionFn,
 
-
-                                                                   isLoading,
-                                                                   enableDnd = false,
-                                                                   onDragEnd: customOnDragEnd,
-                                                                   filterPlaceholder = "Search...",
-                                                                   initialSort = [],
-                                                                   initialColumnVisibility = {},
-                                                                   meta,
-                                                                   showGlobalFilter = true,
-                                                                   showViewOptions = true,
-                                                                   showPagination = true,
-                                                                   globalFilterFn: providedGlobalFilterFn = genericGlobalFilterFn,
-                                                                   customGetRowId,
-                                                               }: DataTableProps<TData, TValue>) {
+                                             isLoading,
+                                             enableDnd = false,
+                                             onDragEnd: customOnDragEnd,
+                                             filterPlaceholder = "Search...",
+                                             initialSort = [],
+                                             initialColumnVisibility = {},
+                                             meta,
+                                             showGlobalFilter = true,
+                                             showViewOptions = true,
+                                             showPagination = true,
+                                             globalFilterFn: providedGlobalFilterFn = genericGlobalFilterFn,
+                                             customGetRowId,
+                                         }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>(initialSort);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [globalFilter, setGlobalFilter] = React.useState("");
     const [rowSelection, setRowSelection] = React.useState({});
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>(initialColumnVisibility);
+    const tChartAction = useTranslations('Admin.charts.actions')
 
     const isPaginationControlled = !!setControlledPagination;
 
@@ -261,11 +264,12 @@ export function DataTable<TData, TValue>({
                     table.getRowModel().rows.map((row, rowIndex) => {
                         const originalItem = row.original as TData & { id?: UniqueIdentifier };
 
-                        if (enableDnd && (originalItem.id === undefined || (typeof originalItem.id !== 'string'))) {
+                        if (enableDnd && (originalItem.id === undefined)) {
                             console.error("DataTable critical error: Attempting to render DraggableRow for an item missing a valid 'id'. This indicates an issue with getRowId configuration or data integrity for DND.");
                             return (
                                 <TableRow key={`error-${row.id}-${rowIndex}`} data-state="error">
-                                    <TableCell colSpan={memoizedColumns.length} className="h-12 text-center text-destructive">
+                                    <TableCell colSpan={memoizedColumns.length}
+                                               className="h-12 text-center text-destructive">
                                         Error: Item missing ID for DND.
                                     </TableCell>
                                 </TableRow>
@@ -317,7 +321,12 @@ export function DataTable<TData, TValue>({
                             className="h-8 w-[150px] lg:w-[250px]"
                         />
                     ) : <div/>}
-                    {showViewOptions && <DataTableViewOptions table={table as TanstackTableType<TData>}/>}
+                    <div className={'flex items-center gap-2'}>
+                        <Button onClick={() => exportToExcel(memoizedData as unknown[], 'data.xlsx', 'Sheet1')}>
+                            {tChartAction('exportToExcel')}
+                        </Button>
+                        {showViewOptions && <DataTableViewOptions table={table as TanstackTableType<TData>}/>}
+                    </div>
                 </div>
             )}
             <div className="rounded-md border">

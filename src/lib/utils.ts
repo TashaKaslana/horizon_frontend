@@ -92,6 +92,8 @@ export const normalizeChartData = <
             if (key === "date") {
                 if (value instanceof Date) {
                     result.date = value.toISOString().split("T")[0]
+                } else if (typeof value === "string") {
+                    result.date = value
                 }
             } else if (typeof value === "bigint") {
                 result[key] = Number(value)
@@ -104,7 +106,11 @@ export const normalizeChartData = <
     })
 }
 
-export const exportToExcel = (data: Record<string, unknown>[], fileName = 'data.xlsx', sheetName = 'Sheet1') => {
+export const exportToExcel = (
+    data: unknown[],
+    fileName = 'data.xlsx',
+    sheetName = 'Sheet1'
+) => {
     const worksheet = XLSX.utils.json_to_sheet(data);
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
