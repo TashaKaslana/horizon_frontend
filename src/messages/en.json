@@ -748,7 +748,10 @@
         "daily": "Last 24 hours",
         "yearly": "Last year"
       },
-      "description": "Showing data for the last {days} days"
+      "description": "Showing data for the last {days} days",
+      "actions": {
+        "exportToExcel": "Export to Excel"
+      }
     },
     "dashboard": {
       "title": "Dashboard",

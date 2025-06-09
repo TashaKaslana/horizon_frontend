@@ -2,6 +2,7 @@ import {clsx, type ClassValue} from "clsx"
 import {twMerge} from "tailwind-merge"
 import {ResponseMetadata} from "@/api/client/types.gen";
 import {isFullPagination} from "@/lib/type-guards";
+import * as XLSX from 'xlsx';
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs))
@@ -91,8 +92,6 @@ export const normalizeChartData = <
             if (key === "date") {
                 if (value instanceof Date) {
                     result.date = value.toISOString().split("T")[0]
-                } else if (typeof value === "string") {
-                    result.date = value
                 }
             } else if (typeof value === "bigint") {
                 result[key] = Number(value)
@@ -104,3 +103,10 @@ export const normalizeChartData = <
         return result as NormalizedChartData
     })
 }
+
+export const exportToExcel = (data: Record<string, unknown>[], fileName = 'data.xlsx', sheetName = 'Sheet1') => {
+    const worksheet = XLSX.utils.json_to_sheet(data);
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
+    XLSX.writeFile(workbook, fileName);
+};

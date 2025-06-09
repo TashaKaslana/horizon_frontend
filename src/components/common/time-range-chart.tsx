@@ -14,6 +14,8 @@ import {
 } from "@/components/ui/select"
 import {ChartCard, NormalizedChartData} from "@/app/admin/components/chart-card"
 import {useTranslations} from "next-intl";
+import { Button } from "../ui/button"
+import {exportToExcel} from "@/lib/utils";
 
 export type TimeRange = {
     value: string;
@@ -52,6 +54,7 @@ export function TimeRangeChart({
                                    onTimeRangeChange,
                                    data = [],
                                }: TimeRangeChartProps) {
+    const t = useTranslations("Admin.charts.actions")
     const localizedTimeRanges = useTimeRangeLocales()
     const timeRanges = propTimeRanges && propTimeRanges.length > 0 ? propTimeRanges : localizedTimeRanges
 
@@ -67,21 +70,26 @@ export function TimeRangeChart({
 
     return (
         <div className={'space-y-4 py-2'}>
-            <Select value={timeRange} onValueChange={handleTimeRangeChange}>
-                <SelectTrigger
-                    className="w-[160px] rounded-lg sm:ml-auto mr-4"
-                    aria-label="Select a value"
-                >
-                    <SelectValue placeholder={timeRanges[0].label}/>
-                </SelectTrigger>
-                <SelectContent className="rounded-xl">
-                    {timeRanges.map((range) => (
-                        <SelectItem key={range.value} value={range.value} className="rounded-lg">
-                            {range.label}
-                        </SelectItem>
-                    ))}
-                </SelectContent>
-            </Select>
+            <div className={'flex justify-end gap-2 items-center'}>
+                <Button onClick={() => exportToExcel(data, `${title}.xlsx`, title)}>
+                    {t('exportToExcel')}
+                </Button>
+                <Select value={timeRange} onValueChange={handleTimeRangeChange}>
+                    <SelectTrigger
+                        className="w-[160px] rounded-lg mr-4"
+                        aria-label="Select a value"
+                    >
+                        <SelectValue placeholder={timeRanges[0].label}/>
+                    </SelectTrigger>
+                    <SelectContent className="rounded-xl">
+                        {timeRanges.map((range) => (
+                            <SelectItem key={range.value} value={range.value} className="rounded-lg">
+                                {range.label}
+                            </SelectItem>
+                        ))}
+                    </SelectContent>
+                </Select>
+            </div>
             <ChartCard
                 data={data}
                 isLoading={isLoading}
