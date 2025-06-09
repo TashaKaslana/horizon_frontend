@@ -1,10 +1,16 @@
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 const NotificationSetting = () => {
+    const t = useTranslations('Home.user_dialog.settings_dialog.notification_section');
+
     return (
         <section>
+            <header>
+                <h1 className="font-bold text-2xl mb-4">{t('title')}</h1>
+            </header>
             <PushNotification />
             <EmailPreferences />
         </section>
@@ -23,11 +29,13 @@ type EmailNotification = {
 };
 
 const PushNotification = () => {
+    const t = useTranslations('Home.user_dialog.settings_dialog.notification_section');
+
     const items: { title: string; value: keyof PushNotificationData; description: string }[] = [
-        { title: "Likes", value: "isEnableLikes", description: "Get notified when someone likes your video." },
-        { title: "Comments", value: "isEnableComments", description: "Get notified when someone comments on your video." },
-        { title: "Mentions", value: "isEnableMentions", description: "Get notified when someone mentions you in a comment or post." },
-        { title: "Followers", value: "isEnableFollowers", description: "Get notified when someone follows you." }
+        { title: t('likes'), value: "isEnableLikes", description: t('likes_description') },
+        { title: t('comments'), value: "isEnableComments", description: t('comments_description') },
+        { title: t('mentions'), value: "isEnableMentions", description: t('mentions_description') },
+        { title: t('followers'), value: "isEnableFollowers", description: t('followers_description') }
     ];
 
     const [configNotification, setConfigNotification] = useState<PushNotificationData>({
@@ -43,7 +51,7 @@ const PushNotification = () => {
 
     return (
         <article>
-            <header className="font-bold text-2xl">Push Notifications</header>
+            <header className="font-bold text-2xl">{t('push_notifications')}</header>
             <section className="space-y-2">
                 {items.map((item) => (
                     <article key={item.value} className="flex justify-between items-center hover:bg-gray-300 rounded px-1">
@@ -62,6 +70,8 @@ const PushNotification = () => {
 };
 
 const EmailPreferences = () => {
+    const t = useTranslations('Home.user_dialog.settings_dialog.notification_section');
+
     const [emailConfig, setEmailConfig] = useState<EmailNotification>({
         isEnableEmails: false
     });
@@ -72,13 +82,13 @@ const EmailPreferences = () => {
 
     return (
         <article className="mt-6">
-            <header className="font-bold text-2xl">Email Preferences</header>
+            <header className="font-bold text-2xl">{t('email_preferences')}</header>
             <section className="space-y-2">
                 <article className="flex justify-between items-center hover:bg-gray-300 rounded px-1">
                     <Label htmlFor="isEnableEmails" className="text-lg w-full">
                         <div>
-                            <h1>Email Notifications</h1>
-                            <p className="text-gray-500 font-light text-sm">Receive email notifications for important updates.</p>
+                            <h1>{t('email_notifications')}</h1>
+                            <p className="text-gray-500 font-light text-sm">{t('email_notifications_description')}</p>
                         </div>
                     </Label>
                     <Switch id="isEnableEmails" checked={emailConfig.isEnableEmails} onCheckedChange={handleToggle} />

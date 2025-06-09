@@ -12,12 +12,13 @@ import {useState} from "react";
 import {cn} from "@/lib/utils";
 import {Breadcrumb, BreadcrumbItem, BreadcrumbList, BreadcrumbSeparator} from "@/components/ui/breadcrumb";
 import {UserInformation} from "@/components/common/UserInformation";
-import {setting_data} from "@/app/(home)/constraints/setting_data";
+import {useSettingsData} from "@/app/(home)/constraints/setting_data";
 import {useTranslations} from "next-intl";
 
 export const SettingsContainer = () => {
     const [sidebarOpenIndex, setSidebarOpenIndex] = useState(0);
     const settingsT = useTranslations("Home.user_dialog.settings_dialog");
+    const settingData = useSettingsData()
 
     const switchSidebarContent = (index: number) => {
         setSidebarOpenIndex(index);
@@ -30,7 +31,7 @@ export const SettingsContainer = () => {
                     <SidebarGroup>
                         <SidebarGroupContent>
                             <SidebarMenu>
-                                {setting_data.map((item, index) => (
+                                {settingData.map((item, index) => (
                                     <SidebarMenuItem key={index}
                                                      className={cn(
                                                          (index === sidebarOpenIndex) && 'bg-gray-300',
@@ -61,13 +62,15 @@ export const SettingsContainer = () => {
                             </BreadcrumbItem>
                             <BreadcrumbSeparator/>
                             <BreadcrumbItem >
-                                <p className={'font-bold text-zinc-600'}>{setting_data[sidebarOpenIndex].label}</p>
+                                <p className={'font-bold text-zinc-600'}>
+                                    {settingData[sidebarOpenIndex].label}
+                                </p>
                             </BreadcrumbItem>
                         </BreadcrumbList>
                     </Breadcrumb>
                 </header>
                 <main className="py-1">
-                    {setting_data[sidebarOpenIndex].ui}
+                    {settingData[sidebarOpenIndex].ui}
                 </main>
             </section>
         </SidebarProvider>

@@ -341,7 +341,7 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
                                                 </FormControl>
                                                 <SelectContent>
                                                     {PostCategoryEnum.options.map(cat => <SelectItem key={cat}
-                                                                                                     value={cat}>{cat}</SelectItem>)}
+                                                                                                     value={cat.toUpperCase()}>{cat}</SelectItem>)}
                                                 </SelectContent>
                                             </Select>
                                             <FormMessage/>

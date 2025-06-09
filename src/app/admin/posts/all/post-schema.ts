@@ -4,7 +4,7 @@ import { z } from "zod";
 import { DraggableItem } from "@/components/common/dnd-table-components";
 import {PostSchema} from "@/schemas/post-schema";
 
-export const PostStatusEnum = z.enum(["Draft", "Published", "Archived", "Pending Review"]);
+export const PostStatusEnum = z.enum(["DRAFT", "PUBLISHED", "ARCHIVED", "PENDING_REVIEW"]);
 export const PostCategoryEnum = z.enum(["Technology", "Lifestyle", "Travel", "Business", "Art", "Science", "Tutorial"]);
 
 export type PostData = z.infer<typeof PostSchema> & DraggableItem;

@@ -532,7 +532,86 @@
         "language": "Ngôn ngữ",
         "theme": "Giao diện",
         "notification": "Thông báo",
-        "description": "Tùy chỉnh cài đặt của bạn tại đây."
+        "description": "Tùy chỉnh cài đặt của bạn tại đây.",
+        "account_section": {
+          "title": "Cài Đặt Tài Khoản",
+          "change_password": "Đổi Mật Khẩu",
+          "current_password": "Mật Khẩu Hiện Tại",
+          "current_password_placeholder": "Nhập mật khẩu hiện tại của bạn",
+          "new_password": "Mật Khẩu Mới",
+          "new_password_placeholder": "Nhập mật khẩu mới của bạn",
+          "confirm_password": "Xác Nhận Mật Khẩu",
+          "confirm_password_placeholder": "Xác nhận mật khẩu mới của bạn",
+          "submit": "Cập Nhật",
+          "submit_success": "Đã cập nhật mật khẩu thành công"
+        },
+        "privacy_section": {
+          "title": "Riêng Tư Hồ Sơ",
+          "public": "Công Khai",
+          "public_description": "Mọi người có thể xem hồ sơ và video của bạn",
+          "comments_privacy": "Quyền Riêng Tư Bình Luận",
+          "comments_on": "Bật Bình Luận",
+          "comments_on_description": "Cho phép người dùng bình luận vào bài viết của bạn",
+          "everyone": "Mọi Người",
+          "friends": "Bạn Bè",
+          "only_me": "Chỉ Mình Tôi"
+        },
+        "notification_section": {
+          "title": "Cài Đặt Thông Báo",
+          "push_notifications": "Thông Báo Đẩy",
+          "likes": "Lượt Thích",
+          "likes_description": "Nhận thông báo khi ai đó thích video của bạn.",
+          "comments": "Bình Luận",
+          "comments_description": "Nhận thông báo khi ai đó bình luận vào video của bạn.",
+          "mentions": "Đề Cập",
+          "mentions_description": "Nhận thông báo khi ai đó đề cập bạn trong bình luận hoặc bài viết.",
+          "followers": "Người Theo Dõi",
+          "followers_description": "Nhận thông báo khi ai đó theo dõi bạn.",
+          "email_preferences": "Tùy Chọn Email",
+          "email_notifications": "Thông Báo Qua Email",
+          "email_notifications_description": "Nhận email thông báo về những cập nhật quan trọng."
+        },
+        "video_section": {
+          "title": "Cài Đặt Video",
+          "description": "Tùy chỉnh chất lượng và thiết lập video",
+          "options": {
+            "auto_play": {
+              "title": "Tự Động Phát",
+              "description": "Tự động phát video khi cuộn trang"
+            },
+            "control_video": {
+              "title": "Điều Khiển Video",
+              "description": "Bật hoặc tắt điều khiển phát video"
+            },
+            "loop_video": {
+              "title": "Lặp Lại Video",
+              "description": "Tự động phát lại video khi kết thúc"
+            }
+          }
+        },
+        "app_preferences": {
+          "title": "Tùy Chọn Ứng Dụng",
+          "language": "Ngôn Ngữ",
+          "select_language": "Chọn Ngôn Ngữ",
+          "languages": {
+            "vietnamese": "Tiếng Việt",
+            "english": "Tiếng Anh",
+            "spanish": "Tiếng Tây Ban Nha",
+            "french": "Tiếng Pháp",
+            "german": "Tiếng Đức",
+            "japanese": "Tiếng Nhật"
+          },
+          "region": "Khu Vực",
+          "select_region": "Chọn Khu Vực",
+          "regions": {
+            "us": "Hoa Kỳ",
+            "eu": "Châu Âu",
+            "asia": "Châu Á",
+            "australia": "Úc"
+          },
+          "dark_mode": "Chế Độ Tối",
+          "dark_mode_description": "Bật chế độ tối để sử dụng vào ban đêm dễ dàng hơn."
+        }
       },
       "logout_description": "Thao tác này sẽ đăng xuất bạn khỏi phiên làm việc hiện tại."
     },

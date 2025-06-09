@@ -6,17 +6,20 @@ import {zodResolver} from "@hookform/resolvers/zod";
 import {AccountField} from "@/app/components/user_dialog/settings/AccountField";
 import {Button} from "@/components/ui/button";
 import {toast} from "sonner";
+import {useTranslations} from "next-intl";
 
 const AccountSetting = () => {
+    const t = useTranslations('Home.user_dialog.settings_dialog.account_section');
+
     return (
         <ScrollArea className={'h-full overflow-y-auto'}>
             <section className={'p-1'}>
                 <article>
                     <header>
-                        <h1 className={'font-bold text-2xl'}>Change Password</h1>
+                        <h1 className={'font-bold text-2xl'}>{t('title')}</h1>
                     </header>
                     <main>
-                        <AccountForm/>
+                        <AccountForm />
                     </main>
                 </article>
             </section>
@@ -34,6 +37,8 @@ const formSchema = z.object({
 })
 
 const AccountForm = () => {
+    const t = useTranslations('Home.user_dialog.settings_dialog.account_section');
+
     const form = useForm<z.infer<typeof formSchema>>({
         defaultValues: {
             currentPassword: '123456',
@@ -44,7 +49,7 @@ const AccountForm = () => {
     })
 
     const handleSubmit = () => {
-        toast.success("Successfully submitted")
+        toast.success(t('submit_success'))
     }
 
     return (
@@ -52,24 +57,24 @@ const AccountForm = () => {
             <form className={'space-y-2 mt-2'} onSubmit={form.handleSubmit(handleSubmit)}>
                 <AccountField form={form}
                               name={'currentPassword'}
-                              label={'Current Password'}
-                              placeholder={'Enter current password'}
+                              label={t('current_password')}
+                              placeholder={t('current_password_placeholder')}
                               type={'password'}
                               />
                 <AccountField form={form}
                               name={'newPassword'}
-                              label={'New Password'}
-                              placeholder={'Enter new password'}
+                              label={t('new_password')}
+                              placeholder={t('new_password_placeholder')}
                               type={'password'}
                 />
                 <AccountField form={form}
                               name={'confirmPassword'}
-                              label={'Confirm Password'}
-                              placeholder={'Enter confirm password'}
+                              label={t('confirm_password')}
+                              placeholder={t('confirm_password_placeholder')}
                               type={'password'}
                 />
                 <div className={'flex justify-end'}>
-                    <Button type={"submit"} className={'w-32'}>Submit</Button>
+                    <Button type={"submit"} className={'w-32'}>{t('submit')}</Button>
                 </div>
             </form>
         </Form>

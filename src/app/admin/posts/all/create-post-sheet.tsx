@@ -173,7 +173,7 @@ export const CreatePostSheet: React.FC<CreatePostSheetProps> = ({
                                                 <SelectTrigger><SelectValue placeholder={t("table.selectCategory")} /></SelectTrigger>
                                             </FormControl>
                                             <SelectContent>
-                                                {PostCategoryEnum.options.map(cat => <SelectItem key={cat} value={cat}>{cat}</SelectItem>)}
+                                                {PostCategoryEnum.options.map(cat => <SelectItem key={cat} value={cat.toUpperCase()}>{cat}</SelectItem>)}
                                             </SelectContent>
                                         </Select>
                                         <FormMessage />

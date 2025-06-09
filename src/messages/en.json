@@ -591,7 +591,86 @@
         "language": "Language",
         "theme": "Theme",
         "notification": "Notification",
-        "description": "Customize your settings here."
+        "description": "Customize your settings here.",
+        "account_section": {
+          "title": "Account Settings",
+          "change_password": "Change Password",
+          "current_password": "Current Password",
+          "current_password_placeholder": "Enter your current password",
+          "new_password": "New Password",
+          "new_password_placeholder": "Enter your new password",
+          "confirm_password": "Confirm Password",
+          "confirm_password_placeholder": "Confirm your new password",
+          "submit": "Submit",
+          "submit_success": "Password updated successfully"
+        },
+        "privacy_section": {
+          "title": "Profile Privacy",
+          "public": "Public",
+          "public_description": "Everyone can see your profile and videos",
+          "comments_privacy": "Comments Privacy",
+          "comments_on": "Comments On",
+          "comments_on_description": "Allow users to comment on your posts",
+          "everyone": "Everyone",
+          "friends": "Friends",
+          "only_me": "Only Me"
+        },
+        "notification_section": {
+          "title": "Notification Settings",
+          "push_notifications": "Push Notifications",
+          "likes": "Likes",
+          "likes_description": "Get notified when someone likes your video.",
+          "comments": "Comments",
+          "comments_description": "Get notified when someone comments on your video.",
+          "mentions": "Mentions",
+          "mentions_description": "Get notified when someone mentions you in a comment or post.",
+          "followers": "Followers",
+          "followers_description": "Get notified when someone follows you.",
+          "email_preferences": "Email Preferences",
+          "email_notifications": "Email Notifications",
+          "email_notifications_description": "Receive email notifications for important updates."
+        },
+        "video_section": {
+          "title": "Video Settings",
+          "description": "Customize video quality and settings",
+          "options": {
+            "auto_play": {
+              "title": "Autoplay",
+              "description": "Automatically play videos while scrolling"
+            },
+            "control_video": {
+              "title": "Control Video Playback",
+              "description": "Enable or disable video playback controls"
+            },
+            "loop_video": {
+              "title": "Loop Video",
+              "description": "Automatically loop videos when they end"
+            }
+          }
+        },
+        "app_preferences": {
+          "title": "App Preferences",
+          "language": "Language",
+          "select_language": "Select Language",
+          "languages": {
+            "vietnamese": "Vietnamese",
+            "english": "English",
+            "spanish": "Spanish",
+            "french": "French",
+            "german": "German",
+            "japanese": "Japanese"
+          },
+          "region": "Region",
+          "select_region": "Select Region",
+          "regions": {
+            "us": "United States",
+            "eu": "Europe",
+            "asia": "Asia",
+            "australia": "Australia"
+          },
+          "dark_mode": "Dark Mode",
+          "dark_mode_description": "Enable dark theme for better night experience."
+        }
       },
       "logout_description": "This action will log you out of your current session."
     },
