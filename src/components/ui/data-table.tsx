@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
 import {
     ColumnDef,
     ColumnFiltersState,
@@ -45,12 +45,13 @@ import {
 import {Button} from "./button";
 import {useTranslations} from "next-intl";
 import {exportToExcel} from "@/lib/utils";
+import {FloatingBar, FloatingBarAction} from "@/components/common/floating-bar";
 
 // Interface for data items when DND is enabled.
 // They must have an 'id' for dnd-kit.
 type DataWithDndId = { id: UniqueIdentifier };
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData extends { id?: string | number }, TValue> {
     columns: ColumnDef<TData, TValue>[];
     data: TData[];
     setData?: React.Dispatch<React.SetStateAction<TData[]>>;
@@ -66,6 +67,7 @@ interface DataTableProps<TData, TValue> {
     enableRowSelection?: boolean | ((row: Row<TData>) => boolean);
     rowSelection?: RowSelectionState;
     setRowSelectionFn?: React.Dispatch<React.SetStateAction<RowSelectionState>>;
+    floatingActions?: (selected: TData[]) => FloatingBarAction[]
 
     isLoading?: boolean;
     enableDnd?: boolean;
@@ -102,39 +104,40 @@ const genericGlobalFilterFn = (
     return false;
 };
 
-export function DataTable<TData, TValue>({
-                                             columns,
-                                             data,
-                                             setData,
+export function DataTable<TData extends { id?: string | number }, TValue>({
+                                                columns,
+                                                data,
+                                                setData,
 
-                                             pageCount: controlledPageCount,
-                                             pagination: controlledPagination,
-                                             onPaginationChange: setControlledPagination,
+                                                pageCount: controlledPageCount,
+                                                pagination: controlledPagination,
+                                                onPaginationChange: setControlledPagination,
 
-                                             fetchNextPage,
-                                             hasNextPage,
-                                             isFetchingNextPage,
+                                                fetchNextPage,
+                                                hasNextPage,
+                                                isFetchingNextPage,
 
-                                             enableRowSelection = false,
-                                             setRowSelectionFn,
+                                                enableRowSelection = false,
+                                                setRowSelectionFn,
+                                                floatingActions,
 
-                                             isLoading,
-                                             enableDnd = false,
-                                             onDragEnd: customOnDragEnd,
-                                             filterPlaceholder = "Search...",
-                                             initialSort = [],
-                                             initialColumnVisibility = {},
-                                             meta,
-                                             showGlobalFilter = true,
-                                             showViewOptions = true,
-                                             showPagination = true,
-                                             globalFilterFn: providedGlobalFilterFn = genericGlobalFilterFn,
-                                             customGetRowId,
-                                         }: DataTableProps<TData, TValue>) {
+                                                isLoading,
+                                                enableDnd = false,
+                                                onDragEnd: customOnDragEnd,
+                                                filterPlaceholder = "Search...",
+                                                initialSort = [],
+                                                initialColumnVisibility = {},
+                                                meta,
+                                                showGlobalFilter = true,
+                                                showViewOptions = true,
+                                                showPagination = true,
+                                                globalFilterFn: providedGlobalFilterFn = genericGlobalFilterFn,
+                                                customGetRowId,
+                                            }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>(initialSort);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [globalFilter, setGlobalFilter] = React.useState("");
-    const [rowSelection, setRowSelection] = React.useState({});
+    const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>(initialColumnVisibility);
     const tChartAction = useTranslations('Admin.charts.actions')
 
@@ -194,6 +197,10 @@ export function DataTable<TData, TValue>({
         manualPagination: isPaginationControlled,
         pageCount: isPaginationControlled ? pageCount : undefined,
     });
+
+    const selectedData = useMemo(
+        () => data.filter(item => rowSelection[item.id!]), [data, rowSelection]
+    )
 
     React.useEffect(() => {
         if (setRowSelectionFn) {
@@ -347,6 +354,11 @@ export function DataTable<TData, TValue>({
                     serverPageCount={controlledPageCount}
                 />
             )}
+            <FloatingBar
+                selectedCount={selectedData.length}
+                actions={floatingActions?.(selectedData) ?? []}
+                onClearSelection={() => table.resetRowSelection()}
+            />
         </div>
     );
 }

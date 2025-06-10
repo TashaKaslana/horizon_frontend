@@ -37,6 +37,7 @@ import useCommentsStore from "@/app/admin/comments/all/stores/useCommentsStore";
 import {CommentResponseWithPostDetails} from "@/api/client";
 import {formatDateTS} from "@/lib/utils";
 import useCommentsManagement from "./hooks/useCommentsManagement";
+import {commentTableActions} from "./comment-table-actions";
 
 export type CommentAdminData = CommentResponseWithPostDetails & DraggableItem;
 
@@ -280,6 +281,7 @@ export function CommentAdminTable() {
                 isFetchingNextPage={isFetchingNextPage}
                 hasNextPage={hasNextPage}
                 fetchNextPage={fetchNextPage}
+                floatingActions={commentTableActions}
             />
             {
                 selectedPostId && <PostDetailViewerSheet

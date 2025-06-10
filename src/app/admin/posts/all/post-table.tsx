@@ -34,6 +34,7 @@ import {formatDateTS, getFixedNumberFormat} from "@/lib/utils";
 import {PostAdminViewDto} from "@/api/client";
 import usePostsStore from "./stores/usePostsStore";
 import {usePostsManagement} from "@/app/admin/posts/all/hooks/usePostsManagement";
+import {postTableActions} from "@/app/admin/posts/all/post-table-actions";
 
 
 export function PostTable() {
@@ -276,6 +277,7 @@ export function PostTable() {
                 hasNextPage={hasNextPage}
                 isFetchingNextPage={isFetchingNextPage}
                 isLoading={isLoading}
+                floatingActions={postTableActions}
             />
 
             {selectedPostId &&

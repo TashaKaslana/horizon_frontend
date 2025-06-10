@@ -24,6 +24,7 @@ import {useModeration} from "@/app/admin/moderation/reports/useModeration";
 import { RowSelectionState } from "@tanstack/react-table";
 import {PostDetailViewerSheet} from "../../posts/all/post-detail-viewer-sheet";
 import {useTranslations} from "next-intl";
+import { reportTableActions } from "./report-table-actions";
 
 type ModerationItemData = ReportDto & DraggableItem
 
@@ -123,6 +124,7 @@ export function ModerationTable({
                 hasNextPage={hasNextPage}
                 pageCount={totalPages ?? 0}
                 initialColumnVisibility={{id: false}}
+                floatingActions={reportTableActions}
             />
             {selectedRowIds().length > 0 && (
                 <div className="fixed bottom-4 right-4 z-50 rounded-md border bg-background p-3 shadow-lg">

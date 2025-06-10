@@ -7,6 +7,7 @@ import useCategoryStore from "@/app/admin/posts/categories/store/useCategoryStor
 import {useState} from "react";
 import {RowSelectionState} from "@tanstack/react-table";
 import {useTranslations} from "next-intl";
+import {categoryTableActions} from "@/app/admin/posts/categories/category-table-actions";
 
 export const CategoryTable = () => {
     const {categories} = useCategoryStore();
@@ -31,6 +32,7 @@ export const CategoryTable = () => {
                 hasNextPage={hasNextPage}
                 pageCount={totalPages}
                 initialColumnVisibility={{id: false}}
+                floatingActions={categoryTableActions}
             />
         </div>
     )

@@ -25,7 +25,7 @@ import {UserTableCellViewer} from "@/app/admin/users/all/components/user-table-c
 import {UserIntroduction} from "@/api/client";
 import useUsersStore from "@/app/admin/users/all/store/useUsersStore";
 import useUsersManagement from "../hooks/useUsersManagement";
-import {UserFloatingBarActions} from "@/app/admin/users/all/components/user-table-actions";
+import {userTableActions} from "@/app/admin/users/all/components/user-table-actions";
 
 export type UserAdminData = UserIntroduction & DraggableItem;
 
@@ -217,9 +217,8 @@ export function UserAdminTable() {
                     isFetchingNextPage={isFetchingNextPage}
                     hasNextPage={hasNextPage}
                     isLoading={isLoading}
+                    floatingActions={userTableActions}
                 />
-
-                <UserFloatingBarActions items={rowSelections} data={data}/>
             </TabsContent>
 
             <TabsContent value="activityLog" className="flex flex-col">
