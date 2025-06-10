@@ -1,9 +1,9 @@
 import { FloatingBarAction } from "@/components/common/floating-bar";
 import { Download, Trash } from "lucide-react";
 import { exportToExcel } from "@/lib/utils";
-import {PostCategoryWithCountDto} from "@/api/client";
+import {TagWithCountDto} from "@/api/client";
 
-export const categoryTableActions = (items: PostCategoryWithCountDto[]): FloatingBarAction[] => {
+export const tagTableActions = (items: TagWithCountDto[]): FloatingBarAction[] => {
     return [
         {
             label: "Export",

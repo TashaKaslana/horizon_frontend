@@ -1,18 +1,15 @@
 import { FloatingBarAction } from "@/components/common/floating-bar";
 import { Download, Pencil, Trash } from "lucide-react";
 import { exportToExcel } from "@/lib/utils";
+import {AdminNotificationDto} from "@/api/client";
 
-// TODO: Replace with actual NotificationAdminData type import
-// import { NotificationAdminData } from "./notification-admin-table";
-type NotificationAdminData = any;
-
-export const notificationTableActions = (items: NotificationAdminData[]): FloatingBarAction[] => {
+export const notificationTableActions = (items: AdminNotificationDto[]): FloatingBarAction[] => {
     return [
         {
-            label: "Mark as Read", // Changed from Edit for notifications
+            label: "Mark as Read",
             onClick: () => console.log("Mark notification as read action clicked", items),
             variant: "default",
-            icon: <Pencil /> // Consider changing icon (e.g., MailOpen)
+            icon: <Pencil />
         },
         {
             label: "Export",

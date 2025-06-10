@@ -3,11 +3,12 @@ import {Button} from "@/components/ui/button";
 import {Spinner} from "@/components/ui/spinner";
 import {ReactNode, useState} from "react";
 import {X} from "lucide-react";
-import { useFloatingDialogActions } from "@/hooks/use-floating-dialog-actions";
+import {useFloatingDialogActions} from "@/hooks/use-floating-dialog-actions";
 
 export interface FloatingBarAction {
-    label: string;
-    onClick: () => Promise<void> | void;
+    label?: string;
+    render?: ReactNode | ((close: () => void) => ReactNode);
+    onClick?: () => Promise<void> | void;
     variant?: "default" | "outline" | "destructive";
     icon?: ReactNode;
     renderDialog?: (close: () => void) => ReactNode;
@@ -30,6 +31,7 @@ export const FloatingBar = ({
     const {
         openDialog,
         getDialogNode,
+        closeDialog
     } = useFloatingDialogActions();
 
     if (selectedCount === 0 || actions.length === 0) return null;
@@ -81,10 +83,14 @@ export const FloatingBar = ({
                     {loadingSet.has(idx) ? (
                         <Spinner size={'small'}/>
                     ) : (
-                        <span className="flex gap-x-2 items-center">
-                            {action.icon}
-                            {action.label}
-                        </span>
+                        action.render ? (
+                            typeof action.render === 'function' ? action.render(closeDialog) : action.render
+                        ) : (
+                            <span className="flex gap-x-2 items-center">
+                                {action.icon}
+                                {action.label}
+                            </span>
+                        )
                     )}
                 </Button>
             ))}

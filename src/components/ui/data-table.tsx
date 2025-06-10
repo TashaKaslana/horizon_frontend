@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React from "react";
 import {
     ColumnDef,
     ColumnFiltersState,
@@ -105,39 +105,39 @@ const genericGlobalFilterFn = (
 };
 
 export function DataTable<TData extends { id?: string | number }, TValue>({
-                                                columns,
-                                                data,
-                                                setData,
+                                                                              columns,
+                                                                              data,
+                                                                              setData,
 
-                                                pageCount: controlledPageCount,
-                                                pagination: controlledPagination,
-                                                onPaginationChange: setControlledPagination,
+                                                                              pageCount: controlledPageCount,
+                                                                              pagination: controlledPagination,
+                                                                              onPaginationChange: setControlledPagination,
 
-                                                fetchNextPage,
-                                                hasNextPage,
-                                                isFetchingNextPage,
+                                                                              fetchNextPage,
+                                                                              hasNextPage,
+                                                                              isFetchingNextPage,
 
-                                                enableRowSelection = false,
-                                                setRowSelectionFn,
-                                                floatingActions,
+                                                                              enableRowSelection = false,
+                                                                              rowSelection,
+                                                                              setRowSelectionFn,
+                                                                              floatingActions,
 
-                                                isLoading,
-                                                enableDnd = false,
-                                                onDragEnd: customOnDragEnd,
-                                                filterPlaceholder = "Search...",
-                                                initialSort = [],
-                                                initialColumnVisibility = {},
-                                                meta,
-                                                showGlobalFilter = true,
-                                                showViewOptions = true,
-                                                showPagination = true,
-                                                globalFilterFn: providedGlobalFilterFn = genericGlobalFilterFn,
-                                                customGetRowId,
-                                            }: DataTableProps<TData, TValue>) {
+                                                                              isLoading,
+                                                                              enableDnd = false,
+                                                                              onDragEnd: customOnDragEnd,
+                                                                              filterPlaceholder = "Search...",
+                                                                              initialSort = [],
+                                                                              initialColumnVisibility = {},
+                                                                              meta,
+                                                                              showGlobalFilter = true,
+                                                                              showViewOptions = true,
+                                                                              showPagination = true,
+                                                                              globalFilterFn: providedGlobalFilterFn = genericGlobalFilterFn,
+                                                                              customGetRowId,
+                                                                          }: DataTableProps<TData, TValue>) {
     const [sorting, setSorting] = React.useState<SortingState>(initialSort);
     const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([]);
     const [globalFilter, setGlobalFilter] = React.useState("");
-    const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
     const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>(initialColumnVisibility);
     const tChartAction = useTranslations('Admin.charts.actions')
 
@@ -172,7 +172,7 @@ export function DataTable<TData extends { id?: string | number }, TValue>({
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
         onGlobalFilterChange: setGlobalFilter,
-        onRowSelectionChange: enableRowSelection ? setRowSelection : undefined,
+        onRowSelectionChange: enableRowSelection ? setRowSelectionFn : undefined,
         onColumnVisibilityChange: setColumnVisibility,
         onPaginationChange: onPaginationChange,
 
@@ -198,20 +198,7 @@ export function DataTable<TData extends { id?: string | number }, TValue>({
         pageCount: isPaginationControlled ? pageCount : undefined,
     });
 
-    const selectedData = useMemo(
-        () => data.filter(item => rowSelection[item.id!]), [data, rowSelection]
-    )
-
-    React.useEffect(() => {
-        if (setRowSelectionFn) {
-            const newRowSelectionState = table.getSelectedRowModel().rows.reduce((acc, row) => {
-                acc[row.id] = true;
-                return acc;
-            }, {} as RowSelectionState);
-
-            setRowSelectionFn(newRowSelectionState);
-        }
-    }, [rowSelection, table, setRowSelectionFn]);
+    const selectedData = table.getSelectedRowModel().rows.map(row => row.original)
 
     const handleDragEnd = (event: DragEndEvent) => {
         if (!enableDnd) return;
