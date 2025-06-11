@@ -122,7 +122,7 @@ export const useRolesManagement = () => {
         deleteRoleMutationFn({path: {id: roleId}});
     };
 
-    const {mutate: bulkDeleteRoles, isPending: isBulkDeletingRoles} = useMutation({
+    const {mutateAsync: bulkDeleteRoles, isPending: isBulkDeletingRoles} = useMutation({
         ...bulkDeleteRolesMutation(),
         onSuccess: (_, variables) => {
             if (variables.body.roleIds) {
@@ -136,7 +136,7 @@ export const useRolesManagement = () => {
         },
     });
 
-    const bulkDeleteRolesHandler = async (roleIds: string[]) => {
+    const bulkDeleteRolesHandler = (roleIds: string[]) => {
         if (roleIds.length === 0) {
             toast.error("No roles selected for deletion.");
             return;

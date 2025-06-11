@@ -155,7 +155,7 @@ export const useModeration = (timeRange = 30) => {
         );
     }
 
-    const {mutate: bulkDeleteReports, isPending: isBulkDeletingReports} = useMutation({
+    const {mutateAsync: bulkDeleteReports, isPending: isBulkDeletingReports} = useMutation({
         ...bulkDeleteReportsMutation(),
         onSuccess: (_, variables) => {
             if (variables.body) {
@@ -171,11 +171,11 @@ export const useModeration = (timeRange = 30) => {
         },
     })
 
-    const bulkDeleteReportsAction = async (reportIds: string[]) => {
-        bulkDeleteReports({body: {reportIds}});
+    const bulkDeleteReportsAction = (reportIds: string[]) => {
+        return bulkDeleteReports({body: {reportIds}});
     }
 
-    const {mutate: bulkUpdateReports, isPending: isBulkUpdatingReports} = useMutation({
+    const {mutateAsync: bulkUpdateReports, isPending: isBulkUpdatingReports} = useMutation({
         ...bulkUpdateReportsMutation(),
         onSuccess: (updatedReports) => {
             if (updatedReports.data) {
@@ -191,8 +191,8 @@ export const useModeration = (timeRange = 30) => {
         },
     });
 
-    const bulkUpdateReportsAction = async (request: BulkReportUpdateRequest) => {
-        bulkUpdateReports({body: request});
+    const bulkUpdateReportsAction = (request: BulkReportUpdateRequest) => {
+        return bulkUpdateReports({body: request});
     }
 
     return {

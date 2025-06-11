@@ -10,7 +10,7 @@ import {useTranslations} from "next-intl";
 export const useRoleTableAction = (items: RoleDto[]): FloatingBarAction[] => {
     const [permissionDialogOpen, setPermissionDialogOpen] = useState(false);
     const {bulkDeleteRolesHandler} = useRolesManagement();
-    const t = useTranslations("Admin.users.roles.table.actions");
+    const t = useTranslations("Admin.users.roles.actions");
 
     const itemsIds = useMemo(() => {
         return items.map(item => item.id!);
@@ -23,7 +23,7 @@ export const useRoleTableAction = (items: RoleDto[]): FloatingBarAction[] => {
     
     return useMemo(() => [
         {
-            // label: t("assignPermissions"),
+            label: t("assignPermissions"),
             variant: "default",
             icon: <Pencil/>,
             onClick: () => setPermissionDialogOpen(true),
@@ -41,7 +41,7 @@ export const useRoleTableAction = (items: RoleDto[]): FloatingBarAction[] => {
         },
         {
             label: t("delete"),
-            onClick: async () => bulkDeleteRolesHandler(itemsIds),
+            onClick: () => bulkDeleteRolesHandler(itemsIds),
             variant: "destructive",
             icon: <Trash/>
         },

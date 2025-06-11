@@ -130,7 +130,6 @@ export const usePostsManagement = (postId?: string, dailyRange?: number) => {
     };
 
     const {
-        mutate: updatePostMutateFn,
         mutateAsync: updatePostMutateAsyncFn,
         isPending: isUpdatingPost
     } = useMutation({
@@ -174,7 +173,7 @@ export const usePostsManagement = (postId?: string, dailyRange?: number) => {
         return deletePostFn({path: {postId}});
     };
 
-    const {mutate: bulkDeletePostsMutateFn, isPending: isBulkDeletingPosts} = useMutation({
+    const {mutateAsync: bulkDeletePostsMutateFn, isPending: isBulkDeletingPosts} = useMutation({
         ...bulkDeletePostsMutation(),
         onSuccess: (_, variables) => {
             if (variables) {
@@ -190,11 +189,11 @@ export const usePostsManagement = (postId?: string, dailyRange?: number) => {
         }
     });
 
-    const bulkDeletePosts = async (postIds: string[]) => {
+    const bulkDeletePosts = (postIds: string[]) => {
         return bulkDeletePostsMutateFn({body: {postIds}});
     };
 
-    const {mutate: deleteAllPostsByUserMutateFn, isPending: isDeletingAllUserPosts} = useMutation({
+    const {mutateAsync: deleteAllPostsByUserMutateFn, isPending: isDeletingAllUserPosts} = useMutation({
         ...deleteAllPostsByUserMutation(),
         onSuccess: (_, variables) => {
             if (variables) {
@@ -216,13 +215,13 @@ export const usePostsManagement = (postId?: string, dailyRange?: number) => {
         }
     });
 
-    const deleteAllPostsByUser = async (userId: string) => {
+    const deleteAllPostsByUser = (userId: string) => {
         return deleteAllPostsByUserMutateFn({
             path: {userId}
         });
     };
 
-    const {mutate: bulkUpdatePostsMutateFn, isPending: isBulkUpdatingPosts} = useMutation({
+    const {mutateAsync: bulkUpdatePostsMutateFn, isPending: isBulkUpdatingPosts} = useMutation({
         ...bulkUpdatePostsMutation(),
         onSuccess: (res) => {
             if (res.data) {
@@ -240,7 +239,7 @@ export const usePostsManagement = (postId?: string, dailyRange?: number) => {
         }
     })
 
-    const bulkUpdatePosts = async (data: BulkPostUpdateRequest) => {
+    const bulkUpdatePosts = (data: BulkPostUpdateRequest) => {
         return bulkUpdatePostsMutateFn({
             body: data
         });

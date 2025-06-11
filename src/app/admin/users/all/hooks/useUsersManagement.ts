@@ -228,7 +228,7 @@ const useUsersManagement = (userId?: string, timeRange?: number) => {
         deleteUserFn({path: {id}});
     };
 
-    const {mutate: bulkUserDeleteMutation, isPending: isBulkUserDeleting} = useMutation({
+    const {mutateAsync: bulkUserDeleteMutation, isPending: isBulkUserDeleting} = useMutation({
         ...bulkDeleteUsersMutation(),
         onSuccess: (_, variables) => {
             if (variables) {
@@ -244,11 +244,11 @@ const useUsersManagement = (userId?: string, timeRange?: number) => {
         }
     })
 
-    const deleteBulkUsers = async (userIds: string[]) => {
+    const deleteBulkUsers = (userIds: string[]) => {
         return bulkUserDeleteMutation({body: {userIds}});
     }
 
-    const {mutate: bulkUserUpdateMutation, isPending: isBulkUserUpdating} = useMutation({
+    const {mutateAsync: bulkUserUpdateMutation, isPending: isBulkUserUpdating} = useMutation({
         ...bulkUpdateUsersMutation(),
         onSuccess: (res) => {
             if (res.data) {
@@ -264,7 +264,7 @@ const useUsersManagement = (userId?: string, timeRange?: number) => {
         }
     })
 
-    const bulkUpdateUsers = async (request: BulkUserUpdateRequest) => {
+    const bulkUpdateUsers = (request: BulkUserUpdateRequest) => {
         return bulkUserUpdateMutation({
             body: request
         });

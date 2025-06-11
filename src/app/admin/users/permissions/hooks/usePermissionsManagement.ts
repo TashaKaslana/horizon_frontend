@@ -128,7 +128,7 @@ const usePermissionsManagement = () => {
         });
     };
 
-    const {mutate: bulkDeletePermissions, isPending: isBulkDeletingPermissions} = useMutation({
+    const {mutateAsync: bulkDeletePermissions, isPending: isBulkDeletingPermissions} = useMutation({
         ...bulkDeletePermissionsMutation(),
         onSuccess: (_, variables) => {
             if (variables.body.permissionIds) {
@@ -138,7 +138,7 @@ const usePermissionsManagement = () => {
         },
     });
 
-    const bulkRemovePermissions = async (permissionIds: string[]) => {
+    const bulkRemovePermissions = (permissionIds: string[]) => {
         return bulkDeletePermissions({
             body: {
                 permissionIds: permissionIds

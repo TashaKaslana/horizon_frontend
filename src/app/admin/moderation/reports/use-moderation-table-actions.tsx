@@ -13,6 +13,7 @@ export const useModerationTableActions = (items: ReportDto[]): FloatingBarAction
     const {bulkUpdateReportsAction, bulkDeleteReportsAction} = useModeration();
     const {currentType} = useReportStore();
     const t = useTranslations("Admin.moderation.all");
+    const reportIds = items.map(item => item.id!);
 
     type StatusKey = 'RESOLVED' | 'REVIEWED_APPROVED' | 'REVIEWED_REJECTED' | 'ACTIONTAKEN_CONTENTREMOVED' | 'ACTIONTAKEN_USERBANNED' | 'ACTIONTAKEN_USERWARNED' | 'PENDING';
     type StatusItem = { key: StatusKey; label: string };
@@ -47,9 +48,8 @@ export const useModerationTableActions = (items: ReportDto[]): FloatingBarAction
                                     onClick={async () => {
                                         setIsStatusLoading(true);
                                         try {
-                                            const reportIds = items.map(item => item.id!);
                                             await bulkUpdateReportsAction({
-                                                reportIds,
+                                                reportIds: reportIds,
                                                 status: item.key
                                             });
                                         } finally {
@@ -76,10 +76,7 @@ export const useModerationTableActions = (items: ReportDto[]): FloatingBarAction
         },
         {
             label: t("table.delete"),
-            onClick: async () => {
-                const reportIds = items.map(item => item.id!);
-                await bulkDeleteReportsAction(reportIds);
-            },
+            onClick: () => bulkDeleteReportsAction(reportIds),
             variant: "destructive",
             icon: <Trash/>
         },

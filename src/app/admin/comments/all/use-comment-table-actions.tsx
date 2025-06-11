@@ -11,6 +11,7 @@ import { useTranslations } from "next-intl";
 export const useCommentTableActions = (items: CommentAdminData[]): FloatingBarAction[] => {
     const { deleteMultipleComments, bulkUpdateComments } = useCommentsManagement();
     const t = useTranslations("Admin.comments.all.table");
+    const commentIds = items.map(item => item.id);
 
     return [
         {
@@ -50,10 +51,7 @@ export const useCommentTableActions = (items: CommentAdminData[]): FloatingBarAc
         },
         {
             label: t("delete"),
-            onClick: async () => {
-                const commentIds = items.map(item => item.id);
-                await deleteMultipleComments(commentIds);
-            },
+            onClick: () => deleteMultipleComments(commentIds),
             variant: "destructive",
             icon: <Trash />,
         },

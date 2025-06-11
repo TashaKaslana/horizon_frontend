@@ -20,7 +20,7 @@ export const usePermissionTableAction = (items: PermissionDto[]): FloatingBarAct
     },
     {
       label: t("delete"),
-      onClick: async () => bulkRemovePermissions(itemsIds),
+      onClick: () => bulkRemovePermissions(itemsIds),
       variant: "destructive",
       icon: <Trash />
     },

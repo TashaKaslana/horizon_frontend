@@ -152,7 +152,7 @@ const useCommentsManagement = (commentId?: string, timeRange?: number) => {
         deleteCommentFn({path: {commentId: id}});
     };
 
-    const {mutate: bulkUpdateCommentsFn, isPending: isUpdatingBulkComments} = useMutation({
+    const {mutateAsync: bulkUpdateCommentsFn, isPending: isUpdatingBulkComments} = useMutation({
         ...bulkUpdateCommentsMutation(),
         onSuccess: (res) => {
             res.data?.forEach((comment) => {
@@ -167,14 +167,14 @@ const useCommentsManagement = (commentId?: string, timeRange?: number) => {
         }
     })
 
-    const bulkUpdateComments = async (request: BulkCommentUpdateRequest) => {
+    const bulkUpdateComments = (request: BulkCommentUpdateRequest) => {
         return bulkUpdateCommentsFn({body: request});
     }
 
-    const {mutate: deleteMultipleCommentsFn, isPending: isDeletingMultipleComments} = useMutation({
+    const {mutateAsync: deleteMultipleCommentsFn, isPending: isDeletingMultipleComments} = useMutation({
         ...deleteMultipleCommentsMutation(),
         onSuccess: (_, variables) => {
-            variables.query?.commentIds.forEach((commentId: string) => {
+            variables.body?.commentIds.forEach((commentId: string) => {
                 actions.removeComment(commentId);
             });
             toast.success("Comments deleted successfully.");
@@ -185,8 +185,8 @@ const useCommentsManagement = (commentId?: string, timeRange?: number) => {
         }
     });
 
-    const deleteMultipleComments = async (commentIds: string[]) => {
-        return deleteMultipleCommentsFn({query: {commentIds}});
+    const deleteMultipleComments = (commentIds: string[]) => {
+        return deleteMultipleCommentsFn({body: {commentIds}});
     };
 
     return {

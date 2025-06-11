@@ -31,7 +31,7 @@ export const useLogTableActions = (items: LogEntryDto[]): FloatingBarAction[] =>
         // },
         {
             label: t("delete"),
-            onClick: async () => bulkDeleteLogEntries(items.map(item => item.id!)),
+            onClick: () => bulkDeleteLogEntries(items.map(item => item.id!)),
             variant: "destructive",
             icon: <Trash/>
         }

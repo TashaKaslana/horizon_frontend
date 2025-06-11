@@ -62,7 +62,7 @@ export const useLoggingManagement = (
         }
     }, [actions, logChartData?.data]);
     
-    const {mutate: bulkDeleteMutation, isPending: isBulkDeleting} = useMutation({
+    const {mutateAsync: bulkDeleteMutation, isPending: isBulkDeleting} = useMutation({
         ...bulkDeleteLogEntriesMutation(),
         onSuccess: (_, variables) => {
             if (variables.body.logIds) {
@@ -82,7 +82,7 @@ export const useLoggingManagement = (
             return;
         }
 
-        bulkDeleteMutation({
+        return bulkDeleteMutation({
             body: {
                 logIds: logIds
             }

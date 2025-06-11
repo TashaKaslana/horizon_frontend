@@ -851,6 +851,7 @@
           "confirmDelete": "Are you sure you want to delete this role?"
         },
         "actions": {
+          "assignPermissions": "Assign Permissions",
           "addRole": "Add new role",
           "viewDetails": "View Details",
           "edit": "Edit",

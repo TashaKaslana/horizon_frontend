@@ -10,6 +10,7 @@ import {useTranslations} from "next-intl";
 export const useUserTableActions = (items: UserAdminData[]): FloatingBarAction[] => {
     const {deleteBulkUsers, bulkUpdateUsers} = useUsersManagement();
     const t = useTranslations("Admin.users.all.actions");
+    const userIds = items.map(item => item.id);
 
     return [
         {
@@ -43,10 +44,7 @@ export const useUserTableActions = (items: UserAdminData[]): FloatingBarAction[]
         },
         {
             label: t("delete"),
-            onClick: async () => {
-                const userIds = items.map(item => item.id);
-                await deleteBulkUsers(userIds);
-            },
+            onClick: () =>  deleteBulkUsers(userIds),
             variant: "destructive",
             icon: <Trash/>,
         },

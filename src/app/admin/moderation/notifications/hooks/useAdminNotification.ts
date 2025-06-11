@@ -102,7 +102,7 @@ export const useAdminNotification = (timeRange: number = 30) => {
 
 
     const {
-        mutate: bulkUpdateNotifications,
+        mutateAsync: bulkUpdateNotifications,
         isPending: isBulkUpdatePending
     } = useMutation({
         ...bulkUpdateNotificationsMutation(),
@@ -117,14 +117,14 @@ export const useAdminNotification = (timeRange: number = 30) => {
         },
     })
 
-    const updateNotifications = async (request: BulkAdminNotificationUpdateRequest) => {
+    const updateNotifications = (request: BulkAdminNotificationUpdateRequest) => {
         return bulkUpdateNotifications({
             body: request,
         });
     }
 
     const {
-        mutate: bulkDeleteNotifications,
+        mutateAsync: bulkDeleteNotifications,
         isPending: isBulkDeletePending
     } = useMutation({
         ...bulkDeleteNotificationsMutation(),
@@ -139,7 +139,7 @@ export const useAdminNotification = (timeRange: number = 30) => {
         },
     })
 
-    const deleteNotifications = async (notificationIds: string[]) => {
+    const deleteNotifications = (notificationIds: string[]) => {
         return bulkDeleteNotifications({
             body: {
                 notificationIds,

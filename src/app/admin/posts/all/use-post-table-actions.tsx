@@ -10,6 +10,7 @@ import {useTranslations} from "next-intl";
 export const usePostTableActions = (items: PostAdminViewDto[]): FloatingBarAction[] => {
     const {bulkDeletePosts, bulkUpdatePosts} = usePostsManagement();
     const t = useTranslations("Admin.posts.all.table");
+    const postIds = items.map(item => item.id!);
 
     return [
         {
@@ -45,10 +46,7 @@ export const usePostTableActions = (items: PostAdminViewDto[]): FloatingBarActio
         },
         {
             label: t("deletePost"),
-            onClick: async () => {
-                const postIds = items.map(item => item.id!);
-                await bulkDeletePosts(postIds);
-            },
+            onClick: () => bulkDeletePosts(postIds),
             variant: "destructive",
             icon: <Trash/>,
         }

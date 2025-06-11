@@ -163,7 +163,7 @@ export const useTagManagement = (timeRange: number = 30) => {
         deleteTagMutationFn({path: {tagId: tagId}});
     };
 
-    const {mutate: bulkDeleteTags, isPending: isBulkDeletingTags} = useMutation({
+    const {mutateAsync: bulkDeleteTags, isPending: isBulkDeletingTags} = useMutation({
         ...bulkDeleteTagsMutation(),
         onSuccess: (_, variables) => {
             if (variables.body.tagIds) {
@@ -177,7 +177,7 @@ export const useTagManagement = (timeRange: number = 30) => {
         },
     });
 
-    const bulkRemoveTags = async (tagIds: string[]) => {
+    const bulkRemoveTags = (tagIds: string[]) => {
         if (tagIds.length === 0) {
             toast.error("No tags selected for deletion.");
             return;

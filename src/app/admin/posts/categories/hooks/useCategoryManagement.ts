@@ -153,7 +153,7 @@ export const useCategoryManagement = (timeRange: number = 7) => {
     };
 
     const {
-        mutate: bulkDeleteCategories,
+        mutateAsync: bulkDeleteCategories,
         isPending: isBulkDeletingCategories
     } = useMutation({
         ...deletePostCategoriesMutation(),
@@ -170,7 +170,7 @@ export const useCategoryManagement = (timeRange: number = 7) => {
             toast.error("No category IDs provided for bulk deletion.");
             return;
         }
-        bulkDeleteCategories({body: {postCategoryIds: categoryIds}});
+        return bulkDeleteCategories({body: {postCategoryIds: categoryIds}});
     };
 
     return {
@@ -199,3 +199,4 @@ export const useCategoryManagement = (timeRange: number = 7) => {
         isBulkDeletingCategories,
     };
 };
+

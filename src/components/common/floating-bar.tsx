@@ -8,7 +8,7 @@ import {useFloatingDialogActions} from "@/hooks/use-floating-dialog-actions";
 export interface FloatingBarAction {
     label?: string;
     render?: ReactNode | ((close: () => void) => ReactNode);
-    onClick?: () => Promise<void> | void;
+    onClick?: () => Promise<void> | Promise<unknown> | void;
     variant?: "default" | "outline" | "destructive";
     icon?: ReactNode;
     renderDialog?: (
@@ -48,12 +48,11 @@ export const FloatingBar = ({
             return;
         }
 
-        const result = action.onClick?.();
-        if (result instanceof Promise) {
+        if (action.onClick) {
             setLoadingSet(currentSet => new Set(currentSet).add(index));
 
             try {
-                await result;
+                await action.onClick();
             } finally {
                 setLoadingSet(currentSet => {
                     const updatedSet = new Set(currentSet);

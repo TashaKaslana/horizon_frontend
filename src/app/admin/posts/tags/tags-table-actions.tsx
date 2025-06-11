@@ -19,7 +19,7 @@ export const useTagTableActions = (items: TagWithCountDto[]): FloatingBarAction[
     },
     {
       label: t("delete"),
-      onClick: async () => bulkRemoveTags(itemsIds),
+      onClick: () => bulkRemoveTags(itemsIds),
       variant: "destructive",
       icon: <Trash />,
     },

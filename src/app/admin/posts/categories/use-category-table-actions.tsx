@@ -19,7 +19,7 @@ export const useCategoryTableActions = (items: PostCategoryWithCountDto[]): Floa
         },
         {
             label: t("delete"),
-            onClick: async () => handleBulkDeleteCategories(itemsIds),
+            onClick: () => handleBulkDeleteCategories(itemsIds),
             variant: "destructive",
             icon: <Trash />
         },
