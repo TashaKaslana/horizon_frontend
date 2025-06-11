@@ -7,7 +7,7 @@ import useTagStore from "@/app/admin/posts/tags/store/useTagStore";
 import {useState} from "react";
 import {RowSelectionState} from "@tanstack/react-table";
 import {useTranslations} from "next-intl";
-import {tagTableActions} from "@/app/admin/posts/tags/tags-table-actions";
+import {useTagTableActions} from "@/app/admin/posts/tags/tags-table-actions";
 
 export const TagsTable = () => {
     const {tags} = useTagStore();
@@ -31,7 +31,7 @@ export const TagsTable = () => {
                 hasNextPage={hasNextPage}
                 pageCount={totalPages}
                 initialColumnVisibility={{id: false}}
-                floatingActions={tagTableActions}
+                floatingActions={useTagTableActions}
             />
         </div>
     )

@@ -2,8 +2,12 @@ import { FloatingBarAction } from "@/components/common/floating-bar";
 import { Download, Trash } from "lucide-react";
 import { exportToExcel } from "@/lib/utils";
 import {TagWithCountDto} from "@/api/client";
+import {useTagManagement} from "@/app/admin/posts/tags/hooks/useTagManagement";
 
-export const tagTableActions = (items: TagWithCountDto[]): FloatingBarAction[] => {
+export const useTagTableActions = (items: TagWithCountDto[]): FloatingBarAction[] => {
+    const {bulkRemoveTags} = useTagManagement()
+    const itemsIds = items.map(item => item.id!);
+
     return [
         {
             label: "Export",
@@ -13,14 +17,7 @@ export const tagTableActions = (items: TagWithCountDto[]): FloatingBarAction[] =
         },
         {
             label: "Delete",
-            onClick: async () => {
-                return new Promise<void>((resolve) =>
-                    setTimeout(() => {
-                        console.log("Delete category action clicked");
-                        resolve();
-                    }, 2000)
-                );
-            },
+            onClick: async () => bulkRemoveTags(itemsIds),
             variant: "destructive",
             icon: <Trash />
         },

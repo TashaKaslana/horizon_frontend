@@ -1,29 +1,29 @@
 'use client'
 
 import {
+    bulkDeleteTagsMutation,
     createTagMutation,
     deleteTagMutation,
-    getAllTagsInfiniteOptions,
     getDailyTagCountsOptions,
     getTagAnalyticsOverviewOptions, getTagDistributionOptions,
     getTagsWithCountsInfiniteOptions,
     updateTagMutation,
 } from "@/api/client/@tanstack/react-query.gen";
 import {useInfiniteQuery, useMutation, useQuery} from "@tanstack/react-query";
-import { getNextPageParam } from "@/lib/utils";
+import {getNextPageParam} from "@/lib/utils";
 import useTagStore from "../store/useTagStore";
-import { useEffect } from "react";
-import { toast } from "sonner";
+import {useEffect} from "react";
+import {toast} from "sonner";
 import {
     CreateTagRequest,
     PaginationInfo,
     UpdateTagRequest,
     TagResponse,
 } from "@/api/client/types.gen";
-import { zCreateTagRequest } from "@/api/client/zod.gen";
+import {zCreateTagRequest} from "@/api/client/zod.gen";
 
 export const useTagManagement = (timeRange: number = 30) => {
-    const { infiniteQueryData, actions } = useTagStore();
+    const {infiniteQueryData, actions} = useTagStore();
 
     const {
         data: tagsData,
@@ -55,13 +55,13 @@ export const useTagManagement = (timeRange: number = 30) => {
     const {data: overviewData, isLoading: isOverviewLoading} = useQuery({
         ...getTagAnalyticsOverviewOptions()
     })
-    
+
     useEffect(() => {
         if (overviewData?.data) {
             actions.setOverviewData(overviewData.data);
         }
     }, [actions, overviewData?.data]);
-    
+
     const {data: dailyCreatedCount, isLoading: isDailyCreatedCountLoading} = useQuery({
         ...getDailyTagCountsOptions()
     });
@@ -86,7 +86,7 @@ export const useTagManagement = (timeRange: number = 30) => {
         }
     }, [actions, dailyUsageCount?.data]);
 
-    const { mutate: createTagMutationFn, isPending: isCreatingTag } = useMutation({
+    const {mutate: createTagMutationFn, isPending: isCreatingTag} = useMutation({
         ...createTagMutation({}),
         onSuccess: (newTag) => {
             if (newTag.data) {
@@ -114,7 +114,7 @@ export const useTagManagement = (timeRange: number = 30) => {
         });
     };
 
-    const { mutate: updateTagMutationFn, isPending: isUpdatingTag } = useMutation({
+    const {mutate: updateTagMutationFn, isPending: isUpdatingTag} = useMutation({
         ...updateTagMutation({}), // Updated to updatePostTagMutation
         onSuccess: (updatedTag) => {
             if (updatedTag.data) {
@@ -136,11 +136,11 @@ export const useTagManagement = (timeRange: number = 30) => {
 
         updateTagMutationFn({
             body: data,
-            path: { tagId : id },
+            path: {tagId: id},
         });
     };
 
-    const { mutate: deleteTagMutationFn, isPending: isDeletingTag } = useMutation({
+    const {mutate: deleteTagMutationFn, isPending: isDeletingTag} = useMutation({
         ...deleteTagMutation({}),
         onSuccess: (_, variables) => {
             if (!infiniteQueryData) {
@@ -160,8 +160,33 @@ export const useTagManagement = (timeRange: number = 30) => {
             return;
         }
 
-        deleteTagMutationFn({ path: { tagId: tagId } });
+        deleteTagMutationFn({path: {tagId: tagId}});
     };
+
+    const {mutate: bulkDeleteTags, isPending: isBulkDeletingTags} = useMutation({
+        ...bulkDeleteTagsMutation(),
+        onSuccess: (_, variables) => {
+            if (variables.body.tagIds) {
+                actions.bulkRemoveTags(variables.body.tagIds);
+                toast.success("Tags deleted successfully.");
+            }
+        },
+        onError: (error) => {
+            console.error("Failed to delete tags:", error);
+            toast.error("Failed to delete tags. Please try again.");
+        },
+    });
+
+    const bulkRemoveTags = async (tagIds: string[]) => {
+        if (tagIds.length === 0) {
+            toast.error("No tags selected for deletion.");
+            return;
+        }
+
+        return bulkDeleteTags({
+            body: {tagIds},
+        });
+    }
 
     return {
         tags: tagsData?.pages.flatMap((page) => page.data) || [],
@@ -186,6 +211,9 @@ export const useTagManagement = (timeRange: number = 30) => {
         isDailyCreatedCountLoading,
         dailyUsageCount: dailyUsageCount?.data || [],
         isDailyUsageCountLoading,
+
+        bulkRemoveTags,
+        isBulkDeletingTags,
     };
 };
 

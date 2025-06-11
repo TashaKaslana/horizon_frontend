@@ -24,7 +24,8 @@ interface TagState {
         clearAllData: () => void;
         addTag: (tag: TagWithCountDto) => void;
         updateTag: (updatedTag: TagWithCountDto) => void;
-        removeTag: (tagId: string | number) => void;
+        removeTag: (tagId: string) => void;
+        bulkRemoveTags: (tagIds: string[]) => void;
     };
 }
 
@@ -68,17 +69,60 @@ const useTagStore = create<TagState>()(
             addTag: (tag) =>
                 set((state) => {
                     state.tags.push(tag);
+                    if (state.infiniteQueryData && state.infiniteQueryData.pages.length > 0) {
+                        const updatedFirstPageData = [tag, ...(state.infiniteQueryData.pages[0]?.data || [])];
+                        const updatedFirstPage = {
+                            ...(state.infiniteQueryData.pages[0] || {}),
+                            data: updatedFirstPageData,
+                        };
+                        state.infiniteQueryData.pages = [updatedFirstPage, ...state.infiniteQueryData.pages.slice(1)];
+                    } else {
+                        state.infiniteQueryData = {
+                            pages: [{data: [tag]}],
+                            pageParams: [0],
+                        };
+                    }
                 }),
             updateTag: (updatedTag) =>
                 set((state) => {
                     const index = state.tags.findIndex((tag) => tag.id === updatedTag.id);
                     if (index !== -1) {
-                        state.tags[index] = { ...state.tags[index], ...updatedTag };
+                        state.tags[index] = {...state.tags[index], ...updatedTag};
+                    }
+                    if (state.infiniteQueryData) {
+                        state.infiniteQueryData.pages = state.infiniteQueryData.pages.map((page) => {
+                            const pageData = page.data ?? [];
+                            if (pageData.some((tag) => tag.id === updatedTag.id)) {
+                                return {
+                                    ...page,
+                                    data: pageData.map((tag) =>
+                                        tag.id === updatedTag.id ? {...tag, ...updatedTag} : tag
+                                    ),
+                                };
+                            }
+                            return page;
+                        });
                     }
                 }),
             removeTag: (tagId) =>
                 set((state) => {
                     state.tags = state.tags.filter((tag) => tag.id !== tagId);
+                    if (state.infiniteQueryData) {
+                        state.infiniteQueryData.pages = state.infiniteQueryData.pages.map((page) => ({
+                            ...page,
+                            data: page.data?.filter((tag) => tag.id !== tagId),
+                        }));
+                    }
+                }),
+            bulkRemoveTags: (tagIds) =>
+                set((state) => {
+                    state.tags = state.tags.filter((tag) => !tagIds.includes(tag.id!));
+                    if (state.infiniteQueryData) {
+                        state.infiniteQueryData.pages = state.infiniteQueryData.pages.map((page) => ({
+                            ...page,
+                            data: page.data?.filter((tag) => !tagIds.includes(tag.id!)),
+                        }));
+                    }
                 }),
         },
     }))
