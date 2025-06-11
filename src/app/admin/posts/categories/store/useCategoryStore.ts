@@ -27,7 +27,8 @@ interface CategoryState {
         setChartData: (data: TopCategoryUsageDto[]) => void;
         addCategory: (role: PostCategoryWithCountDto) => void;
         updateCategory: (updatedRole: PostCategoryWithCountDto) => void;
-        removeCategory: (roleId: string | number) => void;
+        removeCategory: (roleId: string) => void;
+        bulkRemoveCategories: (roleIds: string[]) => void;
     };
 }
 
@@ -112,6 +113,26 @@ const useCategoryStore = create<CategoryState>()(
                         state.infiniteQueryData.pages = state.infiniteQueryData.pages.filter(page => (page.data?.length ?? 0) > 0);
                     }
                 }),
+
+            bulkRemoveCategories: (categoryIds) =>
+                set((state) => {
+                    state.categories = state.categories.filter(r => !categoryIds.includes(r.id!));
+                    if (state.infiniteQueryData) {
+                        state.infiniteQueryData.pages = state.infiniteQueryData.pages.map(page => {
+                            const pageData = page.data ?? [];
+                            if (pageData.some(r => categoryIds.includes(r.id!))) {
+                                return {
+                                    ...page,
+                                    data: pageData.filter(r => !categoryIds.includes(r.id!)),
+                                };
+                            }
+                            return page;
+                        });
+
+                        state.infiniteQueryData.pages = state.infiniteQueryData.pages.filter(page => (page.data?.length ?? 0) > 0);
+                    }
+                }),
+
             clearAllData: () =>
                 set((state) => {
                     state.categories = [];

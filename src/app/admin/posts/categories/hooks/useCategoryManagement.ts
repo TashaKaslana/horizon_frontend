@@ -6,22 +6,23 @@ import {
     getCategoriesWithCountsInfiniteOptions,
     getCategoryAnalyticsOverviewOptions, getCategoryDistributionOptions,
     updatePostCategoryMutation,
+    deletePostCategoriesMutation
 } from "@/api/client/@tanstack/react-query.gen";
 import {useInfiniteQuery, useMutation, useQuery} from "@tanstack/react-query";
-import { getNextPageParam } from "@/lib/utils";
+import {getNextPageParam} from "@/lib/utils";
 import useCategoryStore from "../store/useCategoryStore";
-import { useEffect } from "react";
-import { toast } from "sonner";
+import {useEffect} from "react";
+import {toast} from "sonner";
 import {
     CreatePostCategoryRequest,
     PaginationInfo,
     UpdatePostCategoryRequest,
     PostCategory,
 } from "@/api/client/types.gen";
-import { zCreatePostCategoryRequest } from "@/api/client/zod.gen";
+import {zCreatePostCategoryRequest} from "@/api/client/zod.gen";
 
 export const useCategoryManagement = (timeRange: number = 7) => {
-    const { infiniteQueryData, actions } = useCategoryStore();
+    const {infiniteQueryData, actions} = useCategoryStore();
 
     const {
         data: categoriesData,
@@ -74,7 +75,7 @@ export const useCategoryManagement = (timeRange: number = 7) => {
         }
     }, [actions, dailyCount?.data]);
 
-    const { mutate: createCategoryMutationFn, isPending: isCreatingCategory } = useMutation({
+    const {mutate: createCategoryMutationFn, isPending: isCreatingCategory} = useMutation({
         ...createPostCategoryMutation({}),
         onSuccess: (newCategory) => {
             if (newCategory.data) {
@@ -102,7 +103,7 @@ export const useCategoryManagement = (timeRange: number = 7) => {
         });
     };
 
-    const { mutate: updateCategoryMutationFn, isPending: isUpdatingCategory } = useMutation({
+    const {mutate: updateCategoryMutationFn, isPending: isUpdatingCategory} = useMutation({
         ...updatePostCategoryMutation({}),
         onSuccess: (updatedCategory) => {
             if (updatedCategory.data) {
@@ -124,11 +125,11 @@ export const useCategoryManagement = (timeRange: number = 7) => {
 
         updateCategoryMutationFn({
             body: data,
-            path: { postCategoryId: id },
+            path: {postCategoryId: id},
         });
     };
 
-    const { mutate: deleteCategoryMutationFn, isPending: isDeletingCategory } = useMutation({
+    const {mutate: deleteCategoryMutationFn, isPending: isDeletingCategory} = useMutation({
         ...deletePostCategoryMutation({}),
         onSuccess: (_, variables) => {
             if (!infiniteQueryData) {
@@ -148,7 +149,28 @@ export const useCategoryManagement = (timeRange: number = 7) => {
             return;
         }
 
-        deleteCategoryMutationFn({ path: { postCategoryId: categoryId } });
+        deleteCategoryMutationFn({path: {postCategoryId: categoryId}});
+    };
+
+    const {
+        mutate: bulkDeleteCategories,
+        isPending: isBulkDeletingCategories
+    } = useMutation({
+        ...deletePostCategoriesMutation(),
+        onSuccess: (_, variables) => {
+            if (!infiniteQueryData) {
+                actions.bulkRemoveCategories(variables.body.postCategoryIds);
+                toast.success("Categories deleted successfully.");
+            }
+        }
+    });
+
+    const handleBulkDeleteCategories = (categoryIds: string[]) => {
+        if (!categoryIds?.length) {
+            toast.error("No category IDs provided for bulk deletion.");
+            return;
+        }
+        bulkDeleteCategories({body: {postCategoryIds: categoryIds}});
     };
 
     return {
@@ -172,5 +194,8 @@ export const useCategoryManagement = (timeRange: number = 7) => {
         isOverviewLoading,
         dailyCountData: dailyCount?.data,
         isDailyCountLoading,
+
+        handleBulkDeleteCategories,
+        isBulkDeletingCategories,
     };
 };

@@ -2,8 +2,12 @@ import { FloatingBarAction } from "@/components/common/floating-bar";
 import { Download, Trash } from "lucide-react";
 import { exportToExcel } from "@/lib/utils";
 import {PostCategoryWithCountDto} from "@/api/client";
+import {useCategoryManagement} from "@/app/admin/posts/categories/hooks/useCategoryManagement";
 
-export const categoryTableActions = (items: PostCategoryWithCountDto[]): FloatingBarAction[] => {
+export const useCategoryTableActions = (items: PostCategoryWithCountDto[]): FloatingBarAction[] => {
+    const {handleBulkDeleteCategories} = useCategoryManagement()
+    const itemsIds = items.map(item => item.id!);
+
     return [
         {
             label: "Export",
@@ -13,14 +17,7 @@ export const categoryTableActions = (items: PostCategoryWithCountDto[]): Floatin
         },
         {
             label: "Delete",
-            onClick: async () => {
-                return new Promise<void>((resolve) =>
-                    setTimeout(() => {
-                        console.log("Delete category action clicked");
-                        resolve();
-                    }, 2000)
-                );
-            },
+            onClick: async () => handleBulkDeleteCategories(itemsIds),
             variant: "destructive",
             icon: <Trash />
         },
