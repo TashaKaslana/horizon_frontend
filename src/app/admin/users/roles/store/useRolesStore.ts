@@ -18,7 +18,8 @@ interface RolesState {
         clearAllData: () => void;
         addRole: (role: RoleDto) => void;
         updateRole: (updatedRole: RoleDto) => void;
-        removeRole: (roleId: string | number) => void;
+        removeRole: (roleId: string) => void;
+        removeBulkRole: (roleIds: (string)[]) => void;
     };
 }
 
@@ -91,6 +92,23 @@ const useRolesStore = create<RolesState>()(
                         state.infiniteQueryData.pages = state.infiniteQueryData.pages.filter(page => (page.data?.length ?? 0) > 0);
                     }
                 }),
+
+            removeBulkRole: (roleIds) =>
+                set((state) => {
+                    state.roles = state.roles.filter(r => !roleIds.includes(r.id!));
+                    if (state.infiniteQueryData) {
+                        state.infiniteQueryData.pages = state.infiniteQueryData.pages.map(page => {
+                            const pageData = page.data ?? [];
+                            return {
+                                ...page,
+                                data: pageData.filter(r => !roleIds.includes(r.id!)),
+                            };
+                        });
+
+                        state.infiniteQueryData.pages = state.infiniteQueryData.pages.filter(page => (page.data?.length ?? 0) > 0);
+                    }
+                }),
+
             clearAllData: () =>
                 set((state) => {
                     state.roles = [];

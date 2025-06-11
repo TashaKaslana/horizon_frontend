@@ -5,14 +5,15 @@ import {
     deleteRoleMutation,
     getAllRolesInfiniteOptions,
     updateRoleMutation,
+    bulkDeleteRolesMutation
 } from "@/api/client/@tanstack/react-query.gen";
 import {useInfiniteQuery, useMutation} from "@tanstack/react-query";
-import { getNextPageParam } from "@/lib/utils";
+import {getNextPageParam} from "@/lib/utils";
 import useRolesStore from "../store/useRolesStore";
-import { useEffect } from "react";
-import { toast } from "sonner";
+import {useEffect} from "react";
+import {toast} from "sonner";
 import {CreateRoleRequest, RoleDto, PaginationInfo, UpdateRoleRequest} from "@/api/client/types.gen";
-import { zCreateRoleRequest } from "@/api/client/zod.gen";
+import {zCreateRoleRequest} from "@/api/client/zod.gen";
 
 export const useRolesManagement = () => {
     const {infiniteQueryData, actions} = useRolesStore();
@@ -118,8 +119,31 @@ export const useRolesManagement = () => {
             return;
         }
 
-        deleteRoleMutationFn({ path: { id: roleId } });
+        deleteRoleMutationFn({path: {id: roleId}});
     };
+
+    const {mutate: bulkDeleteRoles, isPending: isBulkDeletingRoles} = useMutation({
+        ...bulkDeleteRolesMutation(),
+        onSuccess: (_, variables) => {
+            if (variables.body.roleIds) {
+                actions.removeBulkRole(variables.body.roleIds);
+                toast.success("Roles deleted successfully.");
+            }
+        },
+        onError: (error) => {
+            console.error("Failed to delete roles:", error);
+            toast.error("Failed to delete roles. Please try again.");
+        },
+    });
+
+    const bulkDeleteRolesHandler = async (roleIds: string[]) => {
+        if (roleIds.length === 0) {
+            toast.error("No roles selected for deletion.");
+            return;
+        }
+
+        return bulkDeleteRoles({body: {roleIds}});
+    }
 
     return {
         roles: roleListData?.pages.flatMap(page => page.data) || [],
@@ -136,7 +160,10 @@ export const useRolesManagement = () => {
         updateRole,
         isUpdatingRole,
         deleteRole,
-        isDeletingRole
+        isDeletingRole,
+
+        bulkDeleteRolesHandler,
+        isBulkDeletingRoles
     };
 }
 

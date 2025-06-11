@@ -4,27 +4,21 @@ import {exportToExcel} from "@/lib/utils";
 import {RoleDto} from "@/api/client";
 import React, {useCallback, useMemo, useState} from "react";
 import {PermissionsSelectionDialog} from "./permissions-selection-dialog";
+import {useRolesManagement} from "@/app/admin/users/roles/hooks/useRolesManagement";
 
 export const useRoleTableAction = (items: RoleDto[]): FloatingBarAction[] => {
     const [permissionDialogOpen, setPermissionDialogOpen] = useState(false);
+    const {bulkDeleteRolesHandler} = useRolesManagement()
 
-    // Memoize the handleConfirm function to avoid recreating it on every render
+    const itemsIds = useMemo(() => {
+        return items.map(item => item.id!);
+    }, [items]);
+    
     const handleConfirm = useCallback((permissionIds: string[]) => {
         console.log(`Assigned permissions to roles: `, permissionIds);
         // Here you would implement the API call to update the role's permissions
     }, []);
-
-    // Use separate component to prevent rerenders of the parent component from causing dialog rerenders
-    const PermissionsDialogWrapper = useMemo(() => {
-        return (
-            <PermissionsSelectionDialog
-                open={permissionDialogOpen}
-                onOpenChangeAction={setPermissionDialogOpen}
-                onConfirmAction={handleConfirm}
-            />
-        );
-    }, [permissionDialogOpen, handleConfirm]);
-
+    
     return useMemo(() => [
         {
             // label: "Assign Permissions",
@@ -45,16 +39,9 @@ export const useRoleTableAction = (items: RoleDto[]): FloatingBarAction[] => {
         },
         {
             label: "Delete",
-            onClick: async () => {
-                return new Promise<void>((resolve) =>
-                    setTimeout(() => {
-                        console.log("Delete action clicked");
-                        resolve();
-                    }, 2000)
-                );
-            },
+            onClick: async () => bulkDeleteRolesHandler(itemsIds),
             variant: "destructive",
             icon: <Trash/>
         },
-    ], [handleConfirm, items, permissionDialogOpen]);  // Include all dependencies
+    ], [bulkDeleteRolesHandler, handleConfirm, items, itemsIds, permissionDialogOpen]);  // Include all dependencies
 }
