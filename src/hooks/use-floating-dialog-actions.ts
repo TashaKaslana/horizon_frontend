@@ -1,22 +1,19 @@
-import { useState } from "react";
-import {FloatingBarAction} from "@/components/common/floating-bar";
+import {useCallback, useState} from "react";
 
 export function useFloatingDialogActions() {
     const [openDialogIndex, setOpenDialogIndex] = useState<number | null>(null);
 
-    const openDialog = (index: number) => setOpenDialogIndex(index);
-    const closeDialog = () => setOpenDialogIndex(null);
+    const openDialog = useCallback((index: number) => {
+        setOpenDialogIndex(index);
+    }, []);
 
-    const getDialogNode = (actions: FloatingBarAction[]) => {
-        if (openDialogIndex === null) return null;
-        const action = actions[openDialogIndex];
-        return action.renderDialog?.(closeDialog) ?? null;
-    };
+    const closeDialog = useCallback(() => {
+        setOpenDialogIndex(null);
+    }, []);
 
     return {
         openDialogIndex,
         openDialog,
         closeDialog,
-        getDialogNode,
     };
 }

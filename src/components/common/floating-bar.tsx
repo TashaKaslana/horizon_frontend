@@ -29,18 +29,15 @@ export const FloatingBar = ({
                             }: FloatingBarProps) => {
     const [loadingSet, setLoadingSet] = useState<Set<number>>(new Set());
     const {
+        openDialogIndex, // Get the state
         openDialog,
-        getDialogNode,
         closeDialog
     } = useFloatingDialogActions();
 
     if (selectedCount === 0 || actions.length === 0) return null;
     if (typeof document === "undefined") return null;
 
-    const handleActionClick = async (
-        action: FloatingBarAction,
-        index: number
-    ) => {
+    const handleActionClick = async (action: FloatingBarAction, index: number) => {
         if (disabled || loadingSet.has(index)) return;
 
         if (action.renderDialog) {
@@ -50,19 +47,22 @@ export const FloatingBar = ({
 
         const result = action.onClick?.();
         if (result instanceof Promise) {
-            const newSet = new Set(loadingSet);
-            newSet.add(index);
-            setLoadingSet(newSet);
+            setLoadingSet(currentSet => new Set(currentSet).add(index));
 
             try {
                 await result;
             } finally {
-                const updatedSet = new Set(loadingSet);
-                updatedSet.delete(index);
-                setLoadingSet(updatedSet);
+                setLoadingSet(currentSet => {
+                    const updatedSet = new Set(currentSet);
+                    updatedSet.delete(index);
+                    return updatedSet;
+                });
             }
         }
     };
+
+    const activeAction = openDialogIndex !== null ? actions[openDialogIndex] : null;
+    const dialogNode = activeAction?.renderDialog?.(closeDialog);
 
     return createPortal(
         <div
@@ -104,7 +104,7 @@ export const FloatingBar = ({
                     />
                 </>
             )}
-            {getDialogNode(actions)}
+            {dialogNode}
         </div>,
         document.body
     );

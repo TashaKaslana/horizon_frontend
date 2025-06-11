@@ -118,8 +118,8 @@ export function DataTable<TData extends { id?: string | number }, TValue>({
                                                                               isFetchingNextPage,
 
                                                                               enableRowSelection = false,
-                                                                              rowSelection,
-                                                                              setRowSelectionFn,
+                                                                              rowSelection: controlledRowSelection,
+                                                                              setRowSelectionFn: setControlledRowSelectionFn,
                                                                               floatingActions,
 
                                                                               isLoading,
@@ -156,6 +156,13 @@ export function DataTable<TData extends { id?: string | number }, TValue>({
     const memoizedData = React.useMemo(() => data, [data]);
     const memoizedColumns = React.useMemo(() => columns, [columns]);
 
+    const isSelectionControlled = !!setControlledRowSelectionFn;
+    const [internalRowSelection, setInternalRowSelection] = React.useState<RowSelectionState>({});
+
+    const rowSelection = isSelectionControlled ? controlledRowSelection : internalRowSelection;
+    const onRowSelectionChange = isSelectionControlled ? setControlledRowSelectionFn : setInternalRowSelection;
+
+
     const table = useReactTable({
         data: memoizedData,
         columns: memoizedColumns,
@@ -164,7 +171,7 @@ export function DataTable<TData extends { id?: string | number }, TValue>({
             sorting,
             columnFilters,
             globalFilter,
-            rowSelection: enableRowSelection ? rowSelection : {},
+            rowSelection: rowSelection ?? {},
             columnVisibility,
             pagination,
         },
@@ -172,7 +179,7 @@ export function DataTable<TData extends { id?: string | number }, TValue>({
         onSortingChange: setSorting,
         onColumnFiltersChange: setColumnFilters,
         onGlobalFilterChange: setGlobalFilter,
-        onRowSelectionChange: enableRowSelection ? setRowSelectionFn : undefined,
+        onRowSelectionChange: enableRowSelection ? onRowSelectionChange : undefined,
         onColumnVisibilityChange: setColumnVisibility,
         onPaginationChange: onPaginationChange,
 
@@ -198,7 +205,13 @@ export function DataTable<TData extends { id?: string | number }, TValue>({
         pageCount: isPaginationControlled ? pageCount : undefined,
     });
 
-    const selectedData = table.getSelectedRowModel().rows.map(row => row.original)
+    const selectedData = React.useMemo(() => {
+        return table.getSelectedRowModel().rows.map(row => row.original);
+    }, [
+        table,
+        // eslint-disable-next-line
+        table.getState().rowSelection
+    ]);
 
     const handleDragEnd = (event: DragEndEvent) => {
         if (!enableDnd) return;
