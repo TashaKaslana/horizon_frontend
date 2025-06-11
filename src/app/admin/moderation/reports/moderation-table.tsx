@@ -109,7 +109,7 @@ export function ModerationTable({
                 hasNextPage={hasNextPage}
                 pageCount={totalPages ?? 0}
                 initialColumnVisibility={{id: false}}
-                floatingActions={moderationTableActions}
+                floatingActions={(selected) => moderationTableActions(selected, type ?? 'ALL')}
             />
             {selectedPostId && (
                 <PostDetailViewerSheet

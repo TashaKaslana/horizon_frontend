@@ -6,15 +6,26 @@ import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger
 
 
 
-export const moderationTableActions = (items: ReportDto[]): FloatingBarAction[] => {
+export const moderationTableActions = (items: ReportDto[], type: 'ALL' | 'USER' | 'COMMENT' |'POST'): FloatingBarAction[] => {
     const Status = {
-        Resolved: "Resolved",
+        RESOLVED: "Resolved",
         REVIEWED_APPROVED: "Approved",
         REVIEWED_REJECTED: "Rejected",
         ACTIONTAKEN_CONTENTREMOVED: "Content Removed",
         ACTIONTAKEN_USERBANNED: "User Banned",
         ACTIONTAKEN_USERWARNED: "User Warned",
         PENDING: "Pending",
+    }
+    let status: string[];
+
+    if (type === 'ALL') {
+        status = Object.values(Status);
+    } else if (type === 'COMMENT') {
+        status = [Status.REVIEWED_APPROVED, Status.REVIEWED_REJECTED, Status.ACTIONTAKEN_CONTENTREMOVED];
+    } else if (type === 'USER') {
+        status = [Status.REVIEWED_APPROVED, Status.ACTIONTAKEN_USERBANNED, Status.ACTIONTAKEN_USERWARNED, Status.REVIEWED_REJECTED];
+    } else if (type === 'POST') {
+        status = [Status.REVIEWED_APPROVED, Status.REVIEWED_REJECTED, Status.ACTIONTAKEN_CONTENTREMOVED];
     }
 
     return [
@@ -26,7 +37,7 @@ export const moderationTableActions = (items: ReportDto[]): FloatingBarAction[] 
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
                         {
-                            Object.values(Status).map((status) => (
+                            status.map((status) => (
                                 <DropdownMenuItem
                                     key={status}
                                     onClick={() => {

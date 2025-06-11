@@ -1,6 +1,6 @@
 'use client'
 
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -23,12 +23,12 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>
 
 interface BulkCommentEditDialogProps {
-    onConfirm: (data: Partial<FormValues>) => void;
-    onClose: () => void;
+    onSubmitAction: (data: Partial<FormValues>) => void;
+    onCloseAction: () => void;
     open: boolean;
 }
 
-export function BulkCommentEditDialog({open, onClose, onConfirm} :BulkCommentEditDialogProps) {
+export function BulkCommentEditDialog({open, onCloseAction, onSubmitAction} :BulkCommentEditDialogProps) {
     const form = useForm<FormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
@@ -43,12 +43,12 @@ export function BulkCommentEditDialog({open, onClose, onConfirm} :BulkCommentEdi
         if (values.updateStatus) payload.status = values.status
         if (values.updatePinned) payload.isPinned = values.isPinned
 
-        onConfirm(payload)
-        onClose()
+        onSubmitAction(payload)
+        onCloseAction()
     }
 
     return (
-        <Dialog open={open} onOpenChange={onClose}>
+        <Dialog open={open} onOpenChange={onCloseAction}>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Bulk Edit Comments</DialogTitle>

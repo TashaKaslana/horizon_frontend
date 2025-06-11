@@ -11,7 +11,10 @@ export interface FloatingBarAction {
     onClick?: () => Promise<void> | void;
     variant?: "default" | "outline" | "destructive";
     icon?: ReactNode;
-    renderDialog?: (close: () => void) => ReactNode;
+    renderDialog?: (
+        close: () => void,
+        setIsLoading: (isLoading: boolean) => void,
+    ) => ReactNode;
 }
 
 export interface FloatingBarProps {
@@ -62,7 +65,20 @@ export const FloatingBar = ({
     };
 
     const activeAction = openDialogIndex !== null ? actions[openDialogIndex] : null;
-    const dialogNode = activeAction?.renderDialog?.(closeDialog);
+    const dialogNode = activeAction?.renderDialog?.(
+        closeDialog,
+        (isLoading: boolean) => {
+            setLoadingSet(currentSet => {
+                const updatedSet = new Set(currentSet);
+                if (isLoading) {
+                    updatedSet.add(openDialogIndex!);
+                } else {
+                    updatedSet.delete(openDialogIndex!);
+                }
+                return updatedSet;
+            });
+        }
+    );
 
     return createPortal(
         <div

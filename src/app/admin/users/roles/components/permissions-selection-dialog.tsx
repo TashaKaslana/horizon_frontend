@@ -45,14 +45,14 @@ export const PermissionsSelectionDialog: React.FC<PermissionsSelectionDialogProp
     const handleConfirm = () => {
         // Extract selected IDs from row selection state
         const selectedIds = Object.keys(rowSelection).filter(id => rowSelection[id]);
-        onConfirmAction(selectedIds);
+        onConfirmAction(selectedIds ?? []);
         onOpenChangeAction(false);
     };
 
     const handleDialogClose = (isOpen: boolean) => {
         if (!isOpen) {
             // Optionally reset selection when dialog is closed via X or overlay click
-            // setRowSelection({});
+            setRowSelection({});
         }
         onOpenChangeAction(isOpen);
     };

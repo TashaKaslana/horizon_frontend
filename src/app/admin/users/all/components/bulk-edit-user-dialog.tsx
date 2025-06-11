@@ -3,46 +3,57 @@
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useEffect } from "react";
 
 import {
     Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
+import { Form, FormField, FormItem, FormLabel, FormControl } from "@/components/ui/form";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
-import { Switch } from "@/components/ui/switch";
+import {Checkbox} from "@/components/ui/checkbox";
 
 const formSchema = z.object({
+    applyRole: z.boolean().optional(),
     roleId: z.string().optional(),
-    status: z.enum(["ACTIVE", "PENDING", "BANNED"]).optional(),
-    isLogin: z.boolean().optional(),
+
+    applyStatus: z.boolean().optional(),
+    status: z.enum(["ACTIVE" , "PENDING" , "SUSPENDED" , "DEACTIVATED"]).optional(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
 interface BulkEditUsersDialogProps {
     open: boolean;
-    onOpenChange: (open: boolean) => void;
-    onSubmit: (values: FormValues) => void;
+    onOpenChangeAction: (open: boolean) => void;
+    onSubmitAction: (values: FormValues) => void;
     loading?: boolean;
 }
 
-export function BulkEditUsersDialog({ open, onOpenChange, onSubmit, loading }: BulkEditUsersDialogProps) {
+export function BulkEditUsersDialog({ open, onOpenChangeAction, onSubmitAction, loading }: BulkEditUsersDialogProps) {
     const form = useForm<FormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
+            applyRole: false,
+            applyStatus: false,
             roleId: undefined,
             status: undefined,
-            isLogin: false,
         },
     });
 
+    useEffect(() => {
+        if (!open) form.reset();
+    }, [form, open]);
+
     const handleSubmit = (values: FormValues) => {
-        onSubmit(values);
+        const payload: Partial<FormValues> = {};
+        if (values.applyStatus) payload.status = values.status;
+        if (values.applyRole) payload.roleId = values.roleId;
+        onSubmitAction(payload);
     };
 
     return (
-        <Dialog open={open} onOpenChange={onOpenChange}>
+        <Dialog open={open} onOpenChange={onOpenChangeAction}>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Bulk Edit Users</DialogTitle>
@@ -52,63 +63,73 @@ export function BulkEditUsersDialog({ open, onOpenChange, onSubmit, loading }: B
                     <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4 py-2">
                         <FormField
                             control={form.control}
-                            name="roleId"
+                            name="applyRole"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Role</FormLabel>
-                                    <Select onValueChange={field.onChange} value={field.value}>
-                                        <FormControl>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Select role" />
-                                            </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                            <SelectItem value="admin">Admin</SelectItem>
-                                            <SelectItem value="moderator">Moderator</SelectItem>
-                                            <SelectItem value="user">User</SelectItem>
-                                        </SelectContent>
-                                    </Select>
+                                    <div className={'flex gap-2 items-center'}>
+                                        <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                                        <FormLabel>Change Role</FormLabel>
+                                    </div>
+                                    {field.value && (
+                                        <FormField
+                                            control={form.control}
+                                            name="roleId"
+                                            render={({ field }) => (
+                                                <Select onValueChange={field.onChange} value={field.value}>
+                                                    <FormControl>
+                                                        <SelectTrigger>
+                                                            <SelectValue placeholder="Select role" />
+                                                        </SelectTrigger>
+                                                    </FormControl>
+                                                    <SelectContent>
+                                                        <SelectItem value="admin">Admin</SelectItem>
+                                                        <SelectItem value="moderator">Moderator</SelectItem>
+                                                        <SelectItem value="user">User</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                            )}
+                                        />
+                                    )}
                                 </FormItem>
                             )}
                         />
 
                         <FormField
                             control={form.control}
-                            name="status"
+                            name="applyStatus"
                             render={({ field }) => (
                                 <FormItem>
-                                    <FormLabel>Status</FormLabel>
-                                    <Select onValueChange={field.onChange} value={field.value}>
-                                        <FormControl>
-                                            <SelectTrigger>
-                                                <SelectValue placeholder="Select status" />
-                                            </SelectTrigger>
-                                        </FormControl>
-                                        <SelectContent>
-                                            <SelectItem value="ACTIVE">Active</SelectItem>
-                                            <SelectItem value="PENDING">Pending</SelectItem>
-                                            <SelectItem value="BANNED">Banned</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                </FormItem>
-                            )}
-                        />
-
-                        <FormField
-                            control={form.control}
-                            name="isLogin"
-                            render={({ field }) => (
-                                <FormItem className="flex items-center space-x-3">
-                                    <FormLabel>Force Login State</FormLabel>
-                                    <FormControl>
-                                        <Switch checked={field.value} onCheckedChange={field.onChange} />
-                                    </FormControl>
+                                    <div className={'flex gap-2 items-center'}>
+                                        <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                                        <FormLabel>Change Status</FormLabel>
+                                    </div>
+                                    {field.value && (
+                                        <FormField
+                                            control={form.control}
+                                            name="status"
+                                            render={({ field }) => (
+                                                <Select onValueChange={field.onChange} value={field.value}>
+                                                    <FormControl>
+                                                        <SelectTrigger>
+                                                            <SelectValue placeholder="Select status" />
+                                                        </SelectTrigger>
+                                                    </FormControl>
+                                                    <SelectContent>
+                                                        <SelectItem value="ACTIVE">Active</SelectItem>
+                                                        <SelectItem value="PENDING">Pending</SelectItem>
+                                                        <SelectItem value="SUSPENDED">Suspended</SelectItem>
+                                                        <SelectItem value="DEACTIVATED">Deactivated</SelectItem>
+                                                    </SelectContent>
+                                                </Select>
+                                            )}
+                                        />
+                                    )}
                                 </FormItem>
                             )}
                         />
 
                         <DialogFooter className="pt-2">
-                            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+                            <Button type="button" variant="outline" onClick={() => onOpenChangeAction(false)}>
                                 Cancel
                             </Button>
                             <Button type="submit" disabled={loading}>

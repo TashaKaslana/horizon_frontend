@@ -14,8 +14,8 @@ export const commentTableActions = (items: CommentAdminData[]): FloatingBarActio
             renderDialog: close => (
                 <BulkCommentEditDialog
                     open={true}
-                    onClose={close}
-                    onConfirm={(data) => {
+                    onCloseAction={close}
+                    onSubmitAction={(data) => {
                         console.log("Comments updated successfully", JSON.stringify(data));
                     }}
                 />
