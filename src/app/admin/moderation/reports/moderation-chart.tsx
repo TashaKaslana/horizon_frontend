@@ -24,31 +24,34 @@ const moderationChartConfig = {
 
 type ModerationChartType = "ALL" | "USER" | "POST" | "COMMENT"
 
-export function ModerationChart({type = "ALL", isSpecific = false}: {
-    type?: ModerationChartType,
-    isSpecific?: boolean
-}) {
+export function ModerationChart({isSpecific = true}: { isSpecific?: boolean }) {
     const chartData = useReportStore((state) => state.chartData);
     const userChartData = useReportStore((state) => state.userChartData);
     const postChartData = useReportStore((state) => state.postChartData);
     const commentChartData = useReportStore((state) => state.commentChartData);
+    const currentType = useReportStore(state => state.currentType);
+    const setCurrentType = useReportStore(state => state.setCurrentType);
 
-    const {setCurrentType} = useReportStore()
+    console.log("Comment chart data", commentChartData)
 
 
     const t = useTranslations("Admin.moderation.all.charts")
     const tType = useTranslations('Admin.moderation.all.types')
 
-    const [activeTab, setActiveTab] = React.useState<ModerationChartType>(type)
+    const [activeTab, setActiveTab] = React.useState<ModerationChartType>("ALL")
     const [timeRangeDays, setTimeRangeDays] = React.useState(30)
     const {isDailyDataLoading} = useModeration(timeRangeDays)
 
     useEffect(() => {
-        setCurrentType(activeTab)
-    }, [setCurrentType, activeTab]);
+        if (!isSpecific) {
+            setCurrentType(activeTab)
+        }
+    }, [setCurrentType, activeTab, isSpecific]);
 
     const currentChartData = React.useMemo(() => {
-        switch (activeTab) {
+        const type = isSpecific ? currentType : activeTab;
+        
+        switch (type) {
             case "ALL":
                 return chartData;
             case "USER":
@@ -60,10 +63,11 @@ export function ModerationChart({type = "ALL", isSpecific = false}: {
             default:
                 return chartData;
         }
-    }, [activeTab, chartData, userChartData, postChartData, commentChartData]);
+    }, [isSpecific, currentType, activeTab, chartData, userChartData, postChartData, commentChartData]);
 
     // Format chart data for the current tab
     const formattedChartData = React.useMemo(() => {
+        console.log("→ Formatting current chart data:", currentChartData?.length);
         if (!currentChartData || currentChartData.length === 0) {
             return []
         }
@@ -165,3 +169,4 @@ export function ModerationChart({type = "ALL", isSpecific = false}: {
         </div>
     )
 }
+

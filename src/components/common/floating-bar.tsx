@@ -88,28 +88,38 @@ export const FloatingBar = ({
             className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 shadow-lg bg-white border rounded-xl px-4 py-3 flex items-center gap-3 animate-in slide-in-from-bottom fade-in"
         >
             <span className="text-sm font-medium sr-only">{selectedCount} selected</span>
-            {actions.map((action, idx) => (
-                <Button
-                    key={idx}
-                    variant={action.variant ?? "default"}
-                    onClick={() => handleActionClick(action, idx)}
-                    className="flex items-center gap-2 min-w-24"
-                    disabled={disabled || loadingSet.has(idx)}
-                >
-                    {loadingSet.has(idx) ? (
-                        <Spinner size={'small'}/>
-                    ) : (
-                        action.render ? (
-                            typeof action.render === 'function' ? action.render(closeDialog) : action.render
-                        ) : (
-                            <span className="flex gap-x-2 items-center">
-                                {action.icon}
-                                {action.label}
-                            </span>
-                        )
-                    )}
-                </Button>
-            ))}
+            {actions.map((action, idx) => {
+                const renderContent = loadingSet.has(idx) ? (
+                    <Spinner size={'small'} />
+                ) : action.render && typeof action.render !== 'function' ? (
+                    action.render
+                ) : (
+                    <span className="flex gap-x-2 items-center">
+                        {action.icon}
+                        {action.label}
+                    </span>
+                );
+
+                if (action.render && typeof action.render === 'function') {
+                    return (
+                        <div key={idx} className="flex items-center gap-2 min-w-24">
+                            {action.render(closeDialog)}
+                        </div>
+                    );
+                }
+
+                return (
+                    <Button
+                        key={idx}
+                        variant={action.variant ?? "default"}
+                        onClick={() => handleActionClick(action, idx)}
+                        className="flex items-center gap-2 min-w-24"
+                        disabled={disabled || loadingSet.has(idx)}
+                    >
+                        {renderContent}
+                    </Button>
+                );
+            })}
             {onClearSelection && (
                 <>
                     <span className={'sr-only'}>Exit</span>

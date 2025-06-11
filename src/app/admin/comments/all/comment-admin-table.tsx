@@ -37,13 +37,13 @@ import useCommentsStore from "@/app/admin/comments/all/stores/useCommentsStore";
 import {CommentResponseWithPostDetails} from "@/api/client";
 import {formatDateTS} from "@/lib/utils";
 import useCommentsManagement from "./hooks/useCommentsManagement";
-import {commentTableActions} from "./comment-table-actions";
+import {useCommentTableActions} from "./use-comment-table-actions";
 
 export type CommentAdminData = CommentResponseWithPostDetails & DraggableItem;
 
 export function CommentAdminTable() {
-    const {comments} = useCommentsStore()
     const {isLoading, isFetchingNextPage, hasNextPage, fetchNextPage} = useCommentsManagement()
+    const {comments} = useCommentsStore()
     const [data, setData] = React.useState<CommentAdminData[]>([]);
     const [selectedPostId, setSelectedPostId] = React.useState<string | null>(null);
     const [isPostSheetOpen, setIsPostSheetOpen] = React.useState(false);
@@ -281,7 +281,7 @@ export function CommentAdminTable() {
                 isFetchingNextPage={isFetchingNextPage}
                 hasNextPage={hasNextPage}
                 fetchNextPage={fetchNextPage}
-                floatingActions={commentTableActions}
+                floatingActions={useCommentTableActions}
             />
             {
                 selectedPostId && <PostDetailViewerSheet

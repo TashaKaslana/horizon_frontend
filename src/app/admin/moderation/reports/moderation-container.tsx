@@ -13,7 +13,7 @@ const ModerationContainer = () => {
         <div className="space-y-4 size-full">
             <SiteHeader text={t('title')}/>
             <ModerationCardList/>
-            <ModerationChart/>
+            <ModerationChart isSpecific={false}/>
             <ModerationTable/>
         </div>
     );

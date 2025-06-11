@@ -9,7 +9,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 
-export const CommentStatus = ["PENDING", "APPROVED", "REJECTED"] as const
+export const CommentStatus = ["PENDING", "APPROVED", "REJECTED", "SPAM"] as const
 
 
 const formSchema = z.object({
