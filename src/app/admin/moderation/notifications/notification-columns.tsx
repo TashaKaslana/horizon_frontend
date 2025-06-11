@@ -18,10 +18,13 @@ import {Badge} from "@/components/ui/badge";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
 import {AdminNotificationDto} from "@/api/client";
 import {useTranslations} from "next-intl";
+import {useAdminNotification} from "@/app/admin/moderation/notifications/hooks/useAdminNotification";
+import {Spinner} from "@/components/ui/spinner";
 
 export const useNotificationColumns = () => {
     const t = useTranslations("Admin.moderation.notifications.table");
     const statusT = useTranslations("Admin.moderation.notifications.status");
+    const {toggleNotificationRead, isMarkingReadState} = useAdminNotification()
 
     return [
         {
@@ -189,8 +192,7 @@ export const useNotificationColumns = () => {
                 };
 
                 const handleToggleRead = () => {
-                    toast.info(`Toggling read status for: ${notification.message}`);
-                    // Implement toggle read status logic
+                    toggleNotificationRead(notification.id!, !notification.isRead);
                 };
 
                 return (
@@ -208,13 +210,20 @@ export const useNotificationColumns = () => {
                                     {t("viewDetails") || "View Details"}
                                 </DropdownMenuItem>
                                 <DropdownMenuSeparator/>
-                                <DropdownMenuItem onSelect={handleToggleRead}>
-                                    {notification.isRead ?
-                                        <MailWarningIcon className="mr-2 h-4 w-4"/> :
-                                        <MailCheckIcon className="mr-2 h-4 w-4"/>}
-                                    {notification.isRead ?
-                                        (t("markAsUnread") || "Mark as Unread") :
-                                        (t("markAsRead") || "Mark as Read")}
+                                <DropdownMenuItem
+                                    onSelect={handleToggleRead}
+                                    disabled={isMarkingReadState}
+                                >
+                                    {isMarkingReadState ? (
+                                        <Spinner className="mr-2 h-4 w-4"/>
+                                    ) : notification.isRead ? (
+                                        <MailWarningIcon className="mr-2 h-4 w-4" />
+                                    ) : (
+                                        <MailCheckIcon className="mr-2 h-4 w-4" />
+                                    )}
+                                    {notification.isRead
+                                        ? t("markAsUnread") || "Mark as Unread"
+                                        : t("markAsRead") || "Mark as Read"}
                                 </DropdownMenuItem>
                             </DropdownMenuContent>
                         </DropdownMenu>
@@ -226,3 +235,5 @@ export const useNotificationColumns = () => {
         },
     ] as ColumnDef<AdminNotificationDto>[];
 };
+
+

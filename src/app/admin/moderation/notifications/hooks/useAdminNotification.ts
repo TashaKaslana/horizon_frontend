@@ -4,7 +4,8 @@ import {
     bulkDeleteNotificationsMutation,
     bulkUpdateNotificationsMutation,
     getAdminNotificationOverviewOptions,
-    getAllNotificationsInfiniteOptions, getNotificationTrendsOptions
+    getAllNotificationsInfiniteOptions, getNotificationTrendsOptions, markAsReadMutation,
+    markAsUnreadMutation
 } from "@/api/client/@tanstack/react-query.gen";
 import {useInfiniteQuery, useMutation, useQuery} from "@tanstack/react-query";
 import {useEffect} from "react";
@@ -59,6 +60,46 @@ export const useAdminNotification = (timeRange: number = 30) => {
         if (!chartData?.data) return;
         actions.setChartData(chartData?.data ?? []);
     }, [actions, chartData?.data]);
+
+    const {mutate: markReadStateMutate, isPending: isMarkingReadState} = useMutation({
+        mutationFn: async ({
+                               notificationId,
+                               isRead
+                           }: {
+            notificationId: string;
+            isRead: boolean;
+        }) => {
+            return isRead
+                ? markAsReadMutation()?.mutationFn?.({
+                    path: {id: notificationId}
+                })
+                : markAsUnreadMutation()?.mutationFn?.({
+                    path: {id: notificationId}
+                })
+        },
+        onSuccess: (data, variables) => {
+            if (data?.data !== undefined) {
+                actions.updateNotifications(data?.data);
+                toast.success(
+                    variables.isRead
+                        ? "Notifications marked as read successfully"
+                        : "Notifications marked as unread successfully"
+                );
+            }
+        },
+        onError: (error, variables) => {
+            toast.error(
+                `Failed to mark notifications as ${
+                    variables.isRead ? "read" : "unread"
+                }: ${error.message}`
+            );
+        }
+    });
+
+    const toggleNotificationRead = (notificationId: string, isRead: boolean) => {
+        markReadStateMutate({ notificationId, isRead });
+    };
+
 
     const {
         mutate: bulkUpdateNotifications,
@@ -124,5 +165,8 @@ export const useAdminNotification = (timeRange: number = 30) => {
         isBulkUpdatePending,
         deleteNotifications,
         isBulkDeletePending,
+
+        toggleNotificationRead,
+        isMarkingReadState,
     };
 }
