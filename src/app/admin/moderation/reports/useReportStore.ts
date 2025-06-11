@@ -12,6 +12,9 @@ type SetInfiniteDataFunction = (data: InfiniteData<ReportDataWrapper> | null | (
 
 interface ReportState {
     reports: ReportDto[];
+    currentType: 'ALL' | 'USER' | 'POST' | 'COMMENT';
+    setCurrentType: (type: 'ALL' | 'USER' | 'POST' | 'COMMENT') => void;
+
     infiniteQueryData: InfiniteData<ReportDataWrapper> | null;
 
     overview: OverviewStatistic[],
@@ -47,6 +50,11 @@ interface ReportState {
 
 export const useReportStore = create<ReportState>()(
     immer((set) => ({
+        currentType: 'ALL',
+        setCurrentType: (type) => set((state) => {
+            state.currentType = type;
+        }),
+
         reports: [],
         infiniteQueryData: null,
 

@@ -14,7 +14,7 @@ const ModerationContainer = () => {
             <SiteHeader text={t('title')}/>
             <ModerationCardList/>
             <ModerationChart/>
-            <ModerationTable isFull/>
+            <ModerationTable/>
         </div>
     );
 }

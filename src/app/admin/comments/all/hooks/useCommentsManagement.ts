@@ -1,8 +1,9 @@
 'use client'
 
 import {
+    bulkUpdateCommentsMutation,
     createCommentMutation,
-    deleteCommentMutation,
+    deleteCommentMutation, deleteMultipleCommentsMutation,
     getAllCommentsWithPostDetailsInfiniteOptions, getCommentAnalyticsOverviewOptions,
     getCommentByIdOptions, getDailyCommentCountsOptions,
     updateCommentMutation
@@ -13,6 +14,7 @@ import useCommentsStore from "../stores/useCommentsStore";
 import {useEffect} from "react";
 import {toast} from "sonner";
 import {
+    BulkCommentUpdateRequest,
     CreateCommentDto,
     UpdateCommentContentDto
 } from "@/api/client/types.gen";
@@ -73,11 +75,11 @@ const useCommentsManagement = (commentId?: string, timeRange?: number) => {
 
 
     const {data: dailyComment, isLoading: isDailyCommentLoading} = useQuery({
-      ...getDailyCommentCountsOptions({
-          query: {
-              days: timeRange ?? 30,
-          }
-      })
+        ...getDailyCommentCountsOptions({
+            query: {
+                days: timeRange ?? 30,
+            }
+        })
     })
 
     useEffect(() => {
@@ -150,6 +152,43 @@ const useCommentsManagement = (commentId?: string, timeRange?: number) => {
         deleteCommentFn({path: {commentId: id}});
     };
 
+    const {mutate: bulkUpdateCommentsFn, isPending: isUpdatingBulkComments} = useMutation({
+        ...bulkUpdateCommentsMutation(),
+        onSuccess: (res) => {
+            res.data?.forEach((comment) => {
+                actions.updateComment(comment);
+            })
+
+            toast.success("Comments updated successfully.");
+        },
+        onError: (err) => {
+            console.error("Bulk update comments error:", err);
+            toast.error("Failed to update comments.");
+        }
+    })
+
+    const bulkUpdateComments = async (request: BulkCommentUpdateRequest) => {
+        return bulkUpdateCommentsFn({body: request});
+    }
+
+    const {mutate: deleteMultipleCommentsFn, isPending: isDeletingMultipleComments} = useMutation({
+        ...deleteMultipleCommentsMutation(),
+        onSuccess: (_, variables) => {
+            variables.query?.commentIds.forEach((commentId: string) => {
+                actions.removeComment(commentId);
+            });
+            toast.success("Comments deleted successfully.");
+        },
+        onError: (err) => {
+            console.error("Bulk delete comments error:", err);
+            toast.error("Failed to delete comments.");
+        }
+    });
+
+    const deleteMultipleComments = async (commentIds: string[]) => {
+        return deleteMultipleCommentsFn({query: {commentIds}});
+    };
+
     return {
         commentListData,
         fetchNextPage,
@@ -177,6 +216,12 @@ const useCommentsManagement = (commentId?: string, timeRange?: number) => {
 
         deleteComment,
         isDeletingComment,
+
+        bulkUpdateComments,
+        isUpdatingBulkComments,
+
+        deleteMultipleComments,
+        isDeletingMultipleComments
     };
 };
 

@@ -1,9 +1,7 @@
 "use client";
 
 import React, {useEffect} from "react";
-
 import {toast} from "sonner";
-
 import {DataTable} from "@/components/ui/data-table";
 import {useModerationTableColumns} from "@/app/admin/moderation/reports/moderation-table-columns";
 import {DraggableItem} from "@/components/common/dnd-table-components";
@@ -11,45 +9,40 @@ import {ModerationStatus} from "@/schemas/report-schema";
 import {ReportDto} from "@/api/client";
 import {useReportStore} from "@/app/admin/moderation/reports/useReportStore";
 import {useModeration} from "@/app/admin/moderation/reports/useModeration";
-import { RowSelectionState } from "@tanstack/react-table";
 import {PostDetailViewerSheet} from "../../posts/all/post-detail-viewer-sheet";
 import {useTranslations} from "next-intl";
-import { moderationTableActions } from "./moderation-table-actions";
+import {useModerationTableActions} from "./use-moderation-table-actions";
 
 type ModerationItemData = ReportDto & DraggableItem
 
 type ModerationTableProps = {
-    type?: 'USER' | 'POST' | 'COMMENT';
     isFull?: boolean;
     onUpdateStatusAction?: (itemIds: string[], newStatus: ModerationStatus) => void;
     onDeleteEntriesAction?: (itemIds: string[]) => void;
 }
 
 export function ModerationTable({
-    type,
-    isFull,
     onUpdateStatusAction,
     onDeleteEntriesAction
 }: ModerationTableProps) {
     const t = useTranslations("Admin.moderation.all.table");
+    const currentType = useReportStore(state => state.currentType);
+    const reports = useReportStore(state => state.reports);
+    const {fetchNextPage, isFetchingNextPage, hasNextPage, totalPages} = useModeration();
 
-    const {reports} = useReportStore()
-    const {fetchNextPage, isFetchingNextPage, hasNextPage, totalPages} = useModeration({type, isFull});
     const [data, setData] = React.useState<ModerationItemData[]>([]);
-    const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({});
     const [selectedPostId, setSelectedPostId] = React.useState<string | null>(null);
     const [isPostSheetOpen, setIsPostSheetOpen] = React.useState(false);
 
     useEffect(() => {
-        setData(reports.map(report => ({
+        setData(reports.map((report) => ({
                 ...report,
                 id: report.id,
             })) as ModerationItemData[]
         )
-    }, [type, reports]);
+    }, [reports]);
 
     const handleUpdateStatus = React.useCallback((itemIds: string[], newStatus: ModerationStatus) => {
-        // Use the passed handler if provided, otherwise handle internally
         if (onUpdateStatusAction) {
             onUpdateStatusAction(itemIds, newStatus);
             return;
@@ -71,7 +64,6 @@ export function ModerationTable({
     }, [onUpdateStatusAction, t]);
 
     const handleDeleteModerationEntries = React.useCallback((itemIds: string[]) => {
-        // Use the passed handler if provided, otherwise handle internally
         if (onDeleteEntriesAction) {
             onDeleteEntriesAction(itemIds);
             return;
@@ -94,14 +86,17 @@ export function ModerationTable({
 
     return (
         <div className="space-y-4 p-4">
+            {currentType && (
+                <div className="text-sm text-muted-foreground mb-2">
+                    Current filter: {currentType}
+                </div>
+            )}
             <DataTable
                 columns={columns}
                 data={data}
                 setData={setData}
                 enableDnd={true}
                 enableRowSelection={true}
-                setRowSelectionFn={setRowSelection}
-                rowSelection={rowSelection}
                 showGlobalFilter={true}
                 filterPlaceholder={t("searchPlaceholder")}
                 fetchNextPage={fetchNextPage}
@@ -109,7 +104,7 @@ export function ModerationTable({
                 hasNextPage={hasNextPage}
                 pageCount={totalPages ?? 0}
                 initialColumnVisibility={{id: false}}
-                floatingActions={(selected) => moderationTableActions(selected, type ?? 'ALL')}
+                floatingActions={useModerationTableActions}
             />
             {selectedPostId && (
                 <PostDetailViewerSheet

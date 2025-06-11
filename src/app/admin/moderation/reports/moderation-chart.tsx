@@ -9,6 +9,7 @@ import {Tabs, TabsList, TabsTrigger} from "@/components/ui/tabs"
 import {Users, FileText, MessageSquare} from "lucide-react"
 import {useTranslations} from "next-intl"
 import {TimeRangeChart} from "@/components/common/time-range-chart"
+import {useEffect} from "react";
 
 const moderationChartConfig = {
     pendingCount: {
@@ -27,17 +28,24 @@ export function ModerationChart({type = "ALL", isSpecific = false}: {
     type?: ModerationChartType,
     isSpecific?: boolean
 }) {
+    const chartData = useReportStore((state) => state.chartData);
+    const userChartData = useReportStore((state) => state.userChartData);
+    const postChartData = useReportStore((state) => state.postChartData);
+    const commentChartData = useReportStore((state) => state.commentChartData);
+
+    const {setCurrentType} = useReportStore()
+
+
     const t = useTranslations("Admin.moderation.all.charts")
     const tType = useTranslations('Admin.moderation.all.types')
 
     const [activeTab, setActiveTab] = React.useState<ModerationChartType>(type)
     const [timeRangeDays, setTimeRangeDays] = React.useState(30)
+    const {isDailyDataLoading} = useModeration(timeRangeDays)
 
-    const {chartData, userChartData, postChartData, commentChartData} = useReportStore()
-    const {isDailyDataLoading} = useModeration({
-        type: activeTab === "ALL" ? undefined : activeTab,
-        timeRange: timeRangeDays
-    })
+    useEffect(() => {
+        setCurrentType(activeTab)
+    }, [setCurrentType, activeTab]);
 
     const currentChartData = React.useMemo(() => {
         switch (activeTab) {
@@ -80,7 +88,7 @@ export function ModerationChart({type = "ALL", isSpecific = false}: {
     }, [activeTab, t]);
 
     const chartDescription = React.useMemo(() => {
-        return t("newReportsDescription", { days: timeRangeDays });
+        return t("newReportsDescription", {days: timeRangeDays});
     }, [timeRangeDays, t]);
 
     // If isSpecific is true, only render the chart for the specific type without tabs
