@@ -1,12 +1,14 @@
 import useLoggingStore from "@/app/admin/system/logs/useLoggingStore";
-import {useInfiniteQuery, useQuery} from "@tanstack/react-query";
+import {useInfiniteQuery, useMutation, useQuery} from "@tanstack/react-query";
 import {
     getAllLogEntriesInfiniteOptions,
     getDailyErrorLogsOptions,
-    getLogOverviewOptions
+    getLogOverviewOptions,
+    bulkDeleteLogEntriesMutation
 } from "@/api/client/@tanstack/react-query.gen";
 import {getNextPageParam} from "@/lib/utils";
 import {useEffect} from "react";
+import {toast} from "sonner";
 
 export const useLoggingManagement = (
     severities?: ("INFO" | "WARNING" | "ERROR" | "CRITICAL")[],
@@ -35,7 +37,7 @@ export const useLoggingManagement = (
         actions.setInfiniteQueryData(data);
         console.log("useLoggingManagement: setInfiniteQueryData", data);
     }, [actions, data]);
-    
+
     const {data: logOverview, isLoading: isLogOverviewLoading} = useQuery({
         ...getLogOverviewOptions()
     })
@@ -59,7 +61,34 @@ export const useLoggingManagement = (
             actions.setLogChartData(logChartData.data);
         }
     }, [actions, logChartData?.data]);
+    
+    const {mutate: bulkDeleteMutation, isPending: isBulkDeleting} = useMutation({
+        ...bulkDeleteLogEntriesMutation(),
+        onSuccess: (_, variables) => {
+            if (variables.body.logIds) {
+                actions.bulkRemoveLogEntries(variables.body.logIds);
+                toast.success("Log entries deleted successfully.");
+            }
+        },
+        onError: (error) => {
+            console.error("Bulk delete failed:", error);
+            toast.error("Failed to delete log entries. Please try again.");
+        },
+    })
+    
+    const bulkDeleteLogEntries = (logIds: string[]) => {
+        if (logIds.length === 0) {
+            toast.error("No log entries selected for deletion.");
+            return;
+        }
 
+        bulkDeleteMutation({
+            body: {
+                logIds: logIds
+            }
+        });
+    };
+    
     return {
         logEntries: data,
         isLoading,
@@ -73,5 +102,8 @@ export const useLoggingManagement = (
 
         isLogChartLoading,
         logChartData: logChartData,
+        
+        bulkDeleteLogEntries,
+        isBulkDeleting
     };
 }

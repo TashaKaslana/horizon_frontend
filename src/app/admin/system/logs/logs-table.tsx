@@ -6,7 +6,7 @@ import {useLoggingManagement} from "@/app/admin/system/logs/useLoggingManagement
 import {LogEntryDto} from "@/api/client";
 import {useTranslations} from "next-intl";
 import {useLogsColumns} from "@/app/admin/system/logs/logs-columns";
-import {logTableActions} from "@/app/admin/system/logs/log-table-actions";
+import {useLogTableActions} from "@/app/admin/system/logs/use-log-table-actions";
 
 export const LogsTable = () => {
     const [tab, setTab] = useState("all");
@@ -61,7 +61,7 @@ const LogTab = ({ severities }: { severities: ("INFO" | "WARNING" | "ERROR" | "C
                 hasNextPage={hasNextPage}
                 pageCount={totalPages}
                 filterPlaceholder={t("searchPlaceholder")}
-                floatingActions={logTableActions}
+                floatingActions={useLogTableActions}
             />
         </TabsContent>
     );

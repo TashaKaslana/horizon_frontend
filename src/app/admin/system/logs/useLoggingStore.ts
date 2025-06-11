@@ -24,6 +24,7 @@ interface LogEntriesState {
         addLogEntries: (logEntries: LogEntryDto) => void;
         // updateLogEntries: (logEntriesUpdate: UpdateNotificationDto) => void;
         removeLogEntries: (logEntriesId: string) => void;
+        bulkRemoveLogEntries: (logEntriesId: string[]) => void;
         setLogEntries: (logEntries: LogEntryDto[]) => void;
     };
 }
@@ -96,6 +97,22 @@ const useAdminLogEntriesStore = create<LogEntriesState>()(
                             .map((page) => ({
                                 ...page,
                                 data: (page.data ?? []).filter((p) => p.id !== logEntryId),
+                            }))
+                            .filter((page) => (page.data?.length ?? 0) > 0);
+                    }
+                }),
+
+            bulkRemoveLogEntries: (logEntryIds) =>
+                set((state) => {
+                    state.logEntries = state.logEntries.filter((p) => !logEntryIds.includes(p.id!));
+                    if (state.selectedLogEntry && logEntryIds.includes(state.selectedLogEntry.id!)) {
+                        state.selectedLogEntry = null;
+                    }
+                    if (state.infiniteQueryData) {
+                        state.infiniteQueryData.pages = state.infiniteQueryData.pages
+                            .map((page) => ({
+                                ...page,
+                                data: (page.data ?? []).filter((p) => !logEntryIds.includes(p.id!)),
                             }))
                             .filter((page) => (page.data?.length ?? 0) > 0);
                     }
