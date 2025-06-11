@@ -7,12 +7,15 @@ import {RoleDto} from "@/api/client";
 import {DraggableItem} from "@/components/common/dnd-table-components";
 import useRolesStore from "@/app/admin/users/roles/store/useRolesStore";
 import {useTranslations} from "next-intl";
+import {useRolesManagement} from "@/app/admin/users/roles/hooks/useRolesManagement";
+import {useRoleTableAction} from "@/app/admin/users/roles/components/role-table-actions";
 
 type RoleDraggable = RoleDto & DraggableItem
 
 export const RolesTable = () => {
     const [data, setData] = useState<RoleDraggable[]>([])
     const {roles} = useRolesStore()
+    const {isLoading, isFetchingNextPage, fetchNextPage, hasNextPage, totalPages} = useRolesManagement()
     const t = useTranslations("Admin.users.roles");
     const columns = useRolesColumns();
 
@@ -25,7 +28,7 @@ export const RolesTable = () => {
             return roleDto as RoleDraggable;
         }))
     }, [roles])
-    
+
     return (
         <div className={'space-y-4 p-4'}>
             <div className={'w-full flex justify-end'}>
@@ -35,7 +38,14 @@ export const RolesTable = () => {
             </div>
             <DataTable columns={columns}
                        data={data}
+                       setData={setData}
                        enableRowSelection={true}
+                       isLoading={isLoading}
+                       isFetchingNextPage={isFetchingNextPage}
+                       fetchNextPage={fetchNextPage}
+                       hasNextPage={hasNextPage}
+                       pageCount={totalPages}
+                       floatingActions={useRoleTableAction}
             />
         </div>
     )
