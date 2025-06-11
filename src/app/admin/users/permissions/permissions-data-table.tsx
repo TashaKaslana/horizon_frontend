@@ -9,7 +9,7 @@ import {
     RowSelectionState,
     VisibilityState,
 } from "@tanstack/react-table";
-import {permissionTableAction} from "@/app/admin/users/permissions/components/permission-table-actions";
+import {usePermissionTableAction} from "@/app/admin/users/permissions/components/permission-table-actions";
 
 type PermissionDraggable = PermissionDto & DraggableItem;
 
@@ -56,7 +56,7 @@ export function PermissionsDataTable({
             rowSelection={rowSelection}
             setRowSelectionFn={onRowSelectionChange}
             initialColumnVisibility={columnVisibility}
-            floatingActions={permissionTableAction}
+            floatingActions={usePermissionTableAction}
         />
     );
 }

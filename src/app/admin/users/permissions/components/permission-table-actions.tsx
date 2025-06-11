@@ -2,8 +2,13 @@ import { FloatingBarAction } from "@/components/common/floating-bar";
 import { Download, Trash } from "lucide-react";
 import { exportToExcel } from "@/lib/utils";
 import {PermissionDto} from "@/api/client";
+import usePermissionsManagement from "@/app/admin/users/permissions/hooks/usePermissionsManagement";
+import {useMemo} from "react";
 
-export const permissionTableAction = (items: PermissionDto[]): FloatingBarAction[] => {
+export const usePermissionTableAction = (items: PermissionDto[]): FloatingBarAction[] => {
+  const {bulkRemovePermissions} = usePermissionsManagement()
+  const itemsIds = useMemo(() => items.map(item => item.id!), [items]);
+
   return [
     {
       label: "Export",
@@ -13,14 +18,7 @@ export const permissionTableAction = (items: PermissionDto[]): FloatingBarAction
     },
     {
       label: "Delete",
-      onClick: async () => {
-        return new Promise<void>((resolve) =>
-          setTimeout(() => {
-            console.log("Delete permissions clicked");
-            resolve();
-          }, 2000)
-        );
-      },
+      onClick: async () => bulkRemovePermissions(itemsIds),
       variant: "destructive",
       icon: <Trash />
     },

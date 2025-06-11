@@ -1,7 +1,7 @@
 import {create} from "zustand";
 import {immer} from "zustand/middleware/immer";
-import { InfiniteData } from "@tanstack/react-query";
-import { PermissionDto } from "@/api/client/types.gen";
+import {InfiniteData} from "@tanstack/react-query";
+import {PermissionDto} from "@/api/client/types.gen";
 
 export interface PermissionPage {
     data?: PermissionDto[];
@@ -17,8 +17,9 @@ interface PermissionsState {
         setInfiniteQueryData: SetInfiniteDataFunction;
         clearAllData: () => void;
         addPermission: (permission: PermissionDto) => void;
-        updatePermission: (updatedPermission: PermissionDto) => void; // New action
-        removePermission: (permissionId: string | number) => void; // New action
+        updatePermission: (updatedPermission: PermissionDto) => void;
+        removePermission: (permissionId: string | number) => void;
+        bulkRemovePermissions: (permissionIds: (string | number)[]) => void;
     };
 }
 
@@ -49,7 +50,7 @@ const usePermissionsStore = create<PermissionsState>()(
                     } else {
                         // Handles case where infiniteQueryData is null or has no pages
                         state.infiniteQueryData = {
-                            pages: [{ data: [permission] }],
+                            pages: [{data: [permission]}],
                             pageParams: [0], // Default initial page param; adjust if your pagination needs otherwise
                         };
                     }
@@ -88,10 +89,26 @@ const usePermissionsStore = create<PermissionsState>()(
                             }
                             return page;
                         });
-                        // Optionally, filter out empty pages if desired, though often not necessary
-                        // state.infiniteQueryData.pages = state.infiniteQueryData.pages.filter(page => (page.data?.length ?? 0) > 0);
                     }
                 }),
+
+            bulkRemovePermissions: (permissionIds) =>
+                set((state) => {
+                    state.permissions = state.permissions.filter(p => !permissionIds.includes(p.id!));
+                    if (state.infiniteQueryData) {
+                        state.infiniteQueryData.pages = state.infiniteQueryData.pages.map(page => {
+                            const pageData = page.data ?? [];
+                            return {
+                                ...page,
+                                data: pageData.filter(p => !permissionIds.includes(p.id!)),
+                            };
+                        });
+                    }
+                    if (state.infiniteQueryData?.pages.length === 0) {
+                        state.infiniteQueryData = null;
+                    }
+                }),
+
             clearAllData: () =>
                 set((state) => {
                     state.permissions = [];

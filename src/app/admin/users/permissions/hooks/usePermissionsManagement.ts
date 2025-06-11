@@ -1,23 +1,32 @@
 'use client'
 
 import {
+    bulkDeletePermissionsMutation,
     createPermissionMutation,
     deletePermissionMutation,
     getAllPermissionsInfiniteOptions,
     updatePermissionMutation,
 } from "@/api/client/@tanstack/react-query.gen";
 import {useInfiniteQuery, useMutation} from "@tanstack/react-query";
-import { getNextPageParam } from "@/lib/utils";
+import {getNextPageParam} from "@/lib/utils";
 import usePermissionsStore from "@/app/admin/users/permissions/stores/usePermissionsStore";
-import { useEffect } from "react";
-import { toast } from "sonner";
+import {useEffect} from "react";
+import {toast} from "sonner";
 import {CreatePermissionRequest, PermissionDto} from "@/api/client/types.gen";
 import {zCreatePermissionRequest} from "@/api/client/zod.gen";
 
 const usePermissionsManagement = () => {
-    const { actions } = usePermissionsStore();
+    const {actions} = usePermissionsStore();
 
-    const { data: permissionListData, fetchNextPage, hasNextPage, isFetchingNextPage, isLoading, isError, error } = useInfiniteQuery({
+    const {
+        data: permissionListData,
+        fetchNextPage,
+        hasNextPage,
+        isFetchingNextPage,
+        isLoading,
+        isError,
+        error
+    } = useInfiniteQuery({
         ...getAllPermissionsInfiniteOptions({
             query: {
                 page: 0,
@@ -60,7 +69,7 @@ const usePermissionsManagement = () => {
             return;
         }
 
-        createPermissionMutationFn({ body: validationResult.data });
+        createPermissionMutationFn({body: validationResult.data});
     };
 
     const {mutate: updatePermissionMutationFn, isPending: isUpdatingPermission} = useMutation({
@@ -83,9 +92,9 @@ const usePermissionsManagement = () => {
             toast.error("Update failed: Permission ID is missing.");
             return;
         }
-        const { id, ...body } = data;
+        const {id, ...body} = data;
         updatePermissionMutationFn({
-            path: { id: id },
+            path: {id: id},
             body: body
         });
     };
@@ -119,6 +128,24 @@ const usePermissionsManagement = () => {
         });
     };
 
+    const {mutate: bulkDeletePermissions, isPending: isBulkDeletingPermissions} = useMutation({
+        ...bulkDeletePermissionsMutation(),
+        onSuccess: (_, variables) => {
+            if (variables.body.permissionIds) {
+                actions.bulkRemovePermissions(variables.body.permissionIds);
+                toast.success("Permissions deleted successfully.");
+            }
+        },
+    });
+
+    const bulkRemovePermissions = async (permissionIds: string[]) => {
+        return bulkDeletePermissions({
+            body: {
+                permissionIds: permissionIds
+            }
+        });
+    }
+
     return {
         fetchNextPage,
         hasNextPage,
@@ -133,6 +160,9 @@ const usePermissionsManagement = () => {
         isUpdatingPermission,
         removePermission,
         isDeletingPermission,
+
+        bulkRemovePermissions,
+        isBulkDeletingPermissions,
     };
 }
 
