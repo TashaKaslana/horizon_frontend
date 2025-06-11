@@ -1,33 +1,41 @@
 'use client'
 
 import {
+    bulkDeletePostsMutation, bulkUpdatePostsMutation,
     createPostMutation,
+    deleteAllPostsByUserMutation,
     deletePostMutation,
     getAllPostsForAdminInfiniteOptions,
+    getAllPostsForAdminInfiniteQueryKey,
     getAllPostWithDetailsForAdminInfiniteOptions,
     getDailyPostCountOptions,
     getPostAnalyticsOptions,
     getPostByIdForAdminOptions,
     updatePostMutation
 } from "@/api/client/@tanstack/react-query.gen";
-import {InfiniteData, useInfiniteQuery, useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
+import {useInfiniteQuery, useMutation, useQuery, useQueryClient} from "@tanstack/react-query";
 import {toast} from "sonner";
 import {
     CreatePostRequest,
-    PostAdminViewDto,
     UpdatePostRequest,
-    PostResponse,
-    PostCategorySummary,
-    RestApiResponseVoid
+    RestApiResponseVoid, BulkPostUpdateRequest
 } from "@/api/client/types.gen";
 import {zCreatePostRequest, zUpdatePostRequest} from "@/api/client/zod.gen";
-import usePostsStore, {PostPage} from "../stores/usePostsStore";
-import {useEffect} from "react";
+import usePostsStore from "../stores/usePostsStore";
+import {useEffect, useRef} from "react";
 import {getNextPageParam} from "@/lib/utils";
 
 export const usePostsManagement = (postId?: string, dailyRange?: number) => {
     const {actions} = usePostsStore();
     const queryClient = useQueryClient();
+    const isMounted = useRef(false);
+
+    useEffect(() => {
+        isMounted.current = true;
+        return () => {
+            isMounted.current = false;
+        };
+    }, []);
 
     const {
         data: postListData,
@@ -66,28 +74,9 @@ export const usePostsManagement = (postId?: string, dailyRange?: number) => {
     });
 
     useEffect(() => {
-        if (!postId && !postListData) return;
+        if (!isMounted.current || !postId && !postListData) return;
 
-        const postResponseToAdminViewDto = (post: PostResponse): PostAdminViewDto => {
-            const { categoryName, visibility, createdAt, updatedAt, ...rest } = post;
-            return {
-                ...rest,
-                id: post.id,
-                visibility: visibility as PostAdminViewDto['visibility'],
-                category: categoryName ? ({ name: categoryName } as PostCategorySummary) : undefined,
-                createdAt: new Date(createdAt ?? '') ,
-                updatedAt: new Date(updatedAt ?? ''),
-            };
-        };
-
-        const transformedData: InfiniteData<PostPage> = {
-            ...postListData,
-            pages: postListData?.pages?.map(page => ({
-                ...page,
-                data: page.data?.map(postResponseToAdminViewDto) ?? [],
-            })),
-        };
-        actions.setInfiniteQueryData(transformedData);
+        actions.setInfiniteQueryData(postListData);
     }, [postId, actions, postListData]);
 
     const {data: postOverviewData, isLoading: isPostOverviewLoading} = useQuery({
@@ -95,9 +84,9 @@ export const usePostsManagement = (postId?: string, dailyRange?: number) => {
     })
 
     useEffect(() => {
-        if (postOverviewData?.data) {
+        if (isMounted.current && postOverviewData?.data) {
             actions.setOverviewData(postOverviewData.data)
-        }    
+        }
     }, [actions, postOverviewData?.data]);
 
     const {data: dailyPostCount, isLoading: isDailyPostCountLoading} = useQuery({
@@ -109,7 +98,7 @@ export const usePostsManagement = (postId?: string, dailyRange?: number) => {
     })
 
     useEffect(() => {
-        if (dailyPostCount?.data) {
+        if (isMounted.current && dailyPostCount?.data) {
             actions.setChartData(dailyPostCount.data);
         }
     }, [actions, dailyPostCount?.data]);
@@ -169,22 +158,92 @@ export const usePostsManagement = (postId?: string, dailyRange?: number) => {
         });
     };
 
-    const {
-        mutateAsync: deletePostAsyncFn,
-        isPending: isDeletingPost
-    } = useMutation({
+    const {mutate: deletePostFn, isPending: isDeletingPost} = useMutation({
         ...deletePostMutation(),
         onSuccess: (_, variables) => {
             actions.removePost(variables.path.postId);
+            toast.success("Post deleted successfully.");
         },
         onError: (err) => {
-            console.error("Delete post error in hook:", err);
-            // Toast will be handled by the component using toast.promise
+            console.error("Delete post error:", err);
+            toast.error("Failed to delete post.");
         }
     });
 
-    const deletePost = (id: string): Promise<RestApiResponseVoid> => {
-        return deletePostAsyncFn({path: {postId: id}});
+    const deletePost = async (postId: string) => {
+        return deletePostFn({path: {postId}});
+    };
+
+    const {mutate: bulkDeletePostsMutateFn, isPending: isBulkDeletingPosts} = useMutation({
+        ...bulkDeletePostsMutation(),
+        onSuccess: (_, variables) => {
+            if (variables) {
+                variables.body.postIds.forEach(postId => {
+                    actions.removePost(postId);
+                });
+                toast.success("Posts deleted successfully.");
+            }
+        },
+        onError: (err) => {
+            console.error("Bulk delete posts error:", err);
+            toast.error("Failed to delete posts.");
+        }
+    });
+
+    const bulkDeletePosts = async (postIds: string[]) => {
+        return bulkDeletePostsMutateFn({body: {postIds}});
+    };
+
+    const {mutate: deleteAllPostsByUserMutateFn, isPending: isDeletingAllUserPosts} = useMutation({
+        ...deleteAllPostsByUserMutation(),
+        onSuccess: (_, variables) => {
+            if (variables) {
+                queryClient.invalidateQueries({
+                    queryKey: getAllPostsForAdminInfiniteQueryKey({
+                        query: {
+                            page: 0,
+                            size: 10,
+                            sort: ["createdAt", "desc"],
+                        }
+                    })
+                }).then();
+                toast.success("All posts by user deleted successfully.");
+            }
+        },
+        onError: (err) => {
+            console.error("Delete all posts by user error:", err);
+            toast.error("Failed to delete all posts by user.");
+        }
+    });
+
+    const deleteAllPostsByUser = async (userId: string) => {
+        return deleteAllPostsByUserMutateFn({
+            path: {userId}
+        });
+    };
+
+    const {mutate: bulkUpdatePostsMutateFn, isPending: isBulkUpdatingPosts} = useMutation({
+        ...bulkUpdatePostsMutation(),
+        onSuccess: (res) => {
+            if (res.data) {
+                res.data.forEach(post => {
+                    actions.updatePost(post);
+                });
+                toast.success("Posts updated successfully.");
+            } else {
+                toast.error("Failed to update posts: No data returned or update failed.");
+            }
+        },
+        onError: (err) => {
+            console.error("Bulk update posts error:", err);
+            toast.error("Failed to update posts.");
+        }
+    })
+
+    const bulkUpdatePosts = async (data: BulkPostUpdateRequest) => {
+        return bulkUpdatePostsMutateFn({
+            body: data
+        });
     };
 
     return {
@@ -202,7 +261,7 @@ export const usePostsManagement = (postId?: string, dailyRange?: number) => {
 
         postOverviewData,
         isPostOverviewLoading,
-        
+
         dailyPostCount,
         isDailyPostCountLoading,
 
@@ -214,6 +273,15 @@ export const usePostsManagement = (postId?: string, dailyRange?: number) => {
 
         deletePost,
         isDeletingPost,
+
+        bulkDeletePosts,
+        isBulkDeletingPosts,
+
+        deleteAllPostsByUser,
+        isDeletingAllUserPosts,
+
+        bulkUpdatePosts,
+        isBulkUpdatingPosts,
     };
 }
 

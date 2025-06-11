@@ -1,6 +1,6 @@
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import {z} from "zod";
+import {useForm} from "react-hook-form";
+import {zodResolver} from "@hookform/resolvers/zod";
 import {
     Form,
     FormControl,
@@ -8,18 +8,40 @@ import {
     FormItem,
     FormLabel,
 } from "@/components/ui/form";
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { useEffect } from "react";
+import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle} from "@/components/ui/dialog";
+import {Button} from "@/components/ui/button";
+import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
+import {Checkbox} from "@/components/ui/checkbox";
+import {useEffect} from "react";
+import useCategoryStore from "@/app/admin/posts/categories/store/useCategoryStore";
+import {useCategoryManagement} from "@/app/admin/posts/categories/hooks/useCategoryManagement";
+import {Loader2} from "lucide-react";
+
+const STATUS = {
+    DRAFT: "DRAFT",
+    PENDING_REVIEW: "PENDING_REVIEW",
+    PUBLISHED: "PUBLISHED",
+    REJECTED: "REJECTED",
+    ARCHIVED: "ARCHIVED"
+} as const;
+
+const STATUS_DISPLAY = {
+    [STATUS.DRAFT]: "Draft",
+    [STATUS.PENDING_REVIEW]: "Pending Review",
+    [STATUS.PUBLISHED]: "Published",
+    [STATUS.REJECTED]: "Rejected",
+    [STATUS.ARCHIVED]: "Archived"
+};
+
+const STATUS_VALUES = Object.values(STATUS) as [string, ...string[]];
+export const StatusEnum = z.enum(STATUS_VALUES);
 
 const formSchema = z.object({
     applyStatus: z.boolean().optional(),
-    status: z.enum(["DRAFT", "PROCESSING", "READY", "BANNED"]).optional(),
+    status: StatusEnum.optional(),
 
     applyVisibility: z.boolean().optional(),
-    visibility: z.enum(["PUBLIC", "PRIVATE", "FOLLOWERS"]).optional(),
+    visibility: z.enum(["PUBLIC", "PRIVATE", "FRIEND"]).optional(),
 
     applyCategory: z.boolean().optional(),
     categoryId: z.string().optional(),
@@ -33,11 +55,15 @@ interface BulkPostEditDialogProps {
     open: boolean;
 }
 
-export function BulkPostEditDialog({ open, onClose, onConfirm }: BulkPostEditDialogProps) {
+export function BulkPostEditDialog({open, onClose, onConfirm}: BulkPostEditDialogProps) {
+    const {categories} = useCategoryStore();
+    const {isLoading: isCategoriesLoading} = useCategoryManagement();
+
     const form = useForm<FormValues>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             applyStatus: false,
+            status: STATUS.DRAFT,
             applyVisibility: false,
             applyCategory: false,
         },
@@ -68,28 +94,29 @@ export function BulkPostEditDialog({ open, onClose, onConfirm }: BulkPostEditDia
                         <FormField
                             control={form.control}
                             name="applyStatus"
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <FormItem>
                                     <div className={'flex gap-2 items-center'}>
-                                        <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                                        <Checkbox checked={field.value} onCheckedChange={field.onChange}/>
                                         <FormLabel>Change Status</FormLabel>
                                     </div>
                                     {field.value && (
                                         <FormField
                                             control={form.control}
                                             name="status"
-                                            render={({ field }) => (
+                                            render={({field}) => (
                                                 <Select onValueChange={field.onChange} value={field.value}>
                                                     <FormControl>
                                                         <SelectTrigger>
-                                                            <SelectValue placeholder="Select status" />
+                                                            <SelectValue placeholder="Select status"/>
                                                         </SelectTrigger>
                                                     </FormControl>
                                                     <SelectContent>
-                                                        <SelectItem value="DRAFT">Draft</SelectItem>
-                                                        <SelectItem value="PROCESSING">Processing</SelectItem>
-                                                        <SelectItem value="READY">Ready</SelectItem>
-                                                        <SelectItem value="BANNED">Banned</SelectItem>
+                                                        {Object.entries(STATUS).map(([key, value]) => (
+                                                            <SelectItem key={value} value={value}>
+                                                                {STATUS_DISPLAY[value] || key}
+                                                            </SelectItem>
+                                                        ))}
                                                     </SelectContent>
                                                 </Select>
                                             )}
@@ -102,27 +129,27 @@ export function BulkPostEditDialog({ open, onClose, onConfirm }: BulkPostEditDia
                         <FormField
                             control={form.control}
                             name="applyVisibility"
-                            render={({ field }) => (
+                            render={({field}) => (
                                 <FormItem>
                                     <div className={'flex gap-2 items-center'}>
-                                        <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                                        <Checkbox checked={field.value} onCheckedChange={field.onChange}/>
                                         <FormLabel>Change Visibility</FormLabel>
                                     </div>
                                     {field.value && (
                                         <FormField
                                             control={form.control}
                                             name="visibility"
-                                            render={({ field }) => (
-                                                <Select onValueChange={field.onChange} value={field.value}>
+                                            render={({field}) => (
+                                                <Select onValueChange={field.onChange} value={field.value || ''}>
                                                     <FormControl>
                                                         <SelectTrigger>
-                                                            <SelectValue placeholder="Select visibility" />
+                                                            <SelectValue placeholder="Select visibility"/>
                                                         </SelectTrigger>
                                                     </FormControl>
                                                     <SelectContent>
                                                         <SelectItem value="PUBLIC">Public</SelectItem>
                                                         <SelectItem value="PRIVATE">Private</SelectItem>
-                                                        <SelectItem value="FOLLOWERS">Followers</SelectItem>
+                                                        <SelectItem value="FRIEND">Followers</SelectItem>
                                                     </SelectContent>
                                                 </Select>
                                             )}
@@ -137,29 +164,49 @@ export function BulkPostEditDialog({ open, onClose, onConfirm }: BulkPostEditDia
                             name="applyCategory"
                             render={({ field }) => (
                                 <FormItem>
-                                    <div className={'flex gap-2 items-center'}>
+                                    <div className="flex gap-2 items-center">
                                         <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                                         <FormLabel>Change Category</FormLabel>
                                     </div>
+
                                     {field.value && (
                                         <FormField
                                             control={form.control}
                                             name="categoryId"
                                             render={({ field }) => (
-                                                <input
-                                                    type="text"
-                                                    placeholder="Category ID"
-                                                    value={field.value ?? ''}
-                                                    onChange={e => field.onChange(e.target.value)}
-                                                    className="input"
-                                                />
+                                                <FormItem>
+                                                    <Select
+                                                        onValueChange={field.onChange}
+                                                        value={field.value || ''}
+                                                        disabled={isCategoriesLoading}
+                                                    >
+                                                        <FormControl>
+                                                            <SelectTrigger>
+                                                                {isCategoriesLoading ? (
+                                                                    <div className="flex items-center">
+                                                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                                                        <span>Loading categories...</span>
+                                                                    </div>
+                                                                ) : (
+                                                                    <SelectValue placeholder="Select category" />
+                                                                )}
+                                                            </SelectTrigger>
+                                                        </FormControl>
+                                                        <SelectContent>
+                                                            {categories.map((category) => (
+                                                                <SelectItem key={category.id} value={category.id!}>
+                                                                    {category.name}
+                                                                </SelectItem>
+                                                            ))}
+                                                        </SelectContent>
+                                                    </Select>
+                                                </FormItem>
                                             )}
                                         />
                                     )}
                                 </FormItem>
                             )}
                         />
-
                         <DialogFooter>
                             <Button type="submit">Update</Button>
                         </DialogFooter>

@@ -34,7 +34,7 @@ import {formatDateTS, getFixedNumberFormat} from "@/lib/utils";
 import {PostAdminViewDto} from "@/api/client";
 import usePostsStore from "./stores/usePostsStore";
 import {usePostsManagement} from "@/app/admin/posts/all/hooks/usePostsManagement";
-import {postTableActions} from "@/app/admin/posts/all/post-table-actions";
+import {usePostTableActions} from "@/app/admin/posts/all/use-post-table-actions";
 
 
 export function PostTable() {
@@ -46,14 +46,23 @@ export function PostTable() {
     const [selectedPostId, setSelectedPostId] = React.useState<string | null>(null);
     const [isSheetOpen, setIsSheetOpen] = React.useState(false);
 
+    const {isLoading, isFetchingNextPage, fetchNextPage, hasNextPage, deletePost, createPost} = usePostsManagement()
     const {posts} = usePostsStore();
 
-    const {isLoading, isFetchingNextPage, fetchNextPage, hasNextPage, deletePost, createPost} = usePostsManagement()
-
     useEffect(() => {
+        let isMounted = true;
+
         if (!isLoading && !isFetchingNextPage) {
-            setData(posts);
+            setTimeout(() => {
+                if (isMounted) {
+                    setData(posts);
+                }
+            }, 0);
         }
+
+        return () => {
+            isMounted = false;
+        };
     }, [isFetchingNextPage, isLoading, posts]);
 
     const handleDeletePost = React.useCallback(async (postId: string, postTitle: string) => {
@@ -156,7 +165,7 @@ export function PostTable() {
                                 userId={user?.id}
                                 initialDisplayName={user?.displayName}
                             />
-                            <span className="text-xs text-muted-foreground">ID: {user?.id}</span>
+                            <span className="text-xs text-muted-foreground truncate">{user?.username}</span>
                         </div>
                     </div>
                 );
@@ -277,7 +286,7 @@ export function PostTable() {
                 hasNextPage={hasNextPage}
                 isFetchingNextPage={isFetchingNextPage}
                 isLoading={isLoading}
-                floatingActions={postTableActions}
+                floatingActions={usePostTableActions}
             />
 
             {selectedPostId &&
