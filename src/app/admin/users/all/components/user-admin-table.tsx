@@ -25,13 +25,13 @@ import {UserTableCellViewer} from "@/app/admin/users/all/components/user-table-c
 import {UserIntroduction} from "@/api/client";
 import useUsersStore from "@/app/admin/users/all/store/useUsersStore";
 import useUsersManagement from "../hooks/useUsersManagement";
-import {userTableActions} from "@/app/admin/users/all/components/user-table-actions";
+import {useUserTableActions} from "@/app/admin/users/all/components/use-user-table-actions";
 
 export type UserAdminData = UserIntroduction & DraggableItem;
 
 export function UserAdminTable() {
-    const {users} = useUsersStore()
     const {fetchNextPage, isFetchingNextPage, hasNextPage, isLoading} = useUsersManagement()
+    const {users} = useUsersStore()
     const [data, setData] = React.useState<UserAdminData[]>([]);
     const t = useTranslations('Admin.users.all');
     const [rowSelections, setRowSelections] = React.useState<RowSelectionState>({});
@@ -217,7 +217,7 @@ export function UserAdminTable() {
                     isFetchingNextPage={isFetchingNextPage}
                     hasNextPage={hasNextPage}
                     isLoading={isLoading}
-                    floatingActions={userTableActions}
+                    floatingActions={useUserTableActions}
                 />
             </TabsContent>
 

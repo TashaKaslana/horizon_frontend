@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useEffect } from "react";
 
 import {
-    Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
+    Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Form, FormField, FormItem, FormLabel, FormControl } from "@/components/ui/form";
@@ -57,6 +57,9 @@ export function BulkEditUsersDialog({ open, onOpenChangeAction, onSubmitAction, 
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Bulk Edit Users</DialogTitle>
+                    <DialogDescription>
+                        Apply changes to selected users.
+                    </DialogDescription>
                 </DialogHeader>
 
                 <Form {...form}>
@@ -82,9 +85,9 @@ export function BulkEditUsersDialog({ open, onOpenChangeAction, onSubmitAction, 
                                                         </SelectTrigger>
                                                     </FormControl>
                                                     <SelectContent>
-                                                        <SelectItem value="admin">Admin</SelectItem>
-                                                        <SelectItem value="moderator">Moderator</SelectItem>
-                                                        <SelectItem value="user">User</SelectItem>
+                                                        <SelectItem value="ADMIN">Admin</SelectItem>
+                                                        <SelectItem value="MODERATOR">Moderator</SelectItem>
+                                                        <SelectItem value="USER">User</SelectItem>
                                                     </SelectContent>
                                                 </Select>
                                             )}

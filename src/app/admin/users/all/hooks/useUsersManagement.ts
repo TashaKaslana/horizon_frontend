@@ -1,9 +1,13 @@
 'use client'
 
 import {
+    bulkDeleteUsersMutation,
+    bulkUpdateUsersMutation,
     createUserMutation,
     deleteUserMutation,
-    getAllUserIntroductionsInfiniteOptions, getDailyUserCountsOptions, getUserAnalyticsOverviewOptions,
+    getAllUserIntroductionsInfiniteOptions,
+    getDailyUserCountsOptions,
+    getUserAnalyticsOverviewOptions,
     getUserOptions,
     updateUserAccount1Mutation,
     updateUserImageMutation,
@@ -12,14 +16,15 @@ import {
 import {useInfiniteQuery, useMutation, useQuery} from "@tanstack/react-query";
 import {getNextPageParam} from "@/lib/utils";
 import useUsersStore from "@/app/admin/users/all/store/useUsersStore";
-import {useEffect} from "react";
+import {useEffect, useRef} from "react";
 import {toast} from "sonner";
 import {
     UserCreateDto,
     UserUpdateInfoDto,
     UserAccountUpdate,
     UserRespondDto,
-    UserImageUpdate
+    UserImageUpdate,
+    BulkUserUpdateRequest
 } from "@/api/client/types.gen";
 import {
     zUserCreateDto,
@@ -30,6 +35,15 @@ import {
 
 const useUsersManagement = (userId?: string, timeRange?: number) => {
     const {actions} = useUsersStore();
+    // Add a ref to track if the component using this hook is mounted
+    const isMounted = useRef(false);
+
+    useEffect(() => {
+        isMounted.current = true;
+        return () => {
+            isMounted.current = false;
+        };
+    }, []);
 
     const {
         data: userListData,
@@ -65,7 +79,9 @@ const useUsersManagement = (userId?: string, timeRange?: number) => {
     })
 
     useEffect(() => {
-        actions.setInfiniteQueryData(userListData);
+        if (isMounted.current && userListData) {
+            actions.setInfiniteQueryData(userListData);
+        }
     }, [actions, userListData]);
 
     const {data: userOverviewData, isLoading: isUserOverviewLoading} = useQuery({
@@ -73,7 +89,8 @@ const useUsersManagement = (userId?: string, timeRange?: number) => {
     })
 
     useEffect(() => {
-        if (userOverviewData?.data) {
+        // Only update state if the component is mounted
+        if (isMounted.current && userOverviewData?.data) {
             actions.setOverviewData(userOverviewData.data);
         }
     }, [actions, userOverviewData?.data]);
@@ -87,7 +104,7 @@ const useUsersManagement = (userId?: string, timeRange?: number) => {
     });
 
     useEffect(() => {
-        if (userChartData?.data) {
+        if (isMounted.current && userChartData?.data) {
             actions.setChartData(userChartData.data);
         }
     }, [actions, userChartData?.data]);
@@ -211,6 +228,48 @@ const useUsersManagement = (userId?: string, timeRange?: number) => {
         deleteUserFn({path: {id}});
     };
 
+    const {mutate: bulkUserDeleteMutation, isPending: isBulkUserDeleting} = useMutation({
+        ...bulkDeleteUsersMutation(),
+        onSuccess: (_, variables) => {
+            if (variables) {
+                variables.body.userIds.forEach(userId => {
+                    actions.removeUser(userId);
+                });
+                toast.success("Users deleted successfully.");
+            }
+        },
+        onError: (err) => {
+            console.error("Bulk delete users error:", err);
+            toast.error("Failed to delete users.");
+        }
+    })
+
+    const deleteBulkUsers = async (userIds: string[]) => {
+        return bulkUserDeleteMutation({body: {userIds}});
+    }
+
+    const {mutate: bulkUserUpdateMutation, isPending: isBulkUserUpdating} = useMutation({
+        ...bulkUpdateUsersMutation(),
+        onSuccess: (res) => {
+            if (res.data) {
+                res.data.forEach(user => {
+                    actions.updateUser(user);
+                });
+                toast.success("Users updated successfully.");
+            }
+        },
+        onError: (err) => {
+            console.error("Bulk update users error:", err);
+            toast.error("Failed to update users.");
+        }
+    })
+
+    const bulkUpdateUsers = async (request: BulkUserUpdateRequest) => {
+        return bulkUserUpdateMutation({
+            body: request
+        });
+    }
+
     return {
         userListData,
         fetchNextPage,
@@ -244,7 +303,14 @@ const useUsersManagement = (userId?: string, timeRange?: number) => {
 
         deleteUser,
         isDeletingUser,
+
+        deleteBulkUsers,
+        isBulkUserDeleting,
+
+        bulkUpdateUsers,
+        isBulkUserUpdating
     };
 };
 
 export default useUsersManagement;
+
