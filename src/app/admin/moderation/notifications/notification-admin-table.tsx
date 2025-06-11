@@ -6,7 +6,7 @@ import {useEffect, useState} from "react";
 import {AdminNotificationDto} from "@/api/client";
 import useAdminNotificationsStore from "@/app/admin/moderation/notifications/stores/useAdminNotificationStore";
 import {useAdminNotification} from "@/app/admin/moderation/notifications/hooks/useAdminNotification";
-import {notificationTableActions} from "@/app/admin/moderation/notifications/notification-table-actions";
+import {useNotificationTableActions} from "@/app/admin/moderation/notifications/use-notification-table-actions";
 
 export const NotificationAdminTable = () => {
     const [data, setData] = useState<AdminNotificationDto[]>([])
@@ -29,7 +29,7 @@ export const NotificationAdminTable = () => {
                 isFetchingNextPage={isFetchingNextPage}
                 fetchNextPage={fetchNextPage}
                 hasNextPage={hasNextPage}
-                floatingActions={notificationTableActions}
+                floatingActions={useNotificationTableActions}
             />
         </div>
     )

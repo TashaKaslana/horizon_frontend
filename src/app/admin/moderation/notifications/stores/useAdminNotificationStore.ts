@@ -22,7 +22,7 @@ interface NotificationsState {
         setChartData: (data: DailyCountDto[]) => void;
         clearAllData: () => void;
         addNotifications: (notifications: AdminNotificationDto) => void;
-        // updateNotifications: (notificationsUpdate: UpdateNotificationDto) => void;
+        updateNotifications: (notificationsUpdate: Partial<AdminNotificationDto>) => void;
         removeNotifications: (notificationsId: string) => void;
         setNotifications: (notifications: AdminNotificationDto[]) => void;
     };
@@ -68,22 +68,29 @@ const useAdminNotificationsStore = create<NotificationsState>()(
                     }
                 }),
 
-            // updateNotifications: (notificationsUpdate) =>
-            //     set((state) => {
-            //
-            //         if (state.selectedNotifications?.id === id) {
-            //             state.selectedNotifications = {...state.selectedNotifications, ...notificationsUpdate};
-            //         }
-            //
-            //         if (state.infiniteQueryData) {
-            //             state.infiniteQueryData.pages = state.infiniteQueryData.pages.map((page) => ({
-            //                 ...page,
-            //                 data: (page.data ?? []).map((p) =>
-            //                     p.id === id ? applyUpdate(p) : p
-            //                 ),
-            //             }));
-            //         }
-            //     }),
+            updateNotifications: (notificationsUpdate) =>
+                set((state) => {
+                    state.notifications = state.notifications.map((notification) => {
+                        if (notification.id === notificationsUpdate.id) {
+                            return { ...notification, ...notificationsUpdate };
+                        }
+                        return notification;
+                    });
+                    if (state.selectedNotifications?.id === notificationsUpdate.id) {
+                        state.selectedNotifications = { ...state.selectedNotifications, ...notificationsUpdate };
+                    }
+                    if (state.infiniteQueryData) {
+                        state.infiniteQueryData.pages = state.infiniteQueryData.pages.map((page) => ({
+                            ...page,
+                            data: (page.data ?? []).map((p) => {
+                                if (p.id === notificationsUpdate.id) {
+                                    return { ...p, ...notificationsUpdate };
+                                }
+                                return p;
+                            }),
+                        }));
+                    }
+                }),
 
             removeNotifications: (notificationsId) =>
                 set((state) => {
