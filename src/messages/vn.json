@@ -804,7 +804,11 @@
           "userDataNotLoaded": "Chưa tải dữ liệu người dùng",
           "updatingUser": "Đang cập nhật người dùng {name}...",
           "userUpdatedSuccess": "Cập nhật người dùng {name} thành công",
-          "userUpdateError": "Cập nhật người dùng thất bại"
+          "userUpdateError": "Cập nhật người dùng thất bại",
+          "delete": "Xóa",
+          "edit": "Chỉnh sửa",
+          "export": "Xuất",
+          "usersExportFileName": "Người Dùng"
         },
         "metrics": {
           "totalUsers": "Tổng Người Dùng",
@@ -842,7 +846,9 @@
           "addRole": "Thêm vai trò mới",
           "viewDetails": "Xem chi tiết",
           "edit": "Chỉnh sửa",
-          "delete": "Xóa"
+          "delete": "Xóa",
+          "export": "Xuất file",
+          "rolesExportFileName": "Vai Trò"
         },
         "addRoleSheet": {
           "title": "Thêm Vai trò Mới",
@@ -899,7 +905,12 @@
           "selectRow": "Chọn hàng",
           "noDescription": "Không có mô tả",
           "openMenu": "Mở menu",
-          "searchPlaceholder": "Tìm kiếm quyền..."
+          "searchPlaceholder": "Tìm kiếm quyền...",
+          "viewDetails": "Xem chi tiết",
+          "edit": "Chỉnh sửa",
+          "delete": "Xóa",
+          "export": "Xuất file",
+          "permissionsExportFileName": "Quyền"
         },
         "addPermissionSheet": {
           "title": "Thêm Quyền Mới",
@@ -949,6 +960,10 @@
           "actions": "Hành động",
           "viewPost": "Xem bài viết",
           "editPost": "Chỉnh sửa bài viết",
+          "delete": "Xoá",
+          "edit": "Chỉnh sửa",
+          "export": "Xuất file",
+          "postsExportFileName": "Bài Đăng",
           "deletePost": "Xóa bài viết",
           "unpublishPost": "Gỡ bài viết",
           "publishPost": "Đăng bài viết",
@@ -1051,7 +1066,9 @@
           "edit": "Chỉnh sửa",
           "delete": "Xóa",
           "searchPlaceholder": "Tìm kiếm danh mục theo slug, tên hoặc mô tả...",
-          "viewDetails": "Xem chi tiết"
+          "viewDetails": "Xem chi tiết",
+          "export": "Xuất file",
+          "categoriesExportFileName": "Danh Mục"
         },
         "detail": {
           "title": "Chi tiết Danh mục",
@@ -1110,6 +1127,8 @@
           "notAvailable": "Không có",
           "openMenu": "Mở menu",
           "edit": "Chỉnh sửa",
+          "export": "Xuất file",
+          "tagsExportFileName": "Thẻ",
           "delete": "Xóa",
           "searchPlaceholder": "Tìm kiếm thẻ theo slug, tên hoặc mô tả...",
           "viewDetails": "Xem chi tiết"
@@ -1204,7 +1223,9 @@
           "postId": "ID bài viết",
           "submittedAt": "Thời gian gửi",
           "lastUpdated": "Cập nhật lần cuối",
-          "report": "Báo cáo"
+          "report": "Báo cáo",
+          "export": "Xuất file",
+          "commentsExportFileName": "Bình Luận"
         },
         "actions": {
           "reportFunctionalityNotImplemented": "Chức năng báo cáo chưa được triển khai"
@@ -1258,7 +1279,9 @@
           "itemsSelected": "mục đã chọn",
           "deleteSelectedNotifications": "Xóa đã chọn",
           "markAsRead": "Đánh dấu đã đọc",
-          "markAsUnread": "Đánh dấu chưa đọc"
+          "markAsUnread": "Đánh dấu chưa đọc",
+          "export": "Xuất file",
+          "notificationsExportFileName": "Thông Báo"
         },
         "charts": {
           "title": "Thống kê thông báo quản trị viên",
@@ -1328,7 +1351,10 @@
           "removeContent": "Gỡ bỏ nội dung",
           "markAsResolved": "Đánh dấu là đã giải quyết",
           "deleteSingleEntry": "báo cáo đã bị xóa.",
-          "deleteMultipleEntries": "báo cáo đã bị xóa."
+          "deleteMultipleEntries": "báo cáo đã bị xóa.",
+          "export": "Xuất file",
+          "reportsExportFileName": "Báo Cáo",
+          "delete": "Xóa"
         },
         "metrics": {
           "totalReports": "Tổng số báo cáo",
@@ -1461,7 +1487,8 @@
           "openMenu": "Mở menu",
           "delete": "Xóa",
           "export": "Xuất",
-          "filter": "Lọc"
+          "filter": "Lọc",
+          "logsExportFileName": "Nhật Ký"
         },
         "severity": {
           "info": "Thông tin",

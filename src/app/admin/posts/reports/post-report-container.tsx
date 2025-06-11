@@ -6,8 +6,10 @@ import {PostModerationCardList} from "@/app/admin/moderation/reports/moderation-
 import {ModerationChart} from "@/app/admin/moderation/reports/moderation-chart";
 import {useReportStore} from "@/app/admin/moderation/reports/useReportStore";
 import {useEffect} from "react";
+import {useTranslations} from "next-intl";
 
 export const PostReportContainer = () => {
+    const t = useTranslations('Admin.moderation.all.types');
     const {setCurrentType} = useReportStore()
 
     useEffect(() => {
@@ -16,7 +18,7 @@ export const PostReportContainer = () => {
 
     return (
         <div className={'space-y-4 size-full'}>
-            <SiteHeader text={'Post Reports'}/>
+            <SiteHeader text={t('post')}/>
             <PostModerationCardList/>
             <ModerationChart/>
             <ModerationTable/>

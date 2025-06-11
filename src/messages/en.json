@@ -812,7 +812,11 @@
           "userDataNotLoaded": "User data not loaded",
           "updatingUser": "Updating user {name}...",
           "userUpdatedSuccess": "User {name} updated successfully",
-          "userUpdateError": "Failed to update user"
+          "userUpdateError": "Failed to update user",
+          "edit": "Edit",
+          "export": "Export",
+          "usersExportFileName": "User",
+          "delete": "Delete"
         },
         "metrics": {
           "totalUsers": "Total Users",
@@ -850,7 +854,9 @@
           "addRole": "Add new role",
           "viewDetails": "View Details",
           "edit": "Edit",
-          "delete": "Delete"
+          "delete": "Delete",
+          "export": "Export",
+          "rolesExportFileName": "Roles"
         },
         "addRoleSheet": {
           "title": "Add New Role",
@@ -907,7 +913,12 @@
           "selectRow": "Select row",
           "noDescription": "No description provided",
           "openMenu": "Open menu",
-          "searchPlaceholder": "Search permissions..."
+          "searchPlaceholder": "Search permissions...",
+          "viewDetails": "View Details",
+          "edit": "Edit",
+          "delete": "Delete",
+          "export": "Export",
+          "permissionsExportFileName": "Permissions"
         },
         "addPermissionSheet": {
           "title": "Add New Permission",
@@ -957,6 +968,10 @@
           "actions": "Actions",
           "viewPost": "View Post",
           "editPost": "Edit Post",
+          "edit": "Edit",
+          "export": "Export",
+          "postsExportFileName": "Posts",
+          "delete": "Delete",
           "deletePost": "Delete Post",
           "unpublishPost": "Unpublish Post",
           "publishPost": "Publish Post",
@@ -1059,7 +1074,9 @@
           "edit": "Edit",
           "delete": "Delete",
           "searchPlaceholder": "Search categories by slug, name, or description...",
-          "viewDetails": "View Details"
+          "viewDetails": "View Details",
+          "export": "Export",
+          "categoriesExportFileName": "Categories"
         },
         "detail": {
           "title": "Category Details",
@@ -1118,6 +1135,8 @@
           "notAvailable": "N/A",
           "openMenu": "Open menu",
           "edit": "Edit",
+          "export": "Export",
+          "tagsExportFileName": "Tags",
           "delete": "Delete",
           "searchPlaceholder": "Search tags by slug, name, or description...",
           "viewDetails": "View Details"
@@ -1197,6 +1216,8 @@
           "authorDetailsManaged": "Author details are managed in the Users section.",
           "viewEditComment": "View/Edit",
           "delete": "Delete",
+          "export": "Export",
+          "commentsExportFileName": "Comments",
           "editingComment": "Editing comment {id}",
           "statusUpdated": "Status updated successfully",
           "commentDeleted": "Comment deleted successfully",
@@ -1266,7 +1287,9 @@
           "itemsSelected": "items selected",
           "deleteSelectedNotifications": "Delete Selected",
           "markAsRead": "Mark as Read",
-          "markAsUnread": "Mark as Unread"
+          "markAsUnread": "Mark as Unread",
+          "export": "Export",
+          "notificationsExportFileName": "Notifications"
         },
         "charts": {
           "title": "Admin Notifications Statistic",
@@ -1336,7 +1359,10 @@
           "removeContent": "Remove Content",
           "markAsResolved": "Mark as Resolved",
           "deleteSingleEntry": "report removed.",
-          "deleteMultipleEntries": "reports removed."
+          "deleteMultipleEntries": "reports removed.",
+          "export": "Export",
+          "delete": "Delete",
+          "reportsExportFileName": "Reports"
         },
         "metrics": {
           "totalReports": "Total Reports",
@@ -1469,6 +1495,7 @@
           "openMenu": "Open menu",
           "delete": "Delete",
           "export": "Export",
+          "logsExportFileName": "Logs",
           "filter": "Filter"
         },
         "severity": {

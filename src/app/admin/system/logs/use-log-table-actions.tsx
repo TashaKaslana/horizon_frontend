@@ -3,19 +3,21 @@ import {Download, Trash} from "lucide-react"; // Changed Pencil to Eye for logs
 import {exportToExcel} from "@/lib/utils";
 import {LogEntryDto} from "@/api/client";
 import {useLoggingManagement} from "@/app/admin/system/logs/useLoggingManagement";
+import {useTranslations} from "next-intl";
 
 export const useLogTableActions = (items: LogEntryDto[]): FloatingBarAction[] => {
-    const {bulkDeleteLogEntries} = useLoggingManagement()
+    const {bulkDeleteLogEntries} = useLoggingManagement();
+    const t = useTranslations("Admin.system.logs.table");
 
     return [
         {
-            label: "Export",
-            onClick: () => exportToExcel(items, "logs.xlsx", "Logs"),
+            label: t("export"),
+            onClick: () => exportToExcel(items, "logs.xlsx", t("logsExportFileName")),
             variant: "outline",
             icon: <Download/>
         },
         // {
-        //     label: "Archive", // Changed from Delete for logs, assuming logs are archived not deleted
+        //     label: t("archive"), // Changed from Delete for logs, assuming logs are archived not deleted
         //     onClick: async () => {
         //         return new Promise<void>((resolve) =>
         //             setTimeout(() => {
@@ -28,11 +30,10 @@ export const useLogTableActions = (items: LogEntryDto[]): FloatingBarAction[] =>
         //     icon: <Trash/> // Consider changing icon (e.g., ArchiveIcon)
         // },
         {
-            label: "Delete",
+            label: t("delete"),
             onClick: async () => bulkDeleteLogEntries(items.map(item => item.id!)),
             variant: "destructive",
             icon: <Trash/>
         }
     ];
 };
-

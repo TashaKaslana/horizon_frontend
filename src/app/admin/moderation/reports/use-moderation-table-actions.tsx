@@ -6,38 +6,30 @@ import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger
 import {useMemo, useState} from "react";
 import {useModeration} from "@/app/admin/moderation/reports/useModeration";
 import {useReportStore} from "@/app/admin/moderation/reports/useReportStore";
-
-const Status = {
-    RESOLVED: "Resolved",
-    REVIEWED_APPROVED: "Approved",
-    REVIEWED_REJECTED: "Rejected",
-    ACTIONTAKEN_CONTENTREMOVED: "Content Removed",
-    ACTIONTAKEN_USERBANNED: "User Banned",
-    ACTIONTAKEN_USERWARNED: "User Warned",
-    PENDING: "Pending",
-}
+import {useTranslations} from "next-intl";
 
 export const useModerationTableActions = (items: ReportDto[]): FloatingBarAction[] => {
     const [isStatusLoading, setIsStatusLoading] = useState(false);
     const {bulkUpdateReportsAction, bulkDeleteReportsAction} = useModeration();
     const {currentType} = useReportStore();
-    
-    type StatusKey = keyof typeof Status;
+    const t = useTranslations("Admin.moderation.all");
+
+    type StatusKey = 'RESOLVED' | 'REVIEWED_APPROVED' | 'REVIEWED_REJECTED' | 'ACTIONTAKEN_CONTENTREMOVED' | 'ACTIONTAKEN_USERBANNED' | 'ACTIONTAKEN_USERWARNED' | 'PENDING';
     type StatusItem = { key: StatusKey; label: string };
     
     const status: StatusItem[] = useMemo(() => {
         const statusKeysByType: Record<typeof currentType, StatusKey[]> = {
-            ALL: Object.keys(Status) as StatusKey[],
-            COMMENT: ["REVIEWED_APPROVED", "REVIEWED_REJECTED", "ACTIONTAKEN_CONTENTREMOVED"],
-            USER: ["REVIEWED_APPROVED", "ACTIONTAKEN_USERBANNED", "ACTIONTAKEN_USERWARNED", "REVIEWED_REJECTED"],
-            POST: ["REVIEWED_APPROVED", "REVIEWED_REJECTED", "ACTIONTAKEN_CONTENTREMOVED"],
+            ALL: ['RESOLVED', 'REVIEWED_APPROVED', 'REVIEWED_REJECTED', 'ACTIONTAKEN_CONTENTREMOVED', 'ACTIONTAKEN_USERBANNED', 'ACTIONTAKEN_USERWARNED', 'PENDING'],
+            COMMENT: ['REVIEWED_APPROVED', 'REVIEWED_REJECTED', 'ACTIONTAKEN_CONTENTREMOVED'],
+            USER: ['REVIEWED_APPROVED', 'ACTIONTAKEN_USERBANNED', 'ACTIONTAKEN_USERWARNED', 'REVIEWED_REJECTED'],
+            POST: ['REVIEWED_APPROVED', 'REVIEWED_REJECTED', 'ACTIONTAKEN_CONTENTREMOVED'],
         }
         
         return statusKeysByType[currentType].map(key => ({
             key,
-            label: Status[key],
+            label: t(`status.${key.toLowerCase()}`),
         }))
-    }, [currentType]);
+    }, [currentType, t]);
 
     return [
         {
@@ -45,7 +37,7 @@ export const useModerationTableActions = (items: ReportDto[]): FloatingBarAction
                 return <DropdownMenu>
                     <DropdownMenuTrigger disabled={isStatusLoading}
                                          className={'border py-1 px-2 rounded-md hover:bg-muted h-9'}>
-                        Change Status
+                        {t('table.changeStatus')}
                     </DropdownMenuTrigger>
                     <DropdownMenuContent>
                         {
@@ -77,13 +69,13 @@ export const useModerationTableActions = (items: ReportDto[]): FloatingBarAction
             icon: <Edit/>
         },
         {
-            label: "Export",
-            onClick: () => exportToExcel(items, "moderation-reports.xlsx", "Reports"),
+            label: t("table.export"),
+            onClick: () => exportToExcel(items, "moderation-reports.xlsx", t("table.reportsExportFileName")),
             variant: "outline",
             icon: <Download/>
         },
         {
-            label: "Delete",
+            label: t("table.delete"),
             onClick: async () => {
                 const reportIds = items.map(item => item.id!);
                 await bulkDeleteReportsAction(reportIds);

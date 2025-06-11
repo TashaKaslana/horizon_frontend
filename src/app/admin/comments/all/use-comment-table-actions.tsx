@@ -5,14 +5,16 @@ import { CommentAdminData } from "@/app/admin/comments/all/comment-admin-table";
 import { BulkCommentEditDialog } from "@/app/admin/comments/all/bulk-comment-edit-dialog";
 import useCommentsManagement from "@/app/admin/comments/all/hooks/useCommentsManagement";
 import { toast } from "sonner";
-import {zBulkCommentUpdateRequest} from "@/api/client/zod.gen";
+import { zBulkCommentUpdateRequest } from "@/api/client/zod.gen";
+import { useTranslations } from "next-intl";
 
 export const useCommentTableActions = (items: CommentAdminData[]): FloatingBarAction[] => {
     const { deleteMultipleComments, bulkUpdateComments } = useCommentsManagement();
+    const t = useTranslations("Admin.comments.all.table");
 
     return [
         {
-            label: "Edit",
+            label: t("editComment"),
             variant: "default",
             icon: <Pencil />,
             renderDialog: (close, setIsLoading) => (
@@ -31,7 +33,7 @@ export const useCommentTableActions = (items: CommentAdminData[]): FloatingBarAc
                             await bulkUpdateComments(updateRequest);
                         } catch (error) {
                             console.error("Failed to update comments:", error);
-                            toast.error("Failed to update comments");
+                            toast.error(t("editingComment.error"));
                         } finally {
                             setIsLoading(false);
                             close();
@@ -41,13 +43,13 @@ export const useCommentTableActions = (items: CommentAdminData[]): FloatingBarAc
             )
         },
         {
-            label: "Export",
-            onClick: () => exportToExcel(items, "comments.xlsx", "Comments"),
+            label: t("export"),
+            onClick: () => exportToExcel(items, "comments.xlsx", t("commentsExportFileName")),
             variant: "outline",
             icon: <Download />
         },
         {
-            label: "Delete",
+            label: t("delete"),
             onClick: async () => {
                 const commentIds = items.map(item => item.id);
                 await deleteMultipleComments(commentIds);

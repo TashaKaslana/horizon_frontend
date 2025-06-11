@@ -5,13 +5,15 @@ import {exportToExcel} from "@/lib/utils";
 import {BulkEditUsersDialog} from "@/app/admin/users/all/components/bulk-edit-user-dialog";
 import useUsersManagement from "@/app/admin/users/all/hooks/useUsersManagement";
 import {BulkUserUpdateRequest} from "@/api/client/types.gen";
+import {useTranslations} from "next-intl";
 
 export const useUserTableActions = (items: UserAdminData[]): FloatingBarAction[] => {
     const {deleteBulkUsers, bulkUpdateUsers} = useUsersManagement();
+    const t = useTranslations("Admin.users.all.actions");
 
     return [
         {
-            label: "Edit",
+            label: t("edit"),
             variant: "default",
             icon: <Pencil/>,
             renderDialog: (close, setIsLoading) => (
@@ -34,13 +36,13 @@ export const useUserTableActions = (items: UserAdminData[]): FloatingBarAction[]
             )
         },
         {
-            label: "Export",
-            onClick: () => exportToExcel(items, "users.xlsx", "Users"),
+            label: t("export"),
+            onClick: () => exportToExcel(items, "users.xlsx", t("usersExportFileName")),
             variant: "outline",
             icon: <Download/>
         },
         {
-            label: "Delete",
+            label: t("delete"),
             onClick: async () => {
                 const userIds = items.map(item => item.id);
                 await deleteBulkUsers(userIds);

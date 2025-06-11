@@ -5,13 +5,15 @@ import {exportToExcel} from "@/lib/utils";
 import {BulkPostEditDialog} from "@/app/admin/posts/all/bulk-post-edit-dialog";
 import {usePostsManagement} from "@/app/admin/posts/all/hooks/usePostsManagement";
 import {zBulkPostUpdateRequest} from "@/api/client/zod.gen";
+import {useTranslations} from "next-intl";
 
 export const usePostTableActions = (items: PostAdminViewDto[]): FloatingBarAction[] => {
     const {bulkDeletePosts, bulkUpdatePosts} = usePostsManagement();
+    const t = useTranslations("Admin.posts.all.table");
 
     return [
         {
-            label: "Edit",
+            label: t("edit"),
             onClick: () => console.log("Edit post action clicked", items),
             variant: "default",
             icon: <Pencil/>,
@@ -36,19 +38,19 @@ export const usePostTableActions = (items: PostAdminViewDto[]): FloatingBarActio
             )
         },
         {
-            label: "Export",
-            onClick: () => exportToExcel(items, "posts.xlsx", "Posts"),
+            label: t("export"),
+            onClick: () => exportToExcel(items, "posts.xlsx", t("postsExportFileName")),
             variant: "outline",
             icon: <Download/>
         },
         {
-            label: "Delete",
+            label: t("deletePost"),
             onClick: async () => {
                 const postIds = items.map(item => item.id!);
                 await bulkDeletePosts(postIds);
             },
             variant: "destructive",
             icon: <Trash/>,
-        },
+        }
     ];
 };

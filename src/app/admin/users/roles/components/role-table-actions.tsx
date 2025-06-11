@@ -5,10 +5,12 @@ import {RoleDto} from "@/api/client";
 import React, {useCallback, useMemo, useState} from "react";
 import {PermissionsSelectionDialog} from "./permissions-selection-dialog";
 import {useRolesManagement} from "@/app/admin/users/roles/hooks/useRolesManagement";
+import {useTranslations} from "next-intl";
 
 export const useRoleTableAction = (items: RoleDto[]): FloatingBarAction[] => {
     const [permissionDialogOpen, setPermissionDialogOpen] = useState(false);
-    const {bulkDeleteRolesHandler} = useRolesManagement()
+    const {bulkDeleteRolesHandler} = useRolesManagement();
+    const t = useTranslations("Admin.users.roles.table.actions");
 
     const itemsIds = useMemo(() => {
         return items.map(item => item.id!);
@@ -21,7 +23,7 @@ export const useRoleTableAction = (items: RoleDto[]): FloatingBarAction[] => {
     
     return useMemo(() => [
         {
-            // label: "Assign Permissions",
+            // label: t("assignPermissions"),
             variant: "default",
             icon: <Pencil/>,
             onClick: () => setPermissionDialogOpen(true),
@@ -32,16 +34,16 @@ export const useRoleTableAction = (items: RoleDto[]): FloatingBarAction[] => {
             />,
         },
         {
-            label: "Export",
-            onClick: () => exportToExcel(items, "roles.xlsx", "Roles"),
+            label: t("export"),
+            onClick: () => exportToExcel(items, "roles.xlsx", t("rolesExportFileName")),
             variant: "outline",
             icon: <Download/>
         },
         {
-            label: "Delete",
+            label: t("delete"),
             onClick: async () => bulkDeleteRolesHandler(itemsIds),
             variant: "destructive",
             icon: <Trash/>
         },
-    ], [bulkDeleteRolesHandler, handleConfirm, items, itemsIds, permissionDialogOpen]);  // Include all dependencies
+    ], [bulkDeleteRolesHandler, handleConfirm, items, itemsIds, permissionDialogOpen, t]);  // Added t to dependencies
 }
