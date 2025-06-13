@@ -10,7 +10,7 @@ import {toast} from "sonner";
 import {isUserExistsByAuth0Id} from "@/api/client";
 
 export const UserProvider = ({children}: { children: React.ReactNode }) => {
-    const {setUser, user: currentUser} = useCurrentUser()
+    const {setUser, user: currentUser, setSub} = useCurrentUser()
     const [isAuthenticated, setIsAuthenticated] = useState(false)
     const {user} = useUser()
     const router = useRouter()
@@ -18,7 +18,8 @@ export const UserProvider = ({children}: { children: React.ReactNode }) => {
 
     useEffect(() => {
         setIsAuthenticated(!!user)
-    }, [user])
+        setSub(user?.sub || "")
+    }, [setSub, user])
 
     const {mutate: createUserOnBackend} = useMutation({
         mutationFn: createUser,

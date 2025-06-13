@@ -12,6 +12,7 @@ import {MaintenanceWrapper} from "@/components/maintenance-wrapper";
 import {ClientInitProvider} from "@/components/client-init-provider";
 import {getLocale} from "next-intl/server";
 import {NextIntlClientProvider} from "next-intl";
+import {AblyProvider} from "@/components/ably-provider";
 
 // const geistSans = Geist({
 //     variable: "--font-geist-sans",
@@ -42,25 +43,27 @@ export default async function RootLayout({
         >
         <Auth0Provider>
             <ClientSetupProvider>
-                <QueryProvider>
-                    <NextIntlClientProvider>
-                        <ClientInitProvider>
-                            <UserProvider>
-                                <ThemeProvider
-                                    attribute="class"
-                                    defaultTheme="system"
-                                    enableSystem
-                                    disableTransitionOnChange
-                                >
-                                    <MaintenanceWrapper>
-                                        {children}
-                                    </MaintenanceWrapper>
-                                    <Toaster richColors/>
-                                </ThemeProvider>
-                            </UserProvider>
-                        </ClientInitProvider>
-                    </NextIntlClientProvider>
-                </QueryProvider>
+                <AblyProvider>
+                    <QueryProvider>
+                        <NextIntlClientProvider>
+                            <ClientInitProvider>
+                                <UserProvider>
+                                    <ThemeProvider
+                                        attribute="class"
+                                        defaultTheme="system"
+                                        enableSystem
+                                        disableTransitionOnChange
+                                    >
+                                        <MaintenanceWrapper>
+                                            {children}
+                                        </MaintenanceWrapper>
+                                        <Toaster richColors/>
+                                    </ThemeProvider>
+                                </UserProvider>
+                            </ClientInitProvider>
+                        </NextIntlClientProvider>
+                    </QueryProvider>
+                </AblyProvider>
             </ClientSetupProvider>
         </Auth0Provider>
         </body>

@@ -1,0 +1,2 @@
+# Treat all files in this folder as generated
+src/api/client/** linguist-generated
