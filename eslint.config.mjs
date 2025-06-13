@@ -13,15 +13,11 @@ const eslintConfig = [
   ...compat.extends("next/core-web-vitals", "next/typescript"),
 
   {
-    files: ["src/api/client/sdk.gen.ts", "src/api/client/zod.gen.ts", "src/api/client/sdk.gen.ts"],
+    files: ["src/api/client/**/*.ts"],
     rules: {
-      "no-unused-vars": "off",
-    },
-  },
-  {
-    files: ["src/api/client/transformer.gen.ts"],
-    rules: {
+      "@typescript-eslint/no-unused-vars": "off",
       "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/ban-ts-comment": "off",
     },
   },
 ];
