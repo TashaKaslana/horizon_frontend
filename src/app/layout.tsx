@@ -12,7 +12,7 @@ import {MaintenanceWrapper} from "@/components/maintenance-wrapper";
 import {ClientInitProvider} from "@/components/client-init-provider";
 import {getLocale} from "next-intl/server";
 import {NextIntlClientProvider} from "next-intl";
-import {AblyProvider} from "@/components/ably-provider";
+import {AblyProviderComponent} from "@/components/ably-provider";
 
 // const geistSans = Geist({
 //     variable: "--font-geist-sans",
@@ -43,7 +43,7 @@ export default async function RootLayout({
         >
         <Auth0Provider>
             <ClientSetupProvider>
-                <AblyProvider>
+                <AblyProviderComponent>
                     <QueryProvider>
                         <NextIntlClientProvider>
                             <ClientInitProvider>
@@ -63,7 +63,7 @@ export default async function RootLayout({
                             </ClientInitProvider>
                         </NextIntlClientProvider>
                     </QueryProvider>
-                </AblyProvider>
+                </AblyProviderComponent>
             </ClientSetupProvider>
         </Auth0Provider>
         </body>
