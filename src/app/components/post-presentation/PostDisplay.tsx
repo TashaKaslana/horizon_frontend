@@ -7,6 +7,7 @@ import VideoContainer from "@/app/components/post-presentation/video-section/Vid
 import CommentContainer from "@/app/components/post-presentation/comment-section/CommentContainer";
 import {useMutation} from "@tanstack/react-query";
 import {recordPostView} from "@/api/postApi";
+import {ChannelProvider} from "ably/react";
 
 export const PostDisplay = ({feed}: { feed: Feed }) => {
     const [isCommentOpened, setIsCommentOpened] = useState(false);
@@ -92,7 +93,15 @@ export const PostDisplay = ({feed}: { feed: Feed }) => {
                         isCommentOpened ? "w-[40%] opacity-100" : "w-0 opacity-0"
                     )}
                 >
-                    <CommentContainer postId={feed.post.id} isCommentOpened={isCommentOpened} isVisible={isVisible}/>
+                    {isCommentOpened && (
+                        <ChannelProvider channelName={`comments.${feed.post.id}`}>
+                            <CommentContainer
+                                postId={feed.post.id}
+                                isCommentOpened={isCommentOpened}
+                                isVisible={isVisible}
+                            />
+                        </ChannelProvider>
+                    )}
                 </div>
             </div>
         </div>

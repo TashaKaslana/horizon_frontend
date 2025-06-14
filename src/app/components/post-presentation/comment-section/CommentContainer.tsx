@@ -1,15 +1,13 @@
-import React, {useEffect, useRef} from "react";
+import React, {useRef} from "react";
 import {AlignLeft, MessageSquareMore} from "lucide-react";
 import {Separator} from "@/components/ui/separator";
 import {CommentSection} from "@/app/components/post-presentation/comment-section/CommentSection";
-import {useInfiniteQuery} from "@tanstack/react-query";
-import {getCommentsByPostId} from "@/api/commentApi";
-import {PaginationInfo} from "@/types/api";
 import InfiniteScroll from "@/components/ui/infinite-scroll";
 import {CommentInput} from "@/app/components/post-presentation/comment-section/CommentInput";
 import {Spinner} from "@/components/ui/spinner";
-import {useCommentStore} from "@/app/(home)/foryou/store/useCommentStore";
 import {useTranslations} from "next-intl";
+import {useComments} from "@/app/(home)/foryou/hooks/useComments";
+import { useCommentRealtime } from "@/app/(home)/foryou/hooks/useCommentRealtime";
 
 interface CommentProps {
     postId: string,
@@ -20,33 +18,16 @@ interface CommentProps {
 const CommentContainer = ({postId, isCommentOpened, isVisible}: CommentProps) => {
     const t = useTranslations("Home.comments");
     const scrollRef = useRef<HTMLDivElement>(null);
+    
+    useCommentRealtime(postId);
+
+    // Use the new hook for fetching comments
     const {
-        getComments,
-        setComments
-    } = useCommentStore();
-
-    const comments = getComments(postId);
-
-
-    const {data, isFetchingNextPage, fetchNextPage, hasNextPage} = useInfiniteQuery({
-        queryKey: ['foryou-comments', postId],
-        queryFn: async ({pageParam = 0}) => {
-            return await getCommentsByPostId(postId, {page: pageParam, size: 10})
-        },
-        getNextPageParam: lastPage => {
-            const pagination: PaginationInfo | undefined = lastPage.metadata?.pagination;
-
-            return pagination?.hasNext ? pagination.currentPage + 1 : undefined;
-        },
-        initialPageParam: 0
-    })
-
-    useEffect(() => {
-        if (data) {
-            const allComments = data.pages.flatMap(page => page.data);
-            setComments(postId, allComments);
-        }
-    }, [data, postId, setComments]);
+        comments,
+        isFetchingNextPage,
+        fetchNextPage,
+        hasNextPage,
+    } = useComments(postId);
 
     //prevent scroll event of parent when open comment container
     //bugs

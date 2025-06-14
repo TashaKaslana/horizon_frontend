@@ -174,7 +174,7 @@ const useCommentsManagement = (commentId?: string, timeRange?: number) => {
     const {mutateAsync: deleteMultipleCommentsFn, isPending: isDeletingMultipleComments} = useMutation({
         ...deleteMultipleCommentsMutation(),
         onSuccess: (_, variables) => {
-            variables.body?.commentIds.forEach((commentId: string) => {
+            variables.query?.commentIds.forEach((commentId: string) => {
                 actions.removeComment(commentId);
             });
             toast.success("Comments deleted successfully.");
@@ -186,7 +186,7 @@ const useCommentsManagement = (commentId?: string, timeRange?: number) => {
     });
 
     const deleteMultipleComments = (commentIds: string[]) => {
-        return deleteMultipleCommentsFn({body: {commentIds}});
+        return deleteMultipleCommentsFn({query: {commentIds}});
     };
 
     return {

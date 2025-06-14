@@ -6,6 +6,7 @@ import {getCommentsByPostId} from "@/api/commentApi";
 import {useEffect} from "react";
 import {CommentResponse} from "@/types/Comment";
 import {PaginationInfo} from "@/types/api";
+import {mergeById} from "@/lib/utils";
 
 interface UseCommentsReturn {
     comments: CommentResponse[];
@@ -40,8 +41,14 @@ export function useComments(postId: string, pageSize: number = 10): UseCommentsR
 
     useEffect(() => {
         if (infiniteData) {
-            const allComments = infiniteData.pages.flatMap(page => page.data);
-            setComments(postId, allComments);
+            const allComments = infiniteData.pages.flatMap((page) => page.data);
+            const latestTimestamp = infiniteData.pages.at(-1)?.timestamp ?? Date.now();
+
+            setComments(
+                postId,
+                (existing) => mergeById(existing, allComments, { preferNewer: true }),
+                latestTimestamp
+            );
         }
     }, [infiniteData, postId, setComments]);
 

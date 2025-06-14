@@ -116,3 +116,43 @@ export const exportToExcel = (
     XLSX.utils.book_append_sheet(workbook, worksheet, sheetName);
     XLSX.writeFile(workbook, fileName);
 };
+
+export function mergeById<T extends { id: string }>(
+    existing: T[],
+    incoming: T[],
+    options?: {
+        preferNewer?: boolean;
+        getTimestamp?: (item: T) => number;
+    }
+): T[] {
+    const {
+        preferNewer = false,
+        getTimestamp = (item: T) => {
+            const updated = (item as any).updatedAt; // eslint-disable-line
+            const created = (item as any).createdAt; // eslint-disable-line
+            return new Date(updated || created).getTime();
+        },
+    } = options || {};
+
+    const map = new Map<string, T>();
+
+    for (const item of existing) {
+        map.set(item.id, item);
+    }
+
+    for (const item of incoming) {
+        const current = map.get(item.id);
+        if (!current) {
+            map.set(item.id, item);
+        } else if (preferNewer) {
+            const currentTime = getTimestamp(current);
+            const incomingTime = getTimestamp(item);
+            if (incomingTime > currentTime) {
+                map.set(item.id, item);
+            }
+        }
+    }
+
+    return Array.from(map.values());
+}
+
