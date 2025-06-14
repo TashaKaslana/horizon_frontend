@@ -60,7 +60,7 @@ interface CloudinaryStatusProps {
     };
 }
 
-export const CloudinaryStatus = ({status, latency_ms, last_checked, storage}: CloudinaryStatusProps) => {
+export const CloudinaryStatus = ({status, latency_ms, storage}: CloudinaryStatusProps) => {
     const formatBytes = (bytes: number) => {
         if (bytes === 0) return "0 Bytes";
         const k = 1024;

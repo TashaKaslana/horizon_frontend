@@ -12,7 +12,7 @@ interface Auth0StatusProps {
     error?: string
 }
 
-export const Auth0Status = ({status, latency_ms, last_checked}: Auth0StatusProps) => {
+export const Auth0Status = ({status, latency_ms}: Auth0StatusProps) => {
     const t = useTranslations("Admin.system.status");
 
     return (

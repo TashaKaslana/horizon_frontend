@@ -1,6 +1,7 @@
 "use client";
 
 import React from "react";
+import {useIsMounted} from "@/hooks/use-is-mounted";
 import { Table as TanstackTable, Column } from "@tanstack/react-table";
 import {
     ArrowDown,
@@ -108,6 +109,8 @@ export function DataTablePagination<TData>({
     const currentPageIndex = tableState.pageIndex;
     const clientSidePageCount = table.getPageCount();
 
+    const isMounted = useIsMounted();
+
     const [isWaitingForDataToAdvance, setIsWaitingForDataToAdvance] = React.useState(false);
 
     const displayPageCount = (serverPageCount !== undefined && serverPageCount > 0) ? serverPageCount : (clientSidePageCount > 0 ? clientSidePageCount : 1);
@@ -125,15 +128,18 @@ export function DataTablePagination<TData>({
     React.useEffect(() => {
         if (isWaitingForDataToAdvance && !isFetchingNextPage) {
             const timerId = setTimeout(() => {
+                if (!isMounted.current) return;
                 if (table.getCanNextPage()) {
                     table.nextPage();
                 }
-                setIsWaitingForDataToAdvance(false);
+                if (isMounted.current) {
+                    setIsWaitingForDataToAdvance(false);
+                }
             }, 0);
 
             return () => clearTimeout(timerId);
         }
-    }, [isFetchingNextPage, table, isWaitingForDataToAdvance]);
+    }, [isFetchingNextPage, table, isWaitingForDataToAdvance, isMounted]);
 
     const canGoToNextServerPage = hasNextPage || currentPageIndex < displayPageCount -1;
 
