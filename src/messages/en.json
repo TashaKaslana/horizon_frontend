@@ -830,6 +830,25 @@
           "userAttendance": "User Attendance",
           "userAttendanceDescription": "Showing new users per day for the last {days} days",
           "newUsers": "New Users"
+        },
+        "addUserSheet": {
+          "title": "Add New User",
+          "description": "Provide details below to create a new user.",
+          "formLabels": {
+            "auth0Id": "Auth0 ID",
+            "username": "Username",
+            "email": "Email",
+            "status": "Status"
+          },
+          "placeholders": {
+            "auth0Id": "auth0|123",
+            "username": "johndoe",
+            "email": "johndoe@example.com"
+          },
+          "buttons": {
+            "cancel": "Cancel",
+            "create": "Create User"
+          }
         }
       },
       "roles": {
