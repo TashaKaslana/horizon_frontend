@@ -3,7 +3,6 @@
 import React, {useEffect} from "react";
 import {ColumnDef, RowSelectionState} from "@tanstack/react-table";
 import {CheckCircle2Icon, LoaderIcon, MailIcon, MoreVerticalIcon, PlusIcon,} from "lucide-react";
-import {toast} from "sonner";
 import {useTranslations} from "next-intl";
 
 import {Badge} from "@/components/ui/badge";
@@ -26,6 +25,7 @@ import {UserIntroduction} from "@/api/client";
 import useUsersStore from "@/app/admin/users/all/store/useUsersStore";
 import useUsersManagement from "../hooks/useUsersManagement";
 import {useUserTableActions} from "@/app/admin/users/all/components/use-user-table-actions";
+import AddUserSheet from "./add-user-sheet";
 
 export type UserAdminData = UserIntroduction & DraggableItem;
 
@@ -194,12 +194,13 @@ export function UserAdminTable() {
                     </TabsTrigger>
                 </TabsList>
                 <div className="flex items-center gap-2">
-                    <Button variant="default" size="sm" className="gap-1.5"
-                            onClick={() => toast.success("Add User Clicked!")}>
-                        <PlusIcon className="size-4"/>
-                        <span className="hidden lg:inline">{t('table.addUser')}</span>
-                        <span className="lg:hidden">{t('table.add')}</span>
-                    </Button>
+                    <AddUserSheet>
+                        <Button variant="default" size="sm" className="gap-1.5">
+                            <PlusIcon className="size-4"/>
+                            <span className="hidden lg:inline">{t('table.addUser')}</span>
+                            <span className="lg:hidden">{t('table.add')}</span>
+                        </Button>
+                    </AddUserSheet>
                 </div>
             </div>
 

@@ -822,6 +822,25 @@
           "userAttendance": "Người dùng tham gia",
           "userAttendanceDescription": "Hiển thị số người dùng mới mỗi ngày trong {days} ngày qua",
           "newUsers": "Người dùng mới"
+        },
+        "addUserSheet": {
+          "title": "Thêm Người Dùng Mới",
+          "description": "Nhập thông tin để tạo người dùng mới.",
+          "formLabels": {
+            "auth0Id": "Auth0 ID",
+            "username": "Tên người dùng",
+            "email": "Email",
+            "status": "Trạng thái"
+          },
+          "placeholders": {
+            "auth0Id": "auth0|123",
+            "username": "tendangnhap",
+            "email": "vidu@example.com"
+          },
+          "buttons": {
+            "cancel": "Hủy",
+            "create": "Tạo Người Dùng"
+          }
         }
       },
       "roles": {
