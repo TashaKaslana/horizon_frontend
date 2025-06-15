@@ -34,6 +34,7 @@ type NotificationStore = {
     updateNotificationReadStatus: (id: string, isRead: boolean) => void
     deleteNotification: (id: string) => void
     updateNotification: (id: string, updates: Partial<Notification>) => void
+    addNotification: (notification: Notification) => void
 }
 
 export const useNotificationStore = create<NotificationStore>()((set) => ({
@@ -57,6 +58,10 @@ export const useNotificationStore = create<NotificationStore>()((set) => ({
     },
 
     setNotifications: (notifications) => set({notifications}),
+    addNotification: (notification) =>
+        set((state) => ({
+            notifications: [notification, ...state.notifications],
+        })),
     setSearchQuery: (query) => set({searchQuery: query}),
     setActiveTab: (tab) => set({activeTab: tab}),
     setReadFilter: (filter) => set({readFilter: filter}),

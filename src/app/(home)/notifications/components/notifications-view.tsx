@@ -12,6 +12,7 @@ import {getGroupType} from "@/app/(home)/notifications/libs/notification-data";
 import {Spinner} from "@/components/ui/spinner";
 import {GroupType} from "@/types/Notification";
 import { useTranslations } from "next-intl";
+import { useNotificationRealtime } from "../hooks/useNotificationRealtime"
 
 export default function NotificationsView() {
     const t = useTranslations('Home.notifications');
@@ -25,6 +26,7 @@ export default function NotificationsView() {
     } = useNotificationStore()
 
     const {hasNextPage, fetchNextPage, isFetchingNextPage, statistics} = useNotification()
+    useNotificationRealtime()
 
     const notificationTabs = useNotificationTabs();
 

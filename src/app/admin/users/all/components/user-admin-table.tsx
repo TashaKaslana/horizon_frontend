@@ -26,6 +26,7 @@ import useUsersStore from "@/app/admin/users/all/store/useUsersStore";
 import useUsersManagement from "../hooks/useUsersManagement";
 import {useUserTableActions} from "@/app/admin/users/all/components/use-user-table-actions";
 import AddUserSheet from "./add-user-sheet";
+import {useUsersRealtime} from "@/app/admin/users/all/hooks/useUsersRealtime";
 
 export type UserAdminData = UserIntroduction & DraggableItem;
 
@@ -35,7 +36,7 @@ export function UserAdminTable() {
     const [data, setData] = React.useState<UserAdminData[]>([]);
     const t = useTranslations('Admin.users.all');
     const [rowSelections, setRowSelections] = React.useState<RowSelectionState>({});
-
+    useUsersRealtime()
 
     useEffect(() => {
         if (users) {
