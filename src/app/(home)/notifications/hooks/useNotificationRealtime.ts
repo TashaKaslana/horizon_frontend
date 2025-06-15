@@ -10,12 +10,12 @@ export const useNotificationRealtime = () => {
         const {name, data} = message;
 
         if (name === 'notification.created') {
-            addNotification(data);
+            addNotification({...data.notification, id: data.notificationId});
         } else if (name === 'notification.updated') {
             const {id, ...updates} = data;
             updateNotification(id, updates);
         } else if (name === 'notification.deleted') {
-            deleteNotification(data.id);
+            deleteNotification(data.notificationId);
         }
     })
 }

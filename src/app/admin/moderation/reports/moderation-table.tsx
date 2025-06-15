@@ -12,6 +12,7 @@ import {useModeration} from "@/app/admin/moderation/reports/useModeration";
 import {PostDetailViewerSheet} from "../../posts/all/post-detail-viewer-sheet";
 import {useTranslations} from "next-intl";
 import {useModerationTableActions} from "./use-moderation-table-actions";
+import {useReportRealtime} from "@/app/admin/moderation/reports/useReportRealtime";
 
 type ModerationItemData = ReportDto & DraggableItem
 
@@ -29,6 +30,7 @@ export function ModerationTable({
     const currentType = useReportStore(state => state.currentType);
     const reports = useReportStore(state => state.reports);
     const {fetchNextPage, isFetchingNextPage, hasNextPage, totalPages} = useModeration();
+    useReportRealtime()
 
     const [data, setData] = React.useState<ModerationItemData[]>([]);
     const [selectedPostId, setSelectedPostId] = React.useState<string | null>(null);

@@ -5,6 +5,7 @@ import {SiteHeader} from "@/app/admin/components/site-header";
 import {CommentChart} from "@/app/admin/comments/all/comment-chart";
 import {CommentAdminTable} from "@/app/admin/comments/all/comment-admin-table";
 import { useTranslations } from "next-intl";
+import {ChannelProvider} from "ably/react";
 
 const CommentAdminContainer = () => {
     const t = useTranslations('Home.comments');
@@ -14,7 +15,9 @@ const CommentAdminContainer = () => {
             <SiteHeader text={t('title')}/>
             <CommentCardList/>
             <CommentChart/>
-            <CommentAdminTable/>
+            <ChannelProvider channelName={'comments'}>
+                <CommentAdminTable/>
+            </ChannelProvider>
         </div>
     )
 }

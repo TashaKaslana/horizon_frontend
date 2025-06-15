@@ -43,8 +43,12 @@ interface ReportState {
         setCommentChartData: (data: DailyPendingAndResolvedDto[]) => void;
 
         addReport: (report: ReportDto) => void;
-        updateReport: (updatedRole: ReportDto) => void;
+        updateReport: (updatedReport: Partial<ReportDto> & { id: string }) => void;
         removeReport: (reportId: string | number) => void;
+
+        // New bulk operations
+        bulkUpdateReports: (reportIds: string[], data: Partial<ReportDto>) => void;
+        bulkDeleteReports: (reportIds: string[]) => void;
     };
 }
 
@@ -173,7 +177,50 @@ export const useReportStore = create<ReportState>()(
                     state.reports = [];
                     state.infiniteQueryData = null;
                 }),
+            bulkUpdateReports: (reportIds, data) =>
+                set((state) => {
+                    state.reports = state.reports.map(report => {
+                        if (reportIds.includes(report.id!)) {
+                            return {...report, ...data};
+                        }
+                        return report;
+                    });
+                    if (state.infiniteQueryData) {
+                        state.infiniteQueryData.pages = state.infiniteQueryData.pages.map(page => {
+                            const pageData = page.data ?? [];
+                            if (pageData.some(report => reportIds.includes(report.id!))) {
+                                return {
+                                    ...page,
+                                    data: pageData.map(report => {
+                                        if (reportIds.includes(report.id!)) {
+                                            return {...report, ...data};
+                                        }
+                                        return report;
+                                    }),
+                                };
+                            }
+                            return page;
+                        });
+                    }
+                }),
+            bulkDeleteReports: (reportIds) =>
+                set((state) => {
+                    state.reports = state.reports.filter(report => !reportIds.includes(report.id!));
+                    if (state.infiniteQueryData) {
+                        state.infiniteQueryData.pages = state.infiniteQueryData.pages.map(page => {
+                            const pageData = page.data ?? [];
+                            if (pageData.some(report => reportIds.includes(report.id!))) {
+                                return {
+                                    ...page,
+                                    data: pageData.filter(report => !reportIds.includes(report.id!)),
+                                };
+                            }
+                            return page;
+                        });
+
+                        state.infiniteQueryData.pages = state.infiniteQueryData.pages.filter(page => (page.data?.length ?? 0) > 0);
+                    }
+                }),
         },
     }))
 );
-

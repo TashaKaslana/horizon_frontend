@@ -22,9 +22,12 @@ interface CommentsState {
         setChartData: (chartData: DailyCountDto[]) => void;
         clearAllData: () => void;
         addComment: (comment: CommentResponseWithPostDetails) => void;
-        updateComment: (comment: CommentResponseWithPostDetails) => void;
+        updateComment: (comment: Partial<CommentResponseWithPostDetails> & { id: string }) => void;
         removeComment: (commentId: string) => void;
         setComments: (comments: CommentResponseWithPostDetails[]) => void;
+        // New bulk operations
+        bulkUpdateComments: (commentIds: string[], data: Partial<CommentResponseWithPostDetails>) => void;
+        bulkDeleteComments: (commentIds: string[]) => void;
     };
 }
 
@@ -70,14 +73,26 @@ const useCommentsStore = create<CommentsState>()(
 
             updateComment: (updatedComment) =>
                 set((state) => {
-                    state.comments = state.comments.map((c) => (c.id === updatedComment.id ? updatedComment : c));
+                    state.comments = state.comments.map((c) => {
+                        if (c.id === updatedComment.id) {
+                            return { ...c, ...updatedComment };
+                        }
+                        return c;
+                    });
+
                     if (state.selectedComment?.id === updatedComment.id) {
                         state.selectedComment = { ...state.selectedComment, ...updatedComment };
                     }
+
                     if (state.infiniteQueryData) {
                         state.infiniteQueryData.pages = state.infiniteQueryData.pages.map((page) => ({
                             ...page,
-                            data: (page.data ?? []).map((c) => (c.id === updatedComment.id ? updatedComment : c)),
+                            data: (page.data ?? []).map((c) => {
+                                if (c.id === updatedComment.id) {
+                                    return { ...c, ...updatedComment };
+                                }
+                                return c;
+                            }),
                         }));
                     }
                 }),
@@ -136,9 +151,64 @@ const useCommentsStore = create<CommentsState>()(
                     state.infiniteQueryData = null;
                     state.selectedComment = null;
                 }),
+
+            bulkUpdateComments: (commentIds, data) =>
+                set((state) => {
+                    // Create a set for faster lookups
+                    const updateSet = new Set(commentIds);
+
+                    // Update in the flat comments array
+                    state.comments = state.comments.map(comment => {
+                        if (updateSet.has(comment.id)) {
+                            return { ...comment, ...data };
+                        }
+                        return comment;
+                    });
+
+                    // Update the selected comment if it's in the update set
+                    if (state.selectedComment && updateSet.has(state.selectedComment.id)) {
+                        state.selectedComment = { ...state.selectedComment, ...data };
+                    }
+
+                    // Update in infiniteQueryData if it exists
+                    if (state.infiniteQueryData) {
+                        state.infiniteQueryData.pages = state.infiniteQueryData.pages.map(page => ({
+                            ...page,
+                            data: (page.data ?? []).map(comment => {
+                                if (updateSet.has(comment.id)) {
+                                    return { ...comment, ...data };
+                                }
+                                return comment;
+                            })
+                        }));
+                    }
+                }),
+
+            bulkDeleteComments: (commentIds) =>
+                set((state) => {
+                    // Create a set for faster lookups
+                    const deleteSet = new Set(commentIds);
+
+                    // Remove from flat comments array
+                    state.comments = state.comments.filter(comment => !deleteSet.has(comment.id));
+
+                    // Clear selected comment if it's in the delete set
+                    if (state.selectedComment && deleteSet.has(state.selectedComment.id)) {
+                        state.selectedComment = null;
+                    }
+
+                    // Remove from infiniteQueryData if it exists
+                    if (state.infiniteQueryData) {
+                        state.infiniteQueryData.pages = state.infiniteQueryData.pages
+                            .map(page => ({
+                                ...page,
+                                data: (page.data ?? []).filter(comment => !deleteSet.has(comment.id))
+                            }))
+                            .filter(page => (page.data?.length ?? 0) > 0); // Remove empty pages
+                    }
+                }),
         },
     }))
 );
 
 export default useCommentsStore;
-

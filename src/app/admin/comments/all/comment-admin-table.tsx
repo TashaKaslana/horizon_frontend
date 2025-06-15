@@ -38,12 +38,14 @@ import {CommentResponseWithPostDetails} from "@/api/client";
 import {formatDateTS} from "@/lib/utils";
 import useCommentsManagement from "./hooks/useCommentsManagement";
 import {useCommentTableActions} from "./use-comment-table-actions";
+import {useCommentRealtime} from "@/app/admin/comments/all/hooks/useCommentRealtime";
 
 export type CommentAdminData = CommentResponseWithPostDetails & DraggableItem;
 
 export function CommentAdminTable() {
     const {isLoading, isFetchingNextPage, hasNextPage, fetchNextPage} = useCommentsManagement()
     const {comments} = useCommentsStore()
+    useCommentRealtime()
     const [data, setData] = React.useState<CommentAdminData[]>([]);
     const [selectedPostId, setSelectedPostId] = React.useState<string | null>(null);
     const [isPostSheetOpen, setIsPostSheetOpen] = React.useState(false);
