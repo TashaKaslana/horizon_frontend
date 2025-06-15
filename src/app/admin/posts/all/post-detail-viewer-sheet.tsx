@@ -49,7 +49,7 @@ import {Separator} from "@/components/ui/separator";
 import {Badge} from "@/components/ui/badge";
 import {PostStatusEnum, PostCategoryEnum} from "./post-schema";
 import Image from "next/image";
-import {usePostsManagement} from "@/app/admin/posts/all/hooks/usePostsManagement";
+import {usePostsSync} from "@/app/admin/posts/all/hooks/usePostsSync";
 import usePostsStore from "@/app/admin/posts/all/stores/usePostsStore";
 import {PostAdminViewDto} from "@/api/client";
 import {zPostAdminViewDto, zUpdatePostRequest} from "@/api/client/zod.gen";
@@ -83,7 +83,7 @@ export const PostDetailViewerSheet: React.FC<PostDetailViewerSheetProps> = ({
     const [post, setPostData] = React.useState<PostAdminViewDto | null>(null);
     const [isEditing, setIsEditing] = React.useState(false);
     const {actions: postStoreActions} = usePostsStore();
-    const {selectedPostData, updatePost, isUpdatingPost, isSelectedPostLoading} = usePostsManagement(postId);
+    const {selectedPostData, updatePost, isUpdatingPost, isSelectedPostLoading} = usePostsSync(postId);
     const t = useTranslations("Admin.posts.all");
 
     const form = useForm<EditablePostFormValues>({

@@ -3,12 +3,12 @@ import {Download, Pencil, Trash} from "lucide-react";
 import {PostAdminViewDto} from "@/api/client";
 import {exportToExcel} from "@/lib/utils";
 import {BulkPostEditDialog} from "@/app/admin/posts/all/bulk-post-edit-dialog";
-import {usePostsManagement} from "@/app/admin/posts/all/hooks/usePostsManagement";
+import {usePostsSync} from "@/app/admin/posts/all/hooks/usePostsSync";
 import {zBulkPostUpdateRequest} from "@/api/client/zod.gen";
 import {useTranslations} from "next-intl";
 
 export const usePostTableActions = (items: PostAdminViewDto[]): FloatingBarAction[] => {
-    const {bulkDeletePosts, bulkUpdatePosts} = usePostsManagement();
+    const {bulkDeletePosts, bulkUpdatePosts} = usePostsSync();
     const t = useTranslations("Admin.posts.all.table");
     const postIds = items.map(item => item.id!);
 

@@ -3,7 +3,7 @@ import {BookMarked, Heart, MessageSquareMore} from "lucide-react";
 import React from "react";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "@/components/ui/tooltip";
 import {Statistic} from "@/types/Feed";
-import {useFeedActions} from "@/app/(home)/foryou/hooks/useFeedAction";
+import {useFeed} from "@/app/(home)/foryou/hooks/useFeed";
 import {MoreAction} from "@/app/components/post-presentation/video-section/MoreAction";
 import {useTranslations} from "next-intl";
 
@@ -15,7 +15,7 @@ interface ActionButtonGroupProps {
 
 const ActionButtonGroup = ({setIsCommentOpened, postId, statistic}: ActionButtonGroupProps) => {
     const t = useTranslations("Home.posts.actions");
-    const {handleLike, handleBookmark} = useFeedActions();
+    const {handleLike, handleBookmark} = useFeed();
 
     const handleCommentToggle = () => {
         setIsCommentOpened?.((prev) => !prev);
