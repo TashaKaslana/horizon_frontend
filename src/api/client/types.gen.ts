@@ -148,6 +148,21 @@ export type UserLoginStatusDto = {
     lastLogin?: Date;
 };
 
+export type UserSettingDto = {
+    preferences?: {
+        [key: string]: unknown;
+    };
+};
+
+export type RestApiResponseUserSettingDto = {
+    success?: boolean;
+    message?: string;
+    data?: UserSettingDto;
+    error?: ApiErrorResponse;
+    timestamp?: Date;
+    metadata?: ResponseMetadata;
+};
+
 export type CommentDto = {
     createdAt?: Date;
     updatedAt?: Date;
@@ -325,6 +340,7 @@ export type CommentRespond = {
     postId?: string;
     isPinned?: boolean;
     status?: 'APPROVED' | 'PENDING' | 'SPAM' | 'REJECTED';
+    interactionCount?: bigint;
 };
 
 export type RestApiResponseCommentRespond = {
@@ -1233,6 +1249,7 @@ export type CommentResponseWithPostDetails = {
     isPinned?: boolean;
     isAuthorDeleted?: boolean;
     status?: 'APPROVED' | 'PENDING' | 'SPAM' | 'REJECTED';
+    interactionCount?: bigint;
 };
 
 export type RestApiResponseListCommentResponseWithPostDetails = {
@@ -1570,6 +1587,38 @@ export type UpdateLoginStatusResponses = {
 };
 
 export type UpdateLoginStatusResponse = UpdateLoginStatusResponses[keyof UpdateLoginStatusResponses];
+
+export type GetMySettingData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/settings/me';
+};
+
+export type GetMySettingResponses = {
+    /**
+     * OK
+     */
+    200: RestApiResponseUserSettingDto;
+};
+
+export type GetMySettingResponse = GetMySettingResponses[keyof GetMySettingResponses];
+
+export type UpdateMySettingData = {
+    body: UserSettingDto;
+    path?: never;
+    query?: never;
+    url: '/api/settings/me';
+};
+
+export type UpdateMySettingResponses = {
+    /**
+     * OK
+     */
+    200: RestApiResponseUserSettingDto;
+};
+
+export type UpdateMySettingResponse = UpdateMySettingResponses[keyof UpdateMySettingResponses];
 
 export type UpdateReportStatusData = {
     body: 'PENDING' | 'REVIEWED_APPROVED' | 'REVIEWED_REJECTED' | 'ACTIONTAKEN_CONTENTREMOVED' | 'ACTIONTAKEN_USERWARNED' | 'ACTIONTAKEN_USERBANNED' | 'RESOLVED';

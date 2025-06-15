@@ -156,6 +156,19 @@ export const zUserLoginStatusDto = z.object({
     lastLogin: z.string().datetime().optional()
 });
 
+export const zUserSettingDto = z.object({
+    preferences: z.object({}).optional()
+});
+
+export const zRestApiResponseUserSettingDto = z.object({
+    success: z.boolean().optional(),
+    message: z.string().optional(),
+    data: zUserSettingDto.optional(),
+    error: zApiErrorResponse.optional(),
+    timestamp: z.string().datetime().optional(),
+    metadata: zResponseMetadata.optional()
+});
+
 export const zCommentDto = z.object({
     createdAt: z.string().datetime().optional(),
     updatedAt: z.string().datetime().optional(),
@@ -390,7 +403,8 @@ export const zCommentRespond = z.object({
         'PENDING',
         'SPAM',
         'REJECTED'
-    ]).optional()
+    ]).optional(),
+    interactionCount: z.coerce.bigint().optional()
 });
 
 export const zRestApiResponseCommentRespond = z.object({
@@ -1420,7 +1434,8 @@ export const zCommentResponseWithPostDetails = z.object({
         'PENDING',
         'SPAM',
         'REJECTED'
-    ]).optional()
+    ]).optional(),
+    interactionCount: z.coerce.bigint().optional()
 });
 
 export const zRestApiResponseListCommentResponseWithPostDetails = z.object({
@@ -1544,6 +1559,10 @@ export const zUpdateUserLoginStatusResponse = zRestApiResponseUserRespondDto;
 export const zGetLoginStatusResponse = zRestApiResponseUserLoginStatusDto;
 
 export const zUpdateLoginStatusResponse = zRestApiResponseUserRespondDto;
+
+export const zGetMySettingResponse = zRestApiResponseUserSettingDto;
+
+export const zUpdateMySettingResponse = zRestApiResponseUserSettingDto;
 
 export const zUpdateReportStatusResponse = zRestApiResponseReportDto;
 
