@@ -33,7 +33,7 @@ import {UserTableCellViewer} from "../../users/all/components/user-table-cell-vi
 import {formatDateTS, getFixedNumberFormat} from "@/lib/utils";
 import {PostAdminViewDto} from "@/api/client";
 import usePostsStore from "./stores/usePostsStore";
-import {usePostsManagement} from "@/app/admin/posts/all/hooks/usePostsManagement";
+import {usePostsSync} from "@/app/admin/posts/all/hooks/usePostsSync";
 import {usePostTableActions} from "@/app/admin/posts/all/use-post-table-actions";
 
 
@@ -46,7 +46,7 @@ export function PostTable() {
     const [selectedPostId, setSelectedPostId] = React.useState<string | null>(null);
     const [isSheetOpen, setIsSheetOpen] = React.useState(false);
 
-    const {isLoading, isFetchingNextPage, fetchNextPage, hasNextPage, deletePost, createPost} = usePostsManagement()
+    const {isLoading, isFetchingNextPage, fetchNextPage, hasNextPage, deletePost, createPost} = usePostsSync()
     const {posts} = usePostsStore();
 
     useEffect(() => {

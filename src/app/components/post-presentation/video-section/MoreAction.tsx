@@ -1,4 +1,4 @@
-import {useFeedActions} from "@/app/(home)/foryou/hooks/useFeedAction";
+import {useFeed} from "@/app/(home)/foryou/hooks/useFeed";
 import {Tooltip, TooltipContent, TooltipTrigger} from "@/components/ui/tooltip";
 import {
     DropdownMenu,
@@ -19,7 +19,7 @@ import {useTranslations} from "next-intl";
 export const MoreAction = ({postId}: { postId: string }) => {
     const actionsT = useTranslations("Home.posts.actions");
     const reportT = useTranslations("Home.posts.report");
-    const {handleShareLink, handleReportPost} = useFeedActions();
+    const {handleShareLink, handleReportPost} = useFeed();
 
     const reportReasons = [
         { key: "sexual_content", value: reportT("sexual_content") },

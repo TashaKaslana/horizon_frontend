@@ -21,13 +21,13 @@ import {
     RestApiResponseVoid, BulkPostUpdateRequest
 } from "@/api/client/types.gen";
 import {zCreatePostRequest, zUpdatePostRequest} from "@/api/client/zod.gen";
-import usePostsStore from "../stores/usePostsStore";
 import {useEffect, useRef} from "react";
 import {getNextPageParam} from "@/lib/utils";
+import usePostsStore from "../stores/usePostsStore";
 
-export const usePostsManagement = (postId?: string, dailyRange?: number) => {
-    const {actions} = usePostsStore();
+export const usePosts = (postId?: string, dailyRange?: number) => {
     const queryClient = useQueryClient();
+    const { actions } = usePostsStore();
     const isMounted = useRef(false);
 
     useEffect(() => {
@@ -73,21 +73,11 @@ export const usePostsManagement = (postId?: string, dailyRange?: number) => {
         throwOnError: true,
     });
 
-    useEffect(() => {
-        if (!isMounted.current || !postId && !postListData) return;
-
-        actions.setInfiniteQueryData(postListData);
-    }, [postId, actions, postListData]);
 
     const {data: postOverviewData, isLoading: isPostOverviewLoading} = useQuery({
         ...getPostAnalyticsOptions(),
     })
 
-    useEffect(() => {
-        if (isMounted.current && postOverviewData?.data) {
-            actions.setOverviewData(postOverviewData.data)
-        }
-    }, [actions, postOverviewData?.data]);
 
     const {data: dailyPostCount, isLoading: isDailyPostCountLoading} = useQuery({
         ...getDailyPostCountOptions({
@@ -97,11 +87,6 @@ export const usePostsManagement = (postId?: string, dailyRange?: number) => {
         }),
     })
 
-    useEffect(() => {
-        if (isMounted.current && dailyPostCount?.data) {
-            actions.setChartData(dailyPostCount.data);
-        }
-    }, [actions, dailyPostCount?.data]);
 
     const {mutate: createPostMutateFn, isPending: isCreatingPost} = useMutation({
         ...createPostMutation(),
@@ -135,7 +120,9 @@ export const usePostsManagement = (postId?: string, dailyRange?: number) => {
     } = useMutation({
         ...updatePostMutation(),
         onSuccess: (res) => {
-            actions.updatePost(res.data!);
+            if (res.data) {
+                actions.updatePost(res.data);
+            }
         },
         onError: (err) => {
             console.error("Update post error in hook:", err);
@@ -161,7 +148,6 @@ export const usePostsManagement = (postId?: string, dailyRange?: number) => {
         ...deletePostMutation(),
         onSuccess: (_, variables) => {
             actions.removePost(variables.path.postId);
-            toast.success("Post deleted successfully.");
         },
         onError: (err) => {
             console.error("Delete post error:", err);
@@ -177,11 +163,9 @@ export const usePostsManagement = (postId?: string, dailyRange?: number) => {
         ...bulkDeletePostsMutation(),
         onSuccess: (_, variables) => {
             if (variables) {
-                variables.body.postIds.forEach(postId => {
-                    actions.removePost(postId);
-                });
-                toast.success("Posts deleted successfully.");
+                actions.removePosts(variables.body.postIds);
             }
+            toast.success("Posts deleted successfully.");
         },
         onError: (err) => {
             console.error("Bulk delete posts error:", err);
@@ -225,13 +209,9 @@ export const usePostsManagement = (postId?: string, dailyRange?: number) => {
         ...bulkUpdatePostsMutation(),
         onSuccess: (res) => {
             if (res.data) {
-                res.data.forEach(post => {
-                    actions.updatePost(post);
-                });
-                toast.success("Posts updated successfully.");
-            } else {
-                toast.error("Failed to update posts: No data returned or update failed.");
+                actions.updatePosts(res.data);
             }
+            toast.success("Posts updated successfully.");
         },
         onError: (err) => {
             console.error("Bulk update posts error:", err);
