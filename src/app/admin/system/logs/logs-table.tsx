@@ -7,10 +7,12 @@ import {LogEntryDto} from "@/api/client";
 import {useTranslations} from "next-intl";
 import {useLogsColumns} from "@/app/admin/system/logs/logs-columns";
 import {useLogTableActions} from "@/app/admin/system/logs/use-log-table-actions";
+import {useLoggingRealtime} from "@/app/admin/system/logs/useLoggingRealtime";
 
 export const LogsTable = () => {
     const [tab, setTab] = useState("all");
     const t = useTranslations("Admin.system.logs");
+    useLoggingRealtime()
 
     return (
         <div className="p-4">

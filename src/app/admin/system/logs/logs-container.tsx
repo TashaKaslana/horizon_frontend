@@ -4,6 +4,7 @@ import {LogsTable} from "@/app/admin/system/logs/logs-table";
 import {SiteHeader} from "@/app/admin/components/site-header";
 import {LogErrorChart} from "@/app/admin/system/logs/logs-chart";
 import {useTranslations} from "next-intl";
+import {ChannelProvider} from "ably/react";
 
 export const LogsContainer = () => {
     const t = useTranslations("Admin.system.logs");
@@ -12,7 +13,9 @@ export const LogsContainer = () => {
         <div className={'space-y-4 size-full'}>
             <SiteHeader text={t('title')}/>
             <LogErrorChart/>
-            <LogsTable/>
+            <ChannelProvider channelName={'admin.logs'}>
+                <LogsTable/>
+            </ChannelProvider>
         </div>
     )
 }
