@@ -9,6 +9,7 @@ import useRolesStore from "@/app/admin/users/roles/store/useRolesStore";
 import {useTranslations} from "next-intl";
 import {useRolesManagement} from "@/app/admin/users/roles/hooks/useRolesManagement";
 import {useRoleTableAction} from "@/app/admin/users/roles/components/role-table-actions";
+import {useRolesRealtime} from "@/app/admin/users/roles/hooks/useRolesRealtime";
 
 type RoleDraggable = RoleDto & DraggableItem
 
@@ -18,6 +19,8 @@ export const RolesTable = () => {
     const {isLoading, isFetchingNextPage, fetchNextPage, hasNextPage, totalPages} = useRolesManagement()
     const t = useTranslations("Admin.users.roles");
     const columns = useRolesColumns();
+    useRolesRealtime()
+
 
     useEffect(() => {
         setData(roles.map(roleFromStore => {

@@ -35,12 +35,15 @@ import {PostAdminViewDto} from "@/api/client";
 import usePostsStore from "./stores/usePostsStore";
 import {usePostsSync} from "@/app/admin/posts/all/hooks/usePostsSync";
 import {usePostTableActions} from "@/app/admin/posts/all/use-post-table-actions";
+import {usePostsRealtime} from "@/app/admin/posts/all/hooks/usePostsRealtime";
 
 
 export function PostTable() {
     const t = useTranslations('Admin.posts.all');
     const tTable = useTranslations('Admin.posts.all.table');
     const tStatus = useTranslations('Admin.posts.all.status');
+
+    usePostsRealtime()
 
     const [data, setData] = React.useState<PostAdminViewDto[]>([]);
     const [selectedPostId, setSelectedPostId] = React.useState<string | null>(null);
