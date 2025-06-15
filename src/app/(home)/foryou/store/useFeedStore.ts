@@ -5,8 +5,11 @@ interface FeedStore {
     feeds: Feed[];
     setFeeds: (feeds: Feed[] | ((prev: Feed[]) => Feed[])) => void;
     addFeed: (feed: Feed) => void;
+    addFeeds: (feeds: Feed[]) => void;
     updateFeed: (id: string, updater: (prev: Feed) => Feed) => void;
+    updateFeeds: (updates: Feed[]) => void;
     removeFeed: (id: string) => void;
+    removeFeeds: (ids: string[]) => void;
     clearFeeds: () => void;
 }
 
@@ -37,15 +40,27 @@ export const useFeedStore = create<FeedStore>((set) => ({
         });
     },
     addFeed: (feed) => set((state) => ({ feeds: [feed, ...state.feeds] })),
+    addFeeds: (newFeeds) => set((state) => ({ feeds: [...newFeeds, ...state.feeds] })),
     updateFeed: (id, updater) =>
         set((state) => ({
             feeds: state.feeds.map((f) =>
                 f.post.id === id ? updater(f) : f
             ),
         })),
+    updateFeeds: (updates) =>
+        set((state) => ({
+            feeds: state.feeds.map((f) => {
+                const updated = updates.find((u) => u.post.id === f.post.id);
+                return updated ? updated : f;
+            }),
+        })),
     removeFeed: (id) =>
         set((state) => ({
             feeds: state.feeds.filter((f) => f.post.id !== id),
+        })),
+    removeFeeds: (ids) =>
+        set((state) => ({
+            feeds: state.feeds.filter((f) => !ids.includes(f.post.id)),
         })),
     clearFeeds: () => set({ feeds: [] }),
 }));

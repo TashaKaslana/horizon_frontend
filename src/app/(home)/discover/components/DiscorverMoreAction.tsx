@@ -6,7 +6,7 @@ import {
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 import {MoreVertical} from "lucide-react";
-import {useFeedActions} from "@/app/(home)/foryou/hooks/useFeedAction";
+import {useFeed} from "@/app/(home)/foryou/hooks/useFeed";
 import React from "react";
 import {toast} from "sonner";
 import Link from "next/link";
@@ -15,7 +15,7 @@ import {useTranslations} from "next-intl";
 export const DiscoverMoreAction = ({postId} : {postId: string}) => {
     const actionsT = useTranslations("Home.posts.actions");
     const reportT = useTranslations("Home.posts.report");
-    const {handleBookmark, handleReportPost} = useFeedActions();
+    const {handleBookmark, handleReportPost} = useFeed();
 
     // Get report reasons from translations
     const reportReasons = [

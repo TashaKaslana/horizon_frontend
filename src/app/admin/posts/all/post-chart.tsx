@@ -6,7 +6,7 @@ import { useTranslations } from "next-intl"
 
 import { ChartConfig } from "@/components/ui/chart"
 import { TimeRangeChart } from "@/components/common/time-range-chart"
-import { usePostsManagement } from "@/app/admin/posts/all/hooks/usePostsManagement"
+import { usePostsSync } from "@/app/admin/posts/all/hooks/usePostsSync"
 import usePostsStore from "@/app/admin/posts/all/stores/usePostsStore"
 import {normalizeChartData} from "@/lib/utils";
 
@@ -22,7 +22,7 @@ export function PostChart() {
     const t = useTranslations('Admin.posts.all.charts')
     const { chartData } = usePostsStore()
     const [days, setDays] = React.useState(30)
-    const { isDailyPostCountLoading } = usePostsManagement(undefined, days)
+    const { isDailyPostCountLoading } = usePostsSync(undefined, days)
 
     const handleTimeRangeChange = (days: number) => {
         setDays(days)

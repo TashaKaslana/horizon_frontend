@@ -8,15 +8,14 @@ import {
 } from '@/api/postApi';
 import {useFeedStore} from '@/app/(home)/foryou/store/useFeedStore';
 import {PaginationInfo} from "@/types/api";
-import {useEffect} from "react";
 import {toast} from "sonner";
 import {Feed} from "@/types/Feed";
+import {useMemo} from "react";
 import {createReportMutation} from "@/api/client/@tanstack/react-query.gen";
 
-export const useFeedActions = (excludePostId?: string) => {
+export const useFeed = (excludePostId?: string) => {
     const {
         feeds,
-        setFeeds,
         addFeed,
         updateFeed,
         removeFeed,
@@ -47,29 +46,22 @@ export const useFeedActions = (excludePostId?: string) => {
         initialPageParam: 0,
     });
 
-    useEffect(() => {
-        if (!data) return;
-        const finalData = data?.pages.flatMap((page) => page.data) ?? [];
+    const fetchedFeeds: Feed[] = useMemo(() => {
+        if (!data) return [];
+        const finalData = data.pages.flatMap((page) => page.data) ?? [];
 
         if (excludePostId) {
-            if (!singleData?.data) return;
+            if (!singleData?.data) return [];
 
             const singlePost = singleData.data;
             const finalFeeds = finalData.filter((f): f is Feed => !!f.post && f.post.id !== excludePostId);
 
-            const newData: Feed[] = [singlePost, ...finalFeeds];
-            setFeeds(newData);
-        } else {
-            setFeeds((prev) => {
-                // Check if the first post in the previous feeds is the same as the first post in the new data
-                if (prev.length > 0 && prev[0].post.id !== finalData[0]?.post?.id) {
-                    return prev;
-                }
-
-                return finalData;
-            });
+            return [singlePost, ...finalFeeds];
         }
-    }, [data, excludePostId, setFeeds, singleData?.data]);
+
+        return finalData;
+    }, [data, singleData?.data, excludePostId]);
+
 
     const likeMutation = useMutation({
         mutationFn: ({postId, isLiked}: { postId: string; isLiked: boolean }) =>
@@ -151,6 +143,7 @@ export const useFeedActions = (excludePostId?: string) => {
 
     return {
         feeds,
+        fetchedFeeds,
         isFetchingNextPage,
         fetchNextPage,
         hasNextPage,

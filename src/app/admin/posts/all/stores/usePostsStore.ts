@@ -28,8 +28,11 @@ interface PostsState {
         setChartData: (data: DailyCountDto[]) => void;
         clearAllData: () => void;
         addPost: (post: PostAdminViewDto) => void;
+        addPosts: (posts: PostAdminViewDto[]) => void;
         updatePost: (postUpdate: PostResponse) => void;
+        updatePosts: (updates: PostResponse[]) => void;
         removePost: (postId: string) => void;
+        removePosts: (postIds: string[]) => void;
         setPosts: (posts: PostAdminViewDto[]) => void;
     };
 }
@@ -74,6 +77,17 @@ const usePostsStore = create<PostsState>()(
                     }
                 }),
 
+            addPosts: (newPosts) =>
+                set((state) => {
+                    state.posts = [...newPosts, ...state.posts];
+                    if (state.infiniteQueryData) {
+                        const firstPage = state.infiniteQueryData.pages[0];
+                        if (firstPage) {
+                            firstPage.data = [...newPosts, ...(firstPage.data ?? [])];
+                        }
+                    }
+                }),
+
             updatePost: (postUpdate) =>
                 set((state) => {
                     const {id, categoryName, ...otherUpdateData} = postUpdate;
@@ -108,6 +122,45 @@ const usePostsStore = create<PostsState>()(
                     }
                 }),
 
+            updatePosts: (updates) =>
+                set((state) => {
+                    const updateMap = new Map(updates.map(u => [u.id, u]));
+
+                    const applyUpdate = (post: PostAdminViewDto, update: PostResponse): PostAdminViewDto => {
+                        const {id, categoryName, ...otherUpdateData} = update;
+                        return {
+                            ...post,
+                            ...otherUpdateData,
+                            id,
+                            visibility: otherUpdateData.visibility as PostAdminViewDto['visibility'],
+                            category: categoryName ? {
+                                ...(post.category || {}),
+                                name: categoryName
+                            } as PostCategorySummary : post.category,
+                        };
+                    };
+
+                    state.posts = state.posts.map((p) => {
+                        const update = p.id ? updateMap.get(p.id) : undefined;
+                        return update ? applyUpdate(p, update) : p;
+                    });
+
+                    const selected = state.selectedPost;
+                    if (selected?.id && updateMap.has(selected.id)) {
+                        state.selectedPost = applyUpdate(selected, updateMap.get(selected.id)!);
+                    }
+
+                    if (state.infiniteQueryData) {
+                        state.infiniteQueryData.pages = state.infiniteQueryData.pages.map((page) => ({
+                            ...page,
+                            data: (page.data ?? []).map((p) => {
+                                const update = p.id ? updateMap.get(p.id) : undefined;
+                                return update ? applyUpdate(p, update) : p;
+                            }),
+                        }));
+                    }
+                }),
+
             removePost: (postId) =>
                 set((state) => {
                     state.posts = state.posts.filter((p) => p.id !== postId);
@@ -119,6 +172,22 @@ const usePostsStore = create<PostsState>()(
                             .map((page) => ({
                                 ...page,
                                 data: (page.data ?? []).filter((p) => p.id !== postId),
+                            }))
+                            .filter((page) => (page.data?.length ?? 0) > 0);
+                    }
+                }),
+
+            removePosts: (postIds) =>
+                set((state) => {
+                    state.posts = state.posts.filter((p) => !p.id || !postIds.includes(p.id));
+                    if (state.selectedPost?.id && postIds.includes(state.selectedPost.id)) {
+                        state.selectedPost = null;
+                    }
+                    if (state.infiniteQueryData) {
+                        state.infiniteQueryData.pages = state.infiniteQueryData.pages
+                            .map((page) => ({
+                                ...page,
+                                data: (page.data ?? []).filter((p) => !p.id || !postIds.includes(p.id)),
                             }))
                             .filter((page) => (page.data?.length ?? 0) > 0);
                     }

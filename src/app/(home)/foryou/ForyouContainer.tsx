@@ -1,7 +1,7 @@
 'use client';
 
 import React, {useRef} from "react";
-import {useFeedActions} from "@/app/(home)/foryou/hooks/useFeedAction";
+import {useFeedSync} from "@/app/(home)/foryou/hooks/useFeedSync";
 import {FeedListUI} from "@/app/components/post-presentation/FeedListUI";
 
 export const ForyouContainer = ({ postId }: { postId?: string }) => {
@@ -12,7 +12,7 @@ export const ForyouContainer = ({ postId }: { postId?: string }) => {
         isFetchingNextPage,
         fetchNextPage,
         hasNextPage,
-    } = useFeedActions(postId);
+    } = useFeedSync(postId);
 
     return (
         <FeedListUI
