@@ -138,7 +138,7 @@ const useUsersManagement = (userId?: string, timeRange?: number) => {
         ...updateUserInfoMutation(),
         onSuccess: (res) => {
             if (res.data) {
-                actions.updateUser(res.data as UserRespondDto);
+                actions.updateUser({...res.data, id: res.data.id!});
                 toast.success("User info updated.");
             }
         },
@@ -168,7 +168,7 @@ const useUsersManagement = (userId?: string, timeRange?: number) => {
         ...updateUserAccount1Mutation(),
         onSuccess: (res) => {
             if (res.data) {
-                actions.updateUser(res.data as UserRespondDto);
+                actions.updateUser({...res.data, id: res.data.id!});
                 toast.success("User account updated.");
             }
         },
@@ -192,7 +192,7 @@ const useUsersManagement = (userId?: string, timeRange?: number) => {
         ...updateUserImageMutation(),
         onSuccess: (res) => {
             if (res.data) {
-                actions.updateUser(res.data as UserRespondDto);
+                actions.updateUser({...res.data, id: res.data.id!});
                 toast.success("User image updated.");
             }
         },
@@ -253,7 +253,7 @@ const useUsersManagement = (userId?: string, timeRange?: number) => {
         onSuccess: (res) => {
             if (res.data) {
                 res.data.forEach(user => {
-                    actions.updateUser(user);
+                    actions.updateUser({...user, id: user.id!});
                 });
                 toast.success("Users updated successfully.");
             }
