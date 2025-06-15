@@ -1,8 +1,5 @@
-"use client"
-
-import { StatusContainer } from "./components/status-container"
-import {SiteHeader} from "@/app/admin/components/site-header";
 import type {Metadata} from "next";
+import {AdminStatusContainer} from "@/app/admin/system/status/status-container";
 
 export const metadata: Metadata = {
     title: "Horizon",
@@ -11,9 +8,6 @@ export const metadata: Metadata = {
 
 export default function StatusPage() {
     return (
-        <div className={'h-screen'}>
-            <SiteHeader text={'System Status'}/>
-            <StatusContainer/>
-        </div>
+        <AdminStatusContainer/>
     )
 }
