@@ -13,7 +13,7 @@ export const useAdminNotificationRealtime = () => {
 
         switch (name) {
             case "admin.notification.created":
-                actions.addNotifications(data.notification);
+                actions.addNotifications({...data.notification, id: data.notificationId});
                 break;
             case "admin.notification.bulk.updated":
                 actions.bulkUpdateReadStatus(data.notificationIds, data.isRead);
