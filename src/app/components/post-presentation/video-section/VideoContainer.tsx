@@ -93,4 +93,4 @@ const VideoSection = ({post, ref, views = 0}: { post: PostSummary, ref?: Ref<HTM
     )
 }
 
-export default VideoContainer
+export default VideoContainer;

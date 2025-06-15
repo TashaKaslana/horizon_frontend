@@ -29,18 +29,23 @@ const CommentContainer = ({postId, isCommentOpened, isVisible}: CommentProps) =>
         hasNextPage,
     } = useComments(postId);
 
-    //prevent scroll event of parent when open comment container
-    //bugs
+    // Prevent parent feed from scrolling while comments are open. This mimics
+    // the behavior of overlays in apps like YouTube Shorts or TikTok where
+    // swiping the comment list doesn't move the underlying video/post.
     const handleWheel = (e: React.WheelEvent<HTMLDivElement>) => {
         if (!isCommentOpened) return;
+
+        // Always stop propagation so the feed does not change posts
+        e.stopPropagation();
 
         const el = scrollRef.current;
         if (!el) return;
 
-        const isAtTop = el.scrollTop === 0;
-        const isAtBottom = el.scrollHeight - el.scrollTop === el.clientHeight;
+        const isAtTop = el.scrollTop <= 0;
+        const isAtBottom = Math.ceil(el.scrollTop + el.clientHeight) >= el.scrollHeight;
 
-        if ((!isAtTop && e.deltaY < 0) || (!isAtBottom && e.deltaY > 0)) {
+        // Prevent default scrolling at the extremes to avoid feed movement
+        if ((isAtTop && e.deltaY < 0) || (isAtBottom && e.deltaY > 0)) {
             e.stopPropagation();
         }
     };
@@ -99,4 +104,4 @@ const CommentHeader = ({amount}: CommentHeaderProps) => {
     )
 }
 
-export default CommentContainer
+export default CommentContainer;

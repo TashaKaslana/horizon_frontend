@@ -16,9 +16,9 @@ export default function InfiniteScroll({
                                            isLoading,
                                            hasMore,
                                            next,
-                                           threshold = 1,
+                                           threshold = 0.5,
                                            root = null,
-                                           rootMargin = '0px',
+                                           rootMargin = '0px 0px 200px 0px',
                                            // eslint-disable-next-line @typescript-eslint/no-unused-vars
                                            reverse,
                                            children,
