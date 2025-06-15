@@ -7,6 +7,7 @@ import {OverviewList} from "@/app/admin/components/overview-list";
 import useCategoryStore from "@/app/admin/posts/categories/store/useCategoryStore";
 import {CategoryChart} from "@/app/admin/posts/categories/catageory-chart";
 import {useTranslations} from "next-intl";
+import {ChannelProvider} from "ably/react";
 
 export const CategoryContainer = () => {
     const {overviewData} = useCategoryStore()
@@ -18,7 +19,9 @@ export const CategoryContainer = () => {
             <SiteHeader text={t('title')}/>
             <OverviewList overviewData={overviewData} isLoading={isOverviewLoading}/>
             <CategoryChart/>
-            <CategoryTable/>
+            <ChannelProvider channelName={'categories'}>
+                <CategoryTable/>
+            </ChannelProvider>
         </div>
     )
 }

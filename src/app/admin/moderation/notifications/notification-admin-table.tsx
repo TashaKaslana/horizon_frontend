@@ -7,12 +7,14 @@ import {AdminNotificationDto} from "@/api/client";
 import useAdminNotificationsStore from "@/app/admin/moderation/notifications/stores/useAdminNotificationStore";
 import {useAdminNotification} from "@/app/admin/moderation/notifications/hooks/useAdminNotification";
 import {useNotificationTableActions} from "@/app/admin/moderation/notifications/use-notification-table-actions";
+import {useAdminNotificationRealtime} from "@/app/admin/moderation/notifications/hooks/useAdminNotificationRealtime";
 
 export const NotificationAdminTable = () => {
     const [data, setData] = useState<AdminNotificationDto[]>([])
     const {notifications} = useAdminNotificationsStore()
     const {fetchNextPage, isFetchingNextPage, isLoading, hasNextPage} = useAdminNotification();
     const columns = useNotificationColumns()
+    useAdminNotificationRealtime()
     
     useEffect(() => {
         setData(notifications)

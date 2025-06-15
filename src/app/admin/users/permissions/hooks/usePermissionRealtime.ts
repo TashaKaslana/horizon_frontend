@@ -21,7 +21,7 @@ export const usePermissionRealtime = () => {
             case "permission.deleted":
                 actions.removePermission(data.permissionId);
                 break;
-            case "permissions.bulk-deleted":
+            case "permission.bulk.deleted":
                 actions.bulkRemovePermissions(data.permissionIds);
                 break;
             default:

@@ -8,6 +8,7 @@ import {useState} from "react";
 import {RowSelectionState} from "@tanstack/react-table";
 import {useTranslations} from "next-intl";
 import {useCategoryTableActions} from "@/app/admin/posts/categories/use-category-table-actions";
+import {useCategoryRealtime} from "@/app/admin/posts/categories/hooks/useCategoryRealtime";
 
 export const CategoryTable = () => {
     const {categories} = useCategoryStore();
@@ -15,6 +16,7 @@ export const CategoryTable = () => {
     const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
     const t = useTranslations("Admin.posts.categories.table");
     const columns = useCategoriesColumns();
+    useCategoryRealtime()
 
     return (
         <div className={'p-4'}>

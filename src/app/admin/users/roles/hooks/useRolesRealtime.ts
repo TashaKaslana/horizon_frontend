@@ -21,7 +21,7 @@ export const useRolesRealtime = () => {
       case "role.deleted":
         actions.removeRole(data.roleId);
         break;
-      case "roles.bulk-deleted":
+      case "role.bulk.deleted":
         actions.removeBulkRole(data.roleIds);
         break;
       default:

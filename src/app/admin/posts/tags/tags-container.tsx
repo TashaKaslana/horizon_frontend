@@ -7,6 +7,7 @@ import {OverviewList} from "@/app/admin/components/overview-list";
 import useTagStore from "@/app/admin/posts/tags/store/useTagStore";
 import {TagsChart} from "@/app/admin/posts/tags/tags-chart";
 import {useTranslations} from "next-intl";
+import {ChannelProvider} from "ably/react";
 
 export const TagsContainer = () => {
     const {overviewData} = useTagStore()
@@ -18,7 +19,9 @@ export const TagsContainer = () => {
             <SiteHeader text={t('title')}/>
             <OverviewList overviewData={overviewData} isLoading={isOverviewLoading}/>
             <TagsChart/>
-            <TagsTable/>
+            <ChannelProvider channelName={'post-tags'}>
+                <TagsTable/>
+            </ChannelProvider>
         </div>
     )
 }

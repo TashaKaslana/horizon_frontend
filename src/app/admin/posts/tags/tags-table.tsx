@@ -8,6 +8,7 @@ import {useState} from "react";
 import {RowSelectionState} from "@tanstack/react-table";
 import {useTranslations} from "next-intl";
 import {useTagTableActions} from "@/app/admin/posts/tags/tags-table-actions";
+import {useTagRealtime} from "@/app/admin/posts/tags/hooks/useTagRealtime";
 
 export const TagsTable = () => {
     const {tags} = useTagStore();
@@ -15,6 +16,7 @@ export const TagsTable = () => {
     const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
     const t = useTranslations("Admin.posts.tags.table");
     const columns = useTagsColumns();
+    useTagRealtime()
 
     return (
         <div className={'p-4'}>

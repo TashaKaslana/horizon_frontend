@@ -26,7 +26,7 @@ interface CategoryState {
         setOverviewData: (data: OverviewStatistic[]) => void;
         setChartData: (data: TopCategoryUsageDto[]) => void;
         addCategory: (role: PostCategoryWithCountDto) => void;
-        updateCategory: (updatedRole: PostCategoryWithCountDto) => void;
+        updateCategory: (updatedCategory: Partial<PostCategoryWithCountDto> & { id: string }) => void;
         removeCategory: (roleId: string) => void;
         bulkRemoveCategories: (roleIds: string[]) => void;
     };
@@ -77,17 +77,17 @@ const useCategoryStore = create<CategoryState>()(
                 }),
             updateCategory: (updatedCategory) =>
                 set((state) => {
-                    state.categories = state.categories.map(r =>
-                        r.id === updatedCategory.id ? updatedCategory : r
+                    state.categories = state.categories.map(category =>
+                        category.id === updatedCategory.id ? { ...category, ...updatedCategory } : category
                     );
                     if (state.infiniteQueryData) {
                         state.infiniteQueryData.pages = state.infiniteQueryData.pages.map(page => {
                             const pageData = page.data ?? [];
-                            if (pageData.some(r => r.id === updatedCategory.id)) {
+                            if (pageData.some(category => category.id === updatedCategory.id)) {
                                 return {
                                     ...page,
-                                    data: pageData.map(r =>
-                                        r.id === updatedCategory.id ? updatedCategory : r
+                                    data: pageData.map(category =>
+                                        category.id === updatedCategory.id ? { ...category, ...updatedCategory } : category
                                     ),
                                 };
                             }
@@ -143,4 +143,3 @@ const useCategoryStore = create<CategoryState>()(
 );
 
 export default useCategoryStore;
-

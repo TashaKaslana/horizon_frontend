@@ -6,6 +6,7 @@ import {NotificationChart} from "@/app/admin/moderation/notifications/notificati
 import {NotificationAdminTable} from "@/app/admin/moderation/notifications/notification-admin-table";
 import {useAdminNotification} from "@/app/admin/moderation/notifications/hooks/useAdminNotification";
 import {useTranslations} from "next-intl";
+import {ChannelProvider} from "ably/react";
 
 export const NotificationAdminContainer = () => {
     useAdminNotification()
@@ -16,7 +17,9 @@ export const NotificationAdminContainer = () => {
             <SiteHeader text={t('title')}/>
             <NotificationAdminCards/>
             <NotificationChart/>
-            <NotificationAdminTable/>
+            <ChannelProvider channelName={'admin.notifications'}>
+                <NotificationAdminTable/>
+            </ChannelProvider>
         </div>
     )
 }

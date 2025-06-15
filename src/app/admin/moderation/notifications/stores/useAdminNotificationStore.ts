@@ -25,6 +25,8 @@ interface NotificationsState {
         updateNotifications: (notificationsUpdate: Partial<AdminNotificationDto>) => void;
         removeNotifications: (notificationsId: string) => void;
         setNotifications: (notifications: AdminNotificationDto[]) => void;
+        bulkUpdateReadStatus: (notificationIds: string[], isRead: boolean) => void;
+        bulkDeleteNotifications: (notificationIds: string[]) => void;
     };
 }
 
@@ -135,9 +137,48 @@ const useAdminNotificationsStore = create<NotificationsState>()(
                     state.infiniteQueryData = null;
                     state.selectedNotifications = null;
                 }),
+
+            bulkUpdateReadStatus: (notificationIds, isRead) =>
+                set((state) => {
+                    state.notifications = state.notifications.map((notification) => {
+                        if (notificationIds.includes(notification.id!)) {
+                            return { ...notification, isRead };
+                        }
+                        return notification;
+                    });
+                    if (state.selectedNotifications?.id && notificationIds.includes(state.selectedNotifications.id)) {
+                        state.selectedNotifications = { ...state.selectedNotifications, isRead: true };
+                    }
+                    if (state.infiniteQueryData) {
+                        state.infiniteQueryData.pages = state.infiniteQueryData.pages.map((page) => ({
+                            ...page,
+                            data: (page.data ?? []).map((p) => {
+                                if (notificationIds.includes(p.id!)) {
+                                    return { ...p, isRead };
+                                }
+                                return p;
+                            }),
+                        }));
+                    }
+                }),
+
+            bulkDeleteNotifications: (notificationIds) =>
+                set((state) => {
+                    state.notifications = state.notifications.filter((p) => !notificationIds.includes(p.id!));
+                    if (state.selectedNotifications?.id && notificationIds.includes(state.selectedNotifications.id)) {
+                        state.selectedNotifications = null;
+                    }
+                    if (state.infiniteQueryData) {
+                        state.infiniteQueryData.pages = state.infiniteQueryData.pages
+                            .map((page) => ({
+                                ...page,
+                                data: (page.data ?? []).filter((p) => !notificationIds.includes(p.id!)),
+                            }))
+                            .filter((page) => (page.data?.length ?? 0) > 0);
+                    }
+                }),
         },
     }))
 );
 
 export default useAdminNotificationsStore;
-
