@@ -21,9 +21,12 @@ interface UsersState {
         setChartData: (data: DailyCountDto[]) => void;
         clearAllData: () => void;
         addUser: (user: UserIntroduction) => void;
-        updateUser: (user: UserIntroduction) => void;
+        updateUser: (user: Partial<UserIntroduction> & { id: string }) => void; // Modified to support partial updates
         removeUser: (userId: string) => void;
-        setUsers: (users: UserIntroduction[]) => void; // Added for DND updates
+        setUsers: (users: UserIntroduction[]) => void;
+        // New bulk operations
+        bulkUpdateUsers: (ids: string[], data: { status?: "ACTIVE" | "PENDING" | "SUSPENDED" | "DEACTIVATED", roleId?: string }) => void;
+        bulkDeleteUsers: (userIds: string[]) => void;
     };
 }
 
@@ -34,95 +37,146 @@ const useUsersStore = create<UsersState>()(
         selectedUser: null,
         overviewData: [],
         chartData: [],
+
         actions: {
-            setInfiniteQueryData: (data) =>
-                set((state) => {
-                    state.infiniteQueryData = data;
-                    state.users = data?.pages?.flatMap((page: UserPage) => page.data ?? []) ?? [];
-                }),
+            setInfiniteQueryData: (data) => set((state) => {
+                state.infiniteQueryData = data;
 
-            setSelectedUser: (user) =>
-                set((state) => {
-                    state.selectedUser = user;
-                }),
-
-            setOverviewData: (data) =>
-                set((state) => {
-                    state.overviewData = data;
-                }),
-
-            setChartData: (data) =>
-                set((state) => {
-                    state.chartData = data;
-                }),
-
-            addUser: (newUser) =>
-                set((state) => {
-                    state.users.unshift(newUser);
-
-                    if (state.infiniteQueryData) {
-                        const firstPage = state.infiniteQueryData.pages[0];
-                        if (firstPage) {
-                            firstPage.data = [newUser, ...(firstPage.data ?? [])];
+                // If we have data, extract users from all pages
+                if (data) {
+                    const allUsers: UserIntroduction[] = [];
+                    data.pages.forEach(page => {
+                        if (page.data) {
+                            allUsers.push(...page.data);
                         }
+                    });
+                    state.users = allUsers;
+                }
+            }),
+
+            setSelectedUser: (user) => set((state) => {
+                state.selectedUser = user;
+            }),
+
+            setOverviewData: (data) => set((state) => {
+                state.overviewData = data;
+            }),
+
+            setChartData: (data) => set((state) => {
+                state.chartData = data;
+            }),
+
+            clearAllData: () => set((state) => {
+                state.users = [];
+                state.infiniteQueryData = null;
+                state.selectedUser = null;
+                state.overviewData = [];
+                state.chartData = [];
+            }),
+
+            addUser: (user) => set((state) => {
+                state.users.unshift(user);
+
+                // Also update infiniteQueryData if it exists
+                if (state.infiniteQueryData?.pages.length) {
+                    const firstPage = state.infiniteQueryData.pages[0];
+                    if (firstPage.data) {
+                        firstPage.data.unshift(user);
+                    } else {
+                        firstPage.data = [user];
                     }
-                }),
+                }
+            }),
 
-            updateUser: (updatedUser) =>
-                set((state) => {
-                    state.users = state.users.map((u) => (u.id === updatedUser.id ? updatedUser : u));
+            updateUser: (userPartial) => set((state) => {
+                // Find the user in the flat users array
+                const index = state.users.findIndex(u => u.id === userPartial.id);
+                if (index !== -1) {
+                    // Merge the partial update with the existing user
+                    state.users[index] = { ...state.users[index], ...userPartial };
+                }
 
-                    if (state.infiniteQueryData) {
-                        state.infiniteQueryData.pages = state.infiniteQueryData.pages.map((page) => ({
-                            ...page,
-                            data: (page.data ?? []).map((u) => (u.id === updatedUser.id ? updatedUser : u)),
-                        }));
-                    }
-                }),
-
-            removeUser: (userId) =>
-                set((state) => {
-                    state.users = state.users.filter((u) => u.id !== userId);
-
-                    if (state.infiniteQueryData) {
-                        state.infiniteQueryData.pages = state.infiniteQueryData.pages
-                            .map((page) => ({
-                                ...page,
-                                data: (page.data ?? []).filter((u) => u.id !== userId),
-                            }))
-                            .filter((page) => (page.data?.length ?? 0) > 0);
-                    }
-                }),
-
-            setUsers: (newUsers) =>
-                set((state) => {
-                    state.users = newUsers;
-                    if (state.infiniteQueryData) {
-                        const remainingUsers = [...newUsers];
-                        state.infiniteQueryData.pages = state.infiniteQueryData.pages.map(page => {
-                            const pageUsersCount = page.data?.length || 0;
-                            const usersForThisPage = remainingUsers.splice(0, pageUsersCount);
-                            return {
-                                ...page,
-                                data: usersForThisPage
-                            };
-                        }).filter(page => page.data && page.data.length > 0);
-
-                        if (newUsers.length > 0 && state.infiniteQueryData.pages.length === 0) {
-                            state.infiniteQueryData.pages = [{ data: newUsers }];
-                            state.infiniteQueryData.pageParams = [0];
+                // Also update in infiniteQueryData if it exists
+                if (state.infiniteQueryData?.pages.length) {
+                    state.infiniteQueryData.pages.forEach(page => {
+                        if (page.data) {
+                            const pageUserIndex = page.data.findIndex(u => u.id === userPartial.id);
+                            if (pageUserIndex !== -1) {
+                                // Apply partial update
+                                page.data[pageUserIndex] = { ...page.data[pageUserIndex], ...userPartial };
+                            }
                         }
-                    }
-                }),
+                    });
+                }
+            }),
 
-            clearAllData: () =>
-                set((state) => {
-                    state.users = [];
-                    state.infiniteQueryData = null;
-                }),
+            removeUser: (userId) => set((state) => {
+                // Remove from flat users array
+                state.users = state.users.filter(u => u.id !== userId);
+
+                // Also remove from infiniteQueryData if it exists
+                if (state.infiniteQueryData?.pages.length) {
+                    state.infiniteQueryData.pages.forEach(page => {
+                        if (page.data) {
+                            page.data = page.data.filter(u => u.id !== userId);
+                        }
+                    });
+                }
+            }),
+
+            setUsers: (users) => set((state) => {
+                state.users = users;
+
+                // Also update the first page in infiniteQueryData if it exists
+                if (state.infiniteQueryData?.pages.length) {
+                    state.infiniteQueryData.pages[0].data = [...users];
+                }
+            }),
+
+            // New bulk operations
+            bulkUpdateUsers: (ids, data) => set((state) => {
+                // Create a set for faster lookups
+                const updateSet = new Set(ids);
+
+                // Update in the flat users array
+                state.users.forEach((user, index) => {
+                    if (updateSet.has(user.id!)) {
+                        state.users[index] = { ...user, ...data };
+                    }
+                });
+
+                // Also update in infiniteQueryData if it exists
+                if (state.infiniteQueryData?.pages.length) {
+                    state.infiniteQueryData.pages.forEach(page => {
+                        if (page.data) {
+                            page.data.forEach((user, index) => {
+                                if (updateSet.has(user.id!)) {
+                                    page.data![index] = { ...user, ...data };
+                                }
+                            });
+                        }
+                    });
+                }
+            }),
+
+            bulkDeleteUsers: (userIds) => set((state) => {
+                // Create a set for faster lookups
+                const deleteSet = new Set(userIds);
+
+                // Remove from flat users array
+                state.users = state.users.filter(user => !deleteSet.has(user.id!));
+
+                // Also remove from infiniteQueryData if it exists
+                if (state.infiniteQueryData?.pages.length) {
+                    state.infiniteQueryData.pages.forEach(page => {
+                        if (page.data) {
+                            page.data = page.data.filter(user => !deleteSet.has(user.id!));
+                        }
+                    });
+                }
+            }),
         },
     }))
 );
 
 export default useUsersStore;
-

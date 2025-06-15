@@ -20,15 +20,10 @@ export const useUsersRealtime = () => {
         } else if (name === "user.deleted") {
             actions.removeUser(data.userId);
         } else if (name === "users.bulk-updated") {
-            // data.users.forEach((user: string) => {
-            //     actions.updateUser(user);
-            // });
-            toast.warning("Notice that user bulk updates are not yet implemented in the UI.");
+            actions.bulkUpdateUsers(data.userIds, {status: data.status, roleId: data.roleId});
         }
         else if (name === "users.bulk-deleted") {
-            data.userIds.forEach((userId: string) => {
-                actions.removeUser(userId);
-            });
+            actions.bulkDeleteUsers(data.userIds);
         }
     })
 }

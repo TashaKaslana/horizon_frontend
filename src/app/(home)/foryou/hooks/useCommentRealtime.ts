@@ -4,14 +4,14 @@ import {useCommentStore} from "../store/useCommentStore";
 import {CommentResponse} from "@/types/Comment";
 
 export function useCommentRealtime(postId: string) {
-    const {sub} = useCurrentUser();
+    const {user} = useCurrentUser();
     const {addComment, updateComment, removeComment} = useCommentStore();
 
     useChannel(`comments.${postId}`, (msg) => {
         const {name, data, clientId} = msg;
         console.log(name, JSON.stringify(data));
 
-        if (clientId === sub) return;
+        if (clientId === user?.id) return;
 
         switch (name) {
             case "comment.created":

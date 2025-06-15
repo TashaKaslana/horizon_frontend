@@ -21,9 +21,6 @@ export const usePostsRealtime = () => {
             case "post.deleted":
                 actions.removePost(data.postId as string);
                 break;
-            case "posts.bulk-created":
-                actions.addPosts(data.posts as PostAdminViewDto[]);
-                break;
             case "posts.bulk-deleted":
                 actions.removePosts(data.postIds as string[]);
                 break;
