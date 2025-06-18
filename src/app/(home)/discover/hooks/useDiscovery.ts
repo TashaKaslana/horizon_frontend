@@ -49,9 +49,19 @@ export const useDiscovery = () => {
 
     useEffect(() => {
         const categoriesFlatten = categoryData?.pages.flatMap((page) => page.data);
-        
+
         if (categoriesFlatten) {
             setCategories(categoriesFlatten);
+            const allCategory: PostCategory = {
+                id: 'all',
+                name: 'all',
+                createdAt: '',
+                updatedAt: '',
+                createdBy: '',
+                updatedBy: '',
+            };
+
+            setCategories([allCategory, ...categoriesFlatten]);
         }
     }, [categoryData?.pages, setCategories])
     

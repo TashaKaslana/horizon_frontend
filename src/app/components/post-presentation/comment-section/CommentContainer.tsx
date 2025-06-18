@@ -61,7 +61,7 @@ const CommentContainer = ({postId, isCommentOpened, isVisible}: CommentProps) =>
                     ref={scrollRef}
                     onWheel={handleWheel}
                     className={'flex-1 min-h-0 overflow-y-auto space-y-2'}>
-                    {(comments.length == 0) ? (
+                    {(comments.length == 0 && !isFetchingNextPage) ? (
                             <div className={'flex justify-center items-center h-full'}>
                                 <div className={'flex flex-col items-center gap-2'}>
                                     <MessageSquareMore className={'size-1/3'}/>

@@ -8,7 +8,7 @@ export const HomeSidebarHeader = () => {
     const {state} = useSidebar()
 
     return (
-        <SidebarHeader>
+        <SidebarHeader className={'p-1 justify-center items-center'}>
             <SidebarMenu>
                 <SidebarMenuItem>
                     <div className="flex items-center justify-between w-full">
