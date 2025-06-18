@@ -9,6 +9,7 @@ import QueryProvider from "@/components/query-provider";
 import {UserProvider} from "@/components/user-provider";
 import ClientSetupProvider from "@/components/client-setup-provider";
 import {MaintenanceWrapper} from "@/components/maintenance-wrapper";
+import {ErrorBoundary} from "@/components/error-boundary";
 import {ClientInitProvider} from "@/components/client-init-provider";
 import {getLocale} from "next-intl/server";
 import {NextIntlClientProvider} from "next-intl";
@@ -56,7 +57,9 @@ export default async function RootLayout({
                                         disableTransitionOnChange
                                     >
                                         <MaintenanceWrapper>
-                                            {children}
+                                            <ErrorBoundary>
+                                                {children}
+                                            </ErrorBoundary>
                                         </MaintenanceWrapper>
                                         <Toaster richColors/>
                                     </ThemeProvider>
