@@ -501,7 +501,8 @@
         "bookmark": "Bookmark",
         "more": "More",
         "shareLink": "Share Link",
-        "reportPost": "Report Post"
+        "reportPost": "Report Post",
+        "editPost": "Edit Post"
       },
       "report": {
         "sexual_content": "Sexual Content or Nudity",

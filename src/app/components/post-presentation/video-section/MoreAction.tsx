@@ -15,19 +15,23 @@ import {Button} from "@/components/ui/button";
 import {MoreVertical} from "lucide-react";
 import React from "react";
 import {useTranslations} from "next-intl";
+import {useRouter} from "next/navigation";
+import {useCurrentUser} from "@/stores/useCurrentUser";
 
-export const MoreAction = ({postId}: { postId: string }) => {
+export const MoreAction = ({postId, authorId}: { postId: string, authorId?: string }) => {
     const actionsT = useTranslations("Home.posts.actions");
     const reportT = useTranslations("Home.posts.report");
     const {handleShareLink, handleReportPost} = useFeed();
+    const router = useRouter()
+    const {user} = useCurrentUser();
 
     const reportReasons = [
-        { key: "sexual_content", value: reportT("sexual_content") },
-        { key: "graphic_content", value: reportT("graphic_content") },
-        { key: "hate_speech", value: reportT("hate_speech") },
-        { key: "harassment", value: reportT("harassment") },
-        { key: "false_information", value: reportT("false_information") },
-        { key: "spam_or_misleading", value: reportT("spam_or_misleading") }
+        {key: "sexual_content", value: reportT("sexual_content")},
+        {key: "graphic_content", value: reportT("graphic_content")},
+        {key: "hate_speech", value: reportT("hate_speech")},
+        {key: "harassment", value: reportT("harassment")},
+        {key: "false_information", value: reportT("false_information")},
+        {key: "spam_or_misleading", value: reportT("spam_or_misleading")}
     ];
 
     return <Tooltip delayDuration={500}>
@@ -42,25 +46,37 @@ export const MoreAction = ({postId}: { postId: string }) => {
                     <DropdownMenuItem onClick={() => handleShareLink()}>
                         {actionsT("shareLink")}
                     </DropdownMenuItem>
-                    <DropdownMenuGroup>
-                        <DropdownMenuSub>
-                            <DropdownMenuSubTrigger>
-                                {actionsT("reportPost")}
-                            </DropdownMenuSubTrigger>
-                            <DropdownMenuPortal>
-                                <DropdownMenuSubContent>
-                                    {reportReasons.map(({key, value}) => (
-                                        <DropdownMenuItem
-                                            key={key}
-                                            onClick={() => handleReportPost(postId, value)}
-                                        >
-                                            {value}
-                                        </DropdownMenuItem>
-                                    ))}
-                                </DropdownMenuSubContent>
-                            </DropdownMenuPortal>
-                        </DropdownMenuSub>
-                    </DropdownMenuGroup>
+                    {
+                        user?.id !== authorId && (
+                            <DropdownMenuGroup>
+                                <DropdownMenuSub>
+                                    <DropdownMenuSubTrigger>
+                                        {actionsT("reportPost")}
+                                    </DropdownMenuSubTrigger>
+                                    <DropdownMenuPortal>
+                                        <DropdownMenuSubContent>
+                                            {reportReasons.map(({key, value}) => (
+                                                <DropdownMenuItem
+                                                    key={key}
+                                                    onClick={() => handleReportPost(postId, value)}
+                                                >
+                                                    {value}
+                                                </DropdownMenuItem>
+                                            ))}
+                                        </DropdownMenuSubContent>
+                                    </DropdownMenuPortal>
+                                </DropdownMenuSub>
+                            </DropdownMenuGroup>
+                        )
+                    }
+
+                    {
+                        user?.id === authorId && (
+                            <DropdownMenuItem onClick={() => router.push(`/management/${postId}/edit`)}>
+                                {actionsT('editPost')}
+                            </DropdownMenuItem>
+                        )
+                    }
                 </DropdownMenuContent>
             </DropdownMenu>
         </TooltipTrigger>

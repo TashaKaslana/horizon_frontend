@@ -10,10 +10,11 @@ import {useTranslations} from "next-intl";
 interface ActionButtonGroupProps {
     setIsCommentOpened?: React.Dispatch<React.SetStateAction<boolean>>;
     postId: string;
+    authorId: string;
     statistic?: Statistic;
 }
 
-const ActionButtonGroup = ({setIsCommentOpened, postId, statistic}: ActionButtonGroupProps) => {
+const ActionButtonGroup = ({setIsCommentOpened, postId, statistic, authorId}: ActionButtonGroupProps) => {
     const t = useTranslations("Home.posts.actions");
     const {handleLike, handleBookmark} = useFeed();
 
@@ -62,7 +63,7 @@ const ActionButtonGroup = ({setIsCommentOpened, postId, statistic}: ActionButton
                     </Tooltip>
                 ))}
 
-                <MoreAction postId={postId}/>
+                <MoreAction postId={postId} authorId={authorId}/>
             </TooltipProvider>
         </div>
     );

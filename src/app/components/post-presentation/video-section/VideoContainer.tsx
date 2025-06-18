@@ -9,7 +9,7 @@ import {formatDateTS} from "@/lib/utils";
 import {UserSummaryCard} from "@/components/common/UserInformation";
 import {Clock, Eye, Grid} from "lucide-react";
 import Link from "next/link";
-import { useTranslations } from "next-intl";
+import {useTranslations} from "next-intl";
 
 interface VideoContainerProps {
     setIsCommentOpened?: React.Dispatch<React.SetStateAction<boolean>>,
@@ -26,7 +26,9 @@ const VideoContainer = ({setIsCommentOpened, feed, ref}: VideoContainerProps) =>
                 <VideoSection post={feed.post} ref={ref} views={feed.statistic.totalViews}/>
                 <ActionButtonGroup setIsCommentOpened={setIsCommentOpened}
                                    postId={feed.post.id}
-                                   statistic={feed.statistic}/>
+                                   statistic={feed.statistic}
+                                   authorId={feed.post.user.id}
+                />
             </Suspense>
         </div>
     )
@@ -67,7 +69,7 @@ const VideoSection = ({post, ref, views = 0}: { post: PostSummary, ref?: Ref<HTM
                         <p className={'text-xs text-zinc-700 dark:text-zinc-300'}>{post.description}</p>
                     </div>
                     <Link href={`/users/${post.user.id}/overview`}>
-                        <UserSummaryCard user={post.user}/>                    
+                        <UserSummaryCard user={post.user}/>
                     </Link>
                 </div>
                 <div className={'w-full'}>
