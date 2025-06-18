@@ -13,9 +13,18 @@ export const useAuthTokenStore = create<AuthTokenStore>((set, get) => ({
     isReady: false,
     setToken: (token) => set({ token, isReady: true }),
     loadToken: async () => {
-        const res = await fetch('/api/token');
-        const data = await res.json();
-        set({ token: data.accessToken.token, isReady: true });
+        try {
+            const res = await fetch('/api/token');
+            if (!res.ok) {
+                set({ token: null, isReady: true });
+                return;
+            }
+
+            const data = await res.json();
+            set({ token: data.accessToken.token, isReady: true });
+        } catch {
+            set({ token: null, isReady: true });
+        }
     },
     getToken: async () => {
         const {isReady } = get();

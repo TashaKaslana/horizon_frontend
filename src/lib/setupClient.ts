@@ -5,17 +5,19 @@ import { useAuthTokenStore } from '@/stores/useTokenStore';
 import {useInterceptorStore} from "@/stores/useInterceptorStore";
 
 export const setupAxiosAuthInterceptor = async () => {
-    await useAuthTokenStore.getState().loadToken(); // load token first
+    try {
+        await useAuthTokenStore.getState().loadToken();
 
-    client.instance.interceptors.request.use(async (config) => {
-        const token = useAuthTokenStore.getState().token;
-        if (token) {
-            config.headers.set('Authorization', `Bearer ${token}`);
-        }
-        return config;
-    });
-
-    useInterceptorStore.getState().setInitialized(true);
+        client.instance.interceptors.request.use(async (config) => {
+            const token = useAuthTokenStore.getState().token;
+            if (token) {
+                config.headers.set('Authorization', `Bearer ${token}`);
+            }
+            return config;
+        });
+    } finally {
+        useInterceptorStore.getState().setInitialized(true);
+    }
 };
 
 export const setupClientInterceptorsResponse = () => {
