@@ -1,8 +1,31 @@
 'use client'
 import {client} from '@/api/client/client.gen';
 
-import { useAuthTokenStore } from '@/stores/useTokenStore';
+import {useAuthTokenStore} from '@/stores/useTokenStore';
 import {useInterceptorStore} from "@/stores/useInterceptorStore";
+
+/**
+ * Returns the current language code from the `locale` cookie.
+ * Converts 'vn' to 'vi'. Defaults to 'en' if not found or on error.
+ * Hmmm that is for localizing in backend, it used country code so don't confuse it
+ */
+const getCurrentLanguage = async (): Promise<string> => {
+    try {
+        // For client-side, read from document.cookie
+        if (typeof window !== 'undefined') {
+            const cookies = document.cookie.split(';');
+            const localeCookie = cookies.find(cookie => cookie.trim().startsWith('locale='));
+            let lang = localeCookie ? localeCookie.split('=')[1].trim() : 'en';
+            if (lang === 'vn') lang = 'vi';
+            return lang;
+        }
+
+        return 'en';
+    } catch (error) {
+        console.error('Error getting language from cookie:', error);
+        return 'en';
+    }
+};
 
 export const setupAxiosAuthInterceptor = async () => {
     try {
@@ -13,6 +36,9 @@ export const setupAxiosAuthInterceptor = async () => {
             if (token) {
                 config.headers.set('Authorization', `Bearer ${token}`);
             }
+
+            config.headers['X-Language'] = await getCurrentLanguage();
+
             return config;
         });
     } finally {

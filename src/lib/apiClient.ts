@@ -7,6 +7,32 @@ const apiClient = axios.create({
     },
 });
 
+const getCurrentLanguage = async (): Promise<string> => {
+    try {
+        // For client-side, read from document.cookie
+        if (typeof window !== 'undefined') {
+            const cookies = document.cookie.split(';');
+            const localeCookie = cookies.find(cookie => cookie.trim().startsWith('locale='));
+            let lang = localeCookie ? localeCookie.split('=')[1].trim() : 'en';
+            if (lang === 'vn') lang = 'vi';
+            return lang;
+        }
+
+        return 'en';
+    } catch (error) {
+        console.error('Error getting language from cookie:', error);
+        return 'en';
+    }
+};
+
+apiClient.interceptors.request.use(
+    async (config) => {
+        config.headers['X-Language'] = await getCurrentLanguage()
+
+        return config;
+    }
+)
+
 apiClient.interceptors.response.use(
     (response) => {
         if (response.status === 204) {
