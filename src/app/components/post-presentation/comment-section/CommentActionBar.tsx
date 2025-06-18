@@ -47,11 +47,12 @@ export const CommentActionBar = ({comment}: {
         <section className="flex">
             <TooltipProvider>
                 <Tooltip>
-                    <TooltipTrigger>
+                    <TooltipTrigger className="flex items-center">
                         <ThumbsUp
                             onClick={handleLike}
                             className={'rounded-l-md border p-2 size-8 group-hover/comment:border-white'}
                         />
+                        <span className="ml-1 text-sm">{comment.interactionCount ?? 0}</span>
                     </TooltipTrigger>
                     <TooltipContent>
                         <p className={'text-sm font-light'}>{t("like")}</p>

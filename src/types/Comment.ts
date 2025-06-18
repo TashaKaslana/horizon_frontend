@@ -10,6 +10,7 @@ export interface CommentResponse {
     isPinned: boolean
     createdAt: string
     updatedAt: string
+    interactionCount?: number
 }
 
 export type CreateComment = Partial<Pick<CommentResponse, 'postId' | 'content' | 'parentCommentId'>>

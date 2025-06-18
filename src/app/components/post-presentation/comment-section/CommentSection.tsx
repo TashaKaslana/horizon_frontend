@@ -3,6 +3,7 @@ import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {CommentResponse} from "@/types/Comment";
 import {formatDateDifference} from "@/lib/utils";
 import {useMemo} from "react";
+import {useCommentStore} from "@/app/(home)/foryou/store/useCommentStore";
 import MentionedText from "@/components/common/mention-text";
 import {CommentActionBar} from "@/app/components/post-presentation/comment-section/CommentActionBar";
 
@@ -12,6 +13,10 @@ interface CommentSectionProps {
 
 export const CommentSection = ({comment}: CommentSectionProps) => {
     const date = useMemo(() => formatDateDifference(new Date(comment.createdAt)), [comment.createdAt]);
+    const { getComments } = useCommentStore();
+const parentComment = comment.parentCommentId
+    ? getComments(comment.postId).find(c => c.id === comment.parentCommentId) || null
+    : null;
 
     return (
         <section
@@ -54,6 +59,9 @@ export const CommentSection = ({comment}: CommentSectionProps) => {
             </header>
 
             <main>
+                {parentComment && (
+                    <p className="text-xs text-gray-500 mb-1">Replying to @{parentComment.user?.username}</p>
+                )}
                 <MentionedText className={'font-light text-gray-800'} content={comment?.content}/>
             </main>
         </section>

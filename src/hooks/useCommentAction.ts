@@ -19,7 +19,7 @@ export function useCommentAction({comment}: CommentAction) {
         mutationFn: () => likeComment(comment.id),
         onSuccess: () => {
             updateComment(comment.postId, comment.id, {
-                // isLiked: true
+                interactionCount: (comment.interactionCount ?? 0) + 1,
             });
         },
         onError: () => {

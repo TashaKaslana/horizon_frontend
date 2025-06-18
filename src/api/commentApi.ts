@@ -1,6 +1,6 @@
 import { apiRequest } from "@/lib/apiRequest"
 import { getAccessToken } from "@auth0/nextjs-auth0"
-import {CommentCreated, CommentResponse, CommentUpdated, CreateComment, UpdateComment} from "@/types/Comment";
+import {CommentResponse, CreateComment, UpdateComment} from "@/types/Comment";
 
 export const getCommentsByPostId = async (postId: string, {page = 1, size = 10}) => {
     const token = await getAccessToken()
@@ -24,7 +24,7 @@ export const getCommentsByPostId = async (postId: string, {page = 1, size = 10})
 export const createComment = async (comment: CreateComment) => {
     const token = await getAccessToken()
 
-    return await apiRequest<CommentCreated>({
+    return await apiRequest<CommentResponse>({
         url: '/comments',
         method: 'POST',
         data: comment,
@@ -37,7 +37,7 @@ export const createComment = async (comment: CreateComment) => {
 export const updateComment = async (updateComment: UpdateComment) => {
     const token = await getAccessToken()
 
-    return await apiRequest<CommentUpdated>({
+    return await apiRequest<CommentResponse>({
         url: `/comments/${updateComment.id}`,
         method: 'PUT',
         data: updateComment,
@@ -95,22 +95,6 @@ export const unpinComment = async (commentId: string) => {
     return await apiRequest<void>({
         url: `/comments/${commentId}/unpin`,
         method: "PATCH",
-        headers: {
-            Authorization: `Bearer ${token}`,
-        }
-    })
-}
-
-export const reportComment = async (commentId: string, reason: string) => {
-    const token = await getAccessToken()
-
-    return await apiRequest<void>({
-        url: `/comments/reports`,
-        method: "POST",
-        data: {
-            commentId,
-            reason
-        },
         headers: {
             Authorization: `Bearer ${token}`,
         }

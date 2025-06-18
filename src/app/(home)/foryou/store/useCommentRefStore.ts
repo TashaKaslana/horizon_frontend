@@ -4,7 +4,7 @@ import {create} from "zustand";
 
 type CommentStore = {
     storedComment: CommentResponse | null
-    setStoredComment: (value: CommentResponse) => void
+    setStoredComment: (value: CommentResponse | null) => void
     commentInputRef: React.RefObject<HTMLTextAreaElement> | null
     mode: 'create' | 'update' | 'reply'
     setMode: (mode: 'create' | 'update' | 'reply') => void

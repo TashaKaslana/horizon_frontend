@@ -14,6 +14,7 @@ export const CommentResponseSchema = z.object({
     isPinned: z.boolean(),
     createdAt: z.string(),
     updatedAt: z.string(),
+    interactionCount: z.number().optional(),
 
     status: CommentStatus.default("Pending"),
 });

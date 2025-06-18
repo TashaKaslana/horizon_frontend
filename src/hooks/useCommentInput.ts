@@ -3,6 +3,7 @@ import {toast} from "sonner";
 import {useMutation} from "@tanstack/react-query";
 import {createComment, updateComment} from "@/api/commentApi";
 import {useCommentRefStore} from "@/app/(home)/foryou/store/useCommentRefStore";
+import {useCommentStore} from "@/app/(home)/foryou/store/useCommentStore";
 
 type UseCommentInputProps = {
     postId: string;
@@ -13,8 +14,9 @@ export function useCommentInput({
                                 }: UseCommentInputProps) {
     const [isFocus, setIsFocus] = useState(false);
     const textRef = useRef<HTMLTextAreaElement>(null);
-    const { storedComment, mode } = useCommentRefStore();
+    const { storedComment, mode, setMode, setStoredComment } = useCommentRefStore();
     const prevContent = useRef('');
+    const {setComments} = useCommentStore()
     
     const mutation = useMutation({
         mutationFn: (content: string) => {
@@ -28,12 +30,25 @@ export function useCommentInput({
                 return createComment({ postId, parentCommentId: storedComment?.id, content });
             }
         },
-        onSuccess: () => {
+        onSuccess: (res) => {
             toast.success(`Comment ${friendlyModeProcessedMessage(mode)} successfully!`);
             const element = textRef.current;
             if (element) {
                 element.value = '';
                 element.blur();
+            }
+            setMode('create');
+            setStoredComment(null);
+
+            if (res) {
+                setComments(postId, (existing) => {
+                    const newComment = res.data;
+                    if (mode === 'update') {
+                        return existing.map(comment => comment.id === newComment.id ? newComment : comment);
+                    } else {
+                        return [...existing, newComment];
+                    }
+                });
             }
         },
         onError: () => {
@@ -60,8 +75,13 @@ export function useCommentInput({
         const element = textRef.current;
         if (!element) return;
 
-        prevContent.current = element.value;
-        element.value = '';
+        if (element.value.trim() !== '') {
+            prevContent.current = element.value;
+            element.value = '';
+        } else {
+            element.value = '';
+            return;
+        }
 
         toast('Restore unsubmitted comment?', {
             action: {
@@ -72,8 +92,10 @@ export function useCommentInput({
                     }
                 }
             },
-            duration: 7000
+            duration: 7000,
         });
+        setMode('create');
+        setStoredComment(null);
     };
 
     const handleSwitchFocus = (value: boolean) => {
