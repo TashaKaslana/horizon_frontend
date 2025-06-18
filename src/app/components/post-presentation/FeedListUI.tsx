@@ -4,6 +4,7 @@ import {Feed} from "@/types/Feed";
 import {Skeleton} from "@/components/ui/skeleton";
 import InfiniteScroll from "@/components/ui/infinite-scroll";
 import {Spinner} from "@/components/ui/spinner";
+import {ChannelProvider} from "ably/react";
 
 interface FeedListUIProps {
     feeds: Feed[];
@@ -35,8 +36,10 @@ export const FeedListUI = ({
                 >
                     {feeds
                         .filter((feed) => feed?.post?.id)
-                        .map((feed, index) => (
-                            <PostDisplay key={index} feed={feed} />
+                        .map((feed) => (
+                            <ChannelProvider channelName={`posts.${feed.post.id}`} key={feed.post.id}>
+                                <PostDisplay feed={feed} />
+                            </ChannelProvider>
                         ))}
                     {isLoading && (
                         <div className="flex justify-center items-center">

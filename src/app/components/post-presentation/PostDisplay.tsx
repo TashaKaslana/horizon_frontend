@@ -8,12 +8,14 @@ import CommentContainer from "@/app/components/post-presentation/comment-section
 import {useMutation} from "@tanstack/react-query";
 import {recordPostView} from "@/api/postApi";
 import {ChannelProvider} from "ably/react";
+import {useSpecificPostRealtime} from "@/app/(home)/foryou/hooks/useSpecificPostRealtime";
 
 export const PostDisplay = ({feed}: { feed: Feed }) => {
     const [isCommentOpened, setIsCommentOpened] = useState(false);
     const videoRef = useRef<HTMLVideoElement>(null);
     const {ref: containerRef, isVisible} = useIsVisible<HTMLDivElement>();
     const {videoSettings} = useConfigStore()
+    useSpecificPostRealtime(feed.post.id);
 
     const viewMutation = useMutation({
         mutationFn: () => recordPostView(feed.post.id),
