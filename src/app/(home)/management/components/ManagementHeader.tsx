@@ -7,26 +7,31 @@ import React from "react";
 import {PostCategory, SortType} from "@/app/(home)/management/types/types";
 import Link from "next/link";
 import {useTranslations} from "next-intl";
+import {useQuery} from "@tanstack/react-query";
+import {getPostCategories} from "@/api/postApi";
 
 export function ManagementHeader() {
     const t = useTranslations('Home.management');
     const {sortPosts, searchPosts, filterPosts} = usePostManagementStore()
 
+    const {data: categoriesData} = useQuery({
+        queryKey: ['management-categories'],
+        queryFn: () => getPostCategories({page: 0, size: 20})
+    })
+
+    const categories = categoriesData?.data ?? []
+
     const filterOptions = [
-        {label: "All", value: "all"},
-        {label: "Entertainment", value: "entertainment"},
-        {label: "Music", value: "music"},
-        {label: "Education", value: "education"},
-        {label: 'Gaming', value: "gaming"},
-        {label: 'Tech', value: 'tech'}
+        {label: t('filterOptions.all'), value: 'all'},
+        ...categories.map((c) => ({label: c.name, value: c.name.toLowerCase()}))
     ]
 
     const sortOptions = [
-        {label: 'Newest', value: 'newest',},
-        {label: 'Oldest', value: 'oldest',},
-        {label: "Popular", value: "popular"},
-        {label: "Top Rated", value: "top_rated"},
-        {label: "Top Commented", value: "top_commented"},
+        {label: t('sortOptions.newest'), value: 'newest'},
+        {label: t('sortOptions.oldest'), value: 'oldest'},
+        {label: t('sortOptions.popular'), value: 'popular'},
+        {label: t('sortOptions.topRated'), value: 'top_rated'},
+        {label: t('sortOptions.topCommented'), value: 'top_commented'},
     ]
 
     const [sortType, setSortType] = React.useState<SortType>('newest')

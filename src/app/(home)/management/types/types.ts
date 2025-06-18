@@ -1,3 +1,8 @@
-export type SortType = 'newest' | 'oldest' | 'popular' | 'top-rated' | 'top-commented'
+export type SortType =
+    | 'newest'
+    | 'oldest'
+    | 'popular'
+    | 'top_rated'
+    | 'top_commented';
 
-export type PostCategory = "entertainment" | "music" | "education" | "gaming" | "tech"
+export type PostCategory = string;

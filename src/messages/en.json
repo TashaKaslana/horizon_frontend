@@ -436,9 +436,19 @@
       "description": "View and manage your videos, comments, and account settings.",
       "noContent": "You haven't posted anything yet.",
       "filter": "Filter",
+      "filterOptions": {
+        "all": "All"
+      },
       "uploadButton": "Upload new post",
       "searchPlaceholder": "Search post",
       "sortBy": "Sort by",
+      "sortOptions": {
+        "newest": "Newest",
+        "oldest": "Oldest",
+        "popular": "Popular",
+        "topRated": "Top Rated",
+        "topCommented": "Top Commented"
+      },
       "views": "Views",
       "actions": {
         "edit": "Edit Post",

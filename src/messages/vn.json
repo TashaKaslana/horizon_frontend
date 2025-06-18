@@ -436,9 +436,19 @@
       "description": "Xem và quản lý video, bình luận và cài đặt tài khoản của bạn.",
       "noContent": "Bạn chưa đăng bài nào.",
       "filter": "Lọc",
+      "filterOptions": {
+        "all": "Tất cả"
+      },
       "uploadButton": "Tải lên bài viết mới",
       "searchPlaceholder": "Tìm kiếm bài viết",
       "sortBy": "Sắp xếp theo",
+      "sortOptions": {
+        "newest": "Mới nhất",
+        "oldest": "Cũ nhất",
+        "popular": "Phổ biến",
+        "topRated": "Đánh giá cao",
+        "topCommented": "Bình luận nhiều"
+      },
       "views": "Lượt xem",
       "actions": {
         "edit": "Chỉnh sửa bài viết",

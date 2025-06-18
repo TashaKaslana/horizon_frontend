@@ -46,22 +46,13 @@ export const usePostManagementStore = create<PostManagementStore>()((set) => ({
 
     filterPosts: (option: PostCategory) => {
         set((state) => ({
-            feeds: state.initialPosts.filter((feed) => {
-                switch (option) {
-                    case 'tech':
-                        return feed.post?.categoryName.toLowerCase() === 'tech'
-                    case 'gaming':
-                        return feed.post?.categoryName.toLowerCase() === 'gaming'
-                    case 'music':
-                        return feed.post?.categoryName.toLowerCase() === 'music'
-                    case 'education':
-                        return feed.post?.categoryName.toLowerCase() === 'education'
-                    case 'entertainment':
-                        return feed.post?.categoryName.toLowerCase() === 'entertainment'
-                    default:
-                        return true
-                }
-            })
+            feeds:
+                option.toLowerCase() === 'all'
+                    ? state.initialPosts
+                    : state.initialPosts.filter(
+                        (feed) =>
+                            feed.post?.categoryName.toLowerCase() === option.toLowerCase()
+                    ),
         }))
     },
 
