@@ -159,14 +159,14 @@ const useCommentsStore = create<CommentsState>()(
 
                     // Update in the flat comments array
                     state.comments = state.comments.map(comment => {
-                        if (updateSet.has(comment.id)) {
+                        if (updateSet.has(comment.id!)) {
                             return { ...comment, ...data };
                         }
                         return comment;
                     });
 
                     // Update the selected comment if it's in the update set
-                    if (state.selectedComment && updateSet.has(state.selectedComment.id)) {
+                    if (state.selectedComment && updateSet.has(state.selectedComment.id!)) {
                         state.selectedComment = { ...state.selectedComment, ...data };
                     }
 
@@ -175,7 +175,7 @@ const useCommentsStore = create<CommentsState>()(
                         state.infiniteQueryData.pages = state.infiniteQueryData.pages.map(page => ({
                             ...page,
                             data: (page.data ?? []).map(comment => {
-                                if (updateSet.has(comment.id)) {
+                                if (updateSet.has(comment.id!)) {
                                     return { ...comment, ...data };
                                 }
                                 return comment;
@@ -190,10 +190,10 @@ const useCommentsStore = create<CommentsState>()(
                     const deleteSet = new Set(commentIds);
 
                     // Remove from flat comments array
-                    state.comments = state.comments.filter(comment => !deleteSet.has(comment.id));
+                    state.comments = state.comments.filter(comment => !deleteSet.has(comment.id!));
 
                     // Clear selected comment if it's in the delete set
-                    if (state.selectedComment && deleteSet.has(state.selectedComment.id)) {
+                    if (state.selectedComment && deleteSet.has(state.selectedComment.id!)) {
                         state.selectedComment = null;
                     }
 
@@ -202,7 +202,7 @@ const useCommentsStore = create<CommentsState>()(
                         state.infiniteQueryData.pages = state.infiniteQueryData.pages
                             .map(page => ({
                                 ...page,
-                                data: (page.data ?? []).filter(comment => !deleteSet.has(comment.id))
+                                data: (page.data ?? []).filter(comment => !deleteSet.has(comment.id!))
                             }))
                             .filter(page => (page.data?.length ?? 0) > 0); // Remove empty pages
                     }

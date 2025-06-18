@@ -116,7 +116,7 @@ const useCommentsManagement = (commentId?: string, timeRange?: number) => {
         ...updateCommentMutation(),
         onSuccess: (res) => {
             if (res.data) {
-                actions.updateComment(res.data);
+                actions.updateComment({...res.data, id: res.data.id!});
                 toast.success("Comment updated successfully.");
             }
         },
@@ -156,7 +156,7 @@ const useCommentsManagement = (commentId?: string, timeRange?: number) => {
         ...bulkUpdateCommentsMutation(),
         onSuccess: (res) => {
             res.data?.forEach((comment) => {
-                actions.updateComment(comment);
+                actions.updateComment({...comment, id: comment.id!});
             })
 
             toast.success("Comments updated successfully.");

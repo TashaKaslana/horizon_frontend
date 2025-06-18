@@ -17,7 +17,6 @@ import {
     CreatePostCategoryRequest,
     PaginationInfo,
     UpdatePostCategoryRequest,
-    PostCategory,
 } from "@/api/client/types.gen";
 import {zCreatePostCategoryRequest} from "@/api/client/zod.gen";
 
@@ -107,7 +106,7 @@ export const useCategoryManagement = (timeRange: number = 7) => {
         ...updatePostCategoryMutation({}),
         onSuccess: (updatedCategory) => {
             if (updatedCategory.data) {
-                actions.updateCategory(updatedCategory.data as PostCategory);
+                actions.updateCategory({...updatedCategory.data, id: updatedCategory.data.id!});
                 toast.success("Category updated successfully.");
             }
         },

@@ -114,7 +114,7 @@ export const useModeration = (timeRange = 30) => {
         ...updateReportStatusMutation(),
         onSuccess: (updatedReport) => {
             if (updatedReport.data) {
-                actions.updateReport(updatedReport.data);
+                actions.updateReport({...updatedReport.data, id: updatedReport.data.id!});
             }
             toast.success("Report status updated successfully.");
         },
@@ -180,7 +180,7 @@ export const useModeration = (timeRange = 30) => {
         onSuccess: (updatedReports) => {
             if (updatedReports.data) {
                 updatedReports.data.forEach(report => {
-                    actions.updateReport(report);
+                    actions.updateReport({...report, id: report.id!});
                 });
             }
             toast.success("Reports updated successfully.");
