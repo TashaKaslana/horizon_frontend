@@ -764,6 +764,44 @@
         "exportToExcel": "Export to Excel"
       }
     },
+    "appBar": {
+      "quickCreate": "Quick Create",
+      "inbox": "Inbox",
+      "documents": "Documents",
+      "userGuide": "User Guide",
+      "apiReference": "API Reference",
+      "databaseSchema": "Database Schema",
+      "open": "Open",
+      "share": "Share",
+      "more": "More",
+      "settings": "Settings",
+      "getHelp": "Get Help",
+      "search": "Search",
+      "dashboard": "Dashboard",
+      "users": "Users",
+      "allUsers": "All Users",
+      "userReports": "Reports",
+      "roles": "Roles",
+      "permissions": "Permissions",
+      "posts": "Posts",
+      "allPosts": "All Posts",
+      "postReports": "Reports",
+      "categories": "Categories",
+      "tags": "Tags",
+      "comments": "Comments",
+      "allComments": "All Comments",
+      "commentReports": "Reports",
+      "moderation": "Moderation",
+      "allReports": "All Reports",
+      "postReportsNav": "Post Reports",
+      "userReportsNav": "User Reports",
+      "commentReportsNav": "Comment Reports",
+      "notifications": "Notifications",
+      "system": "System",
+      "statusUptime": "Status & Uptime",
+      "maintenance": "Maintenance Mode",
+      "logs": "Logs"
+    },
     "dashboard": {
       "title": "Dashboard",
       "tabs": {
@@ -1421,6 +1459,7 @@
     },
     "system": {
       "title": "System",
+      "statusUptimeNav": "Status & Uptime",
       "status": {
         "title": "System Status",
         "description": "Monitor the health and status of all system components",
@@ -1439,6 +1478,13 @@
           "maintenance": "Under Maintenance",
           "unknown": "Status Unknown"
         },
+        "overall": {
+          "operational": "All Systems Operational",
+          "degraded": "Some Systems Degraded",
+          "maintenance": "System Maintenance"
+        },
+        "loading": "Loading system status...",
+        "lastUpdated": "Last updated: {time}",
         "metrics": {
           "uptime": "Uptime",
           "responseTime": "Response Time",

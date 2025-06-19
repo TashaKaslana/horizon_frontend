@@ -1,6 +1,7 @@
 "use client"
 
 import {MailIcon, PlusCircleIcon, type LucideIcon, ChevronRight} from "lucide-react"
+import {useTranslations} from "next-intl"
 
 import {Button} from "@/components/ui/button"
 import {
@@ -30,6 +31,7 @@ export function NavMain({
     }[]
 }) {
     const pathname = usePathname();
+    const t = useTranslations('Admin.appBar');
 
     return (
         <SidebarGroup>
@@ -37,11 +39,11 @@ export function NavMain({
                 <SidebarMenu>
                     <SidebarMenuItem className="flex items-center gap-2">
                         <SidebarMenuButton
-                            tooltip="Quick Create"
+                            tooltip={t('quickCreate')}
                             className="min-w-8 bg-primary text-primary-foreground duration-200 ease-linear hover:bg-primary/90 hover:text-primary-foreground active:bg-primary/90 active:text-primary-foreground"
                         >
                             <PlusCircleIcon/>
-                            <span>Quick Create</span>
+                            <span>{t('quickCreate')}</span>
                         </SidebarMenuButton>
                         <Button
                             size="icon"
@@ -49,7 +51,7 @@ export function NavMain({
                             variant="outline"
                         >
                             <MailIcon/>
-                            <span className="sr-only">Inbox</span>
+                            <span className="sr-only">{t('inbox')}</span>
                         </Button>
                     </SidebarMenuItem>
                 </SidebarMenu>
