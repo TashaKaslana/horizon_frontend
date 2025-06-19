@@ -42,12 +42,12 @@ export function useChat() {
         setIsLoading(true)
 
         try {
-            const conversationHistory = messages
-                .filter((msg) => msg.role !== "system")
-                .map((msg) => `${msg.role === "user" ? "User" : "Assistant"}: ${msg.content}`)
-                .join("\n")
+            // const conversationHistory = messages
+            //     .filter((msg) => msg.role !== "system")
+            //     .map((msg) => `${msg.role === "user" ? "User" : "Assistant"}: ${msg.content}`)
+            //     .join("\n")
 
-            const prompt = `${conversationHistory}\nUser: ${input}\nAssistant:`
+            // const prompt = `${conversationHistory}\nUser: ${input}\nAssistant:`
 
             await chatWithAI(input)
         } catch (error) {

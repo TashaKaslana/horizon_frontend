@@ -1,9 +1,8 @@
 'use client'
 
 import {useChatStore} from "@/app/components/chatbox/stores/useChatStore";
-import {useMutation, useQuery} from "@tanstack/react-query";
-import {chatWithOpenRouterMutation, getSupportedModelsOptions} from "@/api/client/@tanstack/react-query.gen";
-import { useEffect } from "react";
+import {useMutation} from "@tanstack/react-query";
+import {chatWithOpenRouterMutation} from "@/api/client/@tanstack/react-query.gen";
 
 export const useChatActions = () => {
     const { addMessage, setIsLoading } = useChatStore()

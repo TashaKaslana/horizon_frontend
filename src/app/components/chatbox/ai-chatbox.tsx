@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect } from "react"
 import { Bot } from "lucide-react"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { Button } from "@/components/ui/button"
@@ -8,7 +8,6 @@ import { useChat } from "./hooks/useChat"
 import { ModelSelector } from "./components/ModelSelector"
 import { MessageList } from "./components/MessageList"
 import { ChatInput } from "./components/ChatInput"
-import { Separator } from "@radix-ui/react-separator"
 
 export function AiChat() {
     const {
@@ -49,7 +48,7 @@ export function AiChat() {
                 </SheetTrigger>
                 <SheetContent
                     className="!min-w-1/3 p-0 flex flex-col h-screen"
-                    style={{ height: '100vh' }} // hoặc 100% nếu container có height
+                    style={{ height: '100vh' }}
                     >
                         <SheetHeader className="p-4 border-b space-y-3">
                             <SheetTitle className="flex items-center gap-2">
@@ -69,7 +68,6 @@ export function AiChat() {
                             />
                         </div>
 
-                        {/* Thanh nhập liệu */}
                         <div className="relative flex-shrink-0 bg-white h-12 px-2 mr-4">
                             <ChatInput
                             input={input}
