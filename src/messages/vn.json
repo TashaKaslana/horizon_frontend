@@ -756,6 +756,44 @@
         "exportToExcel": "Xuất sang Excel"
       }
     },
+    "appBar": {
+      "quickCreate": "Tạo nhanh",
+      "inbox": "Hộp thư",
+      "documents": "Tài liệu",
+      "userGuide": "Hướng dẫn sử dụng",
+      "apiReference": "Tài liệu API",
+      "databaseSchema": "Lược đồ CSDL",
+      "open": "Mở",
+      "share": "Chia sẻ",
+      "more": "Thêm",
+      "settings": "Cài đặt",
+      "getHelp": "Trợ giúp",
+      "search": "Tìm kiếm",
+      "dashboard": "Bảng điều khiển",
+      "users": "Người dùng",
+      "allUsers": "Tất cả người dùng",
+      "userReports": "Báo cáo",
+      "roles": "Vai trò",
+      "permissions": "Quyền hạn",
+      "posts": "Bài viết",
+      "allPosts": "Tất cả bài viết",
+      "postReports": "Báo cáo",
+      "categories": "Danh mục",
+      "tags": "Thẻ",
+      "comments": "Bình luận",
+      "allComments": "Tất cả bình luận",
+      "commentReports": "Báo cáo",
+      "moderation": "Kiểm duyệt",
+      "allReports": "Tất cả báo cáo",
+      "postReportsNav": "Báo cáo bài viết",
+      "userReportsNav": "Báo cáo người dùng",
+      "commentReportsNav": "Báo cáo bình luận",
+      "notifications": "Thông báo",
+      "system": "Hệ thống",
+      "statusUptime": "Trạng thái & thời gian hoạt động",
+      "maintenance": "Chế độ bảo trì",
+      "logs": "Nhật ký"
+    },
     "dashboard": {
       "title": "Bảng điều khiển",
       "tabs": {
@@ -1412,6 +1450,7 @@
     },
     "system": {
       "title": "System",
+      "statusUptimeNav": "Trạng thái & thời gian hoạt động",
       "status": {
         "title": "Trạng thái hệ thống",
         "description": "Theo dõi tình trạng và trạng thái của tất cả các thành phần trong hệ thống",
@@ -1430,6 +1469,13 @@
           "maintenance": "Đang bảo trì",
           "unknown": "Không xác định"
         },
+        "overall": {
+          "operational": "Tất cả hệ thống hoạt động ổn định",
+          "degraded": "Một số hệ thống gặp sự cố",
+          "maintenance": "Hệ thống đang bảo trì"
+        },
+        "loading": "Đang tải trạng thái hệ thống...",
+        "lastUpdated": "Cập nhật lần cuối: {time}",
         "metrics": {
           "uptime": "Thời gian hoạt động",
           "responseTime": "Thời gian phản hồi",

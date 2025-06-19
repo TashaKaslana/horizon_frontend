@@ -2,6 +2,7 @@
 
 import {Badge} from "@/components/ui/badge"
 import {AlertTriangle, CheckCircle, Settings} from "lucide-react"
+import {useTranslations} from "next-intl"
 import {DatabaseStatus} from "./database-status"
 import {MaintenanceStatus} from "./maintenance-status"
 import {CloudinaryStatus} from "@/app/admin/system/status/components/cloudinary-status";
@@ -78,13 +79,14 @@ export interface StatusData {
 
 export const StatusContainer = () => {
     const {data: dataRetrieved, isLoading} = useSystemStatus()
+    const t = useTranslations('Admin.system.status')
     const data = dataRetrieved as unknown as StatusData;
 
     if (!data || isLoading) {
         return (
             <div className={'h-screen flex flex-col items-center justify-center'}>
                 <Spinner/>
-                <div className="text-center py-8">Loading system status...</div>
+                <div className="text-center py-8">{t('loading')}</div>
             </div>
         )
     }
@@ -102,28 +104,28 @@ export const StatusContainer = () => {
     return (
         <div className="container mx-auto py-8 px-4">
             <div className="mb-8 text-center">
-                <h1 className="text-3xl font-bold mb-2">System Status</h1>
+                <h1 className="text-3xl font-bold mb-2">{t('title')}</h1>
                 <div className="flex items-center justify-center gap-2">
                     {overallStatus === "operational" && (
                         <Badge className="bg-green-500 hover:bg-green-600">
                             <CheckCircle className="h-4 w-4 mr-1"/>
-                            All Systems Operational
+                            {t('overall.operational')}
                         </Badge>
                     )}
                     {overallStatus === "degraded" && (
                         <Badge className="bg-amber-500 hover:bg-amber-600">
                             <AlertTriangle className="h-4 w-4 mr-1"/>
-                            Some Systems Degraded
+                            {t('overall.degraded')}
                         </Badge>
                     )}
                     {overallStatus === "maintenance" && (
                         <Badge className="bg-blue-500 hover:bg-blue-600">
                             <Settings className="h-4 w-4 mr-1 animate-spin"/>
-                            System Maintenance
+                            {t('overall.maintenance')}
                         </Badge>
                     )}
                 </div>
-                <p className="text-muted-foreground mt-2">Last updated: {new Date().toLocaleString()}</p>
+                <p className="text-muted-foreground mt-2">{t('lastUpdated', {time: new Date().toLocaleString()})}</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
