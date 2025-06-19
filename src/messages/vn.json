@@ -1459,6 +1459,8 @@
           "database": "Cơ sở dữ liệu",
           "auth0": "Auth0",
           "cloudinary": "Cloudinary",
+          "ably": "Ably",
+          "redis": "Redis",
           "maintenance": "Chế độ bảo trì"
         },
         "status": {

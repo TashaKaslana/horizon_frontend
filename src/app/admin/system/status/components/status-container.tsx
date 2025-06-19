@@ -7,6 +7,8 @@ import {DatabaseStatus} from "./database-status"
 import {MaintenanceStatus} from "./maintenance-status"
 import {CloudinaryStatus} from "@/app/admin/system/status/components/cloudinary-status";
 import {Auth0Status} from "@/app/admin/system/status/components/auth0-status";
+import {AblyStatus} from "@/app/admin/system/status/components/ably-status";
+import {RedisStatus} from "@/app/admin/system/status/components/redis-status";
 import {useSystemStatus} from "@/app/admin/system/status/hook/useSystemStatus";
 import {Spinner} from "@/components/ui/spinner";
 
@@ -74,6 +76,14 @@ export interface StatusData {
         status: "online" | "offline",
         latency_ms: string,
         last_checked: string,
+    },
+    ably: {
+        status: "online" | "offline",
+        error?: string | null,
+    },
+    redis: {
+        status: "online" | "offline",
+        error?: string | null,
     }
 }
 
@@ -141,6 +151,14 @@ export const StatusContainer = () => {
                     status={data.auth0.status as "online" | "offline"}
                     latency_ms={data.auth0.latency_ms}
                     last_checked={data.auth0.last_checked}
+                />
+                <AblyStatus
+                    status={data.ably.status as "online" | "offline"}
+                    error={data.ably.error}
+                />
+                <RedisStatus
+                    status={data.redis.status as "online" | "offline"}
+                    error={data.redis.error}
                 />
             </div>
         </div>

@@ -1467,6 +1467,8 @@
           "database": "Database",
           "auth0": "Auth0",
           "cloudinary": "Cloudinary",
+          "ably": "Ably",
+          "redis": "Redis",
           "maintenance": "Maintenance Mode"
         },
         "status": {
