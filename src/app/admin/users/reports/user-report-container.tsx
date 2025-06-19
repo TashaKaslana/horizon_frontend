@@ -1,7 +1,7 @@
 'use client'
 
 import {SiteHeader} from "@/app/admin/components/site-header";
-import {ModerationTable} from "@/app/admin/moderation/reports/moderation-table";
+import {ModerationTableCompose} from "@/app/admin/moderation/reports/moderation-table";
 import {ModerationChart} from "@/app/admin/moderation/reports/moderation-chart";
 import {UserModerationCardList} from "@/app/admin/moderation/reports/moderation-card-list";
 import {useReportStore} from "@/app/admin/moderation/reports/useReportStore";
@@ -21,7 +21,7 @@ export const UserReportContainer = () => {
             <SiteHeader text={t('user')}/>
             <UserModerationCardList/>
             <ModerationChart/>
-            <ModerationTable/>
+            <ModerationTableCompose/>
         </div>
     );
 }

@@ -916,7 +916,8 @@
           "edit": "Chỉnh sửa",
           "delete": "Xóa",
           "export": "Xuất file",
-          "rolesExportFileName": "Vai Trò"
+          "rolesExportFileName": "Vai Trò",
+          "assignPermissions": "Gán quyền"
         },
         "addRoleSheet": {
           "title": "Thêm Vai trò Mới",
@@ -1450,7 +1451,7 @@
     },
     "system": {
       "title": "System",
-      "statusUptimeNav": "Trạng thái & thời gian hoạt động",
+      "statusUptimeNav": "Trạng thái hoạt động",
       "status": {
         "title": "Trạng thái hệ thống",
         "description": "Theo dõi tình trạng và trạng thái của tất cả các thành phần trong hệ thống",

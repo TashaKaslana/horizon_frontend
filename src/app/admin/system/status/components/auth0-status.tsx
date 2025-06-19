@@ -44,7 +44,7 @@ export const Auth0Status = ({status, latency_ms}: Auth0StatusProps) => {
             <CardContent>
                 <div className="space-y-2">
                     <div className="flex justify-between">
-                        <span className="text-muted-foreground">{t("status.label")}:</span>
+                        <span className="text-muted-foreground">{t("components.auth0")}:</span>
                         <span className={`font-medium flex items-center ${status === 'online' ? 'text-green-500' : 'text-red-500'}`}>
                             {status === 'online' ? (
                                 <>Online</>

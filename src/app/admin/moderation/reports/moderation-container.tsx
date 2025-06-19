@@ -3,9 +3,8 @@
 import {ModerationCardList} from "@/app/admin/moderation/reports/moderation-card-list";
 import {ModerationChart} from "@/app/admin/moderation/reports/moderation-chart";
 import {SiteHeader} from "@/app/admin/components/site-header";
-import {ModerationTable} from "@/app/admin/moderation/reports/moderation-table";
+import {ModerationTableCompose} from "@/app/admin/moderation/reports/moderation-table";
 import {useTranslations} from "next-intl";
-import {ChannelProvider} from "ably/react";
 
 const ModerationContainer = () => {
     const t = useTranslations("Admin.moderation");
@@ -15,9 +14,7 @@ const ModerationContainer = () => {
             <SiteHeader text={t('title')}/>
             <ModerationCardList/>
             <ModerationChart isSpecific={false}/>
-            <ChannelProvider channelName={'reports'}>
-                <ModerationTable/>
-            </ChannelProvider>
+            <ModerationTableCompose/>
         </div>
     );
 }

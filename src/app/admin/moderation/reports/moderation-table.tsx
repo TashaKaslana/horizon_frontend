@@ -13,6 +13,7 @@ import {PostDetailViewerSheet} from "../../posts/all/post-detail-viewer-sheet";
 import {useTranslations} from "next-intl";
 import {useModerationTableActions} from "./use-moderation-table-actions";
 import {useReportRealtime} from "@/app/admin/moderation/reports/useReportRealtime";
+import { ChannelProvider } from "ably/react";
 
 type ModerationItemData = ReportDto & DraggableItem
 
@@ -20,6 +21,14 @@ type ModerationTableProps = {
     isFull?: boolean;
     onUpdateStatusAction?: (itemIds: string[], newStatus: ModerationStatus) => void;
     onDeleteEntriesAction?: (itemIds: string[]) => void;
+}
+
+export const ModerationTableCompose = (props: ModerationTableProps) => {
+    return (
+        <ChannelProvider channelName={'reports'}>
+            <ModerationTable {...props} />
+        </ChannelProvider>
+    );
 }
 
 export function ModerationTable({

@@ -1,7 +1,7 @@
 'use client';
 
 import {SiteHeader} from "@/app/admin/components/site-header";
-import {ModerationTable} from "@/app/admin/moderation/reports/moderation-table";
+import {ModerationTableCompose} from "@/app/admin/moderation/reports/moderation-table";
 import {ModerationChart} from "@/app/admin/moderation/reports/moderation-chart";
 import {CommentModerationCardList} from "@/app/admin/moderation/reports/moderation-card-list";
 import {useReportStore} from "@/app/admin/moderation/reports/useReportStore";
@@ -15,13 +15,13 @@ export const CommentReportContainer = () => {
     useEffect(() => {
         setCurrentType("COMMENT")
     }, [setCurrentType]);
-    
+
     return (
         <div className={'space-y-4 size-full'}>
             <SiteHeader text={t('comment')}/>
             <CommentModerationCardList/>
             <ModerationChart/>
-            <ModerationTable/>
+            <ModerationTableCompose/>
         </div>
     );
 }
