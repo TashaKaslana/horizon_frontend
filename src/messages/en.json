@@ -1478,6 +1478,28 @@
           "maintenance": "Under Maintenance",
           "unknown": "Status Unknown"
         },
+        "cloudinaryStatus": {
+          "generalInformation": "General Information",
+          "status": "Status",
+          "latency": "Latency",
+          "plan": "Plan",
+          "lastUpdated": "Last Updated",
+          "usageStatistics": "Usage Statistics",
+          "resources": "Resources",
+          "derivedResources": "Derived Resources",
+          "objects": "Objects",
+          "requests": "Requests",
+          "storageAndBandwidth": "Storage & Bandwidth",
+          "storage": "Storage",
+          "bandwidth": "Bandwidth",
+          "credits": "Credits",
+          "creditsUsage": "Credits Usage",
+          "used": "% used",
+          "storageCredits": "Storage Credits",
+          "bandwidthCredits": "Bandwidth Credits",
+          "transformationsCredits": "Transformations Credits",
+          "dashboard": "Cloudinary Dashboard"
+        },
         "overall": {
           "operational": "All Systems Operational",
           "degraded": "Some Systems Degraded",

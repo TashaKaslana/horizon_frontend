@@ -5,6 +5,7 @@ import {Button} from "@/components/ui/button";
 import {Progress} from "@/components/ui/progress";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import {useTranslations} from "next-intl";
 
 interface CloudinaryStatusProps {
     status: "online" | "offline";
@@ -61,6 +62,7 @@ interface CloudinaryStatusProps {
 }
 
 export const CloudinaryStatus = ({status, latency_ms, storage}: CloudinaryStatusProps) => {
+    const t = useTranslations("Admin.system.status.cloudinaryStatus");
     const formatBytes = (bytes: number) => {
         if (bytes === 0) return "0 Bytes";
         const k = 1024;
@@ -85,91 +87,91 @@ export const CloudinaryStatus = ({status, latency_ms, storage}: CloudinaryStatus
             <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-y-6 gap-x-8">
                     <div>
-                        <h3 className="font-medium mb-2">General Information</h3>
+                        <h3 className="font-medium mb-2">{t("generalInformation")}</h3>
                         <div className="space-y-2">
                             <div className="flex justify-between">
-                                <span className="text-muted-foreground">Status:</span>
+                                <span className="text-muted-foreground">{t("status")}</span>
                                 <span className={cn(status === 'online' ? "text-green-500" : "text-red-500")}>
                                     {status.at(0)?.toUpperCase() + status.substring(1)}
                                 </span>
                             </div>
                             <div className="flex justify-between">
-                                <span className="text-muted-foreground">Latency:</span>
+                                <span className="text-muted-foreground">{t("latency")}</span>
                                 <span>{latency_ms}</span>
                             </div>
                             <div className="flex justify-between">
-                                <span className="text-muted-foreground">Plan:</span>
+                                <span className="text-muted-foreground">{t("plan")}</span>
                                 <span>{storage.plan}</span>
                             </div>
                             <div className="flex justify-between">
-                                <span className="text-muted-foreground">Last Updated:</span>
+                                <span className="text-muted-foreground">{t("lastUpdated")}</span>
                                 <span>{storage.last_updated}</span>
                             </div>
                         </div>
                     </div>
 
                     <div>
-                        <h3 className="font-medium mb-2">Usage Statistics</h3>
+                        <h3 className="font-medium mb-2">{t("usageStatistics")}</h3>
                         <div className="space-y-2">
                             <div className="flex justify-between">
-                                <span className="text-muted-foreground">Resources:</span>
+                                <span className="text-muted-foreground">{t("resources")}</span>
                                 <span>{storage.resources}</span>
                             </div>
                             <div className="flex justify-between">
-                                <span className="text-muted-foreground">Derived Resources:</span>
+                                <span className="text-muted-foreground">{t("derivedResources")}</span>
                                 <span>{storage.derived_resources}</span>
                             </div>
                             <div className="flex justify-between">
-                                <span className="text-muted-foreground">Objects:</span>
+                                <span className="text-muted-foreground">{t("objects")}</span>
                                 <span>{storage.objects.usage}</span>
                             </div>
                             <div className="flex justify-between">
-                                <span className="text-muted-foreground">Requests:</span>
+                                <span className="text-muted-foreground">{t("requests")}</span>
                                 <span>{storage.requests}</span>
                             </div>
                         </div>
                     </div>
                     <div>
-                        <h3 className="font-medium mb-2">Storage & Bandwidth</h3>
+                        <h3 className="font-medium mb-2">{t("storageAndBandwidth")}</h3>
                         <div className="space-y-2">
                             <div className="flex justify-between">
-                                <span className="text-muted-foreground">Storage:</span>
+                                <span className="text-muted-foreground">{t("storage")}</span>
                                 <span>{formatBytes(storage.storage.usage)}</span>
                             </div>
                             <div className="flex justify-between">
-                                <span className="text-muted-foreground">Bandwidth:</span>
+                                <span className="text-muted-foreground">{t("bandwidth")}</span>
                                 <span>{formatBytes(storage.bandwidth.usage)}</span>
                             </div>
                         </div>
 
                     </div>
                     <div>
-                        <h3 className="font-medium mb-2">Credits</h3>
+                        <h3 className="font-medium mb-2">{t("credits")}</h3>
                         <div className="space-y-4">
                             <div>
                                 <div className="flex justify-between mb-1">
-                                    <span className="text-muted-foreground">Credits Usage:</span>
+                                    <span className="text-muted-foreground">{t("creditsUsage")}</span>
                                     <span>
                                         {storage.credits.usage} / {storage.credits.limit}
                                     </span>
                                 </div>
                                 <Progress value={storage.credits.used_percent} className="h-2"/>
                                 <div className="text-xs text-right mt-1 text-muted-foreground">
-                                    {storage.credits.used_percent.toFixed(2)}% used
+                                    {storage.credits.used_percent.toFixed(2)}{t("used")}
                                 </div>
                             </div>
 
                             <div className="space-y-1">
                                 <div className="flex justify-between">
-                                    <span className="text-muted-foreground">Storage Credits:</span>
+                                    <span className="text-muted-foreground">{t("storageCredits")}</span>
                                     <span>{storage.storage.credits_usage}</span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span className="text-muted-foreground">Bandwidth Credits:</span>
+                                    <span className="text-muted-foreground">{t("bandwidthCredits")}</span>
                                     <span>{storage.bandwidth.credits_usage}</span>
                                 </div>
                                 <div className="flex justify-between">
-                                    <span className="text-muted-foreground">Transformations Credits:</span>
+                                    <span className="text-muted-foreground">{t("transformationsCredits")}</span>
                                     <span>{storage.transformations.credits_usage}</span>
                                 </div>
                             </div>
@@ -181,7 +183,7 @@ export const CloudinaryStatus = ({status, latency_ms, storage}: CloudinaryStatus
                 <Button variant="outline" className="w-full">
                     <Link href={'https://console.cloudinary.com/console'} target={'_blank'} className={'flex items-center justify-center'}>
                         <ExternalLink className="mr-2 h-4 w-4"/>
-                        Cloudinary Dashboard
+                        {t("dashboard")}
                     </Link>
                 </Button>
             </CardFooter>

@@ -1470,6 +1470,28 @@
           "maintenance": "Đang bảo trì",
           "unknown": "Không xác định"
         },
+        "cloudinaryStatus": {
+          "generalInformation": "Thông tin chung",
+          "status": "Trạng thái",
+          "latency": "Độ trễ",
+          "plan": "Gói",
+          "lastUpdated": "Cập nhật lần cuối",
+          "usageStatistics": "Thống kê sử dụng",
+          "resources": "Tài nguyên",
+          "derivedResources": "Tài nguyên dẫn xuất",
+          "objects": "Đối tượng",
+          "requests": "Yêu cầu",
+          "storageAndBandwidth": "Lưu trữ & Băng thông",
+          "storage": "Lưu trữ",
+          "bandwidth": "Băng thông",
+          "credits": "Tín dụng",
+          "creditsUsage": "Sử dụng tín dụng",
+          "used": "% đã dùng",
+          "storageCredits": "Tín dụng lưu trữ",
+          "bandwidthCredits": "Tín dụng băng thông",
+          "transformationsCredits": "Tín dụng chuyển đổi",
+          "dashboard": "Bảng điều khiển Cloudinary"
+        },
         "overall": {
           "operational": "Tất cả hệ thống hoạt động ổn định",
           "degraded": "Một số hệ thống gặp sự cố",
