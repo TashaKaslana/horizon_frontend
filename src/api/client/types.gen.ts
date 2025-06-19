@@ -571,6 +571,23 @@ export type RestApiResponseCommentInteractionRespond = {
     metadata?: ResponseMetadata;
 };
 
+export type ChatRequest = {
+    message?: string;
+};
+
+export type ChatResponse = {
+    message?: string;
+};
+
+export type RestApiResponseChatResponse = {
+    success?: boolean;
+    message?: string;
+    data?: ChatResponse;
+    error?: ApiErrorResponse;
+    timestamp?: Date;
+    metadata?: ResponseMetadata;
+};
+
 export type MaintenanceRequestDto = {
     message?: string;
     completionDateTime?: string;
@@ -1153,6 +1170,56 @@ export type RestApiResponseListUserIntroduction = {
     error?: ApiErrorResponse;
     timestamp?: Date;
     metadata?: ResponseMetadata;
+};
+
+export type AblyStatusDto = {
+    status?: string;
+    error?: string;
+};
+
+export type Auth0StatusDto = {
+    status?: string;
+    latencyMs?: bigint;
+    lastChecked?: string;
+    error?: string;
+};
+
+export type CloudinaryStatusDto = {
+    status?: string;
+    storage?: {
+        [key: string]: unknown;
+    };
+    latencyMs?: bigint;
+    lastChecked?: string;
+    error?: string;
+};
+
+export type DatabaseStatusDto = {
+    status?: string;
+    error?: string;
+};
+
+export type RedisStatusDto = {
+    status?: string;
+    error?: string;
+};
+
+export type RestApiResponseSystemStatusDto = {
+    success?: boolean;
+    message?: string;
+    data?: SystemStatusDto;
+    error?: ApiErrorResponse;
+    timestamp?: Date;
+    metadata?: ResponseMetadata;
+};
+
+export type SystemStatusDto = {
+    maintenance?: boolean;
+    database?: DatabaseStatusDto;
+    cloudinary?: CloudinaryStatusDto;
+    auth0?: Auth0StatusDto;
+    ably?: AblyStatusDto;
+    redis?: RedisStatusDto;
 };
 
 export type DatabaseColumnDto = {
@@ -2563,6 +2630,22 @@ export type CreateInteraction1Responses = {
 };
 
 export type CreateInteraction1Response = CreateInteraction1Responses[keyof CreateInteraction1Responses];
+
+export type ChatWithOpenRouterData = {
+    body: ChatRequest;
+    path?: never;
+    query?: never;
+    url: '/api/ai/chat';
+};
+
+export type ChatWithOpenRouterResponses = {
+    /**
+     * OK
+     */
+    200: RestApiResponseChatResponse;
+};
+
+export type ChatWithOpenRouterResponse = ChatWithOpenRouterResponses[keyof ChatWithOpenRouterResponses];
 
 export type EnableMaintenanceData = {
     body?: MaintenanceRequestDto;
@@ -4268,7 +4351,7 @@ export type GetSystemStatusResponses = {
     /**
      * OK
      */
-    200: RestApiResponseMapStringObject;
+    200: RestApiResponseSystemStatusDto;
 };
 
 export type GetSystemStatusResponse = GetSystemStatusResponses[keyof GetSystemStatusResponses];

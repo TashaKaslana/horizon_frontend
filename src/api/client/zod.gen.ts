@@ -705,6 +705,23 @@ export const zRestApiResponseCommentInteractionRespond = z.object({
     metadata: zResponseMetadata.optional()
 });
 
+export const zChatRequest = z.object({
+    message: z.string().optional()
+});
+
+export const zChatResponse = z.object({
+    message: z.string().optional()
+});
+
+export const zRestApiResponseChatResponse = z.object({
+    success: z.boolean().optional(),
+    message: z.string().optional(),
+    data: zChatResponse.optional(),
+    error: zApiErrorResponse.optional(),
+    timestamp: z.string().datetime().optional(),
+    metadata: zResponseMetadata.optional()
+});
+
 export const zMaintenanceRequestDto = z.object({
     message: z.string().optional(),
     completionDateTime: z.string().optional()
@@ -1328,6 +1345,54 @@ export const zRestApiResponseListUserIntroduction = z.object({
     metadata: zResponseMetadata.optional()
 });
 
+export const zAblyStatusDto = z.object({
+    status: z.string().optional(),
+    error: z.string().optional()
+});
+
+export const zAuth0StatusDto = z.object({
+    status: z.string().optional(),
+    latencyMs: z.coerce.bigint().optional(),
+    lastChecked: z.string().optional(),
+    error: z.string().optional()
+});
+
+export const zCloudinaryStatusDto = z.object({
+    status: z.string().optional(),
+    storage: z.object({}).optional(),
+    latencyMs: z.coerce.bigint().optional(),
+    lastChecked: z.string().optional(),
+    error: z.string().optional()
+});
+
+export const zDatabaseStatusDto = z.object({
+    status: z.string().optional(),
+    error: z.string().optional()
+});
+
+export const zRedisStatusDto = z.object({
+    status: z.string().optional(),
+    error: z.string().optional()
+});
+
+export const zSystemStatusDto = z.object({
+    maintenance: z.boolean().optional(),
+    database: zDatabaseStatusDto.optional(),
+    cloudinary: zCloudinaryStatusDto.optional(),
+    auth0: zAuth0StatusDto.optional(),
+    ably: zAblyStatusDto.optional(),
+    redis: zRedisStatusDto.optional()
+});
+
+export const zRestApiResponseSystemStatusDto = z.object({
+    success: z.boolean().optional(),
+    message: z.string().optional(),
+    data: zSystemStatusDto.optional(),
+    error: zApiErrorResponse.optional(),
+    timestamp: z.string().datetime().optional(),
+    metadata: zResponseMetadata.optional()
+});
+
 export const zDatabaseRelationshipDto = z.object({
     referencedTable: z.string().optional(),
     referencedColumn: z.string().optional()
@@ -1666,6 +1731,8 @@ export const zGetInteractionsResponse = zRestApiResponseListCommentInteractionRe
 
 export const zCreateInteraction1Response = zRestApiResponseCommentInteractionRespond;
 
+export const zChatWithOpenRouterResponse = zRestApiResponseChatResponse;
+
 export const zEnableMaintenanceResponse = zRestApiResponseMaintenanceInfoDto;
 
 export const zDisableMaintenanceResponse = zRestApiResponseMaintenanceInfoDto;
@@ -1832,7 +1899,7 @@ export const zGetUserResponse = zRestApiResponseUserRespondDto;
 
 export const zGetAllUserIntroductionsResponse = zRestApiResponseListUserIntroduction;
 
-export const zGetSystemStatusResponse = zRestApiResponseMapStringObject;
+export const zGetSystemStatusResponse = zRestApiResponseSystemStatusDto;
 
 export const zGetStatusMaintenanceResponse = zRestApiResponseMaintenanceInfoDto;
 
