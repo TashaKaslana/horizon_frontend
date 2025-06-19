@@ -9,7 +9,7 @@ import {useInterceptorStore} from "@/stores/useInterceptorStore";
  * Converts 'vn' to 'vi'. Defaults to 'en' if not found or on error.
  * Hmmm that is for localizing in backend, it used country code so don't confuse it
  */
-const getCurrentLanguage = async (): Promise<string> => {
+export const getCurrentLanguage = async (): Promise<string> => {
     try {
         // For client-side, read from document.cookie
         if (typeof window !== 'undefined') {

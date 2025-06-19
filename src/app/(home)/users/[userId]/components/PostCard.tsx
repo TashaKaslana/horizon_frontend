@@ -2,10 +2,11 @@ import {Post} from "@/types/Post";
 import {Card, CardContent, CardFooter} from "@/components/ui/card";
 import {AspectRatio} from "@/components/ui/aspect-ratio";
 import {Badge} from "@/components/ui/badge";
-import {cn, formatDateDifference} from "@/lib/utils";
+import {cn} from "@/lib/utils";
 import {Clock, Dot, Eye, Grid} from "lucide-react";
 import {useState} from "react";
 import {useTranslations} from "next-intl";
+import moment from "moment";
 
 export const PostCard = ({
                              post,
@@ -75,7 +76,7 @@ export const PostCard = ({
                             <Dot/>
                             <span className={'flex items-center gap-x-1'}>
                                 <Clock className="w-4 h-4"/>
-                                {formatDateDifference(new Date(post.createdAt))}
+                                {moment(post.createdAt).format('ll')}
                             </span>
                         </div>
                         {isEnableCategory && (

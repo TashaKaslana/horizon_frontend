@@ -48,12 +48,15 @@ export const CommentActionBar = ({comment}: {
             <TooltipProvider>
                 <Tooltip>
                     <TooltipTrigger className="flex items-center">
+                      <span className="rounded-l-md border p-2 h-8 group-hover/comment:border-white flex items-center gap-x-1">
                         <ThumbsUp
                             onClick={handleLike}
-                            className={'rounded-l-md border p-2 size-8 group-hover/comment:border-white'}
+                            className="h-full align-middle"
                         />
-                        <span className="ml-1 text-sm">{comment.interactionCount ?? 0}</span>
+                        <p className="text-sm text-center leading-none align-middle">{comment.interactionCount ?? 0}</p>
+                      </span>
                     </TooltipTrigger>
+
                     <TooltipContent>
                         <p className={'text-sm font-light'}>{t("like")}</p>
                     </TooltipContent>

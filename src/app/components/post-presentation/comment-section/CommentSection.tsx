@@ -1,22 +1,23 @@
 import {Clock} from "lucide-react";
 import {Avatar, AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {CommentResponse} from "@/types/Comment";
-import {formatDateDifference} from "@/lib/utils";
-import {useMemo} from "react";
 import {useCommentStore} from "@/app/(home)/foryou/store/useCommentStore";
 import MentionedText from "@/components/common/mention-text";
 import {CommentActionBar} from "@/app/components/post-presentation/comment-section/CommentActionBar";
+import moment from "moment";
+import {useMemo} from "react";
 
 interface CommentSectionProps {
     comment: CommentResponse,
 }
 
 export const CommentSection = ({comment}: CommentSectionProps) => {
-    const date = useMemo(() => formatDateDifference(new Date(comment.createdAt)), [comment.createdAt]);
-    const { getComments } = useCommentStore();
-const parentComment = comment.parentCommentId
-    ? getComments(comment.postId).find(c => c.id === comment.parentCommentId) || null
-    : null;
+    const {getComments} = useCommentStore();
+    const parentComment = comment.parentCommentId
+        ? getComments(comment.postId).find(c => c.id === comment.parentCommentId) || null
+        : null;
+
+    const date = useMemo(() => moment(comment.createdAt).fromNow(), [comment.createdAt]);
 
     return (
         <section
