@@ -575,14 +575,27 @@ export type ChatRequest = {
     message?: string;
 };
 
-export type ChatResponse = {
+export type AiChatResponse = {
     message?: string;
+    action?: string;
+    parameters?: {
+        [key: string]: unknown;
+    };
 };
 
-export type RestApiResponseChatResponse = {
+export type RestApiResponseAiChatResponse = {
     success?: boolean;
     message?: string;
-    data?: ChatResponse;
+    data?: AiChatResponse;
+    error?: ApiErrorResponse;
+    timestamp?: Date;
+    metadata?: ResponseMetadata;
+};
+
+export type RestApiResponseListString = {
+    success?: boolean;
+    message?: string;
+    data?: Array<string>;
     error?: ApiErrorResponse;
     timestamp?: Date;
     metadata?: ResponseMetadata;
@@ -848,15 +861,6 @@ export type RestApiResponseTagWithCountDto = {
     success?: boolean;
     message?: string;
     data?: TagWithCountDto;
-    error?: ApiErrorResponse;
-    timestamp?: Date;
-    metadata?: ResponseMetadata;
-};
-
-export type RestApiResponseListString = {
-    success?: boolean;
-    message?: string;
-    data?: Array<string>;
     error?: ApiErrorResponse;
     timestamp?: Date;
     metadata?: ResponseMetadata;
@@ -2634,7 +2638,9 @@ export type CreateInteraction1Response = CreateInteraction1Responses[keyof Creat
 export type ChatWithOpenRouterData = {
     body: ChatRequest;
     path?: never;
-    query?: never;
+    query?: {
+        model?: string;
+    };
     url: '/api/ai/chat';
 };
 
@@ -2642,10 +2648,26 @@ export type ChatWithOpenRouterResponses = {
     /**
      * OK
      */
-    200: RestApiResponseChatResponse;
+    200: RestApiResponseAiChatResponse;
 };
 
 export type ChatWithOpenRouterResponse = ChatWithOpenRouterResponses[keyof ChatWithOpenRouterResponses];
+
+export type GetSupportedModelsData = {
+    body?: never;
+    path?: never;
+    query?: never;
+    url: '/api/ai/chat/supported-models';
+};
+
+export type GetSupportedModelsResponses = {
+    /**
+     * OK
+     */
+    200: RestApiResponseListString;
+};
+
+export type GetSupportedModelsResponse = GetSupportedModelsResponses[keyof GetSupportedModelsResponses];
 
 export type EnableMaintenanceData = {
     body?: MaintenanceRequestDto;

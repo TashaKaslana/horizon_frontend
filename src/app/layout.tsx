@@ -14,6 +14,7 @@ import {ClientInitProvider} from "@/components/client-init-provider";
 import {getLocale} from "next-intl/server";
 import {NextIntlClientProvider} from "next-intl";
 import {AblyProviderComponent} from "@/components/ably-provider";
+import { AiChat } from "./components/chatbox/ai-chatbox";
 
 // const geistSans = Geist({
 //     variable: "--font-geist-sans",
@@ -42,6 +43,7 @@ export default async function RootLayout({
         <html lang={locale} suppressHydrationWarning>
         <body
             // className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+            className="relative"
         >
         <Auth0Provider>
             <ClientSetupProvider>
@@ -62,6 +64,7 @@ export default async function RootLayout({
                                             </ErrorBoundary>
                                         </MaintenanceWrapper>
                                         <Toaster richColors/>
+                                        <AiChat/>
                                     </ThemeProvider>
                                 </UserProvider>
                             </ClientInitProvider>

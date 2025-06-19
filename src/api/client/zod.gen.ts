@@ -709,14 +709,25 @@ export const zChatRequest = z.object({
     message: z.string().optional()
 });
 
-export const zChatResponse = z.object({
-    message: z.string().optional()
+export const zAiChatResponse = z.object({
+    message: z.string().optional(),
+    action: z.string().optional(),
+    parameters: z.object({}).optional()
 });
 
-export const zRestApiResponseChatResponse = z.object({
+export const zRestApiResponseAiChatResponse = z.object({
     success: z.boolean().optional(),
     message: z.string().optional(),
-    data: zChatResponse.optional(),
+    data: zAiChatResponse.optional(),
+    error: zApiErrorResponse.optional(),
+    timestamp: z.string().datetime().optional(),
+    metadata: zResponseMetadata.optional()
+});
+
+export const zRestApiResponseListString = z.object({
+    success: z.boolean().optional(),
+    message: z.string().optional(),
+    data: z.array(z.string()).optional(),
     error: zApiErrorResponse.optional(),
     timestamp: z.string().datetime().optional(),
     metadata: zResponseMetadata.optional()
@@ -1022,15 +1033,6 @@ export const zRestApiResponseTagWithCountDto = z.object({
     success: z.boolean().optional(),
     message: z.string().optional(),
     data: zTagWithCountDto.optional(),
-    error: zApiErrorResponse.optional(),
-    timestamp: z.string().datetime().optional(),
-    metadata: zResponseMetadata.optional()
-});
-
-export const zRestApiResponseListString = z.object({
-    success: z.boolean().optional(),
-    message: z.string().optional(),
-    data: z.array(z.string()).optional(),
     error: zApiErrorResponse.optional(),
     timestamp: z.string().datetime().optional(),
     metadata: zResponseMetadata.optional()
@@ -1731,7 +1733,9 @@ export const zGetInteractionsResponse = zRestApiResponseListCommentInteractionRe
 
 export const zCreateInteraction1Response = zRestApiResponseCommentInteractionRespond;
 
-export const zChatWithOpenRouterResponse = zRestApiResponseChatResponse;
+export const zChatWithOpenRouterResponse = zRestApiResponseAiChatResponse;
+
+export const zGetSupportedModelsResponse = zRestApiResponseListString;
 
 export const zEnableMaintenanceResponse = zRestApiResponseMaintenanceInfoDto;
 
