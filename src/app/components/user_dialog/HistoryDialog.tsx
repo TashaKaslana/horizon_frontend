@@ -48,20 +48,22 @@ export const HistoryDialog = () => {
             <DialogTrigger>
                 <UserDialogTrigger item={trigger}/>
             </DialogTrigger>
-            <DialogContent className={'!max-w-fit '}>
-                <DialogHeader>
-                    <DialogTitle>{historyT("title")}</DialogTitle>
-                    <DialogDescription>{t("history_dialog.description") || "Display your history activity"}</DialogDescription>
-                </DialogHeader>
+            <DialogContent className={'!max-w-fit max-h-[80vh] overflow-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent rounded-lg'}>
+                <div className={'h-full w-full'}>
+                    <DialogHeader>
+                        <DialogTitle>{historyT("title")}</DialogTitle>
+                        <DialogDescription>{t("history_dialog.description") || "Display your history activity"}</DialogDescription>
+                    </DialogHeader>
 
-                <DataTable columns={historyColumns}
-                           data={histories ?? []}
-                           fetchNextPage={fetchNextPage}
-                           hasNextPage={hasNextPage}
-                           pageCount={data?.pages[0]?.metadata?.pagination?.totalPages ?? 0}
-                           isFetchingNextPage={isFetchingNextPage}
-                           isLoading={isLoading}
-                />
+                    <DataTable columns={historyColumns}
+                               data={histories ?? []}
+                               fetchNextPage={fetchNextPage}
+                               hasNextPage={hasNextPage}
+                               pageCount={data?.pages[0]?.metadata?.pagination?.totalPages ?? 0}
+                               isFetchingNextPage={isFetchingNextPage}
+                               isLoading={isLoading}
+                    />
+                </div>
             </DialogContent>
         </Dialog>
     )
