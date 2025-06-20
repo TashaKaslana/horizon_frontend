@@ -20,19 +20,19 @@ const AdminLayout = async ({children}: { children: React.ReactNode }) => {
     )
 }
 
-export async function checkAdmin() {
-    const accessToken = await getAccessToken();
-
-    if (!accessToken) {
-        throw new Error("Access token missing");
-    }
-
-    const decoded = jwtDecode<{ [key: string]: any }>(accessToken);
-    const roles = decoded["https://phong-corp/roles"];
-    
-    const isAdmin = Array.isArray(roles) && roles.includes("ADMIN");
-
-    return isAdmin;
-}
+// export async function checkAdmin() {
+//     const accessToken = await getAccessToken();
+//
+//     if (!accessToken) {
+//         throw new Error("Access token missing");
+//     }
+//
+//     const decoded = jwtDecode<{ [key: string]: any }>(accessToken);
+//     const roles = decoded["https://phong-corp/roles"];
+//
+//     const isAdmin = Array.isArray(roles) && roles.includes("ADMIN");
+//
+//     return isAdmin;
+// }
 
 export default AdminLayout
